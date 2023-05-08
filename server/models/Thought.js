@@ -11,14 +11,15 @@ Thought.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    content: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,  
     },
+    content: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+
     numberOfComments: {
       type: DataTypes.INTEGER
     }
