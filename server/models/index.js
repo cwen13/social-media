@@ -22,11 +22,9 @@ Comment.belongsTo(Thouhght, {
 });
 
 
-User.hasMany(Friend, {
-
-});
-
-Friend.belongsToMany(User, {
+User.belongsToMany(User, {
+  foreignKey: "id",
+  through: Friend
 });
 
 
