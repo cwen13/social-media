@@ -21,7 +21,7 @@ Friend.init(
     },
     sent: {
       type: DataTypes.ENUM,
-      valures: ["sent", "denied", "mutual"]
+      valures: ["sent", "denied", "mutual", "blocked"]
     },
     {
       sequelize,
