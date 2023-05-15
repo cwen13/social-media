@@ -19,10 +19,6 @@ Thought.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-
-    numberOfComments: {
-      type: DataTypes.INTEGER
-    }
   },
   {
     sequelize,
