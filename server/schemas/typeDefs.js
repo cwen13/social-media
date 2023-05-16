@@ -67,7 +67,7 @@ type Mutation {
     addComment(thoughtId: ID!, userId: ID!, comment: String!): Comment
     updateComment(id: ID!, comment: String!): Comment
     addFriend(userSentId: ID!, userReceivedId: ID! sent: String! ): Friend
-    removeFriend(): Friend
+    removeFriend(friendId: ID!): Friend
 }
 
 
