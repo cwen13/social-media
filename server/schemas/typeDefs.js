@@ -7,6 +7,7 @@ enum SENT {
   mutual
   blocked
 }
+
 type User {
   id: ID!
   username: String!
@@ -69,9 +70,7 @@ type Mutation {
     addFriend(userSentId: ID!, userReceivedId: ID! sent: String! ): Friend
     removeFriend(friendId: ID!): Friend
 }
-
-
 `;
 
 module.exports  = typeDefs;
-
+ 
