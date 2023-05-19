@@ -11,20 +11,20 @@ Friend.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    userSentId: {
+    userId: {
       type: DataTypes.INTEGER,
       allowNunll: false
     },
-    userReceiedId: {
+    friendId: {
       type: DataTypes.INTEGER,
       allowNunll: false
     },
     sent: {
-      type: DataTypes.ENUM,
-      valures: ["sent", "denied", "mutual", "blocked"]
-    },
-    {
-      sequelize,
+      type: DataTypes.ENUM("sent", "denied", "mutual", "blocked"),
+    }
+  },
+  {
+    sequelize,
     freezeTableName: true,
     underscored: true,
     modelName: 'friends',

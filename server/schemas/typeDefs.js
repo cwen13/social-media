@@ -19,8 +19,8 @@ type User {
 
 type Friend {
   id : ID!
-  userSentId: ID!
-  iserReceivedId: ID!
+  userId: ID!
+  friendId: ID!
   sent: String!
 }
 
@@ -35,6 +35,7 @@ type Comment {
   userId: ID!
   thoughtId: ID!
   comment: String!
+}
 
 type Auth {
   token: ID!
@@ -67,7 +68,7 @@ type Mutation {
     updateThought(id: ID!, content: String!): Thought
     addComment(thoughtId: ID!, userId: ID!, comment: String!): Comment
     updateComment(id: ID!, comment: String!): Comment
-    addFriend(userSentId: ID!, userReceivedId: ID! sent: String! ): Friend
+    addFriend(userId: ID!, friendId: ID! sent: String! ): Friend
     removeFriend(friendId: ID!): Friend
 }
 `;
