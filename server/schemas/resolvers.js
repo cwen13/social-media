@@ -13,8 +13,8 @@ const resolver = {
     users: async (parent, args, context) => {
       return User.findAll({});
     },
-    user: async (parent, {email}, context) => {
-      return User.findOne({where: {email}});
+    user: async (parent, {id}, context) => {
+      return User.findOne({where: {id}});
     },
     userThoughts: async (parent, {userId}, context) => {
       return Thought.findAll({where: {userId}});

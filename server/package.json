@@ -21,7 +21,8 @@
   },
   "scripts": {
     "start": "node server.js",
-    "watch": "modemon server.js"
+    "watch": "modemon server.js",
+    "seed": "node seeder/seeder.js"
   },
   "eslintConfig": {
     "extends": [
