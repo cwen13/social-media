@@ -1,20 +1,13 @@
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
-enum SENT {
-  sent
-  denied
-  mutual
-  blocked
-}
-
 type User {
   id: ID!
   username: String!
   firstName: String!
   lastName: String!
   email: String!
-  passwod: String!
+  password: String!
 }
 
 type Friend {

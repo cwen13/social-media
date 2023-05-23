@@ -1,127 +1,127 @@
 [
   {
-    "userSentId": 1,
-    "userReceivedId": 2,
+    "userId": 1,
+    "friendId": 2,
     "sent": "sent"
   },
   {
-    "userSentId": 3,
-    "userReceivedId": 4,
+    "userId": 3,
+    "friendId": 4,
     "sent": "denied"
   },
   {
-    "userSentId": 2,
-    "userReceivedId": 5,
+    "userId": 2,
+    "friendId": 5,
     "sent": "mutual"
   },
   {
-    "userSentId": 6,
-    "userReceivedId": 7,
+    "userId": 6,
+    "friendId": 7,
     "sent": "sent"
   },
   {
-    "userSentId": 8,
-    "userReceivedId": 1,
+    "userId": 8,
+    "friendId": 1,
     "sent": "mutual"
   },
   {
-    "userSentId": 9,
-    "userReceivedId": 2,
+    "userId": 9,
+    "friendId": 2,
     "sent": "denied"
   },
   {
-    "userSentId": 3,
-    "userReceivedId": 10,
+    "userId": 3,
+    "friendId": 10,
     "sent": "sent"
   },
   {
-    "userSentId": 11,
-    "userReceivedId": 4,
+    "userId": 11,
+    "friendId": 4,
     "sent": "mutual"
   },
   {
-    "userSentId": 12,
-    "userReceivedId": 13,
+    "userId": 12,
+    "friendId": 13,
     "sent": "sent"
   },
   {
-    "userSentId": 14,
-    "userReceivedId": 5,
+    "userId": 14,
+    "friendId": 5,
     "sent": "denied"
   },
   {
-    "userSentId": 6,
-    "userReceivedId": 1,
+    "userId": 6,
+    "friendId": 1,
     "sent": "sent"
   },
   {
-    "userSentId": 2,
-    "userReceivedId": 7,
+    "userId": 2,
+    "friendId": 7,
     "sent": "mutual"
   },
   {
-    "userSentId": 10,
-    "userReceivedId": 8,
+    "userId": 10,
+    "friendId": 8,
     "sent": "sent"
   },
   {
-    "userSentId": 9,
-    "userReceivedId": 11,
+    "userId": 9,
+    "friendId": 11,
     "sent": "mutual"
   },
   {
-    "userSentId": 12,
-    "userReceivedId": 13,
+    "userId": 12,
+    "friendId": 13,
     "sent": "sent"
   },
   {
-    "userSentId": 14,
-    "userReceivedId": 5,
+    "userId": 14,
+    "friendId": 5,
     "sent": "denied"
   },
   {
-    "userSentId": 6,
-    "userReceivedId": 1,
+    "userId": 6,
+    "friendId": 1,
     "sent": "sent"
   },
   {
-    "userSentId": 2,
-    "userReceivedId": 7,
+    "userId": 2,
+    "friendId": 7,
     "sent": "mutual"
   },
   {
-    "userSentId": 10,
-    "userReceivedId": 8,
+    "userId": 10,
+    "friendId": 8,
     "sent": "sent"
   },
   {
-    "userSentId": 9,
-    "userReceivedId": 11,
+    "userId": 9,
+    "friendId": 11,
     "sent": "mutual"
   },
   {
-    "userSentId": 12,
-    "userReceivedId": 13,
+    "userId": 12,
+    "friendId": 13,
     "sent": "sent"
   },
   {
-    "userSentId": 14,
-    "userReceivedId": 5,
+    "userId": 14,
+    "friendId": 5,
     "sent": "denied"
   },
   {
-    "userSentId": 6,
-    "userReceivedId": 1,
+    "userId": 6,
+    "friendId": 1,
     "sent": "sent"
   },
   {
-    "userSentId": 2,
-    "userReceivedId": 7,
+    "userId": 2,
+    "friendId": 7,
     "sent": "mutual"
   },
   {
-    "userSentId": 10,
-    "userReceivedId": 8,
+    "userId": 10,
+    "friendId": 8,
     "sent": "sent"
   }
 ]

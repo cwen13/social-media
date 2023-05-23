@@ -27,6 +27,8 @@ Friend.init(
     sequelize,
     freezeTableName: true,
     underscored: true,
-    modelName: 'friends',
+    modelName: 'friend',
   }
 );
+
+module.exports = Friend;

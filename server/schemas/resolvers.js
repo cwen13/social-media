@@ -1,23 +1,24 @@
 const { AuthenticationError } = require('apollo-server-express');
-const {User} = require('../models/User');
-const {Friend } = require('../models/Friend');
-const {Thought} = require('../models/Thought');
-const {Comment} = require('../models/Comment');
+const {User,Friend,Thought,Comment} = require("./../models");
+//const {User} = require('../models/User');
+//const {Friend } = require('../models/Friend');
+//const {Thought} = require('../models/Thought');
+//const {Comment} = require('../models/Comment');
 const { signToken } = require('../utils/auth');
  
 const resolver = {
   Query: {
     me: async (parent, args, context) => {
-      return User.findOne({id: context.user.id});
+      return await User.findOne({id: context.user.id});
     },
     users: async (parent, args, context) => {
-      return User.findAll({});
+      return await User.findAll();
     },
     user: async (parent, {id}, context) => {
-      return User.findOne({where: {id}});
+      return await User.findOne({where: {id}});
     },
     userThoughts: async (parent, {userId}, context) => {
-      return Thought.findAll({where: {userId}});
+      return await Thought.findAll({where: {userId}});
     }
 
   },
