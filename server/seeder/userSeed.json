@@ -1,99 +1,99 @@
 [
   {
     "username": "johndoe32",
-    "first_name": "John",
-    "last_name": "Doe",
+    "firstName": "John",
+    "lastName": "Doe",
     "email": "johndoe32@example.com",
     "password": "password123"
   },
   {
     "username": "janedoe94",
-    "first_name": "Jane",
-    "last_name": "Doe",
+    "firstName": "Jane",
+    "lastName": "Doe",
     "email": "janedoe94@example.com",
     "password": "password456"
   },
   {
     "username": "mike.smith87",
-    "first_name": "Mike",
-    "last_name": "Smith",
+    "firstName": "Mike",
+    "lastName": "Smith",
     "email": "mike.smith87@example.com",
     "password": "password789"
   },
   {
     "username": "sarahb123",
-    "first_name": "Sarah",
-    "last_name": "Baker",
+    "firstName": "Sarah",
+    "lastName": "Baker",
     "email": "sarahb123@example.com",
     "password": "passwordabc"
   },
   {
     "username": "matt.jackson23",
-    "first_name": "Matt",
-    "last_name": "Jackson",
+    "firstName": "Matt",
+    "lastName": "Jackson",
     "email": "matt.jackson23@example.com",
     "password": "passworddef"
   },
   {
     "username": "lisa_miller81",
-    "first_name": "Lisa",
-    "last_name": "Miller",
+    "firstName": "Lisa",
+    "lastName": "Miller",
     "email": "lisa_miller81@example.com",
     "password": "passwordghi"
   },
   {
     "username": "adam.taylor29",
-    "first_name": "Adam",
-    "last_name": "Taylor",
+    "firstName": "Adam",
+    "lastName": "Taylor",
     "email": "adam.taylor29@example.com",
     "password": "passwordjkl"
   },
   {
     "username": "amanda_cole12",
-    "first_name": "Amanda",
-    "last_name": "Cole",
+    "firstName": "Amanda",
+    "lastName": "Cole",
     "email": "amanda_cole12@example.com",
     "password": "passwordmno"
   },
   {
     "username": "benjohnson63",
-    "first_name": "Ben",
-    "last_name": "Johnson",
+    "firstName": "Ben",
+    "lastName": "Johnson",
     "email": "benjohnson63@example.com",
     "password": "passwordpqr"
   },
   {
     "username": "ashley_brown42",
-    "first_name": "Ashley",
-    "last_name": "Brown",
+    "firstName": "Ashley",
+    "lastName": "Brown",
     "email": "ashley_brown42@example.com",
     "password": "passwordstu"
   },
   {
     "username": "jason_simpson27",
-    "first_name": "Jason",
-    "last_name": "Simpson",
+    "firstName": "Jason",
+    "lastName": "Simpson",
     "email": "jason_simpson27@example.com",
     "password": "passwordvwx"
   },
   {
     "username": "marywilliams99",
-    "first_name": "Mary",
-    "last_name": "Williams",
+    "firstName": "Mary",
+    "lastName": "Williams",
     "email": "marywilliams99@example.com",
     "password": "passwordyz1"
   },
   {
     "username": "chris.miller88",
-    "first_name": "Chris",
-    "last_name": "Miller",
+    "firstName": "Chris",
+    "lastName": "Miller",
     "email": "chris.miller88@example.com",
     "password": "password234"
   },
   {
     "username": "emily_jones63",
-    "first_name": "Emily",
-    "last_name": "Jones",
+    "firstName": "Emily",
+    "lastName": "Jones",
     "email": "emily_jones63@example.com",
     "password": "password567"
   }

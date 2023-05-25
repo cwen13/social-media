@@ -1,25 +1,19 @@
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
-enum SENT {
-  sent
-  denied
-  mutual
-  blocked
-}
 type User {
   id: ID!
   username: String!
   firstName: String!
   lastName: String!
   email: String!
-  passwod: String!
+  password: String!
 }
 
 type Friend {
   id : ID!
-  userSentId: ID!
-  iserReceivedId: ID!
+  userId: ID!
+  friendId: ID!
   sent: String!
 }
 
@@ -34,6 +28,7 @@ type Comment {
   userId: ID!
   thoughtId: ID!
   comment: String!
+}
 
 type Auth {
   token: ID!
@@ -43,19 +38,18 @@ type Auth {
 type Query {
     me: User!
     users: [User]!
-    user(email: String!): User
-    userThoughts(id: ID!): [Thought]!
-
+    user(id: ID!): User!
+    userThoughts(userId: ID!): [Thought]!
 }
 
 type Mutation {
-    addUser(userName: String!,
+    addUser(username: String!,
             firstName: String!,
             lastName: String!,
             email: String!,
             password: String!): Auth
     updateUser(userId: ID!,
-               userName: String,
+               username: String,
                firstName: String,
                lastName: String,
                email: String,
@@ -66,12 +60,10 @@ type Mutation {
     updateThought(id: ID!, content: String!): Thought
     addComment(thoughtId: ID!, userId: ID!, comment: String!): Comment
     updateComment(id: ID!, comment: String!): Comment
-    addFriend(userSentId: ID!, userReceivedId: ID! sent: String! ): Friend
-    removeFriend(): Friend
+    addFriend(userId: ID!, friendId: ID! sent: String! ): Friend
+    removeFriend(friendId: ID!): Friend
 }
-
-
 `;
 
 module.exports  = typeDefs;
-
+ 

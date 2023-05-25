@@ -6,24 +6,24 @@ const Thought = require("./Thought");
 
 User.hasMany(Thought, {
   foreignKey: "userId"
-
 });
 
 Thought.belongsTo(User, {
   foreignKey: "userId"
 });
 
-Thought.hasMnay(Comment, {
+Thought.hasMany(Comment, {
   foreignKey: "thoughtId",
 });
 
-Comment.belongsTo(Thouhght, {
+Comment.belongsTo(Thought, {
   foreignKey: "thoughtId",
 });
 
 
 User.belongsToMany(User, {
-  foreignKey: "id",
+//  foreignKey: "id",
+  as: "friendship",
   through: Friend
 });
 
@@ -33,6 +33,5 @@ module.exports = {
   Friend,
   User,
   Comment,
-  Thouhgt
+  Thought
 };
-
