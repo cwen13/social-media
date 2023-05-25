@@ -1,30 +1,33 @@
 const { AuthenticationError } = require('apollo-server-express');
 const {User,Friend,Thought,Comment} = require("./../models");
-//const {User} = require('../models/User');
-//const {Friend } = require('../models/Friend');
-//const {Thought} = require('../models/Thought');
-//const {Comment} = require('../models/Comment');
 const { signToken } = require('../utils/auth');
  
-const resolver = {
+const resolvers = {
   Query: {
     me: async (parent, args, context) => {
       return await User.findOne({id: context.user.id});
     },
+
+    // FUNCTIONING
     users: async (parent, args, context) => {
       return await User.findAll();
     },
+
+    // FUNCTIONING
     user: async (parent, {id}, context) => {
       return await User.findOne({where: {id}});
     },
+
+    // FUNCTIONING
     userThoughts: async (parent, {userId}, context) => {
       return await Thought.findAll({where: {userId}});
     }
 
   },
   Mutation: {
-    addUser: async (parent, {id, userName, firstName, lastName, email, password}, context) => {
-      const [rowsAffected, userUpdate] = await User.create(
+    // FUNCTIONING -- NEED TO RETURN SOMETHING
+    addUser: async (parent, {id, username, firstName, lastName, email, password}, context) => {
+      const update = await User.create(
 	{
 	  username,
 	  firstName,
@@ -33,12 +36,12 @@ const resolver = {
 	  password
 	},
 	{
-	    returning: true,
-	  where: {id}
+	  returning: true,
 	});
       
-      return rowsAffected;;
+      return update;
     },
+
     
     updateUser: async (parent, {id, userName, firstName, lastName, email, password}, context) => {
       return await User.update({
@@ -92,3 +95,5 @@ const resolver = {
     },
   }
 };
+
+module.exports = resolvers;

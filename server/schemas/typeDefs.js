@@ -38,19 +38,18 @@ type Auth {
 type Query {
     me: User!
     users: [User]!
-    user(email: String!): User
-    userThoughts(id: ID!): [Thought]!
-
+    user(id: ID!): User!
+    userThoughts(userId: ID!): [Thought]!
 }
 
 type Mutation {
-    addUser(userName: String!,
+    addUser(username: String!,
             firstName: String!,
             lastName: String!,
             email: String!,
             password: String!): Auth
     updateUser(userId: ID!,
-               userName: String,
+               username: String,
                firstName: String,
                lastName: String,
                email: String,
