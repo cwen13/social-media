@@ -41,7 +41,6 @@ const resolvers = {
       
       return update;
     },
-
     
     updateUser: async (parent, {id, userName, firstName, lastName, email, password}, context) => {
       return await User.update({
@@ -96,4 +95,4 @@ const resolvers = {
   }
 };
 
-module.exports = resolvers;
+//module.exports = resolvers;
