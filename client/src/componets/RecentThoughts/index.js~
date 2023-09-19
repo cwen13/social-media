@@ -1,0 +1,12 @@
+// file to display the most recent thoughts
+
+const RecentThoughts = () => {
+
+  return (
+      <>
+      <p> here we go</>
+      </>
+  );
+};
+
+export default RecentThoughts;

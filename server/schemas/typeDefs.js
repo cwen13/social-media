@@ -40,6 +40,7 @@ type Query {
     users: [User]!
     user(id: ID!): User!
     userThoughts(userId: ID!): [Thought]!
+    friends: [User]
 }
 
 type Mutation {
