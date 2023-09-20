@@ -1,0 +1,13 @@
+import React from "react";
+
+const UserInfo = (props) => (
+  {/* Need to put in here what user into to display */}
+  <>
+    <h1>Username: ${props.username}</h1>
+    <h2>User: ${props.firstName} ${props.lastName}</h2>
+    
+  </>
+
+);
+
+export default UserInfo;
