@@ -17,7 +17,7 @@ import UserFeed from "./pages/UserFeed";
 import UserProfile from "./pages/UserProfile";
 import Search from "./pages/Search";
 
-import AppNavbar from "./componets/Navbar/";
+import AppNavbar from "./components/Navbar/";
 
 const httpLink = createHttpLink({
   uri: '/graphql',
@@ -59,10 +59,6 @@ function App() {
             <Route 
               path="/signup" 
               element={<Signup/>} 
-            />
-            <Route 
-              path="/user/self" 
-              element={<UserFeed/>} 
             />
 	    <Route
 	      path="/user/:userId"
