@@ -17,7 +17,7 @@ import UserFeed from "./pages/UserFeed";
 import UserProfile from "./pages/UserProfile";
 import Search from "./pages/Search";
 
-import AppNavbar from "./componets/Navbar/";
+import AppNavbar from "./components/Navbar/";
 
 const httpLink = createHttpLink({
   uri: '/graphql',
@@ -39,18 +39,15 @@ const client = new ApolloClient({
 });
 
 
-function App() {
+const App = ()=> {
   return (
     <ApolloProvider client={client}>
       <Router>
-        <>
-	  <AppNavbar
-	  />
-          <Routes>
-	    
+     	  <AppNavbar />
+          <Routes>	    
             <Route 
               path="/" 
-              element={<MainFeed/>} 
+              element={<MainFeed />} 
             />
 	    <Route 
               path="/login" 
@@ -78,7 +75,6 @@ function App() {
 	    />
 	    
           </Routes>
-        </>
       </Router>
     </ApolloProvider>
     
