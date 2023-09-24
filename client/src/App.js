@@ -5,17 +5,20 @@ import {
   InMemoryCache,
   ApolloProvider,
   createHttpLink,
+  useQuery
 } from '@apollo/client';
 
 import { setContext } from '@apollo/client/link/context';
 import './App.css';
 
 import MainFeed from "./pages/MainFeed";
+
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import UserFeed from "./pages/UserFeed";
 import UserProfile from "./pages/UserProfile";
 import Search from "./pages/Search";
+import { QUERY_THOUGHTS } from "./utils/queries";
 
 import AppNavbar from "./components/Navbar/";
 
@@ -40,6 +43,9 @@ const client = new ApolloClient({
 
 
 const App = ()=> {
+  console.log(QUERY_THOUGHTS.loc.source.body);
+  const { loading, error, data } = useQuery(QUERY_THOUGHTS.loc.source.body);
+  console.log("DATA:", data);
   return (
     <ApolloProvider client={client}>
       <Router>

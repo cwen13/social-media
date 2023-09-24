@@ -1,10 +1,18 @@
 // graphql query file
 import { gql } from '@apollo/client';
 
+export const QUERY_ME = gql`
+  query me {
+    user {
+      id
+    }
+  }
+`
+
 export const QUERY_USERS = gql`
-  query getUser($user: ID) {
-    user(user: $user) {
-      _id
+  query getUsers {
+    user {
+      id
       username
       firstName
       lsatName
@@ -14,41 +22,31 @@ export const QUERY_USERS = gql`
 `;
 
 export const QUERY_THOUGHTS = gql`
-  {
+  query getAllThoughts {
     thoughts {
-      _id
+      id
       userId
       content
     }
   }
 `;
 
-export const QUERY_CATEGORIES = gql`
-  {
-    categories {
-      _id
-      name
+
+export const QUERY_USER_THOUGHTS = gql`
+  query getUserThoughts($userId: ID!){
+    thought(id: $userId) {
+      id
+      userId
     }
   }
 `;
 
-export const QUERY_USER = gql`
-  {
-    user {
-      firstName
-      lastName
-      orders {
-        _id
-        purchaseDate
-        products {
-          _id
-          name
-          description
-          price
-          quantity
-          image
-        }
-      }
-    }
+export const QUERY_USER_FRIENDS = gql`
+query getUserFriends($userId: ID!) {
+  friends(id: $userId) {
+    userId
+    friendId
+    sent
   }
-`;
+}
+`

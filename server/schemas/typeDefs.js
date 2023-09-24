@@ -39,11 +39,13 @@ type Query {
     me: User!
     users: [User]!
     user(id: ID!): User!
+    thoughts: [Thought]!
     userThoughts(userId: ID!): [Thought]!
     friends: [User]
 }
 
 type Mutation {
+    login(email: String!, password: String!): Auth
     addUser(username: String!,
             firstName: String!,
             lastName: String!,
@@ -55,16 +57,18 @@ type Mutation {
                lastName: String,
                email: String,
                password: String): User
-    deleteUser(userId: ID!): User
-    login(email: String!, password: String!): Auth
-    addThought(userId: ID!, content: String!): Thought
     updateThought(id: ID!, content: String!): Thought
-    addComment(thoughtId: ID!, userId: ID!, comment: String!): Comment
     updateComment(id: ID!, comment: String!): Comment
-    addFriend(userId: ID!, friendId: ID! sent: String! ): Friend
     removeFriend(friendId: ID!): Friend
+    deleteUser(userId: ID!): User
+    addThought(userId: ID!, content: String!): Thought
+    addComment(thoughtId: ID!, userId: ID!, comment: String!): Comment
+    addFriend(userId: ID!, friendId: ID! sent: String! ): Friend
 }
 `;
 
 module.exports  = typeDefs;
  
+
+// commenting out for now
+
