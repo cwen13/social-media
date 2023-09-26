@@ -15,7 +15,7 @@ export const QUERY_USERS = gql`
       id
       username
       firstName
-      lsatName
+      lastName
       email
     }
   }
@@ -34,7 +34,7 @@ export const QUERY_THOUGHTS = gql`
 
 export const QUERY_USER_THOUGHTS = gql`
   query getUserThoughts($userId: ID!){
-    thought(id: $userId) {
+    thoughts(id: $userId) {
       id
       userId
     }

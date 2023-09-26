@@ -1,11 +1,13 @@
 import React from 'react';
+import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
   createHttpLink,
-  useQuery
+  useQuery,
+  gql
 } from '@apollo/client';
 
 import { setContext } from '@apollo/client/link/context';
@@ -18,9 +20,21 @@ import Signup from "./pages/Signup";
 import UserFeed from "./pages/UserFeed";
 import UserProfile from "./pages/UserProfile";
 import Search from "./pages/Search";
+import AppNavbar from "./components/Navbar/";
+import NotFound from ".//components/NotFound/";
 import { QUERY_THOUGHTS } from "./utils/queries";
 
-import AppNavbar from "./components/Navbar/";
+//debugging only
+let QUERY_USERS = gql`  query getUsers {
+user {
+id
+userName
+firstName
+lastName
+}
+  }
+`;
+
 
 const httpLink = createHttpLink({
   uri: '/graphql',
@@ -43,9 +57,9 @@ const client = new ApolloClient({
 
 
 const App = ()=> {
-  console.log(QUERY_THOUGHTS.loc.source.body);
-  const { loading, error, data } = useQuery(QUERY_THOUGHTS.loc.source.body);
-  console.log("DATA:", data);
+  // this is casusing an invariant error
+  const { loading, error, data } = useQuery(QUERY_USERS);
+  const [ thoughts, setThoughts ] = useState(data);
   return (
     <ApolloProvider client={client}>
       <Router>
@@ -53,33 +67,32 @@ const App = ()=> {
           <Routes>	    
             <Route 
               path="/" 
-              element={<MainFeed />} 
+              element={<MainFeed thoughts={thoughts} />} 
             />
 	    <Route 
               path="/login" 
-              element={<Login/>} 
+              element={<Login />} 
             />
             <Route 
               path="/signup" 
-              element={<Signup/>} 
+              element={<Signup />} 
             />
             <Route 
               path="/user/self" 
-              element={<UserFeed/>} 
+              element={<UserFeed />} 
             />
 	    <Route
 	      path="/user/:userId"
-	      element={<UserProfile/>}
+	      element={<UserProfile />}
 	    />
 	    <Route
 	      path="/search/*"
-	      element={<Search/>}
+	      element={<Search />}
 	    />
 	    <Route 
 	      path='*' 
-	      element={<h1 className="display-2">Wrong page!</h1>}
+	      element={<NotFound />}
 	    />
-	    
           </Routes>
       </Router>
     </ApolloProvider>

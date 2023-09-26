@@ -8,15 +8,16 @@ import ThoughtPost from "./../ThoughtPost/"
 import "./style.css";
 
 //Need to get thougts and put them in here
-const Feed = () => {
+const Feed = (props) => {
 
-  /* query for 10 random users and a random thought of theirs*/
   // temp dummy data
   let usersData = [{key: "01", thought:"xfgdf", userName:"don"},
 		   {key: "02", thought:"dsfdxfgdf", userName:"dont"},
 		   {key: "03", thought:"xfgdsdfsdf", userName:"done"},
 		   {key: "04", thought:"xfgdffghfdh", userName:"dond"},
 		  ];
+
+  
 
   return (
     <div className="feed">

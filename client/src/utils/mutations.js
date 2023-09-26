@@ -49,7 +49,7 @@ mutation updateUser(
     ) {
 user {
 id
-username
+userName
   }
 }
 }
@@ -60,7 +60,7 @@ mutation deleteUser($userId: ID!) {
   deleteUser(id: $userId) {
 user {
     id
-    username
+    userName
     email
 }
  }
