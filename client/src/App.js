@@ -20,7 +20,7 @@ import Signup from "./pages/Signup";
 import UserFeed from "./pages/UserFeed";
 import UserProfile from "./pages/UserProfile";
 import Search from "./pages/Search";
-import AppNavbar from "./components/Navbar/";
+import Navbar from "./components/Navbar/";
 import NotFound from ".//components/NotFound/";
 import { QUERY_THOUGHTS } from "./utils/queries";
 
@@ -35,10 +35,6 @@ lastName
   }
 `;
 
-<<<<<<< HEAD
-=======
-import AppNavbar from "./components/Navbar/";
->>>>>>> 7dcd34c0d3876126606d0b166b0e98d335509fc0
 
 const httpLink = createHttpLink({
   uri: '/graphql',
@@ -67,7 +63,7 @@ const App = ()=> {
   return (
     <ApolloProvider client={client}>
       <Router>
-     	  <AppNavbar />
+     	  <Navbar />
           <Routes>	    
             <Route 
               path="/" 
@@ -81,13 +77,6 @@ const App = ()=> {
               path="/signup" 
               element={<Signup />} 
             />
-<<<<<<< HEAD
-            <Route 
-              path="/user/self" 
-              element={<UserFeed />} 
-            />
-=======
->>>>>>> 7dcd34c0d3876126606d0b166b0e98d335509fc0
 	    <Route
 	      path="/user/:userId"
 	      element={<UserProfile />}
