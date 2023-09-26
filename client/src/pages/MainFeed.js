@@ -2,7 +2,7 @@
 import React from "react";
 import Feed from "./../components/Feed/"
 import RecentThoughts from "./../components/RecentThoughts/"
-import UserInfo from "./../components/UserInfo/";
+import UserInfo from "./../components/UserInfo";
 
 const MainFeed = (props) => {
   return(

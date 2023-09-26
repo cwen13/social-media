@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { QUERY_USERS, QUERY_USER_THOUGHTS } from "./../../utils/queries";

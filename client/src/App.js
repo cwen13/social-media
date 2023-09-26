@@ -35,6 +35,10 @@ lastName
   }
 `;
 
+<<<<<<< HEAD
+=======
+import AppNavbar from "./components/Navbar/";
+>>>>>>> 7dcd34c0d3876126606d0b166b0e98d335509fc0
 
 const httpLink = createHttpLink({
   uri: '/graphql',
@@ -77,10 +81,13 @@ const App = ()=> {
               path="/signup" 
               element={<Signup />} 
             />
+<<<<<<< HEAD
             <Route 
               path="/user/self" 
               element={<UserFeed />} 
             />
+=======
+>>>>>>> 7dcd34c0d3876126606d0b166b0e98d335509fc0
 	    <Route
 	      path="/user/:userId"
 	      element={<UserProfile />}

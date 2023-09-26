@@ -3,7 +3,7 @@
 function UserProfile() {
   return(
       <>
-      <p> This is thes User profile</p>
+      <p>This is the User profile</p>
       </>
   );
 
