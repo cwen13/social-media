@@ -21,44 +21,41 @@ import UserFeed from "./pages/UserFeed";
 import UserProfile from "./pages/UserProfile";
 import Search from "./pages/Search";
 import Navbar from "./components/Navbar/";
-import NotFound from ".//components/NotFound/";
+import NotFound from "./components/NotFound/";
 import { QUERY_THOUGHTS } from "./utils/queries";
-
-//debugging only
-let QUERY_USERS = gql`  query getUsers {
-user {
-id
-userName
-firstName
-lastName
-}
-  }
-`;
-
 
 const httpLink = createHttpLink({
   uri: '/graphql',
 });
 
-const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('id_token');
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : '',
-    },
-  };
-});
+//const authLink = setContext((_, { headers }) => {
+//  const token = localStorage.getItem('id_token');
+//  return {
+//    headers: {
+//      ...headers,
+//      authorization: token ? `Bearer ${token}` : '',
+//    },
+//  };
+//});
 
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+//  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
+
+const QT = gql`
+query getThoughts{
+  getThoughts {
+    userId
+    content
+  }
+}
+`;
 
 
 const App = ()=> {
   // this is casusing an invariant error
-  const { loading, error, data } = useQuery(QUERY_USERS);
+  const { loading, error, data } = useQuery(QT);
   const [ thoughts, setThoughts ] = useState(data);
   return (
     <ApolloProvider client={client}>

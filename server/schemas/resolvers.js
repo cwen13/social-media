@@ -9,7 +9,7 @@ const resolvers = {
     },
 
     // FUNCTIONING
-    users: async (parent, args)/*, context)*/ => {
+    getUsers: async (parent, args)/*, context)*/ => {
       return await User.findAll();
     },
 
@@ -18,7 +18,7 @@ const resolvers = {
       return await User.findOne({where: {id}});
     },
 
-    thoughts: async(parent, props) => {
+    getThoughts: async(parent, props) => {
       return await Thought.findAll();
     },
 

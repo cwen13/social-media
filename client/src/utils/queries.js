@@ -3,7 +3,7 @@ import { gql } from '@apollo/client';
 
 export const QUERY_ME = gql`
   query me {
-    user {
+    me {
       id
     }
   }
@@ -12,8 +12,7 @@ export const QUERY_ME = gql`
 export const QUERY_USERS = gql`
   query getUsers {
     user {
-      id
-      username
+      userName
       firstName
       lastName
       email
@@ -22,9 +21,8 @@ export const QUERY_USERS = gql`
 `;
 
 export const QUERY_THOUGHTS = gql`
-  query getAllThoughts {
-    thoughts {
-      id
+  query getThoughts {
+    getThoughts {
       userId
       content
     }
@@ -34,7 +32,7 @@ export const QUERY_THOUGHTS = gql`
 
 export const QUERY_USER_THOUGHTS = gql`
   query getUserThoughts($userId: ID!){
-    thoughts(id: $userId) {
+    userThoughts(id: $userId) {
       id
       userId
     }

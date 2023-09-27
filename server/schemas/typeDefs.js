@@ -37,9 +37,9 @@ type Auth {
 
 type Query {
     me: User!
-    users: [User]!
+    getUsers: [User]!
     user(id: ID!): User!
-    thoughts: [Thought]!
+    getThoughts: [Thought]!
     userThoughts(userId: ID!): [Thought]!
     friends: [User]
 }
