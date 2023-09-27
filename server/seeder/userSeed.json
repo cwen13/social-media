@@ -1,97 +1,97 @@
 [
   {
-    "username": "johndoe32",
+    "userName": "johndoe32",
     "firstName": "John",
     "lastName": "Doe",
     "email": "johndoe32@example.com",
     "password": "password123"
   },
   {
-    "username": "janedoe94",
+    "userName": "janedoe94",
     "firstName": "Jane",
     "lastName": "Doe",
     "email": "janedoe94@example.com",
     "password": "password456"
   },
   {
-    "username": "mike.smith87",
+    "userName": "mike.smith87",
     "firstName": "Mike",
     "lastName": "Smith",
     "email": "mike.smith87@example.com",
     "password": "password789"
   },
   {
-    "username": "sarahb123",
+    "userName": "sarahb123",
     "firstName": "Sarah",
     "lastName": "Baker",
     "email": "sarahb123@example.com",
     "password": "passwordabc"
   },
   {
-    "username": "matt.jackson23",
+    "userName": "matt.jackson23",
     "firstName": "Matt",
     "lastName": "Jackson",
     "email": "matt.jackson23@example.com",
     "password": "passworddef"
   },
   {
-    "username": "lisa_miller81",
+    "userName": "lisa_miller81",
     "firstName": "Lisa",
     "lastName": "Miller",
     "email": "lisa_miller81@example.com",
     "password": "passwordghi"
   },
   {
-    "username": "adam.taylor29",
+    "userName": "adam.taylor29",
     "firstName": "Adam",
     "lastName": "Taylor",
     "email": "adam.taylor29@example.com",
     "password": "passwordjkl"
   },
   {
-    "username": "amanda_cole12",
+    "userName": "amanda_cole12",
     "firstName": "Amanda",
     "lastName": "Cole",
     "email": "amanda_cole12@example.com",
     "password": "passwordmno"
   },
   {
-    "username": "benjohnson63",
+    "userName": "benjohnson63",
     "firstName": "Ben",
     "lastName": "Johnson",
     "email": "benjohnson63@example.com",
     "password": "passwordpqr"
   },
   {
-    "username": "ashley_brown42",
+    "userName": "ashley_brown42",
     "firstName": "Ashley",
     "lastName": "Brown",
     "email": "ashley_brown42@example.com",
     "password": "passwordstu"
   },
   {
-    "username": "jason_simpson27",
+    "userName": "jason_simpson27",
     "firstName": "Jason",
     "lastName": "Simpson",
     "email": "jason_simpson27@example.com",
     "password": "passwordvwx"
   },
   {
-    "username": "marywilliams99",
+    "userName": "marywilliams99",
     "firstName": "Mary",
     "lastName": "Williams",
     "email": "marywilliams99@example.com",
     "password": "passwordyz1"
   },
   {
-    "username": "chris.miller88",
+    "userName": "chris.miller88",
     "firstName": "Chris",
     "lastName": "Miller",
     "email": "chris.miller88@example.com",
     "password": "password234"
   },
   {
-    "username": "emily_jones63",
+    "userName": "emily_jones63",
     "firstName": "Emily",
     "lastName": "Jones",
     "email": "emily_jones63@example.com",
