@@ -22,41 +22,32 @@ import UserProfile from "./pages/UserProfile";
 import Search from "./pages/Search";
 import Navbar from "./components/Navbar/";
 import NotFound from "./components/NotFound/";
-import { QUERY_THOUGHTS } from "./utils/queries";
+
 
 const httpLink = createHttpLink({
   uri: '/graphql',
 });
 
-//const authLink = setContext((_, { headers }) => {
-//  const token = localStorage.getItem('id_token');
-//  return {
-//    headers: {
-//      ...headers,
-//      authorization: token ? `Bearer ${token}` : '',
-//    },
-//  };
-//});
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('id_token');
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
+});
 
 const client = new ApolloClient({
 //  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
 
-const QT = gql`
-query getThoughts{
-  getThoughts {
-    userId
-    content
-  }
-}
-`;
 
 
 const App = ()=> {
   // this is casusing an invariant error
-  const { loading, error, data } = useQuery(QT);
-  const [ thoughts, setThoughts ] = useState(data);
+
   return (
     <ApolloProvider client={client}>
       <Router>
@@ -64,7 +55,7 @@ const App = ()=> {
           <Routes>	    
             <Route 
               path="/" 
-              element={<MainFeed thoughts={thoughts} />} 
+              element={<MainFeed />} 
             />
 	    <Route 
               path="/login" 
