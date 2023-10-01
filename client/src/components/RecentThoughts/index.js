@@ -1,5 +1,3 @@
-// file to display the most recent thoughts
-
 const RecentThoughts = () => {
 
   return (

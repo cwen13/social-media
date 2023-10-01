@@ -20,20 +20,16 @@ query getThoughts{
 
 //Need to get thougts and put them in here
 const Feed = () => {
-  const { loading, error, data } = useQuery(QT);
+  const { loading, error, data } =  useQuery(QT);
 
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;
   
+//  console.log("Thoughts:", data.thought);
+
   return (
     <div className="feed">
-      {console.log(error)}
-      {data.map((thought) => (
-	<ThoughtPost 
-		     thought={thought.content}
-		     info={thought.id}
-	/>
-	))}
+      
       Here is a little text
     </div>
   );
