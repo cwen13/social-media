@@ -39,7 +39,7 @@ const authLink = setContext((_, { headers }) => {
 });
 
 const client = new ApolloClient({
-//  link: authLink.concat(httpLink),
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
 
@@ -47,7 +47,6 @@ const client = new ApolloClient({
 
 const App = ()=> {
   // this is casusing an invariant error
-
   return (
     <ApolloProvider client={client}>
       <Router>

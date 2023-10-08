@@ -5,12 +5,12 @@ import { getRandom } from "./../../utils/helpers";
 
 import ThoughtPost from "./../ThoughtPost/"
 import { QUERY_THOUGHTS } from "./../../utils/queries";
-import "./style.css";
 
 
 const QT = gql`
 query getThoughts{
   getThoughts {
+    id
     userId
     content
   }
@@ -21,14 +21,25 @@ query getThoughts{
 //Need to get thougts and put them in here
 const Feed = () => {
   const { loading, error, data } =  useQuery(QT);
-
+  var key = 0;
+  
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;
   
-//  console.log("Thoughts:", data.thought);
+  console.log("data:", data.getThoughts);
 
+  const renderThought = (thought) => {
+    return (    	
+      <div className="thought" key={thought.id}>
+	  <p>User: {thought.userId}</p>
+	  <p>Thought: {thought.content}</p>
+	</div>
+    );
+  }
+  
   return (
     <div className="feed">
+      {(data.getThoughts).map(renderThought)}
       
       Here is a little text
     </div>

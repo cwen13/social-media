@@ -1,5 +1,3 @@
-// Prfile page forr the logged in user
-
 function UserProfile() {
   return(
       <>
