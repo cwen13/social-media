@@ -1,10 +1,7 @@
 import React from "react";
-
-<<<<<<< Updated upstream
-=======
 import ThoughtPost from "./../ThoughtPost/"
 import { QUERY_THOUGHTS } from "./../../utils/queries";
-
+import  { gql, useQuery } from "@apollo/client";
 
 const QT = gql`
 query getThoughts{
@@ -15,10 +12,6 @@ query getThoughts{
   }
 }
 `;
-
-
-//Need to get thougts and put them in here
->>>>>>> Stashed changes
 const Feed = (props) => {
   const { loading, error, data } =  useQuery(QT);
   

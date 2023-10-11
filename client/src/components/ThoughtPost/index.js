@@ -9,9 +9,10 @@ import { idbPromise } from '../../utils/helpers';
 
 const ThoughtPost = (thought) => {
 
-
-
   return (
+    <>
+      <p> Thought post</p>
+      </>
 
   );
 };
