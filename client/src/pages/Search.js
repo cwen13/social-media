@@ -1,5 +1,3 @@
-// search forms
-
 function Search() {
   return (
       <>

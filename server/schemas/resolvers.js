@@ -1,5 +1,5 @@
 const { AuthenticationError } = require('apollo-server-express');
-const {User,Friend,Thought,Comment} = require("./../models");
+const { User,Friend,Thought,Comment } = require("./../models");
 const { signToken } = require('../utils/auth');
  
 const resolvers = {

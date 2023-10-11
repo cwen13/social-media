@@ -1,4 +1,4 @@
-// file to display the most recent thoughts
+import React from "react";
 
 const RecentThoughts = () => {
 
