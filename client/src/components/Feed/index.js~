@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+//Need to get thougts and put them in here
+=======
+>>>>>>> 7dcd34c0d3876126606d0b166b0e98d335509fc0
 
 const Feed = () => {
 

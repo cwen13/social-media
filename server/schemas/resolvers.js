@@ -10,7 +10,7 @@ const resolvers = {
     },
 
     // FUNCTIONING
-    users: async (parent, args)/*, context)*/ => {
+    getUsers: async (parent, args)/*, context)*/ => {
       return await User.findAll();
     },
 
@@ -19,7 +19,8 @@ const resolvers = {
       return await User.findOne({where: {id}});
     },
 
-    getThoughts: async(parent, args) => {
+    getThoughts: async(parent, props) => {
+
       return await Thought.findAll();
     },
 
@@ -34,10 +35,11 @@ const resolvers = {
   },
   Mutation: {
     // FUNCTIONING -- NEED TO RETURN SOMETHING
+
     addUser: async (parent, {id, username, firstName, lastName, email, password}, context) => {
       const update = await User.create(
 	{
-	  username,
+	  userName,
 	  firstName,
 	  lastName,
 	  email,
@@ -52,7 +54,7 @@ const resolvers = {
     
     updateUser: async (parent, {id, userName, firstName, lastName, email, password})/*, context)*/ => {
       return await User.update({
-	username,
+	userName,
 	firstName,
 	lastName,
 	email,

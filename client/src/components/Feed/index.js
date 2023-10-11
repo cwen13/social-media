@@ -31,10 +31,16 @@ const Feed = (props) => {
   }
   
   return (
-      <>
-      <p> The feed</p>
-      </>
+    <div className="feed">
+	{/* render out the thought */}
+      {usersData.map((thought) => (
+	<ThoughtPost key={thought.key}
+		     thought={thought.thought}
+		     info={thought.info}
+	/>
+      ))}
+    </div>
   );
 };
-
+  
 export default Feed;
