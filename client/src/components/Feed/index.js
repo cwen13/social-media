@@ -6,7 +6,6 @@ import { getRandom } from "./../../utils/helpers";
 import ThoughtPost from "./../ThoughtPost/"
 import { QUERY_THOUGHTS } from "./../../utils/queries";
 
-
 const QT = gql`
 query getThoughts{
   getThoughts {
@@ -16,8 +15,6 @@ query getThoughts{
   }
 }
 `;
-
-
 //Need to get thougts and put them in here
 const Feed = () => {
   const { loading, error, data } =  useQuery(QT);
