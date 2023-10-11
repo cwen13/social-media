@@ -4,7 +4,8 @@ const { signToken } = require('../utils/auth');
  
 const resolvers = {
   Query: {
-    me: async (parent, args)/*, context)*/ => {
+    me: async (parent, args, context) => {
+      console.log(context);
       return await User.findOne({id: context.user.id});
     },
 
@@ -19,18 +20,23 @@ const resolvers = {
     },
 
     getThoughts: async(parent, props) => {
+
       return await Thought.findAll();
     },
 
     // FUNCTIONING
-    userThoughts: async (parent, {userId})/*, context)*/ => {
-      return await Thought.findAll({where: {userId}});
+    userThoughts: async (parent, args, context) => {
+      if (context.user) {
+	return await Thought.findAll({where: {id: context.user.id}});
+      }
+      throw new AuthorizationError("Not logged in");
     }
 
   },
   Mutation: {
     // FUNCTIONING -- NEED TO RETURN SOMETHING
-    addUser: async (parent, {id, userName, firstName, lastName, email, password})/*, context)*/ => {
+
+    addUser: async (parent, {id, username, firstName, lastName, email, password}, context) => {
       const update = await User.create(
 	{
 	  userName,
@@ -42,8 +48,8 @@ const resolvers = {
 	{
 	  returning: true,
 	});
-      
-      return update;
+      const token = signToken(update);
+      return { token, update };
     },
     
     updateUser: async (parent, {id, userName, firstName, lastName, email, password})/*, context)*/ => {

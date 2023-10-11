@@ -9,7 +9,8 @@ const MainFeed = (props) => {
 	<section className="mainFeed">
 	  <ul>
 	    <li> <UserInfo /> </li>
-	    <li> <Feed thoughts={props.thoughts}/> </li>
+	    <li> <Feed /> </li>
+
 	    <li> <RecentThoughts /> </li>
 	  </ul>
 	</section>
