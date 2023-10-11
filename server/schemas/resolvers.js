@@ -34,7 +34,11 @@ const resolvers = {
   },
   Mutation: {
     // FUNCTIONING -- NEED TO RETURN SOMETHING
+<<<<<<< Updated upstream
     addUser: async (parent, {id, username, firstName, lastName, email, password}, context) => {
+=======
+    addUser: async (parent, {id, userName, firstName, lastName, email, password}) => {
+>>>>>>> Stashed changes
       const update = await User.create(
 	{
 	  username,

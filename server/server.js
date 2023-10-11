@@ -18,6 +18,10 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 // Serve up static assets
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
@@ -26,6 +30,7 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
   });
 }
+
 
 // Create a new instance of an Apollo server with the GraphQL schema
 const startApolloServer = async (typeDefs, resolvers) => {

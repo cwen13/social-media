@@ -1,5 +1,24 @@
 import React from "react";
 
+<<<<<<< Updated upstream
+=======
+import ThoughtPost from "./../ThoughtPost/"
+import { QUERY_THOUGHTS } from "./../../utils/queries";
+
+
+const QT = gql`
+query getThoughts{
+  getThoughts {
+    id
+    userId
+    content
+  }
+}
+`;
+
+
+//Need to get thougts and put them in here
+>>>>>>> Stashed changes
 const Feed = (props) => {
   const { loading, error, data } =  useQuery(QT);
   
