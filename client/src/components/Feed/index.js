@@ -1,9 +1,5 @@
-//Need to get thougts and put them in here
-<<<<<<< Updated upstream
+import React from "react";
 
-const Feed = () => {
-
-=======
 const Feed = (props) => {
   const { loading, error, data } =  useQuery(QT);
   
@@ -22,7 +18,6 @@ const Feed = (props) => {
     );
   }
   
->>>>>>> Stashed changes
   return (
       <>
       <p> The feed</p>

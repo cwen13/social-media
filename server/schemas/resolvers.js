@@ -19,13 +19,10 @@ const resolvers = {
       return await User.findOne({where: {id}});
     },
 
-<<<<<<< Updated upstream
-=======
     getThoughts: async(parent, args) => {
       return await Thought.findAll();
     },
 
->>>>>>> Stashed changes
     // FUNCTIONING
     userThoughts: async (parent, args, context) => {
       if (context.user) {
@@ -37,11 +34,7 @@ const resolvers = {
   },
   Mutation: {
     // FUNCTIONING -- NEED TO RETURN SOMETHING
-<<<<<<< Updated upstream
-    addUser: async (parent, {id, username, firstName, lastName, email, password})/*, context)*/ => {
-=======
-    addUser: async (parent, {id, userName, firstName, lastName, email, password}) => {
->>>>>>> Stashed changes
+    addUser: async (parent, {id, username, firstName, lastName, email, password}, context) => {
       const update = await User.create(
 	{
 	  username,

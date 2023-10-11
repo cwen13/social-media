@@ -7,15 +7,6 @@ import UserInfo from "./../components/UserInfo";
 
 const MainFeed = () => {
   return(
-<<<<<<< Updated upstream
-	<Container fluid>
-	  <Row>
-	    <Col> <UserInfo /> </Col>
-	    <Col> <Feed /> </Col>
-	    <Col> <RecentThoughts /> </Col>
-	  </Row>
-	</Container>
-=======
 	<section className="mainFeed">
 	  <ul>
 	    <li> <UserInfo /> </li>
@@ -23,7 +14,6 @@ const MainFeed = () => {
 	    <li> <RecentThoughts /> </li>
 	  </ul>
 	</section>
->>>>>>> Stashed changes
   );
 
 };
