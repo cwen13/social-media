@@ -7,7 +7,7 @@ export const QUERY_ME = gql`
       id
     }
   }
-`
+`;
 
 export const QUERY_USERS = gql`
   query getUsers {
@@ -18,6 +18,17 @@ export const QUERY_USERS = gql`
       email
     }
   }
+`;
+
+export const QUERY_USER = gql`
+  query getUser ($userId: ID!) {
+    user (id: $userId) {
+      userName
+      firstName
+      lastName
+      email
+    }
+}
 `;
 
 export const QUERY_THOUGHTS = gql`
@@ -47,4 +58,4 @@ query getUserFriends($userId: ID!) {
     sent
   }
 }
-`
+`;

@@ -1,12 +1,12 @@
 // grapql mutations
 import { gql } from '@apollo/client';
 
-export const LOGIN = gql`
+export const LOGIN_USER = gql`
   mutation login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       token
       user {
-        _id
+        id
       }
     }
   }
@@ -27,7 +27,7 @@ export const ADD_USER = gql`
     ) {
       token
       user {
-        _id
+        id
       }
     }
   }
@@ -65,7 +65,7 @@ user {
 }
  }
 }
-`
+`;
 
 export const ADD_THOUGHT = gql`
   mutation addThought($thought: [ID]!) {
@@ -88,8 +88,7 @@ thought {
       }
   }
 }
-
-`
+`;
 
 export const ADD_COMMENT = gql`
 mutation addComment($userId: ID!
@@ -104,7 +103,7 @@ comment {
 }
 }
 }
-`
+`;
 
 export const UPDATE_COMMENT = gql`
 mutation updateComment($userId: ID!
@@ -119,7 +118,7 @@ comment {
 }
 }
 }
-`
+`;
 
 export const ADD_FRIEND = gql`
 mutation addFriend($userId: ID!
@@ -135,7 +134,7 @@ mutation addFriend($userId: ID!
     }
   }
 }
-`
+`;
 
 export const REMOVE_FRIEND = gql`
 mutation removeFriend($friendshipId: ID!) {
@@ -145,5 +144,5 @@ mutation removeFriend($friendshipId: ID!) {
     }
   }
 }
-`
+`;
 
