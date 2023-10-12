@@ -7,8 +7,8 @@ import ThoughtPost from "./../ThoughtPost/"
 import { QUERY_THOUGHTS } from "./../../utils/queries";
 
 const QT = gql`
-query getThoughts{
-  getThoughts {
+query getAllThoughts{
+  getAllThoughts {
     id
     userId
     content
@@ -23,7 +23,7 @@ const Feed = () => {
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;
   
-  console.log("data:", data.getThoughts);
+  console.log("data:", data.getAllThoughts);
 
   const renderThought = (thought) => {
     return (    	
@@ -36,7 +36,7 @@ const Feed = () => {
   
   return (
     <div className="feed">
-      {(data.getThoughts).map(renderThought)}
+      {(data.getAllThoughts).map(renderThought)}
       
       Here is a little text
     </div>

@@ -10,22 +10,29 @@ const resolvers = {
     },
 
     // FUNCTIONING
-    getUsers: async (parent, args)/*, context)*/ => {
+    getUsers: async (parent, args, context) => {
       return await User.findAll();
     },
 
     // FUNCTIONING
-    user: async (parent, {id})/*, context)*/ => {
-      return await User.findOne({where: {id}});
+    user: async (parent, args, context) => {
+      return await User.findOne({where: {id: context.user.id}});
     },
 
-    getThoughts: async(parent, props) => {
+    getThought: async(parent, { id }, context) => {
+      return await Thought.findByPk({id});
+    },
 
+    getAllThoughts: async(parent, args) => {
       return await Thought.findAll();
     },
 
+    getUserThoughts: async (parent, { userId }, context) => {
+      return await Thought.findAll({where: {id: userId} });
+    },
+    
     // FUNCTIONING
-    userThoughts: async (parent, args, context) => {
+    getMyThoughts: async (parent, args, context) => {
       if (context.user) {
 	return await Thought.findAll({where: {id: context.user.id}});
       }
@@ -37,7 +44,7 @@ const resolvers = {
     // FUNCTIONING -- NEED TO RETURN SOMETHING
 
     addUser: async (parent, {id, username, firstName, lastName, email, password}, context) => {
-      const update = await User.create(
+      const newUser = await User.create(
 	{
 	  userName,
 	  firstName,
@@ -48,11 +55,11 @@ const resolvers = {
 	{
 	  returning: true,
 	});
-      const token = signToken(update);
-      return { token, update };
+      const token = signToken(newUser);
+      return { token, newUser };
     },
     
-    updateUser: async (parent, {id, userName, firstName, lastName, email, password})/*, context)*/ => {
+    updateUser: async (parent, {id, userName, firstName, lastName, email, password}, context) => {
       return await User.update({
 	userName,
 	firstName,
@@ -62,11 +69,11 @@ const resolvers = {
       });
     },
   
-    deleteUser: async (parent, {id})/*, context)*/ => {
+    deleteUser: async (parent, {id}, context) => {
       return await User.destroy({where: {id}});
     },
 
-    login: async (parent, {email, password})/*, context)*/ => {
+    login: async (parent, {email, password}, context) => {
       const user = await User.findOne({ where: { email } });
       if (!user) {
         throw new AuthenticationError("There is no user of that email");
@@ -79,27 +86,48 @@ const resolvers = {
       return { token, user };
     },
     
-    addThought: async (parent, {userId, content})/*, context)*/ => {
-      return Thought.create( {userId, content});  
+    addThought: async (parent,{ content }, context) => {
+      if (context.user) {
+	let theThought = Thought.findByPk(thoughtId);
+	let thoughtUser = thethought.dataValues.userId;
+	if (context.user.id === thoughtUser) {
+	  return await Thought.create( {userId: context.user.id, content});
+	} else {
+	  //Ned to replace with different error
+	  throw new AuthenticationError("You are not this thought's owner");
+	}
+      }
+      throw new AuthenticationError("You are not logged in");
+
     },
     
-    updateThought: async (parent, {id, content})/*, context)*/ => {
-      return await Thought.update({content}, {where: {id}});
+    updateThought: async (parent, {thoughtId,content}, context) => {
+      if (context.user) {
+	let theThought = Thought.findByPk(thoughtId);
+	let thoughtUser = thethought.dataValues.userId;
+	if (context.user.id === thoughtUser) {
+	  return await Thought.update({content}, {where: {userId: context.user.id}});
+	} else {
+	  //Ned to replace with different error
+	  throw new AuthenticationError("You are not this thought's owner");
+	}
+      }
+      throw new AuthenticationError("You are not logged in");
     },
 
-    addComment: async (parent, {userId, thoughtId, comment})/*, context)*/ => {
+    addComment: async (parent, {userId, thoughtId, comment}, context) => {
       return await Comment.create({userId, thoughtId, comment});
     },
 
-    updateComment: async (parent, {id, comment})/*, context)*/ => {
+    updateComment: async (parent, {id, comment}, context) => {
       return await Comment.update({ comment}, {where: {id}});
     },
 
-    addFriend: async (parent, {userId, friendId, sent})/*, context)*/ => {
+    addFriend: async (parent, {userId, friendId, sent}, context) => {
       return await Friend.create({userId, friendId, sent});
     },
 
-    removeFriend: async (parent, {id})/*, context)*/ => {
+    removeFriend: async (parent, {id}, context) => {
       return await Friend.destroy({id});
     },
   }
