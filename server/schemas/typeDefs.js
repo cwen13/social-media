@@ -39,8 +39,10 @@ type Query {
     me: User!
     getUsers: [User]!
     user(id: ID!): User!
-    getThoughts: [Thought]!
-    userThoughts(userId: ID!): [Thought]!
+    getThought(id: ID!): Thought
+    getAllThoughts: [Thought]!
+    getUserThoughts(userId: ID!): [Thought]!
+    getMyThoughts: [Thought]!
     friends: [User]
 }
 

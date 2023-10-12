@@ -16,7 +16,7 @@ import './App.css';
 import MainFeed from "./pages/MainFeed";
 
 import Login from "./pages/Login";
-import Signup from "./pages/Signup";
+import SignUp from "./pages/SignUp";
 import UserFeed from "./pages/UserFeed";
 import UserProfile from "./pages/UserProfile";
 import Search from "./pages/Search";
@@ -62,7 +62,7 @@ const App = ()=> {
             />
             <Route 
               path="/signup" 
-              element={<Signup />} 
+              element={<SignUp />} 
             />
 	    <Route
 	      path="/user/:userId"
