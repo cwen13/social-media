@@ -6,7 +6,6 @@ import { QUERY_ME } from './../../utils/queries';
 const UserInfo = () => {
 
   const { loading, error, data } = useQuery(QUERY_ME);
-  console.log("Mydata:", data);
 
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;

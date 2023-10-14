@@ -40,9 +40,8 @@ const resolvers = {
 
   },
   Mutation: {
-    // FUNCTIONING -- NEED TO RETURN SOMETHING
-
-    addUser: async (parent, {id, username, firstName, lastName, email, password}, context) => {
+    // FUNCTIONING
+    addUser: async (parent, { userName, firstName, lastName, email, password }, context) => {
       const newUser = await User.create(
 	{
 	  userName,
@@ -58,14 +57,14 @@ const resolvers = {
       return { token, newUser };
     },
     
-    updateUser: async (parent, {id, userName, firstName, lastName, email, password}, context) => {
-      return await User.update({
-	userName,
-	firstName,
-	lastName,
-	email,
-	password
-      });
+    updateUser: async (parent, { userName, firstName, lastName, email, password}, context) => {
+      return await User.update({where: { id: context.user.id},
+				variables: { userName,
+					     firstName,
+					     lastName,
+					     email,
+					     password
+					   }});
     },
   
     deleteUser: async (parent, {id}, context) => {

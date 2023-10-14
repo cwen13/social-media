@@ -2,9 +2,6 @@ import React from "react";
 import Feed from "./../components/Feed/"
 import RecentThoughts from "./../components/RecentThoughts/"
 import UserInfo from "./../components/UserInfo";
-import SignUp from "./../components/SignUpForm";
-
-
 
 const MainFeed = (props) => {
 
