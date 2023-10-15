@@ -4,41 +4,23 @@ import { QUERY_USERS, QUERY_USER_THOUGHTS } from "./../../utils/queries";
 import { getRandom } from "./../../utils/helpers";
 
 import ThoughtPost from "./../ThoughtPost/"
-import { QUERY_THOUGHTS } from "./../../utils/queries";
+import { QUERY_ALL_THOUGHTS } from "./../../utils/queries";
 
-const QT = gql`
-query getAllThoughts{
-  getAllThoughts {
-    id
-    userId
-    content
-  }
-}
-`;
-//Need to get thougts and put them in here
 const Feed = () => {
-  const { loading, error, data } =  useQuery(QT);
+  const { loading, error, data } =  useQuery(QUERY_ALL_THOUGHTS);
   var key = 0;
   
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;
   
-  console.log("data:", data.getAllThoughts);
+//  console.log("data:", data.getAllThoughts);
 
-  const renderThought = (thought) => {
-    return (    	
-      <div className="thought" key={thought.id}>
-	  <p>User: {thought.userId}</p>
-	  <p>Thought: {thought.content}</p>
-	</div>
-    );
-  }
+  console.log(data.getAllThoughts);
   
   return (
     <div className="feed">
-      {(data.getAllThoughts).map(renderThought)}
-      
-      Here is a little text
+      {(data.getAllThoughts).map(thought => <ThoughtPost thought={thought.content}
+							 userId={thought.userId} />)}
     </div>
   );
 };

@@ -4,9 +4,10 @@ const { signToken } = require('../utils/auth');
  
 const resolvers = {
   Query: {
-    me: async (parent, args, context) => {
-      console.log(context);
-      return await User.findOne({id: context.user.id});
+    me: async (parent, args, context ) => {
+      console.log(context.user);
+      if (!context.user) return null;
+      return await User.findOne({ where: { id: context.user.id } });
     },
 
     // FUNCTIONING
@@ -41,9 +42,8 @@ const resolvers = {
 
   },
   Mutation: {
-    // FUNCTIONING -- NEED TO RETURN SOMETHING
-
-    addUser: async (parent, {id, username, firstName, lastName, email, password}, context) => {
+    // FUNCTIONING
+    addUser: async (parent, { userName, firstName, lastName, email, password }, context) => {
       const newUser = await User.create(
 	{
 	  userName,
@@ -59,14 +59,14 @@ const resolvers = {
       return { token, newUser };
     },
     
-    updateUser: async (parent, {id, userName, firstName, lastName, email, password}, context) => {
-      return await User.update({
-	userName,
-	firstName,
-	lastName,
-	email,
-	password
-      });
+    updateUser: async (parent, { userName, firstName, lastName, email, password}, context) => {
+      return await User.update({where: { id: context.user.id},
+				variables: { userName,
+					     firstName,
+					     lastName,
+					     email,
+					     password
+					   }});
     },
   
     deleteUser: async (parent, {id}, context) => {

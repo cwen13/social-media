@@ -43,10 +43,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-
-
 const App = ()=> {
-  // this is casusing an invariant error
   return (
     <ApolloProvider client={client}>
       <Router>

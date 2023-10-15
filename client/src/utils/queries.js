@@ -5,10 +5,13 @@ export const QUERY_ME = gql`
   query me {
     me {
       id
+      userName
+      firstName
+      email
     }
   }
 `
-
+;
 export const QUERY_USERS = gql`
   query getUsers {
     user {
@@ -20,9 +23,21 @@ export const QUERY_USERS = gql`
   }
 `;
 
-export const QUERY_THOUGHTS = gql`
-  query getThoughts {
-    getThoughts {
+export const QUERY_USER = gql`
+  query getUser ($userId: ID!) {
+    user (id: $userId) {
+      userName
+      firstName
+      lastName
+      email
+    }
+}
+`;
+
+export const QUERY_ALL_THOUGHTS = gql`
+  query getAllThoughts {
+    getAllThoughts {
+      id
       userId
       content
     }
@@ -47,4 +62,4 @@ query getUserFriends($userId: ID!) {
     sent
   }
 }
-`
+`;

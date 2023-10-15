@@ -36,7 +36,7 @@ type Auth {
 }
 
 type Query {
-    me: User!
+    me: User
     getUsers: [User]!
     user(id: ID!): User!
     getThought(id: ID!): Thought
