@@ -12,21 +12,22 @@ type User {
 
 type Friend {
   id : ID!
-  userId: String!
-  friendId: String!
+  userId: ID!
+  friendId: ID!
   sent: String!
 }
 
 type Thought {
   id: ID!
-  userId: String!
+  userId: ID!
   content: String!
+  user: User!
 }
 
 type Comment {
   id: ID!
-  userId: String!
-  thoughtId: String!
+  userId: ID!
+  thoughtId: ID!
   comment: String!
 }
 

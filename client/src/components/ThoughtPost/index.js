@@ -10,8 +10,9 @@ const ThoughtPost = (props) => {
   
   return (
     <section className="thought">
-      <p>Thought: {props.thought}</p>
+      <p>UserName: {props.userName} </p>
       <p>Info: {props.userId}</p>
+      <p>Thought: {props.thought}</p>
       </section>
 
   );

@@ -22,7 +22,7 @@ Comment.belongsTo(Thought, {
 
 
 User.belongsToMany(User, {
-//  foreignKey: "id",
+  foreignKey: "userId",
   as: "friendship",
   through: Friend
 });

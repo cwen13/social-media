@@ -13,14 +13,24 @@ const Feed = () => {
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;
   
-//  console.log("data:", data.getAllThoughts);
+  console.log("data:", data.getAllThoughts);
 
-  console.log(data.getAllThoughts);
+  var key = 0;
+  const renderThought = (thought) => {
+    return (    	
+      <div className="thought" key={thought.id}>
+	  <p>User: {thought.userId}</p>
+	  <p>Thought: {thought.content}</p>
+	</div>
+    );
+  }
   
   return (
     <div className="feed">
-      {(data.getAllThoughts).map(thought => <ThoughtPost thought={thought.content}
-							 userId={thought.userId} />)}
+      {(data.getAllThoughts).map(thought => <ThoughtPost userName={thought.user.userName}
+							 thought={thought.content}
+							 userId={thought.userId}
+							 key={key++}/>)}
     </div>
   );
 };

@@ -6,8 +6,7 @@ const resolvers = {
   Query: {
     me: async (parent, args, context ) => {
       console.log(context.user);
-      if (!context.user) return null;
-      return await User.findOne({ where: { id: context.user.id } });
+      return !context.user ?  null : await User.findOne({ where: { id: context.user.id } });
     },
 
     // FUNCTIONING
@@ -21,11 +20,12 @@ const resolvers = {
     },
 
     getThought: async(parent, { id }, context) => {
-      return await Thought.findByPk({id});
+      return await Thought.findByPk({ id });
     },
 
-    getAllThoughts: async(parent, args) => {
-      return await Thought.findAll();
+    getAllThoughts: async(parent, args, context) => {
+      let thoughts = await Thought.findAll({include: { model: User}});
+      return thoughts;
     },
 
     getUserThoughts: async (parent, { userId }, context) => {
@@ -34,9 +34,7 @@ const resolvers = {
     
     // FUNCTIONING
     getMyThoughts: async (parent, args, context) => {
-      if (context.user) {
-	return await Thought.findAll({where: {id: context.user.id}});
-      }
+      if (context.user) return await Thought.findAll({where: {id: context.user.id}});
       throw new AuthorizationError("Not logged in");
     }
 
@@ -44,7 +42,7 @@ const resolvers = {
   Mutation: {
     // FUNCTIONING
     addUser: async (parent, { userName, firstName, lastName, email, password }, context) => {
-      const newUser = await User.create(
+      const update = await User.create(
 	{
 	  userName,
 	  firstName,
@@ -55,8 +53,8 @@ const resolvers = {
 	{
 	  returning: true,
 	});
-      const token = signToken(newUser);
-      return { token, newUser };
+      const token = signToken(update);
+      return { token, update };
     },
     
     updateUser: async (parent, { userName, firstName, lastName, email, password}, context) => {
@@ -73,6 +71,7 @@ const resolvers = {
       return await User.destroy({where: {id}});
     },
 
+    // FUNCTIONING
     login: async (parent, {email, password}, context) => {
       const user = await User.findOne({ where: { email } });
       if (!user) {
