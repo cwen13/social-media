@@ -7,10 +7,11 @@ import { idbPromise } from '../../utils/helpers';
 
 const ThoughtPost = (props) => {
 
+  
   return (
     <section className="thought">
       <p>Thought: {props.thought}</p>
-      <p>Info: {props.info}</p>
+      <p>Info: {props.userId}</p>
       </section>
 
   );

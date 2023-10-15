@@ -5,15 +5,12 @@ import { QUERY_ME } from './../../utils/queries';
 
 const UserInfo = () => {
 
-  console.log(React);
-
   const { loading, error, data } = useQuery(QUERY_ME);
-  
-  let userMe = data===null ? data.me : { userName: "Luky",
-			       firstName:"Lucky",
-			       email:"licky@we.com" };
 
-  console.log(userMe);
+  // errors out with data as undefined if only use ==
+  let userMe = data === null ? data.me : { userName: "Luky",
+					   firstName:"Lucky",
+					   email:"licky@we.com" };
   
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;

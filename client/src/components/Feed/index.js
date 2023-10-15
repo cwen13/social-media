@@ -15,18 +15,12 @@ const Feed = () => {
   
 //  console.log("data:", data.getAllThoughts);
 
-  const renderThought = (thought) => {
-    return (    	
-      <div className="thought" key={thought.id}>
-	  <p>User: {thought.userId}</p>
-	  <p>Thought: {thought.content}</p>
-	</div>
-    );
-  }
+  console.log(data.getAllThoughts);
   
   return (
     <div className="feed">
-      {(data.getAllThoughts).map(renderThought)}
+      {(data.getAllThoughts).map(thought => <ThoughtPost thought={thought.content}
+							 userId={thought.userId} />)}
     </div>
   );
 };
