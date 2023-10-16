@@ -40,6 +40,9 @@ export const QUERY_ALL_THOUGHTS = gql`
       id
       userId
       content
+      user {
+        userName
+      }
     }
   }
 `;

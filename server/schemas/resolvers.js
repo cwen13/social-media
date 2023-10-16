@@ -6,8 +6,8 @@ const resolvers = {
   Query: {
     me: async (parent, args, context ) => {
       console.log(context.user);
-      if (!context.user) return null;
-      return await User.findOne({ where: { id: context.user.id } });
+      return !context.user ? null : await User.findOne({ where:
+							  { id: context.user.id } });
     },
 
     // FUNCTIONING
@@ -24,12 +24,14 @@ const resolvers = {
       return await Thought.findByPk({id});
     },
 
-    getAllThoughts: async(parent, args) => {
-      return await Thought.findAll();
+    getAllThoughts: async(parent, args, context) => {
+      return await Thought.findAll({ include:
+				     { model: User }});
     },
 
     getUserThoughts: async (parent, { userId }, context) => {
-      return await Thought.findAll({where: {id: userId} });
+      return await Thought.findAll( { where:
+				      { id: userId }});
     },
     
     // FUNCTIONING
