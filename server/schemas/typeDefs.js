@@ -12,27 +12,28 @@ type User {
 
 type Friend {
   id : ID!
-  userId: String!
-  friendId: String!
+  userId: ID!
+  friendId: ID!
   sent: String!
 }
 
 type Thought {
   id: ID!
-  userId: String!
+  userId: ID!
   content: String!
+  user: User
 }
 
 type Comment {
   id: ID!
-  userId: String!
-  thoughtId: String!
+  userId: ID!
+  thoughtId: ID!
   comment: String!
 }
 
 type Auth {
   token: ID!
-  user: User
+  user: User!
 }
 
 type Query {
@@ -63,7 +64,7 @@ type Mutation {
     updateComment(id: ID!, comment: String!): Comment
     removeFriend(friendId: ID!): Friend
     deleteUser(userId: ID!): User
-    addThought(userId: ID!, content: String!): Thought
+    addThought(userId: ID!, content: String!): Thought!
     addComment(thoughtId: ID!, userId: ID!, comment: String!): Comment
     addFriend(userId: ID!, friendId: ID! sent: String! ): Friend
 }
