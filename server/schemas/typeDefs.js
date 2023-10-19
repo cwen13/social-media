@@ -64,7 +64,7 @@ type Mutation {
     updateComment(id: ID!, comment: String!): Comment
     removeFriend(friendId: ID!): Friend
     deleteUser(userId: ID!): User
-    addThought(userId: ID!, content: String!): Thought
+    addThought(userId: ID!, content: String!): Thought!
     addComment(thoughtId: ID!, userId: ID!, comment: String!): Comment
     addFriend(userId: ID!, friendId: ID! sent: String! ): Friend
 }

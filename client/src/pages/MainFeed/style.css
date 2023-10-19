@@ -1,12 +1,17 @@
 #feed {
-  width: 50rem;
+  width: 48%;
 }
 
 #mainFeed {
-  width: 90rem;
+  width: 100%;
 }
 
-#mainFeed ul {
-  width: 90rem;
+#mainFeed .mainPage {
+  width: 100%;
+  display: flex;
+  flex-direction:row;
 }
 
+#userInfo {
+  width: 15%;
+}

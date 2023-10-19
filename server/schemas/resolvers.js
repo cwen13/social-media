@@ -5,7 +5,7 @@ const { signToken } = require('../utils/auth');
 const resolvers = {
   Query: {
     me: async (parent, args, context ) => {
-      console.log(context.user);
+      console.log("CONTEXT:", context.user);
       return !context.user ? null : await User.findOne({ where:
 							  { id: context.user.id } });
     },
@@ -88,22 +88,17 @@ const resolvers = {
       return { token, user };
     },
     
-    addThought: async (parent,{ content }, context) => {
+    addThought: async (parent, { content }, context) => {
+      console.log("IN the adder");
       if (context.user) {
-	let theThought = Thought.findByPk(thoughtId);
-	let thoughtUser = thethought.dataValues.userId;
-	if (context.user.id === thoughtUser) {
-	  return await Thought.create( {userId: context.user.id, content});
-	} else {
-	  //Ned to replace with different error
-	  throw new AuthenticationError("You are not this thought's owner");
-	}
+	return await Thought.create( {userId: context.user.id, content});
+      } else {
+	//Need to replace with different error
+	throw new AuthenticationError("You are not this thought's owner");
       }
-      throw new AuthenticationError("You are not logged in");
-
     },
     
-    updateThought: async (parent, {thoughtId,content}, context) => {
+    updateThought: async (parent, { thoughtId, content }, context) => {
       if (context.user) {
 	let theThought = Thought.findByPk(thoughtId);
 	let thoughtUser = thethought.dataValues.userId;

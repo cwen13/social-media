@@ -8,8 +8,6 @@ import "./style.css";
 
 const ThoughtPost = (props) => {
 
-  console.log(props);
-  
   return (
     <section className="entry">
       <div className="headliner">
@@ -21,10 +19,11 @@ const ThoughtPost = (props) => {
       </div>
       <div className="thought">
 	Thought: {props.thought}
-      </div>
+      </div> 
+      { props.edit ? <button >EDIT!</button> : <div></div>}
       </section>
 
   );
 };
 
-export default ThoughtPost
+export default ThoughtPost;
