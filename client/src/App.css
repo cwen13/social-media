@@ -38,7 +38,7 @@ ul {
 }
 
 ul li {
-  border: 0.25rem solid red;
+  border: 0.125rem solid red;
 }
 
 @keyframes App-logo-spin {
