@@ -1,100 +1,245 @@
 [
   {
-    "userName": "johndoe32",
+    "id": 1,
+    "userName": "john_doe1",
+    "handle": "@johndoe1",
     "firstName": "John",
     "lastName": "Doe",
-    "email": "johndoe32@example.com",
-    "password": "password123"
+    "email": "johndoe1@example.com",
+    "password": "secretpassword1"
   },
   {
-    "userName": "janedoe94",
-    "firstName": "Jane",
-    "lastName": "Doe",
-    "email": "janedoe94@example.com",
-    "password": "password456"
-  },
-  {
-    "userName": "mike.smith87",
-    "firstName": "Mike",
+    "id": 2,
+    "userName": "alice_smith",
+    "handle": "@alicesmith",
+    "firstName": "Alice",
     "lastName": "Smith",
-    "email": "mike.smith87@example.com",
-    "password": "password789"
+    "email": "alicesmith@example.com",
+    "password": "secretpassword2"
   },
   {
-    "userName": "sarahb123",
-    "firstName": "Sarah",
-    "lastName": "Baker",
-    "email": "sarahb123@example.com",
-    "password": "passwordabc"
-  },
-  {
-    "userName": "matt.jackson23",
-    "firstName": "Matt",
-    "lastName": "Jackson",
-    "email": "matt.jackson23@example.com",
-    "password": "passworddef"
-  },
-  {
-    "userName": "lisa_miller81",
-    "firstName": "Lisa",
-    "lastName": "Miller",
-    "email": "lisa_miller81@example.com",
-    "password": "passwordghi"
-  },
-  {
-    "userName": "adam.taylor29",
-    "firstName": "Adam",
-    "lastName": "Taylor",
-    "email": "adam.taylor29@example.com",
-    "password": "passwordjkl"
-  },
-  {
-    "userName": "amanda_cole12",
-    "firstName": "Amanda",
-    "lastName": "Cole",
-    "email": "amanda_cole12@example.com",
-    "password": "passwordmno"
-  },
-  {
-    "userName": "benjohnson63",
-    "firstName": "Ben",
+    "id": 3,
+    "userName": "bob_johnson",
+    "handle": "@bobjohnson",
+    "firstName": "Bob",
     "lastName": "Johnson",
-    "email": "benjohnson63@example.com",
-    "password": "passwordpqr"
+    "email": "bobjohnson@example.com",
+    "password": "secretpassword3"
   },
   {
-    "userName": "ashley_brown42",
-    "firstName": "Ashley",
-    "lastName": "Brown",
-    "email": "ashley_brown42@example.com",
-    "password": "passwordstu"
+    "id": 4,
+    "userName": "susan_wilson",
+    "handle": "@susanwilson",
+    "firstName": "Susan",
+    "lastName": "Wilson",
+    "email": "susanwilson@example.com",
+    "password": "secretpassword4"
   },
   {
-    "userName": "jason_simpson27",
-    "firstName": "Jason",
-    "lastName": "Simpson",
-    "email": "jason_simpson27@example.com",
-    "password": "passwordvwx"
-  },
-  {
-    "userName": "marywilliams99",
-    "firstName": "Mary",
-    "lastName": "Williams",
-    "email": "marywilliams99@example.com",
-    "password": "passwordyz1"
-  },
-  {
-    "userName": "chris.miller88",
-    "firstName": "Chris",
+    "id": 5,
+    "userName": "david_miller",
+    "handle": "@davidmiller",
+    "firstName": "David",
     "lastName": "Miller",
-    "email": "chris.miller88@example.com",
-    "password": "password234"
+    "email": "davidmiller@example.com",
+    "password": "secretpassword5"
   },
   {
-    "userName": "emily_jones63",
+    "id": 6,
+    "userName": "linda_anderson",
+    "handle": "@lindaanderson",
+    "firstName": "Linda",
+    "lastName": "Anderson",
+    "email": "lindaanderson@example.com",
+    "password": "secretpassword6"
+  },
+  {
+    "id": 7,
+    "userName": "james_thompson",
+    "handle": "@jamesthompson",
+    "firstName": "James",
+    "lastName": "Thompson",
+    "email": "jamesthompson@example.com",
+    "password": "secretpassword7"
+  },
+  {
+    "id": 8,
+    "userName": "mary_davis",
+    "handle": "@marydavis",
+    "firstName": "Mary",
+    "lastName": "Davis",
+    "email": "marydavis@example.com",
+    "password": "secretpassword8"
+  },
+  {
+    "id": 9,
+    "userName": "robert_clark",
+    "handle": "@robertclark",
+    "firstName": "Robert",
+    "lastName": "Clark",
+    "email": "robertclark@example.com",
+    "password": "secretpassword9"
+  },
+  {
+    "id": 10,
+    "userName": "emily_martin",
+    "handle": "@emilymartin",
     "firstName": "Emily",
+    "lastName": "Martin",
+    "email": "emilymartin@example.com",
+    "password": "secretpassword10"
+  },
+  {
+    "id": 11,
+    "userName": "michael_wilson",
+    "handle": "@michaelwilson",
+    "firstName": "Michael",
+    "lastName": "Wilson",
+    "email": "michaelwilson@example.com",
+    "password": "secretpassword11"
+  },
+  {
+    "id": 12,
+    "userName": "jennifer_brown",
+    "handle": "@jenniferbrown",
+    "firstName": "Jennifer",
+    "lastName": "Brown",
+    "email": "jenniferbrown@example.com",
+    "password": "secretpassword12"
+  },
+  {
+    "id": 13,
+    "userName": "william_davis",
+    "handle": "@williamdavis",
+    "firstName": "William",
+    "lastName": "Davis",
+    "email": "williamdavis@example.com",
+    "password": "secretpassword13"
+  },
+  {
+    "id": 14,
+    "userName": "laura_johnson",
+    "handle": "@laurajohnson",
+    "firstName": "Laura",
+    "lastName": "Johnson",
+    "email": "laurajohnson@example.com",
+    "password": "secretpassword14"
+  },
+  {
+    "id": 16,
+    "userName": "sarah_wilson",
+    "handle": "@sarahwilson",
+    "firstName": "Sarah",
+    "lastName": "Wilson",
+    "email": "sarahwilson@example.com",
+    "password": "secretpassword16"
+  },
+  {
+    "id": 17,
+    "userName": "samuel_jones",
+    "handle": "@samueljones",
+    "firstName": "Samuel",
     "lastName": "Jones",
-    "email": "emily_jones63@example.com",
-    "password": "password567"
+    "email": "samueljones@example.com",
+    "password": "secretpassword17"
+  },
+  {
+    "id": 18,
+    "userName": "olivia_martin",
+    "handle": "@oliviamartin",
+    "firstName": "Olivia",
+    "lastName": "Martin",
+    "email": "oliviamartin@example.com",
+    "password": "secretpassword18"
+  },
+  {
+    "id": 19,
+    "userName": "jacob_clark",
+    "handle": "@jacobclark",
+    "firstName": "Jacob",
+    "lastName": "Clark",
+    "email": "jacobclark@example.com",
+    "password": "secretpassword19"
+  },
+  {
+    "id": 20,
+    "userName": "emma_miller",
+    "handle": "@emmamiller",
+    "firstName": "Emma",
+    "lastName": "Miller",
+    "email": "emmamiller@example.com",
+    "password": "secretpassword20"
+  },
+  {
+    "id": 21,
+    "userName": "noah_brown",
+    "handle": "@noahbrown",
+    "firstName": "Noah",
+    "lastName": "Brown",
+    "email": "noahbrown@example.com",
+    "password": "secretpassword21"
+  },
+  {
+    "id": 22,
+    "userName": "mia_davis",
+    "handle": "@miadavis",
+    "firstName": "Mia",
+    "lastName": "Davis",
+    "email": "miadavis@example.com",
+    "password": "secretpassword22"
+  },
+  {
+    "id": 23,
+    "userName": "ethan_smith",
+    "handle": "@ethansmith",
+    "firstName": "Ethan",
+    "lastName": "Smith",
+    "email": "ethansmith@example.com",
+    "password": "secretpassword23"
+  },
+  {
+    "id": 24,
+    "userName": "ava_johnson",
+    "handle": "@avajohnson",
+    "firstName": "Ava",
+    "lastName": "Johnson",
+    "email": "avajohnson@example.com",
+    "password": "secretpassword24"
+  },
+  {
+    "id": 25,
+    "userName": "logan_anderson",
+    "handle": "@logananderson",
+    "firstName": "Logan",
+    "lastName": "Anderson",
+    "email": "logananderson@example.com",
+    "password": "secretpassword25"
+  },
+  {
+    "id": 26,
+    "userName": "mia_thompson",
+    "handle": "@miathompson",
+    "firstName": "Mia",
+    "lastName": "Thompson",
+    "email": "miathompson@example.com",
+    "password": "secretpassword26"
+  },
+  {
+    "id": 27,
+    "userName": "liam_martin",
+    "handle": "@liammartin",
+    "firstName": "Liam",
+    "lastName": "Martin",
+    "email": "liammartin@example.com",
+    "password": "secretpassword27"
+  },
+  {
+    "id": 28,
+    "userName": "olivia_miller",
+    "handle": "@oliviamiller",
+    "firstName": "Olivia",
+    "lastName": "Miller",
+    "email": "oliviamiller@example.com",
+    "password": "secretpassword28"
   }
 ]

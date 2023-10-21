@@ -6,10 +6,10 @@ class Thought extends Model{};
 Thought.init(
   {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true,
     },
     userId: {
       type: DataTypes.INTEGER,
@@ -19,7 +19,35 @@ Thought.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-  },
+    likes: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      unique: false,
+      validate: {
+	isNumeric: true,
+      }
+    },
+    likedBy: {
+      type: DataTypes.INTEGER,
+      allownull: true,
+      unique: false,
+      validate: {
+	isNumeric: true
+      }
+    },
+    reply: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: false
+    },
+    replyId: {
+      type:DataTypes.UUID,
+      allowNull: true
+    }
+    reThought: {
+      type: DataTypes.BOOLEAN,
+      allownNull: false,
+    },
   {
     sequelize,
     freezeTableName: true,

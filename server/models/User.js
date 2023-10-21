@@ -7,7 +7,7 @@ class User extends Model {
     console.log(loginPw);
     console.log(this.password);
     return bcrypt.compareSync(loginPw, this.password);
-  }
+  }  
 }
 
 User.init(
@@ -25,23 +25,33 @@ User.init(
       validate: {
         notNull: true,
         notEmpty: true,
-      },
+      }
+    },
+    handle: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+	notEmpty: true
+	not: /\s/i,
+	len: [3,30]
+      }
     },
     firstName: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notNull: true,
-        notEmpty: true,
-      },
+        notEmpty: true
+      }
     },
     lastName: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notNull: true,
-        notEmpty: true,
-      },
+        notEmpty: true
+      }
     },
     email: {
       type: DataTypes.STRING,
@@ -50,15 +60,15 @@ User.init(
       validate: {
 	isEmail: true,
         notNull: true,
-        notEmpty: true,
-      },
+        notEmpty: true
+      }
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [8, 35],
-      },
+        len: [8, 35]
+      }
     },
   },
   {
