@@ -1,9 +1,9 @@
 import React from "react";
 
-import ThoughtCreate from "./../ThoughtCreate"
-
 import { useQuery } from '@apollo/client';
 import { QUERY_ME } from './../../utils/queries';
+
+import ThoughtCreate from "./../ThoughtCreate"
 
 const UserInfo = (props) => {
   
@@ -22,7 +22,8 @@ const UserInfo = (props) => {
 	EMAIL: {props.email}
       </div>
       
-      <ThoughtCreate userId={props.userId} />
+      <ThoughtCreate userId={props.userId}
+		     submission={props.submission} />
     </section>
   );
 };

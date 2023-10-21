@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 
 import { useMutation } from "@apollo/client";
 
@@ -17,8 +17,6 @@ const ThoughtCreate = (props) => {
       thought: value,
     });
   };
-
-  
   
   const handleThought = async (event) => {
     event.preventDefault();
@@ -30,16 +28,23 @@ const ThoughtCreate = (props) => {
 	  content: thoughtState.thought
 	}
       });
+      setThoughtState({
+	...thoughtState,
+	thought: ""
+      });
+      document.querySelector("#thoughtBox").value="";
+      window.location.reload(true);
     } catch (e) {
       console.log("New thought was not commited to memory")
       console.log(e)
     };
-  }
+  };
   
   return(
     <div className="thoughtIput">
       <label>Add your thought</label>
       <textarea placeholder="Put your thought into the database"
+		id="thoughtBox"
 		onChange={handleChange}>
       </textarea>
       <button onClick={handleThought}>

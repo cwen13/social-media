@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Feed from "./../../components/Feed/"
 import RecentThoughts from "./../../components/RecentThoughts/"
 import UserInfo from "./../../components/UserInfo";
@@ -12,6 +12,7 @@ const MainFeed = (props) => {
   const { loading, error, data } = useQuery(QUERY_ME);
 
   let userMe;
+  let [submission, setSubmission] = useState(false);
   
   if ((typeof data === "undefined") || (data.me === null)) {
     userMe = { id: 0,
@@ -21,7 +22,6 @@ const MainFeed = (props) => {
   } else {
     userMe = data.me;
   }
-  
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;
   
@@ -31,10 +31,11 @@ const MainFeed = (props) => {
 	    <li id="userInfo"> <UserInfo userId={userMe.id}
 					 userName={userMe.userName}
 					 firstName={userMe.firstName}
-					 email={userMe.email} />
+					 email={userMe.email}
+					 submission={submission} />
 	    </li>
-	    <li id="feed"> <Feed userId={userMe.id}/> </li>
-	    <li id="recentThoughts"> <RecentThoughts /> </li>
+	    <li id="feed"> <Feed userId={userMe.id}
+				 submission={submission} /> </li>
 	  </ul>
 	</section>
   );
