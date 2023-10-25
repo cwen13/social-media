@@ -5,6 +5,8 @@ import { QUERY_ME } from './../../utils/queries';
 
 import ThoughtCreate from "./../ThoughtCreate"
 
+import "./style.css";
+
 const UserInfo = (props) => {
   
   return(

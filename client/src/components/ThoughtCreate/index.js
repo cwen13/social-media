@@ -3,11 +3,18 @@ import React, { useState, useCallback } from "react";
 import { useMutation } from "@apollo/client";
 
 import { ADD_THOUGHT } from "./../../utils/mutations";
+import { QUERY_ALL_THOUGHTS } from "./../../utils/queries";
+
+import "./style.css";
 
 const ThoughtCreate = (props) => {
 
   const [ thoughtState, setThoughtState ] = useState({thought: ""});
-  const [ newThought, { error } ] = useMutation(ADD_THOUGHT);
+  const [ newThought, { error } ] = useMutation(ADD_THOUGHT,{
+    refetchQueries: [
+      QUERY_ALL_THOUGHTS,
+      "getAllThoughts"]
+  });
   
   const handleChange = (event) => {
     console.log(event.currentTarget.value);
@@ -33,7 +40,6 @@ const ThoughtCreate = (props) => {
 	thought: ""
       });
       document.querySelector("#thoughtBox").value="";
-      window.location.reload(true);
     } catch (e) {
       console.log("New thought was not commited to memory")
       console.log(e)
@@ -41,13 +47,15 @@ const ThoughtCreate = (props) => {
   };
   
   return(
-    <div className="thoughtIput">
+    <div className="thoughtInput">
       <label>Add your thought</label>
       <textarea placeholder="Put your thought into the database"
+		rows="4"
+		cols="33"
 		id="thoughtBox"
 		onChange={handleChange}>
       </textarea>
-      <button onClick={handleThought}>
+      <button id="postThought" onClick={handleThought}>
 	Thought creation
       </button>
     </div>
