@@ -23,9 +23,9 @@ const UserInfo = (props) => {
       <div className="email">
 	EMAIL: {props.email}
       </div>
-      
-      <ThoughtCreate userId={props.userId}
-		     submission={props.submission} />
+      { (props.userId !== 0) ? <ThoughtCreate userId={props.userId}
+					      submission={props.submission} />
+	: <p>Sign up or login to start putting your best thougths out there!</p>}
     </section>
   );
 };
