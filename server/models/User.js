@@ -32,7 +32,7 @@ User.init(
       allowNull: false,
       unique: true,
       validate: {
-	notEmpty: true
+	notEmpty: true,
 	not: /\s/i,
 	len: [3,30]
       }

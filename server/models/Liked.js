@@ -3,7 +3,7 @@ const sequelize = require('../config/connection');
 
 class Liked extends Model{};
 
-Like.init(
+Liked.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -15,7 +15,7 @@ Like.init(
       type: DataTypes.UUID,
       allowNunll: false
     },
-    likeByUser: {
+    likeByUserId: {
       type: DataTypes.INTEGER,
       allowNunll: false
     },
@@ -24,8 +24,8 @@ Like.init(
     sequelize,
     freezeTableName: true,
     underscored: true,
-    modelName: 'like',
+    modelName: "liked",
   }
 );
 
-module.exports = Like;
+module.exports = Liked;

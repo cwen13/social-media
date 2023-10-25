@@ -126,6 +126,15 @@
     "password": "secretpassword14"
   },
   {
+    "id": 15,
+    "userName": "laura_P_johnson",
+    "handle": "@lauraPjohnson",
+    "firstName": "Laura P",
+    "lastName": "Johnson",
+    "email": "lauraPjohnson@example.com",
+    "password": "secretpassword14P"
+  },
+  {
     "id": 16,
     "userName": "sarah_wilson",
     "handle": "@sarahwilson",
@@ -243,3 +252,4 @@
     "password": "secretpassword28"
   }
 ]
+

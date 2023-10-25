@@ -3,7 +3,7 @@ const Friend = require("./Friend");
 const ReThought = require("./ReThought");
 const Thought = require("./Thought");
 const User = require("./User");
-
+const Liked = require("./Liked");
 
 //ReThought relationships
 ReThought.belongsTo(User, {
@@ -17,7 +17,7 @@ ReThought.belongsTo(Thought, {
 
 
 //Thought relationships
-Thought.hasMany(ReThought, {
+Thought.belongsToMany(ReThought, {
   foreignKey: "reThoughtByUserId"
 });
 
@@ -28,8 +28,12 @@ Thought.belongsTo(User, {
 
 Thought.hasMany(User, {
   foreignKey: "thoughtId",
-  as: "thoughtLiked",
-  through: "like"
+  as: "thoughtLikedBy",
+  through: "liked"
+});
+
+Thought.hasMany(Liked, {
+  foreignKey: "thoughtId"
 });
 
 Thought.hasMany(Thought, {
@@ -37,6 +41,20 @@ Thought.hasMany(Thought, {
   as: "thoughtReply",
   through: Thought
 });  
+
+Thought.hasMany(ReThought, {
+  foreignKey:originalThoughtId,
+});
+
+
+// Liked relationships
+Liked.hasMany(User, {
+  foreignKey: "likedByUserId"
+});
+
+Liked.hasMany(Thought, {
+  foreignKey: "thoughtId"
+});
 
 //User relationships
 User.hasMany(ReThought, {
@@ -47,13 +65,11 @@ User.hasMany(Thought, {
   foreignKey: "userId",
 });
 
-User.hasMany(Thought, {
-  foreignKey: "likedByUser",
-  as: "likedThought",
-  through: Like
+User.hasMany(Liked, {
+  foreignKey: "likedByUserId",
 });
 
-// Friend relationship
+// User-Friend relationship
 User.belongsToMany(User, {
   foreignKey: "userId",
   as: "friendship",
@@ -64,5 +80,7 @@ User.belongsToMany(User, {
 module.exports = {
   Friend,
   User,
-  Thought
+  Thought,
+  ReThought,
+  Liked
 };

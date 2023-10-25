@@ -35,19 +35,17 @@ Thought.init(
 	isNumeric: true
       }
     },
-    reply: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-      allowNull: false
-    },
     replyId: {
+      // another thought ID
       type:DataTypes.UUID,
       allowNull: true
-    }
+    },
     reThought: {
+      // quoted thought
       type: DataTypes.BOOLEAN,
       allownNull: false,
-    },
+    }
+  },
   {
     sequelize,
     freezeTableName: true,

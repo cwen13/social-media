@@ -6,40 +6,32 @@ class ReThought extends Model{};
 ReThought.init(
   {
     id: {
-      type.DataTypes.UUID,
+      type: DataTypes.UUID,
       defulatValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true
-    },
-    originalThoughtId: {
-      type.DataTypes.UUID,
-      allowNull: false
-    },
-    originalThoughtUser: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
     },
     reThoughtByUserId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    additionalContent: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+    originalThoughtId: {
+      type: DataTypes.UUID,
       allowNull: false
     },
-    additionalThought: {
+    additionalThoughtId: {
       type: DataTypes.STRING,
       allowNull: true,
-    },
-    {
-      sequelize,
-      freezeTableName: true,
-      userscored: true,
-      modelName: "reThought"
     }
+  },
+  {
+    sequelize,
+    freezeTableName: true,
+    userscored: true,
+    modelName: "reThought"
   }
 );
+
 
 
 module.exports = ReThought;
