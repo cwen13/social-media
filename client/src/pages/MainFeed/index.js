@@ -12,7 +12,6 @@ const MainFeed = (props) => {
   const { loading, error, data } = useQuery(QUERY_ME);
 
   let userMe;
-  let [submission, setSubmission] = useState(false);
   
   if ((typeof data === "undefined") || (data.me === null)) {
     userMe = { id: 0,
@@ -31,11 +30,9 @@ const MainFeed = (props) => {
 	    <li id="userInfo"> <UserInfo userId={userMe.id}
 					 userName={userMe.userName}
 					 firstName={userMe.firstName}
-					 email={userMe.email}
-					 submission={submission} />
+					 email={userMe.email} />
 	    </li>
-	    <li id="feed"> <Feed userId={userMe.id}
-				 submission={submission} /> </li>
+	    <li id="feed"> <Feed userId={userMe.id}g /> </li>
 	  </ul>
 	</section>
   );
