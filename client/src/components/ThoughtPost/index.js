@@ -14,6 +14,7 @@ const ThoughtPost = (props) => {
 
   
   return (
+
     <section className="entry">
       <div className="headliner">
 	<ul>
@@ -29,6 +30,7 @@ const ThoughtPost = (props) => {
       { props.edit ? <button id={`edit-${props.key}`}>EDIT!</button> : <div></div>}
 	{ props.remove ? <button id={`remove-${props.key}`} >Remove!</button> : <div></div>}
 	</div>
+
       </section>
 
   );

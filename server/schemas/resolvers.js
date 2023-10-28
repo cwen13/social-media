@@ -1,80 +1,76 @@
 const { AuthenticationError } = require('apollo-server-express');
-const { User,Friend,Thought,Comment } = require("./../models");
+const { User, Friend, Thought, ReThought, Liked } = require("./../models");
 const { signToken } = require('../utils/auth');
  
 const resolvers = {
   Query: {
+    
+    //STATUS: WORKING
     me: async (parent, args, context ) => {
-      console.log("CONTEXT:", context.user);
-      return !context.user ? null : await User.findOne({ where:
-							  { id: context.user.id } });
+
+      return await User.findByPk((context.user) ? context.user.id : 1);
+
     },
 
-    // FUNCTIONING
-    getUsers: async (parent, args, context) => {
+    //STATUS: WORKING
+    getUser: async (parent, { userId }, context) => {
+      return await User.findByPk(userId);
+
+    },
+
+    //STATUS: WORKING
+    getAllUsers: async (parent, args, context) => {
       return await User.findAll();
     },
 
-    // FUNCTIONING
-    user: async (parent, args, context) => {
-      return await User.findOne({where: {id: context.user.id}});
+    //STATUS: PENDING
+    getFriends: async (parent, { userId }, context) => {
+      let friends = await Friend.findAll({ where: { userId }, include: { model: User, through: {attribute:"friendships"} } });
+      return friends
+      //      return await Friend.findAll({ where: { userId } } );
+
+      
     },
 
+    //STATUS: PENDING
+    getFriendStatus: async (parent, { userId, friendId }, context) => {
+      return await Friend.findOne( { where: userId, friendId});
+    },    
+
+    //STATUS: WORKING
+    getMyThoughts: async (parent, args, context) => { 
+      return  await Thought.findAll({ where: { userId: context.user.id }});
+    },
+
+    //STATUS: PENDING
     getThought: async(parent, { id }, context) => {
-      return await Thought.findByPk({id});
+      return await Thought.findByPk({ id });
     },
 
+    //STATUS: working
     getAllThoughts: async(parent, args, context) => {
-      return await Thought.findAll({ include:
-				     { model: User }});
+      let thoughts = await Thought.findAll({include: { model: User}});
+      return thoughts;
+
     },
 
+    //STATUS: PENDING
     getUserThoughts: async (parent, { userId }, context) => {
-      return await Thought.findAll( { where:
-				      { id: userId }});
-    },
-    
-    // FUNCTIONING
-    getMyThoughts: async (parent, args, context) => {
-      if (context.user) {
-	return await Thought.findAll({where: {id: context.user.id}});
-      }
-      throw new AuthorizationError("Not logged in");
-    }
+      return await Thought.findAll({where: {userId: userId} });
 
+    },
+
+    //STATUS: PENDING
+    getReplys: async (parent, args, context) => {
+    },
+
+    //STATUS: PENDING
+    getReThoughts: async (parent, args, context) => {
+    },
   },
   Mutation: {
-    // FUNCTIONING
-    addUser: async (parent, { userName, firstName, lastName, email, password }, context) => {
-      const newUser = await User.create(
-	{
-	  userName,
-	  firstName,
-	  lastName,
-	  email,
-	  password
-	},
-	{
-	  returning: true,
-	});
-      const token = signToken(newUser);
-      return { token, newUser };
-    },
-    
-    updateUser: async (parent, { userName, firstName, lastName, email, password}, context) => {
-      return await User.update({where: { id: context.user.id},
-				variables: { userName,
-					     firstName,
-					     lastName,
-					     email,
-					     password
-					   }});
-    },
-  
-    deleteUser: async (parent, {id}, context) => {
-      return await User.destroy({where: {id}});
-    },
 
+    //STATUS: WORKING
     login: async (parent, {email, password}, context) => {
       const user = await User.findOne({ where: { email } });
       if (!user) {
@@ -87,18 +83,69 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-    
-    addThought: async (parent, { content }, context) => {
-      console.log("IN the adder");
+
+    //STATUS: PENDING
+    addUser: async (parent, { userName, firstName, lastName, email, password }, context) => {
+      const update = await User.create(
+	{
+	  userName,
+	  firstName,
+	  lastName,
+	  email,
+	  password
+	},
+	{
+	  returning: true,
+	});
+      const token = signToken(update);
+      return { token, update };
+    },
+
+    //STATUS: PENDING
+    updateUser: async (parent, { userName, firstName, lastName, email, password}, context) => {
+      return await User.update({where: { id: context.user.id},
+				variables: { userName,
+					     firstName,
+					     lastName,
+					     email,
+					     password
+					   }});
+    },
+
+    //STATUS: PENDING
+    deleteUser: async (parent, {id}, context) => {
+      return await User.destroy({where: {id}});
+    },
+
+    //STATUS: PENDING
+    addFriend: async (parent, {userId, friendId, sent}, context) => {
+      return await Friend.create({userId, friendId, sent});
+    },
+
+    //STATUS: PENDING
+    removeFriend: async (parent, {id}, context) => {
+      return await Friend.destroy({id});
+    },
+
+    //STATUS: PENDING
+    updateFriendship: async (parent, args, context) => {
+    },
+
+    //STATUS: PENDING
+    addThought: async (parent,{ content }, context) => {
       if (context.user) {
 	return await Thought.create( {userId: context.user.id, content});
       } else {
 	//Need to replace with different error
 	throw new AuthenticationError("You are not this thought's owner");
       }
+
+      throw new AuthenticationError("You are not logged in");
     },
-    
-    updateThought: async (parent, { thoughtId, content }, context) => {
+
+    //STATUS: PENDING
+    updateThought: async (parent, {thoughtId,content}, context) => {
+
       if (context.user) {
 	let theThought = Thought.findByPk(thoughtId);
 	let thoughtUser = thethought.dataValues.userId;
@@ -112,21 +159,25 @@ const resolvers = {
       throw new AuthenticationError("You are not logged in");
     },
 
-    addComment: async (parent, {userId, thoughtId, comment}, context) => {
-      return await Comment.create({userId, thoughtId, comment});
+    //STATUS: PENDING
+    removeThought: async (parent, args, conteext) => {
     },
 
-    updateComment: async (parent, {id, comment}, context) => {
-      return await Comment.update({ comment}, {where: {id}});
+    //STATUS: PENDING
+    addLiked: async (parent, args, conteext) => {
     },
 
-    addFriend: async (parent, {userId, friendId, sent}, context) => {
-      return await Friend.create({userId, friendId, sent});
+    //STATUS: PENDING
+    removeLiked: async (parent, args, conteext) => {
     },
 
-    removeFriend: async (parent, {id}, context) => {
-      return await Friend.destroy({id});
+    //STATUS: PENDING
+    replayToThought: async (parent, args, conteext) => {
     },
+
+    //STATUS: PENDING
+    reThought: async (parent, args, conteext) => {
+    },    
   }
 };
 

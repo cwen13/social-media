@@ -1,11 +1,11 @@
 // here will be how to seed the database
 
 const sequelize = require('./../config/connection');
-const { User, Comment, Friend, Thought } = require("./../models");
-const commentSeedData = require('./commentSeed');
-const userSeedData = require('./userSeed');
-const thoughtSeedData = require("./thoughtSeed");
-const friendSeedData = require("./friendSeed");
+const { User, ReThought, Friend, Thought, Liked } = require("./../models");
+const userSeedData = require('./userSeedData.json');
+const thoughtSeedData = require("./thoughtSeedData.json");
+const friendSeedData = require("./friendSeedData.json");
+const likedSeedData = require("./likedSeedData.json");
 
 const seedDatabase = async () => {
 
@@ -20,8 +20,11 @@ const seedDatabase = async () => {
   Thought.destroy({
     where: {},
   });
-  Comment.destroy({
+  ReThought.destroy({
     where: {},
+  });
+  Liked.destroy({
+    where:{},
   });
 
   for (let i = 0; i < userSeedData.length; i++) {
@@ -35,15 +38,12 @@ const seedDatabase = async () => {
   for (let i = 0; i < thoughtSeedData.length; i++) {
     await Thought.create(thoughtSeedData[i]);
   }
+
+  for (let i = 0; i < likedSeedData.length; i++) {
+    await Liked.create(likedSeedData[i]);
+  }  
   
-  for (let i = 0; i < commentSeedData.length; i++) {
-    await Comment.create(commentSeedData[i]);
-  }
-
-
-
-  process.exit(0);
-  
+  process.exit(0);  
 }
 
 seedDatabase();

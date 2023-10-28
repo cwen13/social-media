@@ -1,10 +1,9 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
-const User = require("./User");
 
-class Friend extends Model {};
+class Liked extends Model{};
 
-Friend.init(
+Liked.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -12,25 +11,21 @@ Friend.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    userId: {
+    thoughtId: {
       type: DataTypes.INTEGER,
       allowNunll: false
     },
-    friendId: {
+    likeByUserId: {
       type: DataTypes.INTEGER,
       allowNunll: false
     },
-    status: {
-      type: DataTypes.ENUM("pending", "denied", "mutual", "blocked"),
-      allowNull: false,
-    }
   },
   {
     sequelize,
     freezeTableName: true,
     underscored: true,
-    modelName: 'friend',
+    modelName: "liked",
   }
 );
 
-module.exports = Friend;
+module.exports = Liked;

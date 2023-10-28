@@ -21,6 +21,7 @@ const Feed = (props) => {
 							 
 							 edit={props.userId === thought.userId}
 							 remove={props.userId === thought.userId}/>)}
+
     </div>
   );
 };

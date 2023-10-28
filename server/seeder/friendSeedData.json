@@ -2,126 +2,126 @@
   {
     "userId": 1,
     "friendId": 2,
-    "sent": "sent"
+    "status": "pending"
   },
   {
     "userId": 3,
     "friendId": 4,
-    "sent": "denied"
+    "status": "denied"
   },
   {
     "userId": 2,
     "friendId": 5,
-    "sent": "mutual"
+    "status": "mutual"
   },
   {
     "userId": 6,
     "friendId": 7,
-    "sent": "sent"
+    "status": "pending"
   },
   {
     "userId": 8,
     "friendId": 1,
-    "sent": "mutual"
+    "status": "mutual"
   },
   {
     "userId": 9,
     "friendId": 2,
-    "sent": "denied"
+    "status": "denied"
   },
   {
     "userId": 3,
     "friendId": 10,
-    "sent": "sent"
+    "status": "pending"
   },
   {
     "userId": 11,
     "friendId": 4,
-    "sent": "mutual"
+    "status": "mutual"
   },
   {
     "userId": 12,
     "friendId": 13,
-    "sent": "sent"
+    "status": "pending"
   },
   {
     "userId": 14,
     "friendId": 5,
-    "sent": "denied"
+    "status": "denied"
   },
   {
     "userId": 6,
     "friendId": 1,
-    "sent": "sent"
+    "status": "pending"
   },
   {
     "userId": 2,
     "friendId": 7,
-    "sent": "mutual"
+    "status": "mutual"
   },
   {
     "userId": 10,
     "friendId": 8,
-    "sent": "sent"
+    "status": "pending"
   },
   {
     "userId": 9,
     "friendId": 11,
-    "sent": "mutual"
+    "status": "mutual"
   },
   {
     "userId": 12,
     "friendId": 13,
-    "sent": "sent"
+    "status": "pending"
   },
   {
     "userId": 14,
     "friendId": 5,
-    "sent": "denied"
+    "status": "denied"
   },
   {
     "userId": 6,
     "friendId": 1,
-    "sent": "sent"
+    "status": "pending"
   },
   {
     "userId": 2,
     "friendId": 7,
-    "sent": "mutual"
+    "status": "mutual"
   },
   {
     "userId": 10,
     "friendId": 8,
-    "sent": "sent"
+    "status": "pending"
   },
   {
     "userId": 9,
     "friendId": 11,
-    "sent": "mutual"
+    "status": "mutual"
   },
   {
     "userId": 12,
     "friendId": 13,
-    "sent": "sent"
+    "status": "pending"
   },
   {
     "userId": 14,
     "friendId": 5,
-    "sent": "denied"
+    "status": "denied"
   },
   {
     "userId": 6,
     "friendId": 1,
-    "sent": "sent"
+    "status": "pending"
   },
   {
     "userId": 2,
     "friendId": 7,
-    "sent": "mutual"
+    "status": "mutual"
   },
   {
     "userId": 10,
     "friendId": 8,
-    "sent": "sent"
+    "status": "pending"
   }
 ]

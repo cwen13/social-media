@@ -9,7 +9,7 @@ Thought.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
     },
     userId: {
       type: DataTypes.INTEGER,
@@ -18,6 +18,11 @@ Thought.init(
     content: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    thoughtReplyOfId: {
+      // thought id of thought it is a replay to
+      type:DataTypes.INTEGER,
+      allowNull: true
     },
   },
   {

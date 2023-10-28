@@ -1,37 +1,52 @@
-// make nextwork here
 const Friend = require("./Friend");
-const Comment = require("./Comment");
-const User = require("./User");
+const ReThought = require("./ReThought");
 const Thought = require("./Thought");
+const User = require("./User");
+const Liked = require("./Liked");
 
-User.hasMany(Thought, {
-  foreignKey: "userId"
+ReThought.belongsTo(User, {
+  foreignKey: "reThoughtByUserId"
+});
+
+ReThought.belongsTo(Thought, {
+  foreignKey: "originalThoughtId",
 });
 
 Thought.belongsTo(User, {
-  foreignKey: "userId"
+  foreignKey: "userId",
 });
 
-Thought.hasMany(Comment, {
-  foreignKey: "thoughtId",
+Thought.hasMany(Liked, {
+  foreignKey: "likedByUserId"
+});
+		      
+Thought.hasMany(ReThought, {
+    foreignKey: "orginalThoughtId",
 });
 
-Comment.belongsTo(Thought, {
-  foreignKey: "thoughtId",
+User.hasMany(Liked, {
+  foreignKey: "likedByUSerId"
 });
 
+User.hasMany(ReThought, {
+  foreignKey: "reThoughtByUserId"
+});
+
+User.hasMany(Thought, {
+  foreignKey: "userId",
+});
 
 User.belongsToMany(User, {
-//  foreignKey: "id",
-  as: "friendship",
-  through: Friend
+  through: Friend,
+  as: "friendship"
 });
 
 
-		     
+
 module.exports = {
   Friend,
   User,
-  Comment,
-  Thought
+  Thought,
+  ReThought,
+  Liked
 };
