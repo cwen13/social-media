@@ -1,0 +1,10 @@
+.thoughtInput {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.thoughtInput button {
+  width: 33%;
+}
+
