@@ -12,7 +12,7 @@ Liked.init(
       autoIncrement: true,
     },
     thoughtId: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       allowNunll: false
     },
     likeByUserId: {

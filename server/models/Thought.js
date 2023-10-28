@@ -6,10 +6,10 @@ class Thought extends Model{};
 Thought.init(
   {
     id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
+      autoIncrement: true
     },
     userId: {
       type: DataTypes.INTEGER,
@@ -19,32 +19,11 @@ Thought.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    likes: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      unique: false,
-      validate: {
-	isNumeric: true,
-      }
-    },
-    likedBy: {
-      type: DataTypes.INTEGER,
-      allownull: true,
-      unique: false,
-      validate: {
-	isNumeric: true
-      }
-    },
-    replyId: {
-      // another thought ID
-      type:DataTypes.UUID,
+    thoughtReplyOfId: {
+      // thought id of thought it is a replay to
+      type:DataTypes.INTEGER,
       allowNull: true
     },
-    reThought: {
-      // quoted thought
-      type: DataTypes.BOOLEAN,
-      allownNull: false,
-    }
   },
   {
     sequelize,

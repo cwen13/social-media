@@ -25,6 +25,7 @@ User.init(
       validate: {
         notNull: true,
         notEmpty: true,
+	max: 33
       }
     },
     handle: {
@@ -34,7 +35,7 @@ User.init(
       validate: {
 	notEmpty: true,
 	not: /\s/i,
-	len: [3,30]
+	len: [3,33]
       }
     },
     firstName: {

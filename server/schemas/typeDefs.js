@@ -4,6 +4,7 @@ const typeDefs = gql`
 type User {
   id: ID!
   userName: String!
+  handle: String!
   firstName: String!
   lastName: String!
   email: String!
@@ -14,61 +15,101 @@ type Friend {
   id : ID!
   userId: ID!
   friendId: ID!
-  sent: String!
+  status: String!
+  friend: User!
 }
 
 type Thought {
   id: ID!
   userId: ID!
   content: String!
-  user: User!
+  thoughtReplyOfId: ID!
+  user: User
 }
 
-type Comment {
+type ReThought {
   id: ID!
-  userId: ID!
+  reThoughtByUserId: ID!
+  originalThoughtId: ID!
+  additionalThoughtId: ID!
+  user: User!
+  thought: Thought!
+}
+
+type Liked {
+  id: ID!
   thoughtId: ID!
-  comment: String!
+  likedByUserId: ID!
+  user: User!
+  thought: Thought!
 }
 
 type Auth {
   token: ID!
-  user: User
+  user: User!
 }
 
 type Query {
-    me: User
-    getUsers: [User]!
-    user(id: ID!): User!
-    getThought(id: ID!): Thought
-    getAllThoughts: [Thought]!
-    getUserThoughts(userId: ID!): [Thought]!
-    getMyThoughts: [Thought]!
-    friends: [User]
+  me: User
+  getUser(userId: ID!): User
+  getAllUsers: [User!]!
+  getFriends(userId: ID!): [Friend]
+  getFriendStatus(userId: ID!,
+                  friendId: ID!,
+                  friendID:ID!): Friend
+  getMyThoughts: [Thought]
+  getThought(id: ID!): Thought
+  getAllThoughts: [Thought!]!
+  getUserThoughts(userId: ID!): [Thought]!
+  getReplys(thoughtReplayOfId: ID!): [Thought]!
+  getReThoughts(originalThoughtId: ID!): [ReThought]!
 }
 
 type Mutation {
-    login(email: String!, password: String!): Auth
-    addUser(userName: String!,
-            firstName: String!,
-            lastName: String!,
-            email: String!,
-            password: String!): Auth
-    updateUser(userId: ID!,
-               userName: String,
-               firstName: String,
-               lastName: String,
-               email: String,
-               password: String): User
-    updateThought(id: ID!, content: String!): Thought
-    updateComment(id: ID!, comment: String!): Comment
-    removeFriend(friendId: ID!): Friend
-    deleteUser(userId: ID!): User
-    addThought(userId: ID!, content: String!): Thought
-    addComment(thoughtId: ID!, userId: ID!, comment: String!): Comment
-    addFriend(userId: ID!, friendId: ID! sent: String! ): Friend
-}
-`;
+  login(email: String!,
+        password: String!): Auth
+  addUser(userName: String!,
+          handle: String!,
+          firstName: String!,
+          lastName: String!,
+          email: String!,
+          password: String!): Auth!
+  updateUser(userId: ID!,
+             userName: String,
+             firstName: String,
+             lastName: String,
+             email: String,
+             password: String): Auth!
+  deleteUser(userId: ID!): User
+
+  addFriend(userId: ID!,
+               friendId: ID!,
+               status: String!): Friend
+  removeFriend(userId: ID!,
+               friendId: ID!): Friend
+  updateFriendship(userId: ID!,
+                   friendId: ID!,
+                   status: String!): Friend!
+
+  addThought(userId: ID!,
+                content: String!,
+                thoughtReplayOfId: ID,
+                reThought: Boolean!): Thought!
+  updateThought(id: ID!,
+                content: String!): Thought!
+  removeThought(id: ID!): Thought!
+  addLiked(thoughtId: ID!,
+           likedByUserId: ID!): Liked!
+  removeLiked(thoughtId: ID!,
+              likedByUserId: ID!): Liked!
+  replayToThought(thoughtId: ID!,
+                  userId: ID!,
+                  content: String!
+                  thoughtReplayOfId: ID!): Thought!
+  reThought(reThoughtByUserId: ID!,
+            originalThoughtId: ID!,
+            additionalThoughtId: ID!): ReThought!
+}`;
 
 module.exports  = typeDefs;
  

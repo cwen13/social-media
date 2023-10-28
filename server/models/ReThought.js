@@ -6,22 +6,22 @@ class ReThought extends Model{};
 ReThought.init(
   {
     id: {
-      type: DataTypes.UUID,
-      defulatValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     reThoughtByUserId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
     originalThoughtId: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     additionalThoughtId: {
-      type: DataTypes.STRING,
-      allowNull: true,
+      type: DataTypes.INTEGER,
+      allowNull: false,
     }
   },
   {
