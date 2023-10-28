@@ -7,7 +7,8 @@ const resolvers = {
     
     //STATUS: WORKING
     me: async (parent, args, context ) => {
-      return await User.findByPk(context.user.id);
+      return await User.findByPk((context.user) ? context.user.id : 1);
+
     },
 
     //STATUS: WORKING
@@ -22,12 +23,16 @@ const resolvers = {
 
     //STATUS: PENDING
     getFriends: async (parent, { userId }, context) => {
-      let friends = await Friend.findAll({ where: { userId }});//, include: { model: User, where: { userId } } });
-      return await Friend.findAll({ where: { userId } } );
+      let friends = await Friend.findAll({ where: { userId }, include: { model: User, through: {attribute:"friendships"} } });
+      return friends
+      //      return await Friend.findAll({ where: { userId } } );
+
+      
     },
 
     //STATUS: PENDING
-    getFriendStatus: async (parent, args, context) => {
+    getFriendStatus: async (parent, { userId, friendId }, context) => {
+      return await Friend.findOne( { where: userId, friendId});
     },    
 
     //STATUS: WORKING

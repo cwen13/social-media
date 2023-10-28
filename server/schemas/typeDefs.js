@@ -16,7 +16,6 @@ type Friend {
   userId: ID!
   friendId: ID!
   status: String!
-  friend: User!
 }
 
 type Thought {
@@ -55,8 +54,7 @@ type Query {
   getAllUsers: [User!]!
   getFriends(userId: ID!): [Friend]
   getFriendStatus(userId: ID!,
-                  friendId: ID!,
-                  friendID:ID!): Friend
+                  friendI:ID!): Friend
   getMyThoughts: [Thought]
   getThought(id: ID!): Thought
   getAllThoughts: [Thought!]!

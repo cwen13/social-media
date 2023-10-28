@@ -37,12 +37,11 @@ User.hasMany(Thought, {
 });
 
 User.belongsToMany(User, {
-  through: {
-    model: Friend,
-    unique: true
-  },
-  as: "friendships"
+  through: Friend,
+  as: "friendship"
 });
+
+
 
 module.exports = {
   Friend,
