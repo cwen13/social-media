@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 
-class Friend extends Model {};
+class Blocked extends Model {};
 
-Friend.init(
+Blocked.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -15,7 +15,7 @@ Friend.init(
       type: DataTypes.INTEGER,
       allowNunll: false
     },
-    friendId: {
+    blockedId: {
       type: DataTypes.INTEGER,
       allowNunll: false
     },
@@ -24,8 +24,8 @@ Friend.init(
     sequelize,
     freezeTableName: true,
     underscored: true,
-    modelName: 'friend',
+    modelName: 'blocked',
   }
 );
 
-module.exports = Friend;
+module.exports = Blocked;

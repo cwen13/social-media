@@ -2,7 +2,7 @@
 
 const sequelize = require('./../config/connection');
 const { User, ReThought, Friend, Thought, Liked } = require("./../models");
-const userSeedData = require('./userSeedData.json');
+const userSeedData = require("./userSeedData.json");
 const thoughtSeedData = require("./thoughtSeedData.json");
 const friendSeedData = require("./friendSeedData.json");
 const likedSeedData = require("./likedSeedData.json");
@@ -31,10 +31,6 @@ const seedDatabase = async () => {
     await User.create(userSeedData[i]);
   }
 
-  for (let i = 0; i < friendSeedData.length; i++) {
-    await Friend.create(friendSeedData[i]);
-  }
-
   for (let i = 0; i < thoughtSeedData.length; i++) {
     await Thought.create(thoughtSeedData[i]);
   }
@@ -42,6 +38,10 @@ const seedDatabase = async () => {
   for (let i = 0; i < likedSeedData.length; i++) {
     await Liked.create(likedSeedData[i]);
   }  
+
+  for (let i = 0; i < friendSeedData.length; i++) {
+    await Friend.create(friendSeedData[i]);
+  }
   
   process.exit(0);  
 }

@@ -1,127 +1,122 @@
 [
   {
     "userId": 1,
-    "friendId": 2,
-    "status": "pending"
-  },
-  {
-    "userId": 3,
-    "friendId": 4,
-    "status": "denied"
+    "friendId": 11
   },
   {
     "userId": 2,
-    "friendId": 5,
-    "status": "mutual"
+    "friendId": 12
+  },
+  {
+    "userId": 2,
+    "friendId": 10
+  },
+  {
+    "userId": 2,
+    "friendId": 14
+  },
+  {
+    "userId": 2,
+    "friendId": 1
+  },
+  {
+    "userId": 3,
+    "friendId": 13
+  },
+  {
+    "userId": 4,
+    "friendId": 14
+  },
+  {
+    "userId": 5,
+    "friendId": 15
   },
   {
     "userId": 6,
-    "friendId": 7,
-    "status": "pending"
+    "friendId": 16
+  },
+  {
+    "userId": 7,
+    "friendId": 17
   },
   {
     "userId": 8,
-    "friendId": 1,
-    "status": "mutual"
+    "friendId": 18
   },
   {
     "userId": 9,
-    "friendId": 2,
-    "status": "denied"
+    "friendId": 19
   },
   {
-    "userId": 3,
-    "friendId": 10,
-    "status": "pending"
+    "userId": 10,
+    "friendId": 20
   },
   {
     "userId": 11,
-    "friendId": 4,
-    "status": "mutual"
+    "friendId": 21
   },
   {
     "userId": 12,
-    "friendId": 13,
-    "status": "pending"
+    "friendId": 22
+  },
+  {
+    "userId": 13,
+    "friendId": 23
   },
   {
     "userId": 14,
-    "friendId": 5,
-    "status": "denied"
+    "friendId": 24
   },
   {
-    "userId": 6,
-    "friendId": 1,
-    "status": "pending"
+    "userId": 15,
+    "friendId": 25
   },
   {
-    "userId": 2,
-    "friendId": 7,
-    "status": "mutual"
+    "userId": 16,
+    "friendId": 26
   },
   {
-    "userId": 10,
-    "friendId": 8,
-    "status": "pending"
+    "userId": 17,
+    "friendId": 27
   },
   {
-    "userId": 9,
-    "friendId": 11,
-    "status": "mutual"
+    "userId": 18,
+    "friendId": 1
   },
   {
-    "userId": 12,
-    "friendId": 13,
-    "status": "pending"
+    "userId": 19,
+    "friendId": 2
   },
   {
-    "userId": 14,
-    "friendId": 5,
-    "status": "denied"
+    "userId": 20,
+    "friendId": 3
   },
   {
-    "userId": 6,
-    "friendId": 1,
-    "status": "pending"
+    "userId": 21,
+    "friendId": 4
   },
   {
-    "userId": 2,
-    "friendId": 7,
-    "status": "mutual"
+    "userId": 22,
+    "friendId": 5
   },
   {
-    "userId": 10,
-    "friendId": 8,
-    "status": "pending"
+    "userId": 23,
+    "friendId": 6
   },
   {
-    "userId": 9,
-    "friendId": 11,
-    "status": "mutual"
+    "userId": 24,
+    "friendId": 7
   },
   {
-    "userId": 12,
-    "friendId": 13,
-    "status": "pending"
+    "userId": 25,
+    "friendId": 8
   },
   {
-    "userId": 14,
-    "friendId": 5,
-    "status": "denied"
+    "userId": 26,
+    "friendId": 9
   },
   {
-    "userId": 6,
-    "friendId": 1,
-    "status": "pending"
-  },
-  {
-    "userId": 2,
-    "friendId": 7,
-    "status": "mutual"
-  },
-  {
-    "userId": 10,
-    "friendId": 8,
-    "status": "pending"
+    "userId": 27,
+    "friendId": 10
   }
 ]

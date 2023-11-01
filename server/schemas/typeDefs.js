@@ -9,13 +9,14 @@ type User {
   lastName: String!
   email: String!
   password: String!
+  friends: [User]
+  friendOfFriend: [User]
 }
 
 type Friend {
-  id : ID!
+  id: ID!
   userId: ID!
   friendId: ID!
-  status: String!
 }
 
 type Thought {
@@ -52,9 +53,7 @@ type Query {
   me: User
   getUser(userId: ID!): User
   getAllUsers: [User!]!
-  getFriends(userId: ID!): [Friend]
-  getFriendStatus(userId: ID!,
-                  friendI:ID!): Friend
+  getFriends(userId: ID!): [User]
   getMyThoughts: [Thought]
   getThought(id: ID!): Thought
   getAllThoughts: [Thought!]!

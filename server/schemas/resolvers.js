@@ -1,5 +1,5 @@
 const { AuthenticationError } = require('apollo-server-express');
-const { User, Friend, Thought, ReThought, Liked } = require("./../models");
+const { User, Friend, Thought, ReThought, Liked, Blocked, Pending } = require("./../models");
 const { signToken } = require('../utils/auth');
  
 const resolvers = {
@@ -23,21 +23,20 @@ const resolvers = {
 
     //STATUS: PENDING
     getFriends: async (parent, { userId }, context) => {
-      let friends = await Friend.findAll({ where: { userId }, include: { model: User, through: {attribute:"friendships"} } });
-      return friends
-      //      return await Friend.findAll({ where: { userId } } );
-
+      let friendsList = await User.findByPk(userId, {
+	include: { model: User,
+		   as: "friendshipUser",
+		   through: "friend" }})
+      console.log("FIND OBJECT:", friendsList);
+      console.log("OBJECT.friendshipUser:", friendsList.friendshipUser);
+      return friendsList.friendshipUser
       
     },
 
-    //STATUS: PENDING
-    getFriendStatus: async (parent, { userId, friendId }, context) => {
-      return await Friend.findOne( { where: userId, friendId});
-    },    
-
     //STATUS: WORKING
-    getMyThoughts: async (parent, args, context) => { 
-      return  await Thought.findAll({ where: { userId: context.user.id }});
+    getMyThoughts: async (parent, args, context) => {
+      console.log(context.user);
+      return await Thought.findAll({ where: { userId: context.user.id }});
     },
 
     //STATUS: PENDING
@@ -114,8 +113,8 @@ const resolvers = {
     },
 
     //STATUS: PENDING
-    addFriend: async (parent, {userId, friendId, sent}, context) => {
-      return await Friend.create({userId, friendId, sent});
+    addFriend: async (parent, {userId, friendId}, context) => {
+      return await Friend.create({userId, friendId});
     },
 
     //STATUS: PENDING
@@ -158,23 +157,23 @@ const resolvers = {
     },
 
     //STATUS: PENDING
-    removeThought: async (parent, args, conteext) => {
+    removeThought: async (parent, args, context) => {
     },
 
     //STATUS: PENDING
-    addLiked: async (parent, args, conteext) => {
+    addLiked: async (parent, args, context) => {
     },
 
     //STATUS: PENDING
-    removeLiked: async (parent, args, conteext) => {
+    removeLiked: async (parent, args, context) => {
     },
 
     //STATUS: PENDING
-    replayToThought: async (parent, args, conteext) => {
+    replayToThought: async (parent, args, context) => {
     },
 
     //STATUS: PENDING
-    reThought: async (parent, args, conteext) => {
+    reThought: async (parent, args, context) => {
     },    
   }
 };
