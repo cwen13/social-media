@@ -7,12 +7,14 @@ const resolvers = {
     
     //STATUS: WORKING
     me: async (parent, args, context ) => {
+
       return await User.findByPk((context.user) ? context.user.id : 1);
     },
 
     //STATUS: WORKING
     getUser: async (parent, { userId }, context) => {
       return await User.findByPk(userId);
+
     },
 
     //STATUS: WORKING
@@ -43,13 +45,20 @@ const resolvers = {
     //STATUS: WORKING
     //Display descending
     getAllThoughts: async(parent, args, context) => {
+<<<<<<< HEAD
       return await Thought.findAll({ include: { model: User},
 					     order: [["createdAt", "DESC"]]});
+=======
+      let thoughts = await Thought.findAll({include: { model: User}});
+      return thoughts;
+
+>>>>>>> be32e9509fe9177e93f13546dc548243ed183876
     },
 
     //STATUS: WORKING
     getUserThoughts: async (parent, { userId }, context) => {
       return await Thought.findAll({where: {userId: userId} });
+
     },
 
     //STATUS: PENDING
@@ -123,20 +132,18 @@ const resolvers = {
     //STATUS: PENDING
     addThought: async (parent,{ content }, context) => {
       if (context.user) {
-	let theThought = Thought.findByPk(thoughtId);
-	let thoughtUser = thethought.dataValues.userId;
-	if (context.user.id === thoughtUser) {
-	  return await Thought.create( {userId: context.user.id, content});
-	} else {
-	  //Ned to replace with different error
-	  throw new AuthenticationError("You are not this thought's owner");
-	}
+	return await Thought.create( {userId: context.user.id, content});
+      } else {
+	//Need to replace with different error
+	throw new AuthenticationError("You are not this thought's owner");
       }
+
       throw new AuthenticationError("You are not logged in");
     },
 
     //STATUS: PENDING
     updateThought: async (parent, {thoughtId,content}, context) => {
+
       if (context.user) {
 	let theThought = Thought.findByPk(thoughtId);
 	let thoughtUser = thethought.dataValues.userId;

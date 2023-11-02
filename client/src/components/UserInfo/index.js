@@ -3,32 +3,29 @@ import React from "react";
 import { useQuery } from '@apollo/client';
 import { QUERY_ME } from './../../utils/queries';
 
-const UserInfo = () => {
+import ThoughtCreate from "./../ThoughtCreate"
 
-  const { loading, error, data } = useQuery(QUERY_ME);
+import "./style.css";
 
-  // errors out with data as undefined if only use ==
-  let userMe = data === null ? data.me : { userName: "Luky",
-					   firstName:"Lucky",
-					   email:"licky@we.com" };
-  
-  if (loading) return "Loading...";
-  if (error) return `Error ${error.message}`;
+const UserInfo = (props) => {
   
   return(
     <section className="userInfo" >
-      <h1>=^={userMe.userName}=^=</h1>
+      <h1>=^={props.userName}=^=</h1>
       <div className="pfp">
 	+==+<br/>
 	|--|<br/>
 	+==+
       </div>
       <div className="names">
-	NAME: {userMe.firstName}
+	NAME: {props.firstName}
       </div>
       <div className="email">
-	EMAIL: {userMe.email}
+	EMAIL: {props.email}
       </div>
+      { (props.userId !== 0) ? <ThoughtCreate userId={props.userId}
+					      submission={props.submission} />
+	: <p>Sign up or login to start putting your best thougths out there!</p>}
     </section>
   );
 };

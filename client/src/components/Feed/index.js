@@ -1,36 +1,27 @@
 import React from "react";
-import { useQuery, useMutation, gql } from "@apollo/client";
-import { QUERY_USERS, QUERY_USER_THOUGHTS } from "./../../utils/queries";
-import { getRandom } from "./../../utils/helpers";
+import { useQuery } from "@apollo/client";
 
 import ThoughtPost from "./../ThoughtPost/"
 import { QUERY_ALL_THOUGHTS } from "./../../utils/queries";
 
-const Feed = () => {
-  const { loading, error, data } =  useQuery(QUERY_ALL_THOUGHTS);
-  var key = 0;
+import "./style.css";
+
+const Feed = (props) => {
+
+  const { loading, error, data } = useQuery(QUERY_ALL_THOUGHTS);
   
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;
-  
-  console.log("data:", data.getAllThoughts);
 
-  var key = 0;
-  const renderThought = (thought) => {
-    return (    	
-      <div className="thought" key={thought.id}>
-	  <p>User: {thought.userId}</p>
-	  <p>Thought: {thought.content}</p>
-	</div>
-    );
-  }
-  
   return (
     <div className="feed">
       {(data.getAllThoughts).map(thought => <ThoughtPost userName={thought.user.userName}
-							 thought={thought.content}
 							 userId={thought.userId}
-							 key={key++}/>)}
+							 thought={thought.content}
+							 
+							 edit={props.userId === thought.userId}
+							 remove={props.userId === thought.userId}/>)}
+
     </div>
   );
 };

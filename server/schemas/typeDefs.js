@@ -17,6 +17,12 @@ type Friend {
   id: ID!
   userId: ID!
   friendId: ID!
+<<<<<<< HEAD
+=======
+
+  status: String!
+
+>>>>>>> be32e9509fe9177e93f13546dc548243ed183876
 }
 
 type Thought {
@@ -34,12 +40,20 @@ type ReThought {
   additionalThoughtId: ID!
   user: User!
   thought: Thought!
+
 }
 
 type Liked {
   id: ID!
+
   thoughtId: ID!
   likedByUserId: ID!
+<<<<<<< HEAD
+=======
+  user: User!
+  thought: Thought!
+
+>>>>>>> be32e9509fe9177e93f13546dc548243ed183876
 }
 
 type Auth {
@@ -107,6 +121,7 @@ type Mutation {
             originalThoughtId: ID!,
             additionalThoughtId: ID!): ReThought!
 }`;
+
 
 module.exports  = typeDefs;
  
