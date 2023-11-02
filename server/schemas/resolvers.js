@@ -1,14 +1,13 @@
 const { AuthenticationError } = require('apollo-server-express');
 const { User, Friend, Thought, ReThought, Liked, Blocked, Pending } = require("./../models");
 const { signToken } = require('../utils/auth');
- 
+
 const resolvers = {
   Query: {
     
     //STATUS: WORKING
     me: async (parent, args, context ) => {
       return await User.findByPk((context.user) ? context.user.id : 1);
-
     },
 
     //STATUS: WORKING
@@ -21,16 +20,13 @@ const resolvers = {
       return await User.findAll();
     },
 
-    //STATUS: PENDING
+    //STATUS: WORKING
     getFriends: async (parent, { userId }, context) => {
-      let friendsList = await User.findByPk(userId, {
+      let userFriends = await User.findByPk(userId, {
 	include: { model: User,
 		   as: "friendshipUser",
 		   through: "friend" }})
-      console.log("FIND OBJECT:", friendsList);
-      console.log("OBJECT.friendshipUser:", friendsList.friendshipUser);
-      return friendsList.friendshipUser
-      
+      return userFriends.friendshipUser;
     },
 
     //STATUS: WORKING
@@ -39,18 +35,19 @@ const resolvers = {
       return await Thought.findAll({ where: { userId: context.user.id }});
     },
 
-    //STATUS: PENDING
+    //STATUS: WORKING
     getThought: async(parent, { id }, context) => {
-      return await Thought.findByPk({ id });
+      return await Thought.findByPk(id);
     },
 
-    //STATUS: working
+    //STATUS: WORKING
+    //Display descending
     getAllThoughts: async(parent, args, context) => {
-      let thoughts = await Thought.findAll({include: { model: User}});
-      return thoughts;
+      return await Thought.findAll({ include: { model: User},
+					     order: [["createdAt", "DESC"]]});
     },
 
-    //STATUS: PENDING
+    //STATUS: WORKING
     getUserThoughts: async (parent, { userId }, context) => {
       return await Thought.findAll({where: {userId: userId} });
     },
@@ -79,21 +76,12 @@ const resolvers = {
       return { token, user };
     },
 
-    //STATUS: PENDING
-    addUser: async (parent, { userName, firstName, lastName, email, password }, context) => {
-      const update = await User.create(
-	{
-	  userName,
-	  firstName,
-	  lastName,
-	  email,
-	  password
-	},
-	{
-	  returning: true,
-	});
-      const token = signToken(update);
-      return { token, update };
+    //STATUS: WORKING
+    //args = {userName, handle, first/lastName, email, password}
+    addUser: async (parent, args, context) => {
+      const newUser = await User.create({ ...args });
+      const token = signToken(newUser);
+      return { token, user: newUser };
     },
 
     //STATUS: PENDING
@@ -107,14 +95,20 @@ const resolvers = {
 					   }});
     },
 
-    //STATUS: PENDING
+    //STATUS: WORKING
     deleteUser: async (parent, {id}, context) => {
-      return await User.destroy({where: {id}});
+      if (context.user) {
+	return (await User.destroy({where: {id}}) === 1);
+      } else {
+        throw new AuthenticationError("You need to be signed in!");
+      }
     },
 
     //STATUS: PENDING
-    addFriend: async (parent, {userId, friendId}, context) => {
-      return await Friend.create({userId, friendId});
+    addFriend: async (parent, {userId, friendId}, context) => {      
+      
+      return (await Friend.create({userId, friendId}) &&
+	      await Friend.create({userId: friendId, friendId: userId}));
     },
 
     //STATUS: PENDING
@@ -160,8 +154,15 @@ const resolvers = {
     removeThought: async (parent, args, context) => {
     },
 
-    //STATUS: PENDING
-    addLiked: async (parent, args, context) => {
+    //STATUS: WORKING
+    addLiked: async (parent, { thoughtId }, context) => {
+      if (context.user) {
+	const liked = await Liked.create({thoughtId, likedByUserId: context.user.id})
+	console.log(liked);
+	return liked;
+      } else {
+	throw new AuthenticaitonErro("You need to be logged in to like a thought!");
+      }
     },
 
     //STATUS: PENDING

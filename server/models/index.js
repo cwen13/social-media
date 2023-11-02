@@ -3,8 +3,8 @@ const ReThought = require("./ReThought");
 const Thought = require("./Thought");
 const User = require("./User");
 const Liked = require("./Liked");
-const Pending = require("./Pending");
 const Blocked = require("./Blocked");
+const Pending = require("./Pending");
 
 
 ReThought.belongsTo(User, {
@@ -53,15 +53,34 @@ User.belongsToMany(User, {
   as: "friendshipFriend",
 });
 
-//User.belongsToMany(User, {
-//  through: "blocked",
-//  as: "blocked"
-//});
-//
-//User.belongsToMany(User, {
-//  through: "pending",
-//  as: "pending"
-//});
+User.belongsToMany(User, {
+  through: "blocked",
+  foreignKey: "userId",
+  otherKey: "blockedId",
+  as: "blockingUser",
+});
+
+User.belongsToMany(User, {
+  through: "blocked",
+  foreignKey: "blockedId",
+  otherKey: "userId",
+  as: "blockedUser",
+});
+
+User.belongsToMany(User, {
+  through: "pending",
+  foreignKey: "userId",
+  otherKey: "pendingId",
+  as: "pendingRequest",
+});
+
+User.belongsToMany(User, {
+  through: "pending",
+  foreignKey: "pendingId",
+  otherKey: "userId",
+  as: "pendingUser",
+});
+
 
 
 module.exports = {
@@ -69,5 +88,7 @@ module.exports = {
   User,
   Thought,
   ReThought,
-  Liked
+  Liked,
+  Blocked,
+  Pending
 };
