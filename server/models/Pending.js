@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 
-class Friend extends Model {};
+class Pending extends Model {};
 
-Friend.init(
+Pending.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -15,7 +15,7 @@ Friend.init(
       type: DataTypes.INTEGER,
       allowNunll: false
     },
-    friendId: {
+    pendingId: {
       type: DataTypes.INTEGER,
       allowNunll: false
     },
@@ -24,8 +24,8 @@ Friend.init(
     sequelize,
     freezeTableName: true,
     underscored: true,
-    modelName: 'friend',
+    modelName: 'pending',
   }
 );
 
-module.exports = Friend;
+module.exports = Pending;
