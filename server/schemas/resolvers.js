@@ -33,8 +33,10 @@ const resolvers = {
 
     //STATUS: WORKING
     getMyThoughts: async (parent, args, context) => {
-      console.log(context.user);
-      return await Thought.findAll({ where: { userId: context.user.id }});
+      //return await Thought.findAll({ where: { userId: context.user.id }});
+      const thought = await Thought.findAll({ where: { userId: context.user.id }});
+      console.log(thought[0].userId);
+      return thought;
     },
 
     //STATUS: WORKING
@@ -45,14 +47,8 @@ const resolvers = {
     //STATUS: WORKING
     //Display descending
     getAllThoughts: async(parent, args, context) => {
-<<<<<<< HEAD
       return await Thought.findAll({ include: { model: User},
 					     order: [["createdAt", "DESC"]]});
-=======
-      let thoughts = await Thought.findAll({include: { model: User}});
-      return thoughts;
-
->>>>>>> be32e9509fe9177e93f13546dc548243ed183876
     },
 
     //STATUS: WORKING
@@ -93,19 +89,18 @@ const resolvers = {
       return { token, user: newUser };
     },
 
-    //STATUS: PENDING
-    updateUser: async (parent, { userName, firstName, lastName, email, password}, context) => {
-      return await User.update({where: { id: context.user.id},
-				variables: { userName,
-					     firstName,
-					     lastName,
-					     email,
-					     password
-					   }});
+    //STATUS: WORKING
+    //args = {userName, handle, first/lastName, email, password}
+    updateUser: async (parent, args, context) => {
+      const userUpdate = await User.update({ ...args   },
+					   {where: { id: args.userId}});
+      const user = await User.findByPk(args.userId);
+      const token = signToken(user);
+      return { token, user };				
     },
 
     //STATUS: WORKING
-    deleteUser: async (parent, {id}, context) => {
+    deleteUser: async (parent, { id }, context) => {
       if (context.user) {
 	return (await User.destroy({where: {id}}) === 1);
       } else {
@@ -113,15 +108,17 @@ const resolvers = {
       }
     },
 
-    //STATUS: PENDING
-    addFriend: async (parent, {userId, friendId}, context) => {      
-      
+    //STATUS: WORKING
+    //Need to update in future to check if userId is valid
+    addFriend: async (parent, { userId, friendId }, context) => {      
+      // making two entries so only one column needs to be quired
+      // when collecting all of a user's friends
       return (await Friend.create({userId, friendId}) &&
 	      await Friend.create({userId: friendId, friendId: userId}));
     },
 
     //STATUS: PENDING
-    removeFriend: async (parent, {id}, context) => {
+    removeFriend: async (parent, { userId, friendId }, context) => {
       return await Friend.destroy({id});
     },
 
@@ -129,36 +126,37 @@ const resolvers = {
     updateFriendship: async (parent, args, context) => {
     },
 
-    //STATUS: PENDING
-    addThought: async (parent,{ content }, context) => {
+    //STATUS: WORKING
+    addThought: async (parent,{ content, thoughtReplyOfId }, context) =>{ 
       if (context.user) {
-	return await Thought.create( {userId: context.user.id, content});
+	return await Thought.create( {userId: context.user.id, content, thoughtReplyOfId});
       } else {
 	//Need to replace with different error
 	throw new AuthenticationError("You are not this thought's owner");
       }
-
       throw new AuthenticationError("You are not logged in");
     },
 
-    //STATUS: PENDING
-    updateThought: async (parent, {thoughtId,content}, context) => {
-
-      if (context.user) {
-	let theThought = Thought.findByPk(thoughtId);
-	let thoughtUser = thethought.dataValues.userId;
-	if (context.user.id === thoughtUser) {
-	  return await Thought.update({content}, {where: {userId: context.user.id}});
-	} else {
-	  //Ned to replace with different error
-	  throw new AuthenticationError("You are not this thought's owner");
-	}
+    //STATUS: WORKING
+    updateThought: async (parent, { thoughtId, content }, context) => {
+      const thought = await Thought.findByPk(thoughtId);
+      if (context.user.id === thought.userId) {
+	await Thought.update({ ...content },
+			     {where: { id: thoughtId }});
+	return await Thought.findByPk(thoughtId);
+      } else {
+	//Ned to replace with different error
+	throw new AuthenticationError("You are not this thought's owner");
       }
-      throw new AuthenticationError("You are not logged in");
     },
 
-    //STATUS: PENDING
-    removeThought: async (parent, args, context) => {
+    //STATUS: WORKING
+    removeThought: async (parent, { id }, context) => {
+      if (context.user) {
+	return (await Thought.destroy({where: {id}}) === 1);
+      } else {
+        throw new Error("You can not delete this thought!");
+      }
     },
 
     //STATUS: WORKING

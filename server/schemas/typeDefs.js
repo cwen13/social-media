@@ -17,19 +17,13 @@ type Friend {
   id: ID!
   userId: ID!
   friendId: ID!
-<<<<<<< HEAD
-=======
-
-  status: String!
-
->>>>>>> be32e9509fe9177e93f13546dc548243ed183876
 }
 
 type Thought {
   id: ID!
   userId: ID!
   content: String!
-  thoughtReplyOfId: ID!
+  thoughtReplyOfId: ID
   user: User
 }
 
@@ -45,15 +39,8 @@ type ReThought {
 
 type Liked {
   id: ID!
-
   thoughtId: ID!
   likedByUserId: ID!
-<<<<<<< HEAD
-=======
-  user: User!
-  thought: Thought!
-
->>>>>>> be32e9509fe9177e93f13546dc548243ed183876
 }
 
 type Auth {
@@ -87,6 +74,7 @@ type Mutation {
           password: String!): Auth!
   updateUser(userId: ID!,
              userName: String,
+             handle: String,
              firstName: String,
              lastName: String,
              email: String,
@@ -94,21 +82,18 @@ type Mutation {
   deleteUser(id: ID!): Boolean!
 
   addFriend(userId: ID!,
-               friendId: ID!,
-               status: String!): Friend
+               friendId: ID!): Friend
   removeFriend(userId: ID!,
                friendId: ID!): Friend
   updateFriendship(userId: ID!,
                    friendId: ID!,
                    status: String!): Friend!
 
-  addThought(userId: ID!,
-                content: String!,
-                thoughtReplayOfId: ID,
-                reThought: Boolean!): Thought!
-  updateThought(id: ID!,
+  addThought(content: String!,
+             thoughtReplyOfId: ID): Thought!
+  updateThought(thoughtId: ID!,
                 content: String!): Thought!
-  removeThought(id: ID!): Thought!
+  removeThought(id: ID!): Boolean!
 
   addLiked(thoughtId: ID!): Liked!
   removeLiked(thoughtId: ID!,
