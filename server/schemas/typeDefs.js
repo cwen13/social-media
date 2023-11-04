@@ -19,6 +19,19 @@ type Friend {
   friendId: ID!
 }
 
+type Block {
+  id: ID!
+  userId: ID!
+  blockId: ID!
+}
+
+type Pending {
+  id: ID!
+  userId: ID!
+  pendingId: ID!
+}
+
+
 type Thought {
   id: ID!
   userId: ID!
@@ -34,7 +47,6 @@ type ReThought {
   additionalThoughtId: ID!
   user: User!
   thought: Thought!
-
 }
 
 type Liked {
@@ -50,16 +62,19 @@ type Auth {
 
 type Query {
   me: User
-  getUser(userId: ID!): User
   getAllUsers: [User!]!
+  getUser(userId: ID!): User
+  getMyFriends: [User]
   getFriends(userId: ID!): [User]
 
   getMyThoughts: [Thought]
-  getThought(id: ID!): Thought
   getAllThoughts: [Thought!]!
+  getAllLiked: [Liked]!
+  getThought(thoughtId: ID!): Thought
+  getThoughtLikes(thoughtId: ID!): [User]
   getUserThoughts(userId: ID!): [Thought]!
 
-  getReplys(thoughtReplayOfId: ID!): [Thought]!
+  getReplys(thoughtReplyOfId: ID!): [Thought]
   getReThoughts(originalThoughtId: ID!): [ReThought]!
 }
 
@@ -79,29 +94,24 @@ type Mutation {
              lastName: String,
              email: String,
              password: String): Auth!
-  deleteUser(id: ID!): Boolean!
+  deleteUser(userId: ID!): Boolean!
 
-  addFriend(userId: ID!,
-               friendId: ID!): Friend
-  removeFriend(userId: ID!,
-               friendId: ID!): Friend
-  updateFriendship(userId: ID!,
-                   friendId: ID!,
-                   status: String!): Friend!
+  addFriend(friendId: ID!): Friend
+  removeFriend(friendId: ID!): Boolean!
+  updateFriend(userId: ID!,
+               friendId: ID!): Friend!
 
   addThought(content: String!,
              thoughtReplyOfId: ID): Thought!
   updateThought(thoughtId: ID!,
                 content: String!): Thought!
-  removeThought(id: ID!): Boolean!
+  removeThought(thoughtId: ID!): Boolean!
 
   addLiked(thoughtId: ID!): Liked!
-  removeLiked(thoughtId: ID!,
-              likedByUserId: ID!): Liked!
-  replayToThought(thoughtId: ID!,
-                  userId: ID!,
-                  content: String!
-                  thoughtReplayOfId: ID!): Thought!
+  removeLiked(thoughtId: ID!): Boolean!
+
+  replyToThought(content: String!
+                 thoughtReplyOfId: ID!): Thought!
   reThought(reThoughtByUserId: ID!,
             originalThoughtId: ID!,
             additionalThoughtId: ID!): ReThought!

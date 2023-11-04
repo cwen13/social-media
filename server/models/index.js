@@ -27,17 +27,26 @@ Thought.hasMany(ReThought, {
     foreignKey: "orginalThoughtId",
 });
 
-User.hasMany(Liked, {
-  foreignKey: "likedByUserId"
-});
-
 User.hasMany(ReThought, {
   foreignKey: "reThoughtByUserId"
 });
 
 User.hasMany(Thought, {
   foreignKey: "userId",
+  as: "author"
 });
+
+User.belongsToMany(Thought, {
+  through: "liked",
+  foreignKey:"likedByUserId",
+  as: "userLikes"
+});
+
+Thought.belongsToMany(User, {
+  through: "liked",
+  foreignKey: "thoughtId",
+  as: "thoughtLikes"
+})
 
 User.belongsToMany(User, {
   through: "friend",
