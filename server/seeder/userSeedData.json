@@ -230,6 +230,14 @@
     "lastName": "Miller",
     "email": "oliviamiller@example.com",
     "password": "secretpassword28"
+  },
+  {
+    "userName": "olivia_bund",
+    "handle": "@oliviabund",
+    "firstName": "Olivia",
+    "lastName": "Bund",
+    "email": "oliviabund@example.com",
+    "password": "secretpassword289"
   }
 ]
 

@@ -18,6 +18,7 @@ Thought.init(
     content: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: false
     },
     thoughtReplyOfId: {
       // thought id of thought it is a replay to
