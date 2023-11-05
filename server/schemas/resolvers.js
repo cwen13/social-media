@@ -218,7 +218,34 @@ const resolvers = {
     },
 
     //STATUS: PENDING
-    reThought: async (parent, args, context) => {
+    addReThought: async (parent, { originalThoughtId, additionalThought }, context) => {
+      let thought = null;
+      if (context.user) {
+	if (additionalThought !== null) {
+	  thought = await Thought.create({ userId: context.user.id,
+					   content: additionalThought,
+					 });
+	}
+	const reThought = await ReThought.create({ reThoughtByUserId: context.user.id,
+						   originalThoughtId,
+						   additionalThoughtId: (thought === null) ? null : thought.id
+						  });
+	const reThoughtStored = await ReThought.findByPk(reThought.id,
+							 { where: { additionalThoughtId: thought.id,
+								    reThoughtByUserId: context.user.id},
+							   
+							   include: [{ model: Thought,
+								       as: "responseThought"},
+
+								     { model: User,
+								       as: "reAuthor" }]})
+
+	console.log(reThoughtStored);
+	return reThoughtStored;
+      } else {
+	throw new AuthenticationError("You can not reThought unless your logged in");
+      }
+      
     },    
   }
 };

@@ -44,9 +44,9 @@ type ReThought {
   id: ID!
   reThoughtByUserId: ID!
   originalThoughtId: ID!
-  additionalThoughtId: ID!
+  additionalThoughtId: ID
+  thought: Thought
   user: User!
-  thought: Thought!
 }
 
 type Liked {
@@ -112,9 +112,8 @@ type Mutation {
 
   replyToThought(content: String!
                  thoughtReplyOfId: ID!): Thought!
-  reThought(reThoughtByUserId: ID!,
-            originalThoughtId: ID!,
-            additionalThoughtId: ID!): ReThought!
+  addReThought(originalThoughtId: ID!,
+               additionalThought: String): ReThought!
 }`;
 
 

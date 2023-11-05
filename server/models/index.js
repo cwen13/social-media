@@ -8,7 +8,12 @@ const Pending = require("./Pending");
 
 
 ReThought.belongsTo(User, {
-  foreignKey: "reThoughtsByUserId"
+  foreignKey: "reThoughtByUserId",
+  as: "reAuthor"
+});
+
+User.hasMany(ReThought, {
+  foreignKey: "reThoughtByUserId",
 });
 
 ReThought.belongsTo(Thought, {
@@ -24,7 +29,8 @@ Thought.hasMany(Liked, {
 });
 		      
 Thought.hasMany(ReThought, {
-    foreignKey: "orginalThoughtId",
+  foreignKey: "orginalThoughtId",
+    as: "responseThought"
 });
 
 User.hasMany(ReThought, {
