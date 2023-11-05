@@ -56,6 +56,7 @@ const resolvers = {
     //STATUS: WORKING
     getAllLiked: async (parent, args, context) => {
       return await Liked.findAll({where: { likedByUserId: context.user.id }});
+				  
     },
     
     //STATUS: WORKING
