@@ -9,8 +9,7 @@ import { QUERY_ME, QUERY_FRIENDS } from './../../utils/queries';
 const Stats = (props) => {
   const friendsQuery = useQuery(QUERY_FRIENDS);
   
-  
-  
+    
   return(
     <>
       <h3> Stats for {props.userName}</h3>

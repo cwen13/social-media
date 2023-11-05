@@ -18,7 +18,8 @@ const Feed = (props) => {
       {(data.getAllThoughts).map(thought => <ThoughtPost userName={thought.user.userName}
 							 userId={thought.userId}
 							 thought={thought.content}
-							 
+							 key={thought.id}
+							 thoughtId={thought.id}
 							 edit={props.userId === thought.userId}
 							 remove={props.userId === thought.userId}/>)}
 

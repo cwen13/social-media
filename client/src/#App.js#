@@ -93,15 +93,21 @@ const App = ()=> {
 	    />
 	    <Route
 	      path="/user/:userId/following"
-	      element={<Following />}
+	      element={<Following userId={data.userId}
+				  userName={data.userName}
+		       />}
 	    />
 	    <Route
 	      path="/user/:userId/liked"
-	      element={<Likes />}
+	      element={<Likes userId={data.userId}
+			      userName={data.userName}
+		       />}
 	    />
 	    <Route
 	      path="/user/:userId/reThoughts"
-	      element={<ReThoughts />}
+	      element={<ReThoughts userId={data.userId}
+				   userName={data.userName}
+		       />}
 	    />
 	    <Route
 	      path="/search/*"
