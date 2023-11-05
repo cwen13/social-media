@@ -229,19 +229,14 @@ const resolvers = {
 	const reThought = await ReThought.create({ reThoughtByUserId: context.user.id,
 						   originalThoughtId,
 						   additionalThoughtId: (thought === null) ? null : thought.id
-						  });
-	const reThoughtStored = await ReThought.findByPk(reThought.id,
-							 { where: { additionalThoughtId: thought.id,
-								    reThoughtByUserId: context.user.id},
-							   
-							   include: [{ model: Thought,
-								       as: "responseThought"},
+						 });
+	console.log(reThought);
+	
+	const user = await User.findByPk(context.user.id);
+	const reThoughtInfo = { reThought, thought, user };
+	console.log("RETHOGUHTINFO:",reThoughtInfo);
 
-								     { model: User,
-								       as: "reAuthor" }]})
-
-	console.log(reThoughtStored);
-	return reThoughtStored;
+	return reThoughtInfo;
       } else {
 	throw new AuthenticationError("You can not reThought unless your logged in");
       }
