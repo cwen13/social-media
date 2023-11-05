@@ -10,8 +10,8 @@ export const QUERY_ME = gql`
       email
     }
   }
-`
-;
+`;
+
 export const QUERY_USERS = gql`
   query getUsers {
     user {
@@ -31,8 +31,7 @@ export const QUERY_USER = gql`
       lastName
       email
     }
-}
-`;
+}`;
 
 export const QUERY_ALL_THOUGHTS = gql`
   query getAllThoughts {
@@ -44,9 +43,19 @@ export const QUERY_ALL_THOUGHTS = gql`
         userName
       }
     }
-  }
-`;
+  }`;
 
+export const QUERY_MY_THOUGHTS = gql`
+  query getMyThoughts {
+    getAllThoughts {
+      id
+      userId
+      content
+      user {
+        userName
+      }
+    }
+  }`;
 
 export const QUERY_USER_THOUGHTS = gql`
   query getUserThoughts($userId: ID!){
@@ -54,15 +63,21 @@ export const QUERY_USER_THOUGHTS = gql`
       id
       userId
     }
-  }
-`;
+  }`;
 
 export const QUERY_USER_FRIENDS = gql`
 query getUserFriends($userId: ID!) {
   friends(id: $userId) {
     userId
     friendId
-    sent
   }
-}
-`;
+}`;
+
+export const QUERY_MY_FRIENDS = gql`
+query getMyFriends {
+  myFriends {
+    userId
+    userNAme
+    handle
+  }
+}`;

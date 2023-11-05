@@ -13,16 +13,21 @@ import {
 import { setContext } from '@apollo/client/link/context';
 import './App.css';
 
-import MainFeed from "./pages/MainFeed";
+import { QUERY_ME } from "./utils/queries";
 
+import MainFeed from "./pages/MainFeed";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import UserProfile from "./pages/UserProfile";
 import Search from "./pages/Search";
+
 import Navbar from "./components/Navbar/";
 import NotFound from "./components/NotFound/";
 import Liked from "./components/Liked/";
 import ReThought from "./components/ReThought/";
+import Following from "./components/Following/";
+import Blocked from "./components/Blocked/";
+
 
 const httpLink = createHttpLink({
   uri: '/graphql',
@@ -44,6 +49,7 @@ const client = new ApolloClient({
 });
 
 const App = ()=> {
+  console.log(QUERY_ME);
   const { loading, error, data } = useQuery(QUERY_ME);
 
   let userMe;
@@ -93,15 +99,27 @@ const App = ()=> {
 	    />
 	    <Route
 	      path="/user/:userId/following"
-	      element={<Following />}
+	      element={<Following userId={data.userId}
+				  userName={data.userName}
+		       />}
+	    />
+	    <Route
+	      path="/user/:userId/blocked"
+	      element={<Blocked userId={data.userId}
+				userName={data.userName}
+		       />}
 	    />
 	    <Route
 	      path="/user/:userId/liked"
-	      element={<Likes />}
+	      element={<Liked userId={data.userId}
+			      userName={data.userName}
+		       />}
 	    />
 	    <Route
 	      path="/user/:userId/reThoughts"
-	      element={<ReThoughts />}
+	      element={<ReThought userId={data.userId}
+				  userName={data.userName}
+		       />}
 	    />
 	    <Route
 	      path="/search/*"

@@ -1,16 +1,18 @@
 import React, { useState } from "react";
-import { Link } form "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { useQuery } from '@apollo/client';
-import { QUERY_ME, QUERY_FRIENDS } from './../../utils/queries';
+import { QUERY_ME, QUERY_MY_FRIENDS } from './../../utils/queries';
+
+import Following from "./../Following";
+import FriendList from "./../FriendList";
 
 //Stats will include friend indicator, link to liked,
 //  reThoughts, and 
 const Stats = (props) => {
-  const friendsQuery = useQuery(QUERY_FRIENDS);
+  const friendsQuery = useQuery(QUERY_MY_FRIENDS);
   
-  
-  
+    
   return(
     <>
       <h3> Stats for {props.userName}</h3>
@@ -24,19 +26,27 @@ const Stats = (props) => {
 	<li>Following
 	  {/*This will be a mini scroll box likely a iframe*/}
 	  <Following userId={props.userId} />
-	  <Link to="/:userId/following">See everyone you follow</Link>
+	  <Link to={`/${props.userId}/following`}
+		state={{ userId: props.userId,
+			 userName: props.userName }}>See everyone you follow</Link>
 	</li>
 	
 	<li>
-	  <Link to="/:userId/likes">Liked thoughts</Link>
+	  <Link to={`/${props.userId}/liked`}
+		state={{ userId: props.userId,
+			 userName: props.userName }}>Liked thoughts</Link>
       </li>
 
       <li>
-	<Link to="/:userId/reThoughts">Link to reThoughts</Link>
+	<Link to={`/${props.userId}/reThoughts`}
+	      state={{ userId: props.userId,
+		       userName: props.userName }}>Link to reThoughts</Link>
       </li>
 
       <li>
-	<Link to="/:userId/blocked">Blocked</Link>
+	<Link to={`/${props.userId}/blocked`}
+	      state={{ userId: props.userId,
+		       userName: props.userName }}>Blocked</Link>
       </li>
 
       <li>
