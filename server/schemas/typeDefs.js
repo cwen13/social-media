@@ -61,11 +61,11 @@ type Auth {
 }
 
 type Query {
-  me: User
+  getMe: User
   getAllUsers: [User!]!
   getUser(userId: ID!): User
   getMyFriends: [User]
-  getFriends(userId: ID!): [User]
+  getUserFriends(userId: ID!): [User]
 
   getMyThoughts: [Thought]
   getAllThoughts: [Thought!]!

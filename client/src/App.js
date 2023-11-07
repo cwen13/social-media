@@ -48,12 +48,11 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const App = ()=> {
-  console.log(QUERY_ME);
-  const { loading, error, data } = useQuery(QUERY_ME);
-
+const App = () => {
   let userMe;
-  
+  const { loading, error, data } = useQuery(QUERY_ME);
+  console.log(data);
+
   if ((typeof data === "undefined") || (data.me === null)) {
     userMe = { id: 0,
 	       userName: "Luky",
@@ -64,7 +63,6 @@ const App = ()=> {
   }
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;
-
   
   return (
     <ApolloProvider client={client}>
