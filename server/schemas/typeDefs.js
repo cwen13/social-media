@@ -61,7 +61,7 @@ type Auth {
 }
 
 type Query {
-  getMe: User
+  getMe: User!
   getAllUsers: [User!]!
   getUser(userId: ID!): User
   getMyFriends: [User]
@@ -117,7 +117,7 @@ type Mutation {
 }`;
 
 
-module.exports  = typeDefs;
+module.exports = typeDefs;
  
 
 

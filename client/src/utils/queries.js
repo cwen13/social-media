@@ -1,11 +1,5 @@
 import { gql } from '@apollo/client';
 
-const thoughtInfo = `
-    content
-    user{
-      userName
-      handle
-    }`;
 
 
 export const QUERY_ME = gql`

@@ -49,25 +49,17 @@ const client = new ApolloClient({
 });
 
 const App = () => {
-  let userMe;
-  const { loading, error, data } = useQuery(QUERY_ME);
-  console.log(data);
 
-  if ((typeof data === "undefined") || (data.me === null)) {
-    userMe = { id: 0,
-	       userName: "Luky",
-	       firstName:"Lucky",
-	       email:"licky@we.com" };
-  } else {
-    userMe = data.me;
-  }
-  if (loading) return "Loading...";
-  if (error) return `Error ${error.message}`;
-  
+  let [user, setUser] = useState({ id: 0,
+				   userName: "Luky",
+				   firstName:"Lucky",
+				   email:"licky@we.com" });
+				 
   return (
     <ApolloProvider client={client}>
+      <UserContext.Provider value=user>
       <Router>
-     	  <Navbar />
+     	<Navbar />
           <Routes>	    
             <Route 
               path="/" 
@@ -129,6 +121,7 @@ const App = () => {
 	    />
           </Routes>
       </Router>
+      </UserContext.Provider>
     </ApolloProvider>
     
   );
