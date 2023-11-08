@@ -32,7 +32,8 @@ const MainFeed = (props) => {
 					 firstName={userMe.firstName}
 					 email={userMe.email} />
 	    </li>
-	    <li id="feed"> <Feed userId={userMe.id}g /> </li>
+	    <li id="feed"> <Feed userId={userMe.id}
+				 queryMe={false}/> </li>
 	  </ul>
 	</section>
   );

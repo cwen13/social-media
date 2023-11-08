@@ -13,14 +13,20 @@ import {
 import { setContext } from '@apollo/client/link/context';
 import './App.css';
 
-import MainFeed from "./pages/MainFeed";
+import { QUERY_ME } from "./utils/queries";
 
+import MainFeed from "./pages/MainFeed";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import UserProfile from "./pages/UserProfile";
 import Search from "./pages/Search";
+
 import Navbar from "./components/Navbar/";
 import NotFound from "./components/NotFound/";
+import Liked from "./components/Liked/";
+import ReThought from "./components/ReThought/";
+import Following from "./components/Following/";
+import Blocked from "./components/Blocked/";
 
 
 const httpLink = createHttpLink({
@@ -42,7 +48,22 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const App = ()=> {
+const App = () => {
+  let userMe;
+  const { loading, error, data } = useQuery(QUERY_ME);
+  console.log(data);
+
+  if ((typeof data === "undefined") || (data.me === null)) {
+    userMe = { id: 0,
+	       userName: "Luky",
+	       firstName:"Lucky",
+	       email:"licky@we.com" };
+  } else {
+    userMe = data.me;
+  }
+  if (loading) return "Loading...";
+  if (error) return `Error ${error.message}`;
+  
   return (
     <ApolloProvider client={client}>
       <Router>
@@ -50,7 +71,12 @@ const App = ()=> {
           <Routes>	    
             <Route 
               path="/" 
-              element={<MainFeed />} 
+              element={<MainFeed userId={data.userId}
+				 userName={data.userName}
+				 firstName={data.firstName}
+				 lastName={data.lastName}
+				 email={data.email}
+		       />} 
             />
 	    <Route 
               path="/login" 
@@ -62,7 +88,36 @@ const App = ()=> {
             />
 	    <Route
 	      path="/user/:userId"
-	      element={<UserProfile />}
+	      element={<UserProfile userId={data.userId}
+				    userName={data.userName}
+				    firstName={data.firstName}
+				    lastName={data.lastName}
+				    email={data.email}
+		       />}
+	    />
+	    <Route
+	      path="/user/:userId/following"
+	      element={<Following userId={data.userId}
+				  userName={data.userName}
+		       />}
+	    />
+	    <Route
+	      path="/user/:userId/blocked"
+	      element={<Blocked userId={data.userId}
+				userName={data.userName}
+		       />}
+	    />
+	    <Route
+	      path="/user/:userId/liked"
+	      element={<Liked userId={data.userId}
+			      userName={data.userName}
+		       />}
+	    />
+	    <Route
+	      path="/user/:userId/reThoughts"
+	      element={<ReThought userId={data.userId}
+				  userName={data.userName}
+		       />}
 	    />
 	    <Route
 	      path="/search/*"

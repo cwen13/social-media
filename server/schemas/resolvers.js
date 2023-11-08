@@ -1,13 +1,12 @@
 const { AuthenticationError } = require('apollo-server-express');
 const { User, Friend, Thought, ReThought, Liked, Blocked, Pending } = require("./../models");
 const { signToken } = require('../utils/auth');
-const { Op } = require("sequelize");
 
 const resolvers = {
   Query: {
-    
+   
     //STATUS: WORKING
-    me: async (parent, args, context ) => {
+    getMe: async (parent, args, context ) => {
       return await User.findByPk((context.user) ? context.user.id : 1);
     },
 
@@ -32,7 +31,7 @@ const resolvers = {
     },
     
     //STATUS: WORKING
-    getFriends: async (parent, { userId }, context) => {
+    getUserFriends: async (parent, { userId }, context) => {
       let userFriends = await User.findByPk(userId, {
 	include: { model: User,
 		   as: "friendshipUser",
@@ -242,7 +241,7 @@ const resolvers = {
 	throw new AuthenticationError("You can not reThought unless your logged in");
       }
       
-    },    
+    }
   }
 };
 

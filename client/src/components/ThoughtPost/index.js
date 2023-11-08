@@ -18,6 +18,7 @@ const ThoughtPost = (props) => {
     <section className="entry">
       <div className="headliner">
 	<ul>
+	  <li className="thoughtId">{props.thoughtId}</li>
 	  <li className="userName">{props.userName}</li>
 	  <li className="pfp">This is a profile pic</li>
 	  <li className="handler">{props.userId}</li>

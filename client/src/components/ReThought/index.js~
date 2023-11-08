@@ -1,0 +1,9 @@
+import React from "react";
+
+const ReThought = (props) => {
+  return(
+    <p> This is where te liekd posts will be shown</p>
+  );
+};
+
+export default ReThought;

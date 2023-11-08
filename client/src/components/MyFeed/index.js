@@ -1,14 +1,17 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
 
-import ThoughtPost from "./../ThoughtPost/"
-import { QUERY_ALL_THOUGHTS } from "./../../utils/queries";
+import ThoughtPost from "./../ThoughtPost/";
+import { QUERY_MY_THOUGHTS } from "./../../utils/queries";
 
-import "./style.css";
+//import "./style.css";
 
-const Feed = (props) => {
-  const { loading, error, data } = useQuery(QUERY_ALL_THOUGHTS);
-   
+const MyFeed = (props) => {
+  const userId = props.userId;
+  
+    const { loading, error, data } = useQuery(QUERY_MY_THOUGHTS,
+					      { variables: { userId }});  
+  
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;
 
@@ -27,4 +30,4 @@ const Feed = (props) => {
   );
 };
   
-export default Feed;
+export default MyFeed;
