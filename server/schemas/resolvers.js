@@ -7,6 +7,7 @@ const resolvers = {
    
     //STATUS: WORKING
     getMe: async (parent, args, context ) => {
+      console.log("Here");
       return await User.findByPk((context.user) ? context.user.id : 1);
     },
 

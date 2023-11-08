@@ -1,35 +1,50 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import { useQuery } from '@apollo/client';
-import { QUERY_ME } from './../../utils/queries';
+import { QUERY_USER } from './../../utils/queries';
 
 import ThoughtCreate from "./../ThoughtCreate"
 
+import { UserContext } from "./../../utils/UserContext";
 
 import "./style.css";
 
-const UserInfo = (props) => {
+const UserInfo =  ( ) => {
+
+  const { userId, setUserId } = useContext(UserContext);
+
+  const { loading, error, data } =  useQuery(QUERY_USER,
+    {variables: { userId }
+    });
+
+  if (loading) return "Loading...";
+  if (error) return `Error ${error.message}`;
+
+  console.log(data);
   
   return(
     <section className="userInfo" >
-      <h1>=^={props.userName}=^=</h1>
-      <div className="pfp">
-	+==+<br/>
-	|--|<br/>
-	+==+
-      </div>
-      <div className="names">
-	NAME: {props.firstName}
-      </div>
-      <div className="email">
-	EMAIL: {props.email}
-      </div>
-      { (props.userId !== 0) ? <ThoughtCreate userId={props.userId}
-					      submission={props.submission} />
-	: <p>Sign up or login to start putting your best thougths out there!</p>}
+      USER INFO
+      	<ThoughtCreate userId={userId} /> :
+	<p>Sign up or login to start putting your best thougths out there!</p>}
     </section>
   );
 };
 
 export default UserInfo;
+
+
+//      <h1>=^={data.user.userName}=^=</h1>
+//      <div className="pfp">
+//	+==+<br/>
+//	|--|<br/>
+//	+==+
+//      </div>
+//      <div className="names">
+//	NAME: {data.user.handle}
+//      </div>
+//      <div className="email">
+//	EMAIL: {data.user.email}
+//      </div>
+//      { (userId !== 0) ?
 
