@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from "react";
+import React, { useState, useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import {
   ApolloClient,
@@ -9,10 +8,9 @@ import {
   useQuery,
   gql
 } from '@apollo/client';
-
-import { setContext } from '@apollo/client/link/context';
+ 
 import './App.css';
-
+import { setContext } from "@apollo/client/link/context";
 import { QUERY_ME } from "./utils/queries";
 
 import MainFeed from "./pages/MainFeed";
@@ -28,6 +26,7 @@ import ReThought from "./components/ReThought/";
 import Following from "./components/Following/";
 import Blocked from "./components/Blocked/";
 
+import { UserContext } from "./utils/UserContext";
 
 const httpLink = createHttpLink({
   uri: '/graphql',
@@ -48,82 +47,65 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+
+
 const App = () => {
 
-  let [user, setUser] = useState({ id: 0,
-				   userName: "Luky",
-				   firstName:"Lucky",
-				   email:"licky@we.com" });
-				 
+  const [userId, setUserId] = useState(0);
+  
   return (
     <ApolloProvider client={client}>
-      <UserContext.Provider value=user>
-      <Router>
-     	<Navbar />
-          <Routes>	    
-            <Route 
-              path="/" 
-              element={<MainFeed userId={data.userId}
-				 userName={data.userName}
-				 firstName={data.firstName}
-				 lastName={data.lastName}
-				 email={data.email}
-		       />} 
-            />
-	    <Route 
-              path="/login" 
-              element={<Login />} 
-            />
-            <Route 
-              path="/signup" 
-              element={<SignUp />} 
-            />
-	    <Route
-	      path="/user/:userId"
-	      element={<UserProfile userId={data.userId}
-				    userName={data.userName}
-				    firstName={data.firstName}
-				    lastName={data.lastName}
-				    email={data.email}
-		       />}
-	    />
-	    <Route
-	      path="/user/:userId/following"
-	      element={<Following userId={data.userId}
-				  userName={data.userName}
-		       />}
-	    />
-	    <Route
-	      path="/user/:userId/blocked"
-	      element={<Blocked userId={data.userId}
-				userName={data.userName}
-		       />}
-	    />
-	    <Route
-	      path="/user/:userId/liked"
-	      element={<Liked userId={data.userId}
-			      userName={data.userName}
-		       />}
-	    />
-	    <Route
-	      path="/user/:userId/reThoughts"
-	      element={<ReThought userId={data.userId}
-				  userName={data.userName}
-		       />}
-	    />
-	    <Route
-	      path="/search/*"
-	      element={<Search />}
-	    />
-	    <Route 
-	      path='*' 
-	      element={<NotFound />}
-	    />
-          </Routes>
-      </Router>
-      </UserContext.Provider>
-    </ApolloProvider>
-    
+	<Router>
+     	  <Navbar />
+	  <UserContext.Provider value={{
+				  userId,
+				  setUserId
+				}}>
+	    <Routes>	    
+              <Route 
+		path="/" 
+		element={<MainFeed />} 
+              />
+	      <Route 
+		path="/login" 
+		element={<Login />} 
+              />
+              <Route 
+		path="/signup" 
+		element={<SignUp />} 
+              />
+	      <Route
+		path="/user/:userId"
+		element={<UserProfile />}
+	      />
+	      <Route
+		path="/user/:userId/following"
+		element={<Following />}
+	      />
+	      <Route
+		path="/user/:userId/blocked"
+		element={<Blocked />}
+	      />
+	      <Route
+		path="/user/:userId/liked"
+		element={<Liked />}
+	      />
+	      <Route
+		path="/user/:userId/reThoughts"
+		element={<ReThought />}
+	      />
+	      <Route
+		path="/search/*"
+		element={<Search />}
+	      />
+	      <Route 
+		path='*' 
+		element={<NotFound />}
+	      />
+            </Routes>
+	  </UserContext.Provider>
+	</Router>
+    </ApolloProvider>    
   );
 }
 

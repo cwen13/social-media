@@ -6,6 +6,9 @@ import { idbPromise } from '../../utils/helpers';
 
 import "./style.css";
 
+import UserContext from "./../../utils/UserContext";
+
+
 const ThoughtPost = (props) => {
 
   const handleRemove = async (event) => {

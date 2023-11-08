@@ -27,8 +27,7 @@ export const QUERY_USER = gql`
 query getUser ($userId: ID!) {
    getUser (id: $userId) {
      userName
-     firstName
-     lastName
+     handle
      email
    }
 }`;
@@ -69,6 +68,7 @@ query getAllThoughts {
     userId
     content
     user {
+      id
       userName
     }
   }
