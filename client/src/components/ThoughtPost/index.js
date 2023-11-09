@@ -6,7 +6,7 @@ import { idbPromise } from '../../utils/helpers';
 
 import "./style.css";
 
-import UserContext from "./../../utils/UserContext";
+import { UserContext } from "./../../utils/UserContext";
 
 
 const ThoughtPost = (props) => {
@@ -30,7 +30,7 @@ const ThoughtPost = (props) => {
       <div className="thought">
 	Thought: {props.thought}
       </div>
-      <div class="actions">
+      <div className="actions">
       { props.edit ? <button id={`edit-${props.key}`}>EDIT!</button> : <div></div>}
 	{ props.remove ? <button id={`remove-${props.key}`} >Remove!</button> : <div></div>}
 	</div>

@@ -31,7 +31,6 @@ type Pending {
   pendingId: ID!
 }
 
-
 type Thought {
   id: ID!
   userId: ID!
