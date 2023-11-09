@@ -6,17 +6,17 @@ import { LOGIN_USER } from "./queries";
 export const UserContext = createContext(null);
 
 export const UserContextProvider = ({ children }) => {
-  const [userId, setUserId] = useState(0);
+  const [userId, setUserId] = useState(1);
 
   const loginUser = (newUserId) => {
     setUserId(newUserId);
     return newUserId;
   }
 
-  const logoutUser = () => setUserId(0);
+  const logoutUser = () => setUserId(1);
   
   return (
-    <UserContext.Provider value={{userId, setUserId}}>
+    <UserContext.Provider value={{userId, loginUser, logoutUser}}>
       {children}
     </UserContext.Provider>
   );

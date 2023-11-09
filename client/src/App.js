@@ -26,7 +26,7 @@ import ReThought from "./components/ReThought/";
 import Following from "./components/Following/";
 import Blocked from "./components/Blocked/";
 
-import {UserContextProvider, useUserContext } from "./utils/UserContext";
+import { UserContextProvider } from "./utils/UserContext";
 
 const httpLink = createHttpLink({
   uri: '/graphql',
@@ -49,11 +49,11 @@ const client = new ApolloClient({
 
 
 const App = () => {
-  
+
   return (
     <ApolloProvider client={client}>
-      <UserContextProvider >
-	<Router>
+      <UserContextProvider>
+      <Router>
      	  <Navbar />
 	  <Routes>	    
             <Route 
@@ -97,7 +97,7 @@ const App = () => {
 	      element={<NotFound />}
 	    />
           </Routes>
-	</Router>
+      </Router>
       </UserContextProvider>
     </ApolloProvider>    
   );

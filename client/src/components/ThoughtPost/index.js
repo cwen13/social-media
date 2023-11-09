@@ -6,7 +6,7 @@ import { idbPromise } from '../../utils/helpers';
 
 import "./style.css";
 
-import UserContext from "./../../App";
+import { UserContext } from "./../../utils/UserContext";
 
 
 const ThoughtPost = (props) => {

@@ -13,7 +13,7 @@ query me {
   }
 }`;
 
-export const QUERY_USERS = gql`
+export const QUERY_ALL_USERS = gql`
 query getAllUsers {
   getAllUser {
     id
