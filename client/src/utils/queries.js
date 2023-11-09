@@ -16,6 +16,7 @@ query me {
 export const QUERY_USERS = gql`
 query getAllUsers {
   getAllUser {
+    id
     userName
     firstName
     lastName
@@ -25,7 +26,7 @@ query getAllUsers {
 
 export const QUERY_USER = gql`
 query getUser ($userId: ID!) {
-   getUser (id: $userId) {
+   getUser (userId: $userId) {
      userName
      handle
      email

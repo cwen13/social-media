@@ -1,24 +1,40 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { Link } from 'react-router-dom';
+
 import { LOGIN_USER } from './../utils/mutations';
 import Auth from './../utils/auth';
+import { UserContext, useUserContext } from "./../utils/UserContext";
 
-function Login(props) {
+const DEF_DELAY=1000;
+const sleep = (ms) => {
+  return new Promise(resolve => setTimeout(resolve, ms || DEF_DELAY));
+};
+
+
+const Login = (props) => {
+
+  const {userId, setUserId} = useUserContext();
+  
   const [formState, setFormState] = useState({ email: '', password: '' });
-
-  console.log("LOGIN_USER:", LOGIN_USER);
   
   const [login, { error }] = useMutation(LOGIN_USER);
 
+  
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     try {
-      const mutationResponse = await login({
+      const mutationResponse = login({
         variables: { email: formState.email, password: formState.password },
+      }).then(async () => {
+	console.log(mutationResponse);
+//	const token = mutationResponse.data.login.token;
+//	Auth.login(token);
+//	console.log(mutationResponse);
+//	setUserId(mutationResponse);
+	await sleep(100);
       });
-      const token = mutationResponse.data.login.token;
-      Auth.login(token);
+      
     } catch (e) {
       console.log(e);
     }

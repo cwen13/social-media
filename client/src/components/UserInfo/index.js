@@ -1,30 +1,40 @@
 import React, { useContext } from "react";
-
 import { useQuery } from '@apollo/client';
+
 import { QUERY_USER } from './../../utils/queries';
-
 import ThoughtCreate from "./../ThoughtCreate"
-
-import { UserContext } from "./../../utils/UserContext";
-
+import { UserContext, useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
 const UserInfo =  ( ) => {
 
-  const { userId, setUserId } = useContext(UserContext);
+  const { userId, setUserId } = useUserContext();
 
   const { loading, error, data } =  useQuery(QUERY_USER,
-    {variables: { userId }
-    });
+					     { variables: { userId }});
 
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;
 
+  console.log("USERID:", userId);
   console.log(data);
   
   return(
     <section className="userInfo" >
-      USER INFO
+     <h1>=^={data.userName}=^=</h1>
+      <div className="pfp">
+	+==+<br/>
+	|--|<br/>
+	+==+
+      </div>
+      <div className="names">
+	NAME: {data.handle}
+      </div>
+      <div className="email">
+	EMAIL: {data.email}
+      </div>
+      { (userId !== 0) ?
+
       	<ThoughtCreate userId={userId} /> :
 	<p>Sign up or login to start putting your best thougths out there!</p>}
     </section>
@@ -34,17 +44,4 @@ const UserInfo =  ( ) => {
 export default UserInfo;
 
 
-//      <h1>=^={data.user.userName}=^=</h1>
-//      <div className="pfp">
-//	+==+<br/>
-//	|--|<br/>
-//	+==+
-//      </div>
-//      <div className="names">
-//	NAME: {data.user.handle}
-//      </div>
-//      <div className="email">
-//	EMAIL: {data.user.email}
-//      </div>
-//      { (userId !== 0) ?
 

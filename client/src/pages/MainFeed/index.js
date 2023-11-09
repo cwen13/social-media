@@ -4,7 +4,7 @@ import Feed from "./../../components/Feed/"
 import RecentThoughts from "./../../components/RecentThoughts/"
 import UserInfo from "./../../components/UserInfo";
 
-import { UserContext } from "./../../utils/UserContext";
+import { UserContext } from "./../../App";
 
 import "./style.css";
 

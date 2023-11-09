@@ -1,7 +1,19 @@
-import { createContext } from 'react';
+import React, { useContext, createContext, useState } from "react";
 
-// Create our theme context using React.CreateContext()
-export const UserContext = createContext(0);
+export const UserContext = createContext(null);
 
+export const UserContextProvider = ({ children }) => {
+  const [userId, setUserId] = useState(0);
+  
+  return (
+    <UserContext.Provider value={{userId, setUserId}}>
+      {children}
+    </UserContext.Provider>
+  );
+};
 
-
+export const useUserContext = () => {
+  const context = useContext(UserContext);
+  if(!context) throw new Error("Did not connect to the context");
+  return context;
+};

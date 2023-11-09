@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, createContext } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import {
   ApolloClient,
@@ -26,7 +26,7 @@ import ReThought from "./components/ReThought/";
 import Following from "./components/Following/";
 import Blocked from "./components/Blocked/";
 
-import { UserContext } from "./utils/UserContext";
+import {UserContextProvider, useUserContext } from "./utils/UserContext";
 
 const httpLink = createHttpLink({
   uri: '/graphql',
@@ -48,63 +48,57 @@ const client = new ApolloClient({
 });
 
 
-
 const App = () => {
-
-  const [userId, setUserId] = useState(0);
   
   return (
     <ApolloProvider client={client}>
+      <UserContextProvider >
 	<Router>
      	  <Navbar />
-	  <UserContext.Provider value={{
-				  userId,
-				  setUserId
-				}}>
-	    <Routes>	    
-              <Route 
-		path="/" 
-		element={<MainFeed />} 
-              />
-	      <Route 
-		path="/login" 
-		element={<Login />} 
-              />
-              <Route 
-		path="/signup" 
-		element={<SignUp />} 
-              />
-	      <Route
-		path="/user/:userId"
-		element={<UserProfile />}
-	      />
-	      <Route
-		path="/user/:userId/following"
-		element={<Following />}
-	      />
-	      <Route
-		path="/user/:userId/blocked"
-		element={<Blocked />}
-	      />
-	      <Route
-		path="/user/:userId/liked"
-		element={<Liked />}
-	      />
-	      <Route
-		path="/user/:userId/reThoughts"
-		element={<ReThought />}
-	      />
-	      <Route
-		path="/search/*"
-		element={<Search />}
-	      />
-	      <Route 
-		path='*' 
-		element={<NotFound />}
-	      />
-            </Routes>
-	  </UserContext.Provider>
+	  <Routes>	    
+            <Route 
+	      path="/" 
+	      element={<MainFeed />} 
+            />
+	    <Route 
+	      path="/login" 
+	      element={<Login />}
+            />
+            <Route 
+	      path="/signup" 
+	      element={<SignUp />} 
+            />
+	    <Route
+	      path="/user/:userId"
+	      element={<UserProfile />}
+	    />
+	    <Route
+	      path="/user/:userId/following"
+	      element={<Following />}
+	    />
+	    <Route
+	      path="/user/:userId/blocked"
+	      element={<Blocked />}
+	    />
+	    <Route
+	      path="/user/:userId/liked"
+	      element={<Liked />}
+	    />
+	    <Route
+	      path="/user/:userId/reThoughts"
+	      element={<ReThought />}
+	    />
+	    <Route
+	      path="/search/*"
+	      element={<Search />}
+	    />
+	    <Route 
+	      path='*' 
+	      element={<NotFound />}
+	    />
+          </Routes>
 	</Router>
+      </UserContextProvider>
     </ApolloProvider>    
   );
 }
