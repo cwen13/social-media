@@ -8,37 +8,48 @@ import "./style.css";
 
 const UserInfo =  ( ) => {
 
-  const { userId, setUserId } = useUserContext();
+  const { userId, setUserId } = useUserContext(2);
 
-  const { loading, error, data } =  useQuery(QUERY_USER,
+  const { loading, error, data } = useQuery(QUERY_USER,
 					     { variables: { userId }});
 
+
+  setUserId(2);
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;
-
   console.log("USERID:", userId);
   console.log(data);
-  
-  return(
-    <section className="userInfo" >
-     <h1>=^={data.userName}=^=</h1>
-      <div className="pfp">
-	+==+<br/>
-	|--|<br/>
-	+==+
-      </div>
-      <div className="names">
-	NAME: {data.handle}
-      </div>
-      <div className="email">
-	EMAIL: {data.email}
-      </div>
-      { (userId !== 0) ?
 
-      	<ThoughtCreate userId={userId} /> :
-	<p>Sign up or login to start putting your best thougths out there!</p>}
-    </section>
-  );
+  const renderLanding = () => {
+    return (
+      <section> LOGIN TO EXP </section>
+    );
+  };
+
+  const renderUserInfo = () => {
+    return (
+      <section className="userInfo" >
+	<h1>=^={data.getUser.userName}=^=</h1>
+	<div className="pfp">
+	  +==+<br/>
+	  |--|<br/>
+	  +==+
+	</div>
+	<div className="names">
+	  NAME: {data.getUser.handle}
+	</div>
+	<div className="email">
+	  EMAIL: {data.getUser.email}
+	</div>
+	{ (userId !== 0) ?
+	  
+      	  <ThoughtCreate userId={userId} /> :
+	  <p>Sign up or login to start putting your best thougths out there!</p>}
+      </section>
+    );
+  };
+  
+  return((data.getUser ==  null) ? renderLanding() : renderUserInfo());
 };
 
 export default UserInfo;

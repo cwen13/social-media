@@ -4,13 +4,13 @@ import { Link } from 'react-router-dom';
 
 import { LOGIN_USER } from './../utils/mutations';
 import Auth from './../utils/auth';
-import { UserContext, useUserContext } from "./../utils/UserContext";
+import { UserContext, useUserContext, UserContextProvider } from "./../utils/UserContext";
+
 
 const DEF_DELAY=1000;
 const sleep = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms || DEF_DELAY));
 };
-
 
 const Login = (props) => {
 
@@ -24,16 +24,13 @@ const Login = (props) => {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     try {
-      const mutationResponse = login({
+      const loginRes = await login({
         variables: { email: formState.email, password: formState.password },
-      }).then(async () => {
-	console.log(mutationResponse);
-//	const token = mutationResponse.data.login.token;
-//	Auth.login(token);
-//	console.log(mutationResponse);
-//	setUserId(mutationResponse);
-	await sleep(100);
-      });
+      })
+      console.log(loginRes);
+      Auth.login(loginRes.data.login.token);
+      UserContextProvider.loginUser(loginRes.data.login.user.id);
+      await sleep(100);
       
     } catch (e) {
       console.log(e);
