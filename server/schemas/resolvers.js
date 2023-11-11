@@ -163,8 +163,7 @@ const resolvers = {
 					      thoughtReplyOfId,
 					    });
 	return await Thought.findByPk(thought.id,
-				      { include: { model: User }});
-				     
+				      { include: { model: User }});				     
       } else {
 	//Need to replace with different error
 	throw new Error("Something went wrong");

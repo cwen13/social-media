@@ -76,8 +76,8 @@ user {
 `;
 
 export const ADD_THOUGHT = gql`
-  mutation addThought($userId: ID!, $content: String!) {
-    addThought (userId: $userId, content: $content) {
+  mutation addThought($userId: ID!, $content: String!, $thoughtReplyOfId: ID) {
+    addThought (userId: $userId, content: $content, thoughtReplyOfId: $thoughtReplyOfId) {
       id
       userId
       content

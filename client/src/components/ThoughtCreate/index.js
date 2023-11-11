@@ -13,7 +13,7 @@ const ThoughtCreate = () => {
 
   const { userId, loginUser, logoutUser } = useUserContext();
   
-  const [ thoughtState, setThoughtState ] = useState({thought: ""});
+  const [ thoughtState, setThoughtState ] = useState("");
   const [ newThought, { error } ] = useMutation(ADD_THOUGHT,{
     refetchQueries: [
       QUERY_ALL_THOUGHTS,
@@ -29,12 +29,13 @@ const ThoughtCreate = () => {
     });
   };
   
-  const handleThought = async (event) => {
+  const postThought = async (event) => {
     event.preventDefault();
     try {
       console.log("thought:", thoughtState.thought);
       const mutationResponse = await newThought({
 	variables: {
+	  userId: userId,
 	  content: thoughtState.thought,
 	  thoughtReplyOfId: null
 	}
@@ -59,7 +60,7 @@ const ThoughtCreate = () => {
 		id="thoughtBox"
 		onChange={handleChange}>
       </textarea>
-      <button id="postThought" onClick={handleThought}>
+      <button id="postThought" onClick={postThought}>
 	Thought creation
       </button>
     </div>

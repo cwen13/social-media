@@ -100,7 +100,8 @@ type Mutation {
   updateFriend(userId: ID!,
                friendId: ID!): Friend!
 
-  addThought(content: String!,
+  addThought(userId: ID!
+             content: String!,
              thoughtReplyOfId: ID): Thought!
   updateThought(thoughtId: ID!,
                 content: String!): Thought!
