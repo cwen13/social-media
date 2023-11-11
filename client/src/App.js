@@ -51,8 +51,8 @@ const App = () => {
 
   return (
     <ApolloProvider client={client}>
-      <UserContextProvider>
-	<Router>
+      <Router>
+	<UserContextProvider>
      	  <Navbar />
 	  <Routes>	    
             <Route 
@@ -96,8 +96,8 @@ const App = () => {
 	      element={<NotFound />}
 	    />
           </Routes>
+	</UserContextProvider>
       </Router>
-      </UserContextProvider>
     </ApolloProvider>    
   );
 }

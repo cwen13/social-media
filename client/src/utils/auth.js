@@ -1,10 +1,18 @@
+import React, { useEffect } from "react";
 import decode from 'jwt-decode';
-import { UserContext } from "./UserContext";
+import { useNavigate } from "react-router-dom";
+import { useUserContext } from "./UserContext";
 
 class AuthService {
+
   
   getProfile() {
     return decode(this.getToken());
+  }
+
+  getToken() {
+    // Retrieves the user token from localStorage
+    return localStorage.getItem('id_token');
   }
 
   loggedIn() {
@@ -24,15 +32,10 @@ class AuthService {
     }
   }
 
-  getToken() {
-    // Retrieves the user token from localStorage
-    return localStorage.getItem('id_token');
-  }
-
   login(idToken) {
     // Saves user token to localStorage
-    localStorage.setItem('id_token', idToken);    
-    window.location.assign('/');
+    localStorage.setItem('id_token', idToken);
+//    window.location.assign('/');
   }
 
   logout() {

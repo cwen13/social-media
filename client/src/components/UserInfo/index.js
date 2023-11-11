@@ -3,12 +3,14 @@ import { useQuery } from '@apollo/client';
 
 import { QUERY_USER } from './../../utils/queries';
 import ThoughtCreate from "./../ThoughtCreate"
-import { UserContext } from "./../../utils/UserContext";
+import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
 const UserInfo =  ( ) => {
-  const {userId,setUserId} = useContext(UserContext);
-  
+  const { userId, loginUSer, logoutUser } = useUserContext();
+
+  console.log("USERID getuser:",userId);
+
   const { loading, error, data } = useQuery(QUERY_USER,
 					     { variables: { userId }});
 

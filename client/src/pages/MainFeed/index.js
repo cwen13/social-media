@@ -4,11 +4,13 @@ import Feed from "./../../components/Feed/"
 import RecentThoughts from "./../../components/RecentThoughts/"
 import UserInfo from "./../../components/UserInfo";
 
-import { UserContext } from "./../../App";
+//import { useUserContext } from "./../../utils/UserContext";
+//const { userId, loginUser, logoutUser } = useUserContext();
 
 import "./style.css";
 
 const MainFeed = () => {
+
   
   return(
 	<section id="mainFeed">

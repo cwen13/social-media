@@ -9,33 +9,43 @@ import { UserContext, useUserContext, UserContextProvider } from "./../utils/Use
 
 const Login = (props) => {
 
-  const {userId, loginUser, logoutUser} = useUserContext();
-
-  const [loginRes, setLoginRes] = useState(null);
+  const {userId, setUserId, loginUser, logoutUser} = useUserContext(); 
   const [formState, setFormState] = useState({ email: '', password: '' });
-  
   const [login, { error }] = useMutation(LOGIN_USER);
-  
-  useEffect( () => {
-    if (loginRes) {
-      console.log("CURRENT USER:", loginRes.data.login.user.id);
-      loginUser(loginRes.data.login.user.id);
-      Auth.login(loginRes.data.login.token);
-    };
-  }, [loginRes]);
-  
 
+  const navigate = useNavigate();
+  const prevUserId = userId;
+
+  let token;
+  
+  useEffect(() => {
+    if (Auth.loggedIn()) {
+      console.log("USEEFFECT:", userId)
+      return (navigate("/"));
+    }
+  }, [userId, navigate, token]);
+
+  
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await login({
-        variables: { email: formState.email, password: formState.password },
-      })
-      setLoginRes(response);
-      
+      const { data } = await login({
+        variables: {
+	  email: formState.email,
+	  password: formState.password
+	}})
+      console.log("LOGGIN:", userId)
+      Auth.login(data.login.token);
+      await loginUser(data.login.user.id);
+
     } catch (e) {
       console.log(e);
     }
+    setFormState({
+      ...formState,
+      email: "",
+      password: ""
+    });
   };
 
   const handleChange = (event) => {
