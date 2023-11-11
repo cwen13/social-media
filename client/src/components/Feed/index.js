@@ -6,7 +6,7 @@ import { QUERY_ALL_THOUGHTS } from "./../../utils/queries";
 
 import "./style.css";
 
-const Feed = (props) => {
+const Feed = () => {
   const { loading, error, data } = useQuery(QUERY_ALL_THOUGHTS);
 
   if (loading) return "Loading...";

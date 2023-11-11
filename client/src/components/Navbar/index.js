@@ -35,7 +35,6 @@ const AppNavbar = () => {
     ));
   };
   
-
   return (
     <>
       <nav className="navbar-nav">

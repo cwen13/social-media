@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useContext } from "react";
 
 import { useMutation } from "@apollo/client";
 
@@ -7,8 +7,12 @@ import { QUERY_ALL_THOUGHTS } from "./../../utils/queries";
 
 import "./style.css";
 
-const ThoughtCreate = (props) => {
+import { useUserContext } from "./../../utils/UserContext";
 
+const ThoughtCreate = () => {
+
+  const { userId, loginUser, logoutUser } = useUserContext();
+  
   const [ thoughtState, setThoughtState ] = useState({thought: ""});
   const [ newThought, { error } ] = useMutation(ADD_THOUGHT,{
     refetchQueries: [
@@ -31,8 +35,8 @@ const ThoughtCreate = (props) => {
       console.log("thought:", thoughtState.thought);
       const mutationResponse = await newThought({
 	variables: {
-	  userId: props.userId,
-	  content: thoughtState.thought
+	  content: thoughtState.thought,
+	  thoughtReplyOfId: null
 	}
       });
       setThoughtState({

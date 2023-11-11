@@ -85,8 +85,7 @@ export const ADD_THOUGHT = gql`
         userName
       }
     }
-  }
-`;
+  }`;
 
 export const UPDATE_THOUGHT = gql`
 mutation updateThought($thoughtId: ID! $content: String!) {
@@ -97,38 +96,15 @@ thought {
                   content
       }
   }
-}
-`;
+}`;
 
-export const ADD_COMMENT = gql`
-mutation addComment($userId: ID!
-                    $thoughtId: ID!
-                    $comment: String!) {
-addComment(userId: $userId
-           thouhghtId: $thoughtId
-           comment: $comment) {
-comment {
-     id
-     userId
-}
-}
-}
-`;
 
-export const UPDATE_COMMENT = gql`
-mutation updateComment($userId: ID!
-                    $thoughtId: ID!
-                    $comment: String!) {
-updateComment(userId: $userId
-           thouhghtId: $thoughtId
-           comment: $comment) {
-comment {
-     id
-     userId
-}
-}
-}
-`;
+export const REMOVE_THOUGHT = gql`
+mutation removeThought($thoughtId: ID!) {
+  removeThought(thoughtId: $thoughtId)
+}`;
+
+
 
 export const ADD_FRIEND = gql`
 mutation addFriend($userId: ID!
