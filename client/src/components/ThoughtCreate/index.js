@@ -13,7 +13,7 @@ const ThoughtCreate = () => {
 
   const { userId, loginUser, logoutUser } = useUserContext();
   
-  const [ thoughtState, setThoughtState ] = useState("");
+  const [ thought, setThought ] = useState("");
   const [ newThought, { error } ] = useMutation(ADD_THOUGHT,{
     refetchQueries: [
       QUERY_ALL_THOUGHTS,
@@ -21,10 +21,9 @@ const ThoughtCreate = () => {
   });
   
   const handleChange = (event) => {
-    console.log(event.currentTarget.value);
     const value = event.currentTarget.value;
-    setThoughtState({
-      ...thoughtState,
+    setThought({
+      ...thought,
       thought: value,
     });
   };
@@ -32,16 +31,16 @@ const ThoughtCreate = () => {
   const postThought = async (event) => {
     event.preventDefault();
     try {
-      console.log("thought:", thoughtState.thought);
+      console.log("thought:", thought.thought);
       const mutationResponse = await newThought({
 	variables: {
 	  userId: userId,
-	  content: thoughtState.thought,
+	  content: thought.thought,
 	  thoughtReplyOfId: null
 	}
       });
-      setThoughtState({
-	...thoughtState,
+      setThought({
+	...thought,
 	thought: ""
       });
       document.querySelector("#thoughtBox").value="";
