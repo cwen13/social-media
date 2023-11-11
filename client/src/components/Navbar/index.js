@@ -4,32 +4,24 @@ import { Link } from 'react-router-dom';
 import Auth from './../../utils/auth';
 import "./style.css";
 
-const AppNavbar = () => {
+const Navbar = () => {
   const showNav = () => {
     return (Auth.loggedIn() ? (
       <>
-	<Link>
-	  <h4 as={Link} to='/user/:userId'>
-            Your Profile
-	  </h4>
+	<Link to='/user/:userId'>
+	  <h4>Your Profile</h4>
 	</Link>
-	<Link>
-	  <h4 onClick={() => Auth.logout()}>
-	    Logout
-	  </h4>
+	<Link onClick={() => Auth.logout()}>
+	  <h4>Logout</h4>
 	</Link>
       </>
     ) : (
       <>
-      <Link>
-	<h4 as={Link} to="/login">
-	  Login
-	</h4>
+      <Link to="/login">
+	<h4>Login</h4>
       </Link>
-      <Link>
-	<h4 as={Link} to="/signUp">
-	  Sign Up
-	</h4>
+      <Link to="/signup">
+	<h4>Sign Up</h4>
       </Link>
       </>
     ));
@@ -46,4 +38,4 @@ const AppNavbar = () => {
   );
 };
 
-export default AppNavbar;
+export default Navbar;
