@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { LOGIN_USER } from './../utils/mutations';
 import Auth from './../utils/auth';
@@ -12,19 +12,6 @@ const Login = (props) => {
   const {userId, setUserId, loginUser, logoutUser} = useUserContext(); 
   const [formState, setFormState] = useState({ email: '', password: '' });
   const [login, { error }] = useMutation(LOGIN_USER);
-
-  const navigate = useNavigate();
-  const prevUserId = userId;
-
-  let token;
-  
-  useEffect(() => {
-    if (Auth.loggedIn()) {
-      console.log("USEEFFECT:", userId)
-      return (navigate("/"));
-    }
-  }, [userId, navigate, token]);
-
   
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -34,10 +21,7 @@ const Login = (props) => {
 	  email: formState.email,
 	  password: formState.password
 	}})
-      console.log("LOGGIN:", userId)
-      Auth.login(data.login.token);
-      await loginUser(data.login.user.id);
-
+      Auth.login(data.login.token, data.login.user.id);
     } catch (e) {
       console.log(e);
     }

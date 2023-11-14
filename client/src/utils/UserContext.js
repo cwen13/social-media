@@ -5,17 +5,22 @@ import { LOGIN_USER } from "./queries";
 export const UserContext = createContext(null);
 
 export const UserContextProvider = ({ children }) => {
-  const [userId, setUserId] = useState(0);
+  const [userId, setUserId] = useState(() => {
+    return localStorage.getItem("user_id") || 0
+  });
 
   const loginUser = (newUserId) => {
     setUserId(newUserId);
     return newUserId;
-  }
+  };
 
-  const logoutUser = () => setUserId(0);
+  const logoutUser = () => {
+    localStorage.setItem("user_id",0);
+    setUserId(0);
+  };
   
   return (
-    <UserContext.Provider value={{userId, setUserId, loginUser, logoutUser}}>
+    <UserContext.Provider value={{userId, loginUser, logoutUser}}>
       {children}
     </UserContext.Provider>
   );

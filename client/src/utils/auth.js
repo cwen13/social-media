@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useUserContext } from "./UserContext";
 
 class AuthService {
-
   
   getProfile() {
     return decode(this.getToken());
@@ -32,14 +31,16 @@ class AuthService {
     }
   }
 
-  login(idToken) {
+  login(idToken, userId) {
     // Saves user token to localStorage
     localStorage.setItem('id_token', idToken);
-//    window.location.assign('/');
+    localStorage.setItem("user_id", userId);
+    window.location.assign('/');
   }
 
   logout() {
     // Clear user token and profile data from localStorage
+    localStorage.removeItem("user_id");
     localStorage.removeItem('id_token');
     // this will reload the page and reset the state of the application
     window.location.assign('/');

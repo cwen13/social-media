@@ -10,7 +10,6 @@ import UserInfo from "./../../components/UserInfo";
 import "./style.css";
 
 const MainFeed = () => {
-
   
   return(
 	<section id="mainFeed">
