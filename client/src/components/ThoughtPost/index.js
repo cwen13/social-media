@@ -1,4 +1,4 @@
-import React, { useContext, useState, memo } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { pluralize } from './../../utils/helpers';
 import { useDispatch, useSelector } from 'react-redux';
@@ -29,6 +29,17 @@ const ThoughtPost = (props) => {
 						       "getAllThoughts"
 						     ]});
 
+  const [ cursorPosition, setCursorPosition ] = useState({ start:0, end: 0 });
+
+  const textAreaRef = useRef(null);
+  
+  useEffect(() => {
+    if(isEditing) {
+      textAreaRef.current.focus();
+      textAreaRef.current.selectionStart = cursorPosition.start;
+      
+    }
+  },[thoughtText]);
   
   
   const handleRemove = async (event) => {
@@ -47,13 +58,11 @@ const ThoughtPost = (props) => {
   const handleSave = async (event) => {
     event.preventDefault();
     try {
-      console.log("ThoughtText:", thoughtText);
       const updateThoughtResponse = await updateThought({
 	variables: {
 	  thoughtId: props.thoughtId,
 	  content: thoughtText
 	}});
-      console.log("THOUGHT RES:",updateThoughtResponse);
       setIsEditing(false);
     } catch (e) {
       console.log("Thought update was not commited to memory")
@@ -61,9 +70,12 @@ const ThoughtPost = (props) => {
     }; 
   };
 
-  const handleChange = (event) => {
+  const handleChange = async (event) => {
     setThoughtText(event.currentTarget.value);
-    console.log("ThoughtTEXT(after set):", thoughtText);
+    setCursorPosition({ start: event.target.selectionStart,
+			end: event.target.selectionEnd
+		      });
+    
   };
   
   const RenderThought = () => {
@@ -92,7 +104,8 @@ const ThoughtPost = (props) => {
 		  name="thoughtText"
 		  spellCheck="true"
 		  defaultValue={thoughtText}
-		  onChange={handleChange}>
+		  onChange={handleChange}
+		  ref={textAreaRef}>
 	</textarea>
 	<div className="actions">
 	  <button id={`saveEdit-${props.thoughtId}`}
@@ -102,8 +115,6 @@ const ThoughtPost = (props) => {
     );
   };
 
-  const MemoRenderEdit = memo(RenderEdit);
-  
   return (
     <section className="entry">
       <div className="headliner">
@@ -114,7 +125,7 @@ const ThoughtPost = (props) => {
 	  <li className="handler">{props.userId}</li>
 	</ul>
       </div>
-      {isEditing ? <MemoRenderEdit /> : <RenderThought />}
+      {isEditing ? <RenderEdit /> : <RenderThought />}
     </section>
   );
 };
