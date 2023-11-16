@@ -14,9 +14,11 @@ import { useUserContext } from "./../../utils/UserContext";
 const ThoughtPost = (props) => {
 
   const { userId, loginUser, logoutUser } = useUserContext();
+  const textAreaRef = useRef(null);
 
   const [ isEditing, setIsEditing ] = useState(false);
   const [ thoughtText, setThoughtText ] = useState(props.thought.toString());
+  const [ cursorPosition, setCursorPosition ] = useState({ start:0, end: 0 });
   
   const [ removeThought, { removeError }] = useMutation(REMOVE_THOUGHT,
 						  { refetchQueries:
@@ -29,15 +31,10 @@ const ThoughtPost = (props) => {
 						       "getAllThoughts"
 						     ]});
 
-  const [ cursorPosition, setCursorPosition ] = useState({ start:0, end: 0 });
-
-  const textAreaRef = useRef(null);
-  
   useEffect(() => {
     if(isEditing) {
       textAreaRef.current.focus();
-      textAreaRef.current.selectionStart = cursorPosition.start;
-      
+      textAreaRef.current.selectionStart = cursorPosition.start;    
     }
   },[thoughtText]);
   
