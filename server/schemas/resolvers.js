@@ -174,12 +174,13 @@ const resolvers = {
     updateThought: async (parent, { thoughtId, content }, context) => {
       const thought = await Thought.findByPk(thoughtId);
       if (context.user.id === thought.userId) {
-	await Thought.update({ ...content },
-			     {where: { id: thoughtId }});
+	const [rowsEffected, updatedThought] = await Thought.update({ content },
+								    {where:
+								     { id: thoughtId }});
 	return await Thought.findByPk(thoughtId, { include: { model: User }});
       } else {
 	//Ned to replace with different error
-	throw new AuthenticationError("You are not this thought's owner");
+	throw new Error("You are not this thought's owner");
       }
     },
 

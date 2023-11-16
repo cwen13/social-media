@@ -6,18 +6,13 @@ import ThoughtCreate from "./../ThoughtCreate"
 import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
-const UserInfo =  ( ) => {
+const UserInfo = () => {
   const { userId, loginUSer, logoutUser } = useUserContext();
-
-  console.log("USERID getuser:",userId);
-
   const { loading, error, data } = useQuery(QUERY_USER,
 					     { variables: { userId }});
 
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;
-  console.log("USERID:", userId);
-  console.log(data);
 
   const renderLanding = () => {
     return (

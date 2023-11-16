@@ -9,7 +9,7 @@ import { UserContext, useUserContext, UserContextProvider } from "./../utils/Use
 
 const Login = (props) => {
 
-  const {userId, setUserId, loginUser, logoutUser} = useUserContext(); 
+//  const {userId, loginUser, logoutUser} = useUserContext(); 
   const [formState, setFormState] = useState({ email: '', password: '' });
   const [login, { error }] = useMutation(LOGIN_USER);
   

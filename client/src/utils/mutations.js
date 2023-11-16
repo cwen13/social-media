@@ -89,13 +89,15 @@ export const ADD_THOUGHT = gql`
 
 export const UPDATE_THOUGHT = gql`
 mutation updateThought($thoughtId: ID! $content: String!) {
-  updateThought(id: $thoughtId,
+  updateThought(thoughtId: $thoughtId,
                 content: $content) {
-thought {
                   id
                   content
-      }
-  }
+                  user{
+                    userName
+                    handle
+                  }
+                }
 }`;
 
 
