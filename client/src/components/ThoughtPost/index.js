@@ -3,8 +3,15 @@ import { Link } from 'react-router-dom';
 import { pluralize } from './../../utils/helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import { idbPromise } from './../../utils/helpers';
-import { useMutation } from "@apollo/client"
-import { REMOVE_THOUGHT, UPDATE_THOUGHT } from "./../../utils/mutations";
+import { useMutation, useQuery } from "@apollo/client"
+import {
+  REMOVE_THOUGHT,
+  UPDATE_THOUGHT,
+  ADD_LIKED,
+} from "./../../utils/mutations";
+import {
+  QUERY_MY_LIKED
+} from "./../../utils/queries";
 import { QUERY_ALL_THOUGHTS } from "./../../utils/queries";
 
 import "./style.css";
@@ -19,18 +26,26 @@ const ThoughtPost = (props) => {
   const [ isEditing, setIsEditing ] = useState(false);
   const [ thoughtText, setThoughtText ] = useState(props.thought);
   const [ cursorPosition, setCursorPosition ] = useState({ start:0, end: 0 });
+  const [ isLiked, setIsLiked ] = useState(props.liked);
   
-  const [ removeThought, { removeError }] = useMutation(REMOVE_THOUGHT,
+  const [ removeThought, { error: removeError }] = useMutation(REMOVE_THOUGHT,
 						  { refetchQueries:
 						    [ QUERY_ALL_THOUGHTS,
 						      "getAllThoughts"
 						    ]});
-  const [ updateThought, { updateError }] =  useMutation(UPDATE_THOUGHT,
+  const [ updateThought, { error: updateError }] =  useMutation(UPDATE_THOUGHT,
 						   { refetchQueries:
 						     [ QUERY_ALL_THOUGHTS,
 						       "getAllThoughts"
 						     ]});
+  const [ likedThought, { error: likedError }] = useMutation(ADD_LIKED,
+						      { refetchQueries:
+							[ QUERY_ALL_THOUGHTS,
+							  "getAllThoughts"
+							]});
 
+
+  
   useEffect(() => {
     if(isEditing) {
       textAreaRef.current.focus();
@@ -38,6 +53,22 @@ const ThoughtPost = (props) => {
     }
   },[thoughtText]);
   
+  const handleLiked  = async (event) => {
+    event.preventDefault();
+    try {
+      if(userId) {
+	const likedResponse = await likedThought({
+	  variables: {
+	    thoughtId: props.thoughtId
+	  }
+	});
+	setIsLiked(true);
+      }
+    } catch (e) {
+      throw new Error("No thought removed");
+      console.log(e);
+    }
+  };
   
   const handleRemove = async (event) => {
     event.preventDefault();
@@ -49,7 +80,7 @@ const ThoughtPost = (props) => {
     } catch (e) {
       throw new Error("No thought removed");
       console.log(e);
-    }
+    };
   };
 
   const handleSave = async (event) => {
@@ -74,21 +105,46 @@ const ThoughtPost = (props) => {
 		      });
     
   };
-  
+
+  const MyInteractivity = () => {
+    return(<>
+	     <button id={`edit-${props.thoughtId}`}
+		     onClick={() => setIsEditing(!isEditing)}>EDIT!
+	     </button> 
+	     <button id={`remove-${props.thoughtId}`}
+		     onClick={handleRemove}>Remove!
+	     </button> 
+	   </>
+	  );
+  };
+
+  const AllInteractivity = () => {
+    return(<>
+	     <button id={`liked-${props.thoughtId}`}
+		     className={isLiked ? "liked-thought" : "not-liked-thought"}
+		     onClick={handleLiked}>
+	       LIKE!
+	     </button> 
+	     <button id={`reply-${props.thoughtId}`}
+		     onClick={handleRemove}>
+	       REPLY!
+	     </button>
+	     <button id={`rethought-${props.thoughtId}`}
+		     onClick={handleRemove}>
+	       RETHOUGHT!
+	     </button>
+	   </>
+	  );
+  };
+	     
   const RenderThought = () => {
     return (
       <section className="thought">
 	Thought: {props.thought}
 	<div className="actions">
-	  {(props.userId===userId) || (props.page==="UserProfile") ?
-	   <>
-	     <button id={`edit-${props.thoughtId}`}
-		     onClick={() => setIsEditing(!isEditing)} >EDIT!</button> 
-	     <button id={`remove-${props.thoughtId}`}
-		     onClick={handleRemove} >Remove!</button>
-	   </>
-	   :
-	   <span>ACTIONS</span>
+	  {(props.userId===userId) || (props.page==="UserProfile")
+	   ? <MyInteractivity />
+	   : <AllInteractivity />
 	  }
 	</div>
       </section>

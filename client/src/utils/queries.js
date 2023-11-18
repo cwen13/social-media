@@ -140,3 +140,10 @@ query getReThoughts ($originalThoughtId: ID!) {
   }
 }`;
  
+export const QUERY_MY_LIKED = gql`
+query getAllMyLiked {
+  getAllMyLiked {
+    likedByUserId
+    thoughtId
+  }
+}`;

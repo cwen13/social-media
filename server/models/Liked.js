@@ -13,7 +13,8 @@ Liked.init(
     },
     thoughtId: {
       type: DataTypes.INTEGER,
-      allowNunll: false
+      allowNull: false,
+      unique: false
     },
     likeByUserId: {
       type: DataTypes.INTEGER,

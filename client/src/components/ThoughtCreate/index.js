@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useContext } from "react";
-
 import { useMutation } from "@apollo/client";
 
 import { ADD_THOUGHT } from "./../../utils/mutations";
@@ -7,8 +6,8 @@ import { QUERY_ALL_THOUGHTS, QUERY_MY_THOUGHTS } from "./../../utils/queries";
 
 import "./style.css";
 
-const ThoughtCreate = ({ userId, page }) => {
-
+const ThoughtCreate = ({ userId, pageUserId, page }) => {
+  
   const refetchOptions = { UserProfile : [ QUERY_MY_THOUGHTS, "getMyThoughts"],
 			   MainFeed: [ QUERY_ALL_THOUGHTS, "getAllThoughts"] }
   
@@ -48,18 +47,23 @@ const ThoughtCreate = ({ userId, page }) => {
   };
   
   return(
-    <div className="thoughtInput">
-      <label>Add your thought</label>
-      <textarea placeholder="Put your thought into the database"
-		rows="4"
-		cols="33"
-		id="thoughtBox"
-		onChange={handleChange}>
-      </textarea>
-      <button id="postThought" onClick={postThought}>
-	Thought creation
-      </button>
-    </div>
+    <>
+      {(userId===pageUserId) ? 
+       <div className="thoughtInput">
+	 <label>Add your thought</label>
+	 <textarea placeholder="Put your thought into the database"
+		   rows="4"
+		   cols="33"
+		   id="thoughtBox"
+		   onChange={handleChange}>
+	 </textarea>
+	 <button id="postThought" onClick={postThought}>
+	   Thought creation
+	  </button>
+       </div> :
+       <p>Here is where they enter thoughts </p>
+      }
+    </>
   );
 };
 

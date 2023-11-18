@@ -21,7 +21,6 @@ function UserPage() {
       </ul>
       </section>
   );
-
 };
 
 export default UserPage;

@@ -60,9 +60,14 @@ const resolvers = {
 
     //STATUS: WORKING
     getAllLiked: async (parent, args, context) => {
-      return await Liked.findAll({where: { likedByUserId: context.user.id }});
+      return await Liked.findAll();
 				  
     },
+
+    getAllMyLiked: async (parent, args, context) => {
+      return await Liked.findAll({where: { likedByUserId: context.user.id }});
+				  
+    },    
     
     //STATUS: WORKING
     getThought: async(parent, { thoughtId }, context) => {
@@ -80,7 +85,10 @@ const resolvers = {
 
     //STATUS: WORKING
     getUserThoughts: async (parent, { userId }, context) => {
-      return await Thought.findAll({where: {userId: userId} });
+      return await Thought.findAll({
+	where: {userId: userId},
+	include: {model: User},
+      });
 
     },
 
@@ -202,7 +210,7 @@ const resolvers = {
     //STATUS: WORKING
     addLiked: async (parent, { thoughtId }, context) => {
       if (context.user) {
-	return await Liked.create({thoughtId, likedByUserId: context.user.id});
+	return (await Liked.create({thoughtId, likedByUserId: context.user.id}) !== 1);
       } else {
 	throw new AuthenticaitonErro("You need to be logged in to like a thought!");
       }

@@ -69,6 +69,7 @@ type Query {
   getMyThoughts: [Thought]
   getAllThoughts: [Thought!]!
   getAllLiked: [Liked]!
+  getAllMyLiked: [Liked]
   getThought(thoughtId: ID!): Thought
   getThoughtLikes(thoughtId: ID!): [User]
   getUserThoughts(userId: ID!): [Thought]!
@@ -107,7 +108,7 @@ type Mutation {
                 content: String!): Thought!
   removeThought(thoughtId: ID!): Boolean!
 
-  addLiked(thoughtId: ID!): Liked!
+  addLiked(thoughtId: ID!): Boolean!
   removeLiked(thoughtId: ID!): Boolean!
 
   replyToThought(content: String!

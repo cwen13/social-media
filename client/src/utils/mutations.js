@@ -102,9 +102,7 @@ mutation updateThought($thoughtId: ID! $content: String!) {
 
 
 export const REMOVE_THOUGHT = gql`
-mutation removeThought($thoughtId: ID!) {
-  removeThought(thoughtId: $thoughtId)
-}`;
+mutation removeThought($thoughtId: ID!) { removeThought(thoughtId: $thoughtId) }`;
 
 
 
@@ -131,6 +129,7 @@ mutation removeFriend($friendshipId: ID!) {
       id
     }
   }
-}
-`;
+}`;
 
+export const ADD_LIKED = gql`
+mutation addLiked($thoughtId: ID!) { addLiked(thoughtId: $thoughtId) }`;
