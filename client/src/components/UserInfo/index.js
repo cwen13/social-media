@@ -6,7 +6,7 @@ import ThoughtCreate from "./../ThoughtCreate"
 import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
-const UserInfo = () => {
+const UserInfo = ({ page }) => {
   const { userId, loginUSer, logoutUser } = useUserContext();
   const { loading, error, data } = useQuery(QUERY_USER,
 					     { variables: { userId }});
@@ -37,7 +37,8 @@ const UserInfo = () => {
 	</div>
 	{ (userId !== 0) ?
 	  
-      	  <ThoughtCreate userId={data.getUser.userId} /> :
+      	  <ThoughtCreate userId={userId}
+			 page={page}/> :
 	  <p>Sign up or login to start putting your best thougths out there!</p>}
       </section>
     );

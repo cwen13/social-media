@@ -4,27 +4,20 @@ import { useQuery } from "@apollo/client";
 import { QUERY_ME } from './../utils/queries';
 
 import UserInfo from "./../components/UserInfo";
-import UserFeed from "./../components/UserFeed";
+import Feed from "./../components/Feed";
 import Stats from "./../components/Stats";
 
-function UserProfile(props) {
+function UserProfile() {
 
   return(
     <section className="userPage">      
       <ul>
 	<li id="userInfo">
-	  <UserInfo userId={props.userId}
-		    userName={props.userName}
-		    firstName={props.firstName}
-		    email={props.email} />
+	  <UserInfo page="UserProfile"/>
+	  <Stats />
 	</li>
-
-	<li id="userStats">
-	  <Stats user={props.userName} />
-	</li>
-	
 	<li>
-	  <UserFeed userId={props.userId} />
+	  <Feed page="UserProfile"/>
 	</li>
       </ul>
       </section>

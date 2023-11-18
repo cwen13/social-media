@@ -7,17 +7,21 @@ import { QUERY_ME, QUERY_MY_FRIENDS } from './../../utils/queries';
 import Following from "./../Following";
 import FriendList from "./../FriendList";
 
+import { useUserContext } from "./../../utils/UserContext";
+
+import "./style.css";
+
 //Stats will include friend indicator, link to liked,
 //  reThoughts, and 
 const Stats = (props) => {
-  const friendsQuery = useQuery(QUERY_MY_FRIENDS);
-  
-    
-  return(
-    <>
-      <h3> Stats for {props.userName}</h3>
-      <ul>
+  const { userId, loginUser, logoutUser } = useUserContext();
 
+  const myInfo = useQuery(QUERY_ME);
+  const friendsQuery = useQuery(QUERY_MY_FRIENDS);
+
+  
+  return(
+      <ul className="userStats">
 	<li>Number of friends {friendsQuery.length}
 	  {/*This will be a mini scroll box likely a iframe*/}
 	  <FriendList friends={friendsQuery.data} />
@@ -25,35 +29,34 @@ const Stats = (props) => {
 
 	<li>Following
 	  {/*This will be a mini scroll box likely a iframe*/}
-	  <Following userId={props.userId} />
-	  <Link to={`/${props.userId}/following`}
-		state={{ userId: props.userId,
-			 userName: props.userName }}>See everyone you follow</Link>
+	  <Following userId={userId} />
+	  <Link to={`/${userId}/following`}
+		state={{ userId: userId,
+			 userName: myInfo.userName }}>See everyone you follow</Link>
 	</li>
 	
 	<li>
-	  <Link to={`/${props.userId}/liked`}
-		state={{ userId: props.userId,
-			 userName: props.userName }}>Liked thoughts</Link>
+	  <Link to={`/${userId}/liked`}
+		state={{ userId: userId,
+			 userName: myInfo.userName }}>Liked thoughts</Link>
       </li>
 
       <li>
-	<Link to={`/${props.userId}/reThoughts`}
-	      state={{ userId: props.userId,
-		       userName: props.userName }}>Link to reThoughts</Link>
+	<Link to={`/${userId}/reThoughts`}
+	      state={{ userId: userId,
+		       userName: myInfo.userName }}>Link to reThoughts</Link>
       </li>
 
       <li>
-	<Link to={`/${props.userId}/blocked`}
-	      state={{ userId: props.userId,
-		       userName: props.userName }}>Blocked</Link>
+	<Link to={`/${userId}/blocked`}
+	      state={{ userId: userId,
+		       userName: myInfo.userName }}>Blocked</Link>
       </li>
 
       <li>
 	<Link to="">Edit profile -make a drop down</Link>
       </li>
     </ul>
-    </>    
   );
 };
     

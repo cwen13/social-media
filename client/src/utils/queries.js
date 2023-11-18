@@ -52,7 +52,7 @@ query getUserFriends($userId: ID!) {
 
 export const QUERY_MY_THOUGHTS = gql`
 query getMyThoughts {
-  getAllThoughts {
+  getMyThoughts {
     id
     userId
     content

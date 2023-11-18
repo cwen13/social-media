@@ -3,21 +3,18 @@ import React, { useState, useCallback, useContext } from "react";
 import { useMutation } from "@apollo/client";
 
 import { ADD_THOUGHT } from "./../../utils/mutations";
-import { QUERY_ALL_THOUGHTS } from "./../../utils/queries";
+import { QUERY_ALL_THOUGHTS, QUERY_MY_THOUGHTS } from "./../../utils/queries";
 
 import "./style.css";
 
-import { useUserContext } from "./../../utils/UserContext";
+const ThoughtCreate = ({ userId, page }) => {
 
-const ThoughtCreate = () => {
-
-  const { userId, loginUser, logoutUser } = useUserContext();
+  const refetchOptions = { UserProfile : [ QUERY_MY_THOUGHTS, "getMyThoughts"],
+			   MainFeed: [ QUERY_ALL_THOUGHTS, "getAllThoughts"] }
   
   const [ thought, setThought ] = useState("");
   const [ newThought, { error } ] = useMutation(ADD_THOUGHT,{
-    refetchQueries: [
-      QUERY_ALL_THOUGHTS,
-      "getAllThoughts"]
+    refetchQueries: refetchOptions[page]
   });
   
   const handleChange = (event) => {

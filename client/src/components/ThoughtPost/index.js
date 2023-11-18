@@ -17,7 +17,7 @@ const ThoughtPost = (props) => {
   const textAreaRef = useRef(null);
 
   const [ isEditing, setIsEditing ] = useState(false);
-  const [ thoughtText, setThoughtText ] = useState(props.thought.toString());
+  const [ thoughtText, setThoughtText ] = useState(props.thought);
   const [ cursorPosition, setCursorPosition ] = useState({ start:0, end: 0 });
   
   const [ removeThought, { removeError }] = useMutation(REMOVE_THOUGHT,
@@ -80,13 +80,15 @@ const ThoughtPost = (props) => {
       <section className="thought">
 	Thought: {props.thought}
 	<div className="actions">
-	  {!(props.userId === userId) ? <span>ACTIONS</span> :
+	  {(props.userId===userId) || (props.page==="UserProfile") ?
 	   <>
 	     <button id={`edit-${props.thoughtId}`}
 		     onClick={() => setIsEditing(!isEditing)} >EDIT!</button> 
 	     <button id={`remove-${props.thoughtId}`}
 		     onClick={handleRemove} >Remove!</button>
 	   </>
+	   :
+	   <span>ACTIONS</span>
 	  }
 	</div>
       </section>
@@ -117,9 +119,11 @@ const ThoughtPost = (props) => {
       <div className="headliner">
 	<ul>
 	  <li className="thoughtId">{props.thoughtId}</li>
-	  <li className="userName">{props.userName}</li>
-	  <li className="pfp">This is a profile pic</li>
-	  <li className="handler">{props.userId}</li>
+	  {(props.page==="MainFeed") ? <>
+					<li className="userName">{props.userName}</li>
+					<li className="pfp">This is a profile pic</li>
+					<li className="userId">{props.userId}</li>
+				      </> : <li> ME </li>}
 	</ul>
       </div>
       {isEditing ? <RenderEdit /> : <RenderThought />}

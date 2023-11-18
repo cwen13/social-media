@@ -6,21 +6,19 @@ import UserInfo from "./../../components/UserInfo";
 
 import "./style.css";
 
-const MainFeed = () => {
-  
+const MainFeed = () => {  
   return(
 	<section id="mainFeed">
 	  <ul className="mainPage">
 	    <li id="userInfo">
-	      <UserInfo />
+	      <UserInfo page="MainFeed"/>
 	    </li>
 	    <li id="feed">
-	      <Feed />
+	      <Feed page="MainFeed"/>
 	    </li>
 	  </ul>
 	</section>
   );
-
 };
 
 export default MainFeed;

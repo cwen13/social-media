@@ -33,16 +33,22 @@ const resolvers = {
     //STATUS: WORKING
     getUserFriends: async (parent, { userId }, context) => {
       let userFriends = await User.findByPk(userId, {
-	include: { model: User,
-		   as: "friendshipUser",
-		   through: "friend" }})
+	include: {
+	  model: User,
+	  as: "friendshipUser",
+	  through: "friend"
+	}})
       return userFriends.friendshipUser;
     },
 
     //STATUS: WORKING
     getMyThoughts: async (parent, args, context) => {
       //return await Thought.findAll({ where: { userId: context.user.id }});
-      return await Thought.findAll({ where: { userId: context.user.id }});
+      return await Thought.findAll({
+	where: { userId: context.user.id },
+	include : { model: User,},
+	order : [["createdAt", "DESC"]],
+      });
     },
 
     //STATUS: WORKING
