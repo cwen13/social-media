@@ -18,6 +18,7 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import UserProfile from "./pages/UserProfile";
 import Search from "./pages/Search";
+import UserPage from "./pages/UserPage";
 
 import Navbar from "./components/Navbar/";
 import NotFound from "./components/NotFound/";
@@ -76,8 +77,12 @@ const App = () => {
 	      element={<SignUp />} 
             />
 	    <Route
-	      path="/user/:userId"
+	      path="/user/me"
 	      element={<UserProfile />}
+	    />
+	    <Route
+	      path="/user/:userId"
+	      element={<UserPage />}
 	    />
 	    <Route
 	      path="/user/:userId/following"

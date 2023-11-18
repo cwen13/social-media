@@ -108,7 +108,8 @@ query getThoughtLikes ($thoughtId: ID!) {
 
 export const QUERY_USER_THOUGHTS = gql`
 query getUserThoughts ($userId: ID!) {
-    getUserThoughts (userId: $userId) {
+  getUserThoughts (userId: $userId) {
+    id
     content
     user{
       userName

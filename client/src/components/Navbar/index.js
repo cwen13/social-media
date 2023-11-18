@@ -2,13 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import Auth from './../../utils/auth';
+import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
 const Navbar = () => {
+
+  const { userId, loginUser, logoutUser } = useUserContext();
+  
   const showNav = () => {
     return (Auth.loggedIn() ? (
       <>
-	<Link to='/user/:userId'>
+	<Link to={`/user/me`}>
 	  <h4>Your Profile</h4>
 	</Link>
 	<Link onClick={() => Auth.logout()}>

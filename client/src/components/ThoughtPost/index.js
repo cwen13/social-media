@@ -120,7 +120,11 @@ const ThoughtPost = (props) => {
 	<ul>
 	  <li className="thoughtId">{props.thoughtId}</li>
 	  {(props.page==="MainFeed") ? <>
-					<li className="userName">{props.userName}</li>
+					 <li className="userName">
+					   <Link to={`/user/${props.userId}`}>
+					     {props.userName}
+					   </Link>
+					 </li>
 					<li className="pfp">This is a profile pic</li>
 					<li className="userId">{props.userId}</li>
 				      </> : <li> ME </li>}

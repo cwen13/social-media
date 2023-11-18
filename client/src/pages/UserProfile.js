@@ -1,23 +1,22 @@
 import React, { useState } from "react";
 
-import { useQuery } from "@apollo/client";
-import { QUERY_ME } from './../utils/queries';
-
 import UserInfo from "./../components/UserInfo";
 import Feed from "./../components/Feed";
 import Stats from "./../components/Stats";
 
 function UserProfile() {
 
+  const page = "UserProfile"
+  
   return(
-    <section className="userPage">      
+    <section className="userProfile">      
       <ul>
 	<li id="userInfo">
-	  <UserInfo page="UserProfile"/>
-	  <Stats />
+	  <UserInfo page={page}/>
+	  <Stats page={page} />
 	</li>
 	<li>
-	  <Feed page="UserProfile"/>
+	  <Feed page={page}/>
 	</li>
       </ul>
       </section>
