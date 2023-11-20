@@ -6,7 +6,6 @@ const { authMiddleware } = require('./utils/auth');
 const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
 
-
 const PORT = process.env.PORT || 3001;
 const server = new ApolloServer({
   typeDefs,
@@ -18,7 +17,6 @@ const app = express();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
 
 // Serve up static assets
 if (process.env.NODE_ENV === 'production') {
