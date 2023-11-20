@@ -1,7 +1,7 @@
 {
   "name": "social-media-client",
-  "version": "0.1.0",
-  "private": false,
+  "version": "1.0.0",
+  "private": true,
   "proxy": "http://localhost:3001/",
   "dependencies": {
     "@apollo/client": "^3.8.1",
