@@ -169,10 +169,10 @@ const resolvers = {
     },
 
     //STATUS: WORKING
-    addThought: async (parent,{ content, thoughtReplyOfId }, context) =>{ 
+    addThought: async (parent, { content, thoughtReplyOfId }, context) =>{ 
       if (context.user) {
 	let thought =  await Thought.create({ userId: context.user.id,
-					      content,
+					      content: content,
 					      thoughtReplyOfId,
 					    });
 	return await Thought.findByPk(thought.id,
@@ -225,10 +225,10 @@ const resolvers = {
     //STATUS: WORKING
     replyToThought: async (parent, { content, thoughtReplyOfId}, context) => {
       let thoughtReply =  await Thought.create({ userId: context.user.id,
-						  content,
+						 content: content,
 						 thoughtReplyOfId });
       
-      return await Thought.findByPk(thoughtReply.id, { include: { model: User }});;
+      return thoughtReply;
     },
 
     //STATUS: PENDING

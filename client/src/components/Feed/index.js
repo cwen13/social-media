@@ -32,7 +32,7 @@ const Feed = ({ page }) => {
 										 : "");
   if (likedLoading) return <p> Loading </p>
   
-  const likedThoughts = likedData.getAllMyLiked.map(result => result.thoughtId);
+  const likedThoughts = (likedData) ? likedData.getAllMyLiked.map(result => result.thoughtId) : [0];
   const isLiked = (thoughtId) => likedThoughts.includes(thoughtId);
   
   if (queryLoading) return "Loading...";
@@ -45,6 +45,7 @@ const Feed = ({ page }) => {
 								 userId={thought.user.id}
 								 thought={thought.content}
 								 thoughtId={thought.id}
+								 thoughtReplyOfId={thought.thoughtReplyOfId}
 								 key={thought.id}
 								 page={page}
 								 liked={isLiked(thought.id)}

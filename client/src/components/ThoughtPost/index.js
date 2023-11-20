@@ -8,6 +8,7 @@ import {
   REMOVE_THOUGHT,
   UPDATE_THOUGHT,
   ADD_LIKED,
+  REPLY_TO_THOUGHT,
 } from "./../../utils/mutations";
 import {
   QUERY_MY_LIKED
@@ -19,40 +20,69 @@ import "./style.css";
 import { useUserContext } from "./../../utils/UserContext";
 
 const ThoughtPost = (props) => {
-
+  
+  const thoughtAreaRef = useRef(null);
+  const replyAreaRef = useRef(null);
   const { userId, loginUser, logoutUser } = useUserContext();
-  const textAreaRef = useRef(null);
 
   const [ isEditing, setIsEditing ] = useState(false);
   const [ thoughtText, setThoughtText ] = useState(props.thought);
-  const [ cursorPosition, setCursorPosition ] = useState({ start:0, end: 0 });
+  const [ cursorPositionThought, setCursorPositionThought ] = useState({ start:0, end: 0 });
+  const [ cursorPositionReply, setCursorPositionReply ] = useState({ start:0, end: 0 });
   const [ isLiked, setIsLiked ] = useState(props.liked);
+  const [ replying, setReplying ] = useState(false);
+  const [ replyContent, setReplyContent ] = useState("");
   
   const [ removeThought, { error: removeError }] = useMutation(REMOVE_THOUGHT,
-						  { refetchQueries:
-						    [ QUERY_ALL_THOUGHTS,
-						      "getAllThoughts"
-						    ]});
+							       { refetchQueries:
+								 [ QUERY_ALL_THOUGHTS,
+								   "getAllThoughts"
+								 ]});
   const [ updateThought, { error: updateError }] =  useMutation(UPDATE_THOUGHT,
-						   { refetchQueries:
-						     [ QUERY_ALL_THOUGHTS,
-						       "getAllThoughts"
-						     ]});
+								{ refetchQueries:
+								  [ QUERY_ALL_THOUGHTS,
+								    "getAllThoughts"
+								  ]});
   const [ likedThought, { error: likedError }] = useMutation(ADD_LIKED,
-						      { refetchQueries:
-							[ QUERY_ALL_THOUGHTS,
-							  "getAllThoughts"
-							]});
-
-
+							     { refetchQueries:
+							       [ QUERY_ALL_THOUGHTS,
+								 "getAllThoughts"
+							       ]});
+  const [ replyToThought, { error, replyError }] = useMutation(REPLY_TO_THOUGHT,
+							       { refetchQueries:
+								 [ QUERY_ALL_THOUGHTS,
+								   "getAllThoughts"
+								 ]});
+  
   
   useEffect(() => {
     if(isEditing) {
-      textAreaRef.current.focus();
-      textAreaRef.current.selectionStart = cursorPosition.start;    
+      thoughtAreaRef.current.focus();
+      thoughtAreaRef.current.selectionStart = cursorPositionThought.start;    
     }
   },[thoughtText]);
+
+    useEffect(() => {
+    if(replying) {
+      replyAreaRef.current.focus();
+      replyAreaRef.current.selectionStart = cursorPositionReply.start;
+    }
+  },[replyContent]);
   
+  const handleReplySubmit = async () => {
+    try {
+      const reply = await replyToThought({
+	variables: {
+	  content: replyContent,
+	  thoughtReplyOfId: props.thoughtId
+	}});
+      setReplying(false);
+    } catch (e) {
+      throw new Error("You did not reply to the thought!");
+      console.log(e);
+    }
+  };
+    
   const handleLiked  = async (event) => {
     event.preventDefault();
     try {
@@ -98,19 +128,58 @@ const ThoughtPost = (props) => {
     }; 
   };
 
-  const handleChange = async (event) => {
+  const handleChangeThought = async (event) => {
+    console.log(event);
     setThoughtText(event.currentTarget.value);
-    setCursorPosition({ start: event.target.selectionStart,
-			end: event.target.selectionEnd
-		      });
+    setCursorPositionThought({ start: event.target.selectionStart,
+			       end: event.target.selectionEnd
+			     });
     
+  };
+
+  const handleChangeReply = async (event) => {
+
+    setReplyContent(event.target.value);
+    setCursorPositionReply({ start: event.target.selectionStart,
+			     end: event.target.selectionEnd
+			   });
+    
+  };
+
+  
+  const ReplySection = () => {
+    return(
+      <>
+	{!replying
+	 ? <button id={`reply-${props.thoughtId}`}
+		   onClick={() => setReplying(true)}>
+	     REPLY!
+	   </button>
+	 : <section className="replying">
+	     Reply:
+	     <textarea id="replyTextBox"
+		       name="replyContent"
+		       spellCheck="true"
+		       placeholder="Reply with kindness"
+		       onChange={handleChangeReply}
+		       ref={replyAreaRef}
+		       value={replyContent}>
+	     </textarea>
+	     <div className="actions">
+	       <button id={`saveEdit-${props.thoughtId}`}
+		       onClick={handleReplySubmit}> SAVE </button>
+	     </div>
+	   </section>}
+      </>
+    );
   };
 
   const MyInteractivity = () => {
     return(<>
 	     <button id={`edit-${props.thoughtId}`}
 		     onClick={() => setIsEditing(!isEditing)}>EDIT!
-	     </button> 
+	     </button>
+	     <ReplySection />
 	     <button id={`remove-${props.thoughtId}`}
 		     onClick={handleRemove}>Remove!
 	     </button> 
@@ -124,11 +193,8 @@ const ThoughtPost = (props) => {
 		     className={isLiked ? "liked-thought" : "not-liked-thought"}
 		     onClick={handleLiked}>
 	       LIKE!
-	     </button> 
-	     <button id={`reply-${props.thoughtId}`}
-		     onClick={handleRemove}>
-	       REPLY!
 	     </button>
+	     <ReplySection />
 	     <button id={`rethought-${props.thoughtId}`}
 		     onClick={handleRemove}>
 	       RETHOUGHT!
@@ -140,6 +206,8 @@ const ThoughtPost = (props) => {
   const RenderThought = () => {
     return (
       <section className="thought">
+	{props.thoughtReplyOfId !== null ? `Reply to thought ID: ${props.thoughtReplyOfId}` : ''}
+	<br/>
 	Thought: {props.thought}
 	<div className="actions">
 	  {(props.userId===userId) || (props.page==="UserProfile")
@@ -159,8 +227,8 @@ const ThoughtPost = (props) => {
 		  name="thoughtText"
 		  spellCheck="true"
 		  defaultValue={thoughtText}
-		  onChange={handleChange}
-		  ref={textAreaRef}>
+		  onChange={handleChangeThought}
+		  ref={thoughtAreaRef}>
 	</textarea>
 	<div className="actions">
 	  <button id={`saveEdit-${props.thoughtId}`}
@@ -174,16 +242,19 @@ const ThoughtPost = (props) => {
     <section className="entry">
       <div className="headliner">
 	<ul>
-	  <li className="thoughtId">{props.thoughtId}</li>
-	  {(props.page==="MainFeed") ? <>
-					 <li className="userName">
-					   <Link to={`/user/${props.userId}`}>
-					     {props.userName}
-					   </Link>
-					 </li>
-					<li className="pfp">This is a profile pic</li>
-					<li className="userId">{props.userId}</li>
-				      </> : <li> ME </li>}
+	  <li className="thoughtId">Thought ID: {props.thoughtId}</li>
+	  {(props.page==="MainFeed")
+	   ? <>
+	       <li className="userName">
+		 UserName:
+		 <Link to={`/user/${props.userId}`}>
+		    {props.userName}
+		 </Link>
+	       </li>
+	       <li className="pfp">This is a profile pic</li>
+	       <li className="userId">User ID: {props.userId}</li>
+	     </>
+	   : <li> ME </li>}
 	</ul>
       </div>
       {isEditing ? <RenderEdit /> : <RenderThought />}

@@ -18,6 +18,7 @@ export const LOGIN_USER = gql`
 export const ADD_USER = gql`
   mutation addUser(
     $userName: String!
+    $handle: String!
     $firstName: String!
     $lastName: String!
     $email: String!
@@ -26,12 +27,14 @@ export const ADD_USER = gql`
     addUser(
       userName: $userName
       firstName: $firstName
+      handle: $handle
       lastName: $lastName
       email: $email
       password: $password
     ) {
       token
       user {
+        id
         userName
         firstName
         lastName
@@ -133,3 +136,12 @@ mutation removeFriend($friendshipId: ID!) {
 
 export const ADD_LIKED = gql`
 mutation addLiked($thoughtId: ID!) { addLiked(thoughtId: $thoughtId) }`;
+
+export const REPLY_TO_THOUGHT = gql`
+mutation replyToThought($content: String!, $thoughtReplyOfId: ID!) {
+  replyToThought (content: $content, thoughtReplyOfId: $thoughtReplyOfId) {
+    id
+    content
+    thoughtReplyOfId
+  }
+}`;

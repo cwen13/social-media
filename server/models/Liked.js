@@ -16,7 +16,7 @@ Liked.init(
       allowNull: false,
       unique: false
     },
-    likeByUserId: {
+    likedByUserId: {
       type: DataTypes.INTEGER,
       allowNunll: false
     },
