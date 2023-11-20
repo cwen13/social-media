@@ -1,28 +1,58 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
-
-import ThoughtPost from "./../ThoughtPost/"
-import { QUERY_ALL_THOUGHTS } from "./../../utils/queries";
+import { useParams } from "react-router-dom";
+import ThoughtPost from "./../ThoughtPost"
+import {
+  QUERY_ALL_THOUGHTS,
+  QUERY_MY_THOUGHTS,
+  QUERY_USER_THOUGHTS,
+  QUERY_MY_LIKED
+} from "./../../utils/queries";
 
 import "./style.css";
 
-const Feed = (props) => {
-  const { loading, error, data } = useQuery(QUERY_ALL_THOUGHTS);
+const Feed = ({ page }) => {
+  const { userId } = useParams();
 
-  if (loading) return "Loading...";
-  if (error) return `Error ${error.message}`;
+  const queryOptions = {
+    UserProfile : QUERY_MY_THOUGHTS,
+    UserPage: QUERY_USER_THOUGHTS,
+    MainFeed :  QUERY_ALL_THOUGHTS,
+  };
+  const thoughts = {
+    UserProfile : "getMyThoughts",
+    UserPage: "getUserThoughts",
+    MainFeed :  "getAllThoughts",
+  };
+
+  const { loading: likedLoading, error: likedError, data: likedData } = useQuery(QUERY_MY_LIKED);
+  const { loading: queryLoading, error: queryError, data: queryData } = useQuery(queryOptions[page],
+										 (page==="UserPage")
+										 ? {variables: {userId}}
+										 : "");
+  if (likedLoading) return <p> Loading </p>
+  
+  const likedThoughts = (likedData) ? likedData.getAllMyLiked.map(result => result.thoughtId) : [0];
+  const isLiked = (thoughtId) => likedThoughts.includes(thoughtId);
+  
+  if (queryLoading) return "Loading...";
+  if (queryError) return `Error ${queryError.message}`;
+
 
   return (
 	<div className="feed">
-	  {(data.getAllThoughts).map(thought => <ThoughtPost userName={thought.user.userName}
-							     userId={thought.user.id}
-							     thought={thought.content}
-							     key={thought.id}
-							     thoughtId={thought.id}
-						/>)}
-	  
+	  {queryData[thoughts[page]].map(thought => <ThoughtPost userName={thought.user.userName}
+								 userId={thought.user.id}
+								 thought={thought.content}
+								 thoughtId={thought.id}
+								 thoughtReplyOfId={thought.thoughtReplyOfId}
+								 key={thought.id}
+								 page={page}
+								 liked={isLiked(thought.id)}
+						    />)}
 	</div>
   );
 };
-  
+	  
 export default Feed;
+

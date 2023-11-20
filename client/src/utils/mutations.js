@@ -18,6 +18,7 @@ export const LOGIN_USER = gql`
 export const ADD_USER = gql`
   mutation addUser(
     $userName: String!
+    $handle: String!
     $firstName: String!
     $lastName: String!
     $email: String!
@@ -26,12 +27,14 @@ export const ADD_USER = gql`
     addUser(
       userName: $userName
       firstName: $firstName
+      handle: $handle
       lastName: $lastName
       email: $email
       password: $password
     ) {
       token
       user {
+        id
         userName
         firstName
         lastName
@@ -76,8 +79,8 @@ user {
 `;
 
 export const ADD_THOUGHT = gql`
-  mutation addThought($userId: ID!, $content: String!) {
-    addThought (userId: $userId, content: $content) {
+  mutation addThought($userId: ID!, $content: String!, $thoughtReplyOfId: ID) {
+    addThought (userId: $userId, content: $content, thoughtReplyOfId: $thoughtReplyOfId) {
       id
       userId
       content
@@ -85,50 +88,26 @@ export const ADD_THOUGHT = gql`
         userName
       }
     }
-  }
-`;
+  }`;
 
 export const UPDATE_THOUGHT = gql`
 mutation updateThought($thoughtId: ID! $content: String!) {
-  updateThought(id: $thoughtId,
+  updateThought(thoughtId: $thoughtId,
                 content: $content) {
-thought {
                   id
                   content
-      }
-  }
-}
-`;
+                  user{
+                    userName
+                    handle
+                  }
+                }
+}`;
 
-export const ADD_COMMENT = gql`
-mutation addComment($userId: ID!
-                    $thoughtId: ID!
-                    $comment: String!) {
-addComment(userId: $userId
-           thouhghtId: $thoughtId
-           comment: $comment) {
-comment {
-     id
-     userId
-}
-}
-}
-`;
 
-export const UPDATE_COMMENT = gql`
-mutation updateComment($userId: ID!
-                    $thoughtId: ID!
-                    $comment: String!) {
-updateComment(userId: $userId
-           thouhghtId: $thoughtId
-           comment: $comment) {
-comment {
-     id
-     userId
-}
-}
-}
-`;
+export const REMOVE_THOUGHT = gql`
+mutation removeThought($thoughtId: ID!) { removeThought(thoughtId: $thoughtId) }`;
+
+
 
 export const ADD_FRIEND = gql`
 mutation addFriend($userId: ID!
@@ -153,6 +132,16 @@ mutation removeFriend($friendshipId: ID!) {
       id
     }
   }
-}
-`;
+}`;
 
+export const ADD_LIKED = gql`
+mutation addLiked($thoughtId: ID!) { addLiked(thoughtId: $thoughtId) }`;
+
+export const REPLY_TO_THOUGHT = gql`
+mutation replyToThought($content: String!, $thoughtReplyOfId: ID!) {
+  replyToThought (content: $content, thoughtReplyOfId: $thoughtReplyOfId) {
+    id
+    content
+    thoughtReplyOfId
+  }
+}`;

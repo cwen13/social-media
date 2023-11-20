@@ -52,10 +52,11 @@ query getUserFriends($userId: ID!) {
 
 export const QUERY_MY_THOUGHTS = gql`
 query getMyThoughts {
-  getAllThoughts {
+  getMyThoughts {
     id
     userId
     content
+    thoughtReplyOfId
     user {
       userName
     }
@@ -68,6 +69,7 @@ query getAllThoughts {
     id
     userId
     content
+    thoughtReplyOfId
     user {
       id
       userName
@@ -108,7 +110,8 @@ query getThoughtLikes ($thoughtId: ID!) {
 
 export const QUERY_USER_THOUGHTS = gql`
 query getUserThoughts ($userId: ID!) {
-    getUserThoughts (userId: $userId) {
+  getUserThoughts (userId: $userId) {
+    id
     content
     user{
       userName
@@ -139,3 +142,10 @@ query getReThoughts ($originalThoughtId: ID!) {
   }
 }`;
  
+export const QUERY_MY_LIKED = gql`
+query getAllMyLiked {
+  getAllMyLiked {
+    likedByUserId
+    thoughtId
+  }
+}`;

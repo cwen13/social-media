@@ -1,4 +1,4 @@
-import React, { useState, useContext, createContext } from 'react';
+import React, { useState, useEffect, useContext, createContext } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import {
   ApolloClient,
@@ -18,6 +18,7 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import UserProfile from "./pages/UserProfile";
 import Search from "./pages/Search";
+import UserPage from "./pages/UserPage";
 
 import Navbar from "./components/Navbar/";
 import NotFound from "./components/NotFound/";
@@ -25,8 +26,8 @@ import Liked from "./components/Liked/";
 import ReThought from "./components/ReThought/";
 import Following from "./components/Following/";
 import Blocked from "./components/Blocked/";
-
 import { UserContextProvider } from "./utils/UserContext";
+import Auth from "./utils/auth";
 
 const httpLink = createHttpLink({
   uri: '/graphql',
@@ -50,10 +51,17 @@ const client = new ApolloClient({
 
 const App = () => {
 
+  useEffect(() => {
+    if (!Auth.loggedIn()) {
+      localStorage.removeItem("user_id");
+      localStorage.removeItem('id_token');
+    };
+  },[])
+  
   return (
     <ApolloProvider client={client}>
-      <UserContextProvider>
       <Router>
+	<UserContextProvider>
      	  <Navbar />
 	  <Routes>	    
             <Route 
@@ -69,8 +77,12 @@ const App = () => {
 	      element={<SignUp />} 
             />
 	    <Route
-	      path="/user/:userId"
+	      path="/user/me"
 	      element={<UserProfile />}
+	    />
+	    <Route
+	      path="/user/:userId"
+	      element={<UserPage />}
 	    />
 	    <Route
 	      path="/user/:userId/following"
@@ -97,8 +109,8 @@ const App = () => {
 	      element={<NotFound />}
 	    />
           </Routes>
+	</UserContextProvider>
       </Router>
-      </UserContextProvider>
     </ApolloProvider>    
   );
 }

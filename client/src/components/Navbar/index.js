@@ -2,40 +2,35 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import Auth from './../../utils/auth';
+import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
-const AppNavbar = () => {
+const Navbar = () => {
+
+  const { userId, loginUser, logoutUser } = useUserContext();
+  
   const showNav = () => {
     return (Auth.loggedIn() ? (
       <>
-	<Link>
-	  <h4 as={Link} to='/user/:userId'>
-            Your Profile
-	  </h4>
+	<Link to={`/user/me`}>
+	  <h4>Your Profile</h4>
 	</Link>
-	<Link>
-	  <h4 onClick={() => Auth.logout()}>
-	    Logout
-	  </h4>
+	<Link onClick={() => Auth.logout()}>
+	  <h4>Logout</h4>
 	</Link>
       </>
     ) : (
       <>
-      <Link>
-	<h4 as={Link} to="/login">
-	  Login
-	</h4>
+      <Link to="/login">
+	<h4>Login</h4>
       </Link>
-      <Link>
-	<h4 as={Link} to="/signUp">
-	  Sign Up
-	</h4>
+      <Link to="/signup">
+	<h4>Sign Up</h4>
       </Link>
       </>
     ));
   };
   
-
   return (
     <>
       <nav className="navbar-nav">
@@ -47,4 +42,4 @@ const AppNavbar = () => {
   );
 };
 
-export default AppNavbar;
+export default Navbar;

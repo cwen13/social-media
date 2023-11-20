@@ -7,7 +7,6 @@ const resolvers = {
    
     //STATUS: WORKING
     getMe: async (parent, args, context ) => {
-      console.log("Here");
       return await User.findByPk((context.user) ? context.user.id : 1);
     },
 
@@ -34,16 +33,22 @@ const resolvers = {
     //STATUS: WORKING
     getUserFriends: async (parent, { userId }, context) => {
       let userFriends = await User.findByPk(userId, {
-	include: { model: User,
-		   as: "friendshipUser",
-		   through: "friend" }})
+	include: {
+	  model: User,
+	  as: "friendshipUser",
+	  through: "friend"
+	}})
       return userFriends.friendshipUser;
     },
 
     //STATUS: WORKING
     getMyThoughts: async (parent, args, context) => {
       //return await Thought.findAll({ where: { userId: context.user.id }});
-      return await Thought.findAll({ where: { userId: context.user.id }});
+      return await Thought.findAll({
+	where: { userId: context.user.id },
+	include : { model: User,},
+	order : [["createdAt", "DESC"]],
+      });
     },
 
     //STATUS: WORKING
@@ -55,9 +60,14 @@ const resolvers = {
 
     //STATUS: WORKING
     getAllLiked: async (parent, args, context) => {
-      return await Liked.findAll({where: { likedByUserId: context.user.id }});
+      return await Liked.findAll();
 				  
     },
+
+    getAllMyLiked: async (parent, args, context) => {
+      return await Liked.findAll({where: { likedByUserId: context.user.id }});
+				  
+    },    
     
     //STATUS: WORKING
     getThought: async(parent, { thoughtId }, context) => {
@@ -75,7 +85,10 @@ const resolvers = {
 
     //STATUS: WORKING
     getUserThoughts: async (parent, { userId }, context) => {
-      return await Thought.findAll({where: {userId: userId} });
+      return await Thought.findAll({
+	where: {userId: userId},
+	include: {model: User},
+      });
 
     },
 
@@ -156,15 +169,14 @@ const resolvers = {
     },
 
     //STATUS: WORKING
-    addThought: async (parent,{ content, thoughtReplyOfId }, context) =>{ 
+    addThought: async (parent, { content, thoughtReplyOfId }, context) =>{ 
       if (context.user) {
 	let thought =  await Thought.create({ userId: context.user.id,
-					      content,
+					      content: content,
 					      thoughtReplyOfId,
 					    });
 	return await Thought.findByPk(thought.id,
-				      { include: { model: User }});
-				     
+				      { include: { model: User }});				     
       } else {
 	//Need to replace with different error
 	throw new Error("Something went wrong");
@@ -176,12 +188,13 @@ const resolvers = {
     updateThought: async (parent, { thoughtId, content }, context) => {
       const thought = await Thought.findByPk(thoughtId);
       if (context.user.id === thought.userId) {
-	await Thought.update({ ...content },
-			     {where: { id: thoughtId }});
+	const [rowsEffected, updatedThought] = await Thought.update({ content },
+								    {where:
+								     { id: thoughtId }});
 	return await Thought.findByPk(thoughtId, { include: { model: User }});
       } else {
 	//Ned to replace with different error
-	throw new AuthenticationError("You are not this thought's owner");
+	throw new Error("You are not this thought's owner");
       }
     },
 
@@ -197,7 +210,7 @@ const resolvers = {
     //STATUS: WORKING
     addLiked: async (parent, { thoughtId }, context) => {
       if (context.user) {
-	return await Liked.create({thoughtId, likedByUserId: context.user.id});
+	return (await Liked.create({thoughtId, likedByUserId: context.user.id}) !== 1);
       } else {
 	throw new AuthenticaitonErro("You need to be logged in to like a thought!");
       }
@@ -212,10 +225,10 @@ const resolvers = {
     //STATUS: WORKING
     replyToThought: async (parent, { content, thoughtReplyOfId}, context) => {
       let thoughtReply =  await Thought.create({ userId: context.user.id,
-						  content,
+						 content: content,
 						 thoughtReplyOfId });
       
-      return await Thought.findByPk(thoughtReply.id, { include: { model: User }});;
+      return thoughtReply;
     },
 
     //STATUS: PENDING

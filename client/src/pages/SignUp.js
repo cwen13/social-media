@@ -2,22 +2,23 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import Auth from '../utils/auth';
-import { ADD_USER } from '../utils/actions';
+import { ADD_USER } from '../utils/mutations';
 
 function Signup(props) {
   const [formState, setFormState] = useState({ userName: "",
+					       handle: "",
 					       firstName: "",
 					       lastName: "",
 					       email: "",
 					       password: "" });
-  const [addUser] = useMutation(ADD_USER);
+  const [addUser, { error }] = useMutation(ADD_USER);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    console.log(formState);
     const mutationResponse = await addUser({
       variables: {
 	userName: formState.userName,
+	handle: formState.handle,
         firstName: formState.firstName,
         lastName: formState.lastName,
         email: formState.email,
@@ -26,7 +27,7 @@ function Signup(props) {
     });
     console.log(mutationResponse);
     const token = mutationResponse.data.addUser.token;
-    Auth.login(token);
+    Auth.login(token, mutationResponse.data.addUser.user.id);
   };
 
   const handleChange = (event) => {
@@ -51,6 +52,17 @@ function Signup(props) {
             name="userName"
             type="userName"
             id="userName"
+            onChange={handleChange}
+          />
+        </div>
+
+	<div className="flex-row space-between my-2">
+          <label htmlFor="handle">Handle:</label>
+          <input
+            placeholder="handle"
+            name="handle"
+            type="handle"
+            id="handle"
             onChange={handleChange}
           />
         </div>

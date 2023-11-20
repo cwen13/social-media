@@ -1,19 +1,28 @@
 import React, { useContext, createContext, useState } from "react";
-import { useMutation } from "@apollo/client";
 import { LOGIN_USER } from "./queries";
-
+import Auth from "./auth";
 
 export const UserContext = createContext(null);
 
 export const UserContextProvider = ({ children }) => {
-  const [userId, setUserId] = useState(1);
+
+  const [userId, setUserId] = useState(() => {
+    if (Auth.getToken()){
+      return Auth.isTokenExpired(Auth.getToken()) ? 0 :
+	localStorage.getItem("user_id") || 0;
+    }
+    return 0;
+  });
 
   const loginUser = (newUserId) => {
     setUserId(newUserId);
     return newUserId;
-  }
+  };
 
-  const logoutUser = () => setUserId(1);
+  const logoutUser = () => {
+    localStorage.setItem("user_id",0);
+    setUserId(0);
+  };
   
   return (
     <UserContext.Provider value={{userId, loginUser, logoutUser}}>
