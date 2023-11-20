@@ -17,6 +17,14 @@ const app = express();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use((req,res, nenxt) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; script-src 'self' 'unsafe-inline';"
+    // Add more directives as needed
+  );
+  next();
+});
 
 // Serve up static assets
 if (process.env.NODE_ENV === 'production') {
