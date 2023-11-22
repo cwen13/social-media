@@ -9,6 +9,10 @@ There is a bit of ChatGPT used to create the initial data mainly.
 ## Goal
 The goal of this project is to create a usable app showing off my skills and developing new ones. As well as help me find a position that can benefit from my skills. One way I am trying to help get my name out there is through twitch. I am building this during multiple streaming sessions on twitch and some work outside of that.
 
+## Link
+
+Here is the [site](https://cwwc-social-media-587842874c09.herokuapp.com/).
+
 ## Credit
 I am the main contributor to this project and do not plan currently to open it up to additional submissions.
 
