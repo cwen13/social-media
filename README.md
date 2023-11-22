@@ -11,7 +11,7 @@ The goal of this project is to create a usable app showing off my skills and dev
 
 ## Link
 
-Here is the (site)[https://cwwc-social-media-587842874c09.herokuapp.com/]
+Here is the [site](https://cwwc-social-media-587842874c09.herokuapp.com/).
 
 ## Credit
 I am the main contributor to this project and do not plan currently to open it up to additional submissions.
