@@ -26,10 +26,12 @@ const Feed = ({ page }) => {
   };
 
   const { loading: likedLoading, error: likedError, data: likedData } = useQuery(QUERY_MY_LIKED);
-  const { loading: queryLoading, error: queryError, data: queryData } = useQuery(queryOptions[page],
-										 (page==="UserPage")
-										 ? {variables: {userId}}
-										 : "");
+  const { loading: queryLoading, error: queryError, data: queryData } = useQuery(
+    queryOptions[page],
+    (page==="UserPage")
+      ? {variables: {userId}}
+    : "");
+  
   if (likedLoading) return <p> Loading </p>
   
   const likedThoughts = (likedData) ? likedData.getAllMyLiked.map(result => result.thoughtId) : [0];

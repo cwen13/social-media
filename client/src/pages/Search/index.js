@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
-import { useUserContext } from "./../utils/UserContext";
-import UserInfo from "./../components/UserInfo";
-import FriendList from "./../components/FriendList"
+import { useUserContext } from "./../../utils/UserContext";
+import UserInfo from "./../../components/UserInfo";
+import FriendList from "./../../components/FriendList"
 
 function Search() {
   const { userId, setUserId } = useUserContext;

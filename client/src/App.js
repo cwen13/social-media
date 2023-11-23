@@ -19,6 +19,7 @@ import SignUp from "./pages/SignUp";
 import UserProfile from "./pages/UserProfile";
 import Search from "./pages/Search";
 import UserPage from "./pages/UserPage";
+import ThoughtPage from "./pages/ThoughtPage";
 
 import Navbar from "./components/Navbar/";
 import NotFound from "./components/NotFound/";
@@ -99,6 +100,10 @@ const App = () => {
 	    <Route
 	      path="/user/:userId/reThoughts"
 	      element={<ReThought />}
+	    />
+	    <Route
+	      path="/thought/:postId"
+	      element={<ThoughtPage />}
 	    />
 	    <Route
 	      path="/search/*"

@@ -48,7 +48,7 @@ const ThoughtPost = (props) => {
 							       [ QUERY_ALL_THOUGHTS,
 								 "getAllThoughts"
 							       ]});
-  const [ replyToThought, { error, replyError }] = useMutation(REPLY_TO_THOUGHT,
+  const [ replyToThought, { error: replyError }] = useMutation(REPLY_TO_THOUGHT,
 							       { refetchQueries:
 								 [ QUERY_ALL_THOUGHTS,
 								   "getAllThoughts"
@@ -76,6 +76,7 @@ const ThoughtPost = (props) => {
 	  content: replyContent,
 	  thoughtReplyOfId: props.thoughtId
 	}});
+      setReplyContent("");
       setReplying(false);
     } catch (e) {
       throw new Error("You did not reply to the thought!");
@@ -210,7 +211,7 @@ const ThoughtPost = (props) => {
 	<br/>
 	Thought: {props.thought}
 	<div className="actions">
-	  {(props.userId===userId) || (props.page==="UserProfile")
+	  {(props.userId===userId)
 	   ? <MyInteractivity />
 	   : <AllInteractivity />
 	  }
@@ -238,23 +239,43 @@ const ThoughtPost = (props) => {
     );
   };
 
-  return (
-    <section className="entry">
-      <div className="headliner">
-	<ul>
-	  <li className="thoughtId">Thought ID: {props.thoughtId}</li>
-	  {(props.page==="MainFeed")
-	   ? <>
+  const ThoughtsPage = () => {
+    switch (props.page) {
+      case "MainFeed":
+      return(<>
 	       <li className="userName">
 		 UserName:
 		 <Link to={`/user/${props.userId}`}>
-		    {props.userName}
+		   {props.userName}
 		 </Link>
 	       </li>
 	       <li className="pfp">This is a profile pic</li>
 	       <li className="userId">User ID: {props.userId}</li>
 	     </>
-	   : <li> ME </li>}
+	    );
+    case "UserProfile":
+      return(<li> ME </li>);
+    case "UserPage":
+      return(<li>{props.userName}</li>);
+    case "Reply":
+      return(<li>{props.userName}</li>);
+    default:
+      return(<li> No User I know </li>);
+    }
+
+
+  }
+  
+  return (
+    <section className="entry">
+      <div className="headliner">
+	<ul>
+	  <li className="thoughtId">Thought ID:
+	    <Link  to={`/thought/${props.thoughtId}`}>
+	      {props.thoughtId}
+	    </Link>
+	  </li>
+	  <ThoughtsPage />
 	</ul>
       </div>
       {isEditing ? <RenderEdit /> : <RenderThought />}

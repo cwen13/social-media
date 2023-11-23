@@ -88,8 +88,11 @@ query getAllLiked {
 export const QUERY_THOUGHT = gql`
 query getThought($thoughtId: ID!) {
   getThought(thoughtId: $thoughtId) {
+    id
     content
+    thoughtReplyOfId
     user{
+      id
       userName
       handle
     }
@@ -123,8 +126,10 @@ query getUserThoughts ($userId: ID!) {
 export const QUERY_REPLYS = gql`
 query getReplys ($thoughtReplyOfId: ID!) {
   getReplys(thoughtReplyOfId: $thoughtReplyOfId) {
+    id
     content
     user{
+      id
       userName
       handle
     }
