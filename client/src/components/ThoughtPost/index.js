@@ -206,7 +206,7 @@ const ThoughtPost = (props) => {
   const RenderThought = () => {
     return (
       <section className="thought">
-	{props.thoughtReplyOfId !== null ? `Reply to thought ID: ${props.thoughtReplyOfId}` : ''}
+	{(props.page !== "Reply") ? (props.thoughtReplyOfId !== null ? `Reply to thought ID: ${props.thoughtReplyOfId}` : '') : ""}
 	<br/>
 	Thought: {props.thought}
 	<div className="actions">

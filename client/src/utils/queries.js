@@ -126,6 +126,7 @@ query getReplys ($thoughtReplyOfId: ID!) {
   getReplys(thoughtReplyOfId: $thoughtReplyOfId) {
     id
     content
+    thoughtReplyOfId
     user{
       id
       userName

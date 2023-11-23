@@ -41,6 +41,10 @@ const seedDatabase = async () => {
 
   for (let i = 0; i < friendSeedData.length; i++) {
     await Friend.create(friendSeedData[i]);
+    await Friend.create({
+      friendSeedData[i].friendId,
+      friendSeedData[i].userId
+    });
   }
   
   process.exit(0);  
