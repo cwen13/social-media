@@ -4,3 +4,8 @@
   display: flex;
   flex-direction: column;
 }
+
+#friendList {
+  display: flex;
+  flex-direction: column;
+}

@@ -1,8 +1,18 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import "./style.css"
 
-const FriendList = (props) => {
+const FriendList = ({ friendId, friendName, key }) => {
+  
+  
   return(
-    <p> This is where the friends will be shown</p>
+    <>
+      <li>
+	<Link to={`/user/${friendId}`}>
+	  <p> {friendName}</p>
+	</Link>
+      </li>
+    </>
   );
 };
 

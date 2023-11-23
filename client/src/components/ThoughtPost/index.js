@@ -130,7 +130,6 @@ const ThoughtPost = (props) => {
   };
 
   const handleChangeThought = async (event) => {
-    console.log(event);
     setThoughtText(event.currentTarget.value);
     setCursorPositionThought({ start: event.target.selectionStart,
 			       end: event.target.selectionEnd

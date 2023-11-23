@@ -32,11 +32,11 @@ const Feed = ({ page }) => {
       ? {variables: {userId}}
     : "");
   
-  if (likedLoading) return <p> Loading </p>
   
   const likedThoughts = (likedData) ? likedData.getAllMyLiked.map(result => result.thoughtId) : [0];
   const isLiked = (thoughtId) => likedThoughts.includes(thoughtId);
   
+  if (likedLoading) return "Loading";
   if (queryLoading) return "Loading...";
   if (queryError) return `Error ${queryError.message}`;
 

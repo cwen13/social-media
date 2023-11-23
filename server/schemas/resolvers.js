@@ -23,10 +23,13 @@ const resolvers = {
 
     //STATUS: WORKING
     getMyFriends: async (parent, args, context) => {
-      let userFriends = await User.findByPk(context.user.id, {
-	include: { model: User,
-		   as: "friendshipUser",
-		   through: "friend" }})
+      let userFriends = await User.findByPk(context.user.id,
+					    {
+					      include: {
+						model: User,
+						as: "friendshipUser",
+						through: "friend"
+					      }});
       return userFriends.friendshipUser;
     },
     
@@ -64,6 +67,7 @@ const resolvers = {
 				  
     },
 
+    //STATUS: WORKING
     getAllMyLiked: async (parent, args, context) => {
       return await Liked.findAll({where: { likedByUserId: context.user.id }});
 				  

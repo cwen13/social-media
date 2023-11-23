@@ -1,7 +1,5 @@
 import { gql } from '@apollo/client';
 
-
-
 export const QUERY_ME = gql`
 query me {
   getMe {
@@ -36,8 +34,8 @@ query getUser ($userId: ID!) {
 export const QUERY_MY_FRIENDS = gql`
 query getMyFriends {
   getMyFriends {
-    userId
-    userNAme
+    id
+    userName
     handle
   }
 }`;

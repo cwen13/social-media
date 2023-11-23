@@ -20,9 +20,6 @@ const ThoughtReplys = ({ postId }) => {
 
   if (likedLoading) return <p> Loading </p>;
   if (replyLoading) return <p> Loading </p>;
-
-  console.log((replyData) ? replyData.getReplys : "No replays");
-  console.log("ReplyDATA:", replyData);
   
   return(
     <p>
