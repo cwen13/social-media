@@ -9,9 +9,11 @@ import "./style.css";
 const UserInfo = ({ page }) => {
   const params = useParams();
   const { userId, loginUSer, logoutUser } = useUserContext();
-  let pageUserId = (userId===params.userId) || (page!=="UserPage")
-						? userId
-						: params.userId;
+  const pageUserId = (userId===params.userId) ||
+	(page!=="UserPage") ? userId : params.userId;
+  
+  
+  
   
   const { loading, error, data } = useQuery(
     QUERY_USER,
@@ -22,6 +24,9 @@ const UserInfo = ({ page }) => {
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;
 
+  
+  
+  
   const renderLanding = () => {
     return (
       <section> LOGIN TO EXP </section>

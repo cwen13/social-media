@@ -42,9 +42,9 @@ query getMyFriends {
 
 export const QUERY_USER_FRIENDS = gql`
 query getUserFriends($userId: ID!) {
-  getUserFriends(id: $userId) {
-    userId
-    friendId
+  getUserFriends(userId: $userId) {
+    id
+    userName
   }
 }`;
 

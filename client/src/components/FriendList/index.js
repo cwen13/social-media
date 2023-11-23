@@ -2,17 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./style.css"
 
-const FriendList = ({ friendId, friendName, key }) => {
-  
+const FriendList = (props) => {
+
+  console.log(props);
   
   return(
-    <>
-      <li>
-	<Link to={`/user/${friendId}`}>
-	  <p> {friendName}</p>
+      <li className="friend">
+	<Link to={`/user/${props.friendId}`}>
+	   {props.friendName}
 	</Link>
       </li>
-    </>
   );
 };
 
