@@ -4,8 +4,6 @@ import "./style.css"
 
 const FriendList = (props) => {
 
-  console.log(props);
-  
   return(
       <li className="friend">
 	<Link to={`/user/${props.friendId}`}>

@@ -71,8 +71,8 @@ type Query {
   getThought(thoughtId: ID!): Thought
   getUserThoughts(userId: ID!): [Thought]!
 
-  getAllLiked: [Liked]!
-  getAllMyLiked: [Liked]
+  getAllLiked: [Thought]
+  getAllMyLiked: [Thought]
   getThoughtLikes(thoughtId: ID!): [User]
 
   getReplys(thoughtReplyOfId: ID!): [Thought]

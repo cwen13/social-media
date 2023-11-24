@@ -69,7 +69,17 @@ const resolvers = {
 
     //STATUS: WORKING
     getAllMyLiked: async (parent, args, context) => {
-      return await Liked.findAll({where: { likedByUserId: context.user.id }});
+      const liked =  await User.findByPk(context.user.id, {
+	include: {
+	  model: Thought,
+	  as: "userLiked",
+	  through: "liked",
+	  include: {
+	    model: User,
+	    as: "user"
+	  }
+	}})
+      return liked.userLiked;
 				  
     },    
     

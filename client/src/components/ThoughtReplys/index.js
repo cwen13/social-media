@@ -23,7 +23,7 @@ const ThoughtReplys = ({ postId }) => {
   
   return(
     <p>
-      Here is where you reply
+      REPLYS
       {replyData.getReplys.map(reply => <ThoughtPost userName={reply.user.userName}
 						     userId={reply.user.id}
 						     thought={reply.content}

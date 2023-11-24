@@ -43,7 +43,7 @@ User.hasMany(Thought, {
 User.belongsToMany(Thought, {
   through: "liked",
   foreignKey:"likedByUserId",
-  as: "userLikes"
+  as: "userLiked"
 });
 
 Thought.belongsToMany(User, {

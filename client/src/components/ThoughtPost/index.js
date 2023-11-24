@@ -96,7 +96,7 @@ const ThoughtPost = (props) => {
 	setIsLiked(true);
       }
     } catch (e) {
-      throw new Error("No thought removed");
+      throw new Error("No thought liked");
       console.log(e);
     }
   };
@@ -267,12 +267,12 @@ const ThoughtPost = (props) => {
   
   return (
     <section className="entry">
-	    <Link  to={`/thought/${props.thoughtId}`}>
-	    </Link>
       <div className="headliner">
 	<ul>
 	  <li className="thoughtId">Thought ID:
+	    <Link  to={`/thought/${props.thoughtId}`}>
 	      {props.thoughtId}
+	    </Link>
 	  </li>
 	  <ThoughtsPage />
 	</ul>

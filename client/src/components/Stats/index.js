@@ -30,7 +30,10 @@ const Stats = (props) => {
     {variables: { userId: friendId}}
   );
 
-  const [ friendshipRequest, { error: friendAddError } ] = useMutation(ADD_FRIEND);
+  const [ friendshipRequest, { error: friendAddError } ] = useMutation(
+    ADD_FRIEND,
+    { refetchQueries: [ QUERY_USER_FRIENDS, "addFriend" ]
+    });
   
   const isFriend = () => {
     if (!friendship) {
@@ -46,8 +49,8 @@ const Stats = (props) => {
   const handleFriendship = async (event) => {
     await friendshipRequest({
       variables: {
-	userId: userId,
-	friendId: userPage
+
+	friendId: friendId
       }});
     setFriendship(true);
   }
@@ -69,8 +72,8 @@ const Stats = (props) => {
   
   return(
     <ul className="userStats">
-      {((userId === userPage) || (userPage === undefined)) ? "" : friendButton() }
 
+      {((userId === userPage) || (userPage === undefined)) ? "" : friendButton() }
       <li>Number of friends 
 	{/*This will be a mini scroll box likely a iframe*/}
 	<ul id="friendList">
