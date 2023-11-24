@@ -44,7 +44,6 @@ const Stats = (props) => {
   if (myInfoLoading) return "Loading....";
 
   const handleFriendship = async (event) => {
-    console.log("SEND FRIEND REQUEST");
     await friendshipRequest({
       variables: {
 	userId: userId,
