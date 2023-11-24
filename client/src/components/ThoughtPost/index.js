@@ -9,6 +9,7 @@ import {
   UPDATE_THOUGHT,
   ADD_LIKED,
   REPLY_TO_THOUGHT,
+  REMOVE_LIKED
 } from "./../../utils/mutations";
 import {
   QUERY_MY_LIKED
@@ -48,6 +49,11 @@ const ThoughtPost = (props) => {
 							       [ QUERY_ALL_THOUGHTS,
 								 "getAllThoughts"
 							       ]});
+  const [ removeLikedThought, { error: removeLikedError }] = useMutation(REMOVE_LIKED,
+									 { refetchQueries:
+									   [ QUERY_ALL_THOUGHTS,
+									     "getAllThoughts"
+									   ]});
   const [ replyToThought, { error: replyError }] = useMutation(REPLY_TO_THOUGHT,
 							       { refetchQueries:
 								 [ QUERY_ALL_THOUGHTS,
@@ -86,22 +92,33 @@ const ThoughtPost = (props) => {
     
   const handleLiked  = async (event) => {
     event.preventDefault();
-    try {
-      if(userId) {
+    try {      
+      if (userId && !isLiked) {
+	console.log(props.thoughtId);
 	const likedResponse = await likedThought({
 	  variables: {
 	    thoughtId: props.thoughtId
 	  }
 	});
+	console.log("Added");
 	setIsLiked(true);
-      }
+      } else if (userId && isLiked) {
+	const removeLikedResponse = await removeLikedThought({
+	  variables: {
+	    thoughtId: props.thoughtId
+	  }
+	});
+	setIsLiked(false);
+      } else {
+	console.log("User needs to be logged in");
+      };
     } catch (e) {
-      throw new Error("No thought liked");
+      throw new Error("No thought thought liked");
       console.log(e);
     }
   };
   
-  const handleRemove = async (event) => {
+const handleRemove = async (event) => {
     event.preventDefault();
     try {
       const removeResponse = await removeThought({

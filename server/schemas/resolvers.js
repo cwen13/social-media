@@ -224,7 +224,10 @@ const resolvers = {
     //STATUS: WORKING
     addLiked: async (parent, { thoughtId }, context) => {
       if (context.user) {
-	return (await Liked.create({thoughtId, likedByUserId: context.user.id}) !== 1);
+	return (await Liked.create({
+	  thoughtId: thoughtId,
+	  likedByUserId: context.user.id
+	}) !== 1);
       } else {
 	throw new AuthenticaitonErro("You need to be logged in to like a thought!");
       }

@@ -22,10 +22,6 @@ ReThought.belongsTo(Thought, {
 Thought.belongsTo(User, {
   foreignKey: "userId",
 });
-
-Thought.hasMany(Liked, {
-  foreignKey: "likedByUserId"
-});
 		      
 Thought.hasMany(ReThought, {
   foreignKey: "orginalThoughtId",

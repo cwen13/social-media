@@ -127,6 +127,9 @@ mutation removeFriend($friendshipId: ID!) {
 export const ADD_LIKED = gql`
 mutation addLiked($thoughtId: ID!) { addLiked(thoughtId: $thoughtId) }`;
 
+export const REMOVE_LIKED = gql`
+mutation removeLiked($thoughtId: ID!) { removeLiked(thoughtId: $thoughtId) }`;
+
 export const REPLY_TO_THOUGHT = gql`
 mutation replyToThought($content: String!, $thoughtReplyOfId: ID!) {
   replyToThought (content: $content, thoughtReplyOfId: $thoughtReplyOfId) {
