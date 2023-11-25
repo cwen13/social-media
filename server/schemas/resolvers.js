@@ -1,5 +1,5 @@
 const { AuthenticationError } = require('apollo-server-express');
-const { User, Friend, Thought, ReThought, Liked, Blocked, Pending } = require("./../models");
+const { User, Friend, Thought, Liked, Blocked, Pending } = require("./../models");
 const { signToken } = require('../utils/auth');
 
 const resolvers = {
@@ -50,15 +50,25 @@ const resolvers = {
       return await Thought.findAll({
 	where: { userId: context.user.id },
 	include : { model: User,},
-	order : [["createdAt", "DESC"]],
+	order : [["id", "DESC"]],
       });
     },
 
     //STATUS: WORKING
     //Display descending
     getAllThoughts: async (parent, args, context) => {
-      return await Thought.findAll({ include: { model: User},
-					     order: [["createdAt", "DESC"]]});
+      return await Thought.findAll(
+	{
+	  include:
+	  {
+	    model: User
+	  },
+	  order:
+	  [[
+	    "id", "DESC"
+	  ]]
+	}
+      );
     },
 
     //STATUS: WORKING
@@ -85,7 +95,11 @@ const resolvers = {
     
     //STATUS: WORKING
     getThought: async(parent, { thoughtId }, context) => {
-      return await Thought.findByPk(thoughtId, { include: User});
+      return await Thought.findByPk(thoughtId,
+				    {
+				      include: User
+				    }
+				   );
     },
 
     //STATUS: WORKING
@@ -114,6 +128,7 @@ const resolvers = {
 
     //STATUS: PENDING
     getReThoughts: async (parent, { originalThoughtId }, context) => {
+      
     },
   },
   Mutation: {
@@ -143,8 +158,17 @@ const resolvers = {
     //STATUS: WORKING
     //args = {userName, handle, first/lastName, email, password}
     updateUser: async (parent, args, context) => {
-      const userUpdate = await User.update({ ...args   },
-					   {where: { id: args.userId}});
+      const userUpdate = await User.update(
+	{
+	  ...args
+	},
+	{
+	  where:
+	  {
+	    id: args.userId
+	  }
+	}
+      );
       const user = await User.findByPk(args.userId);
       const token = signToken(user);
       return { token, user };				
@@ -251,31 +275,7 @@ const resolvers = {
     //STATUS: PENDING
     addReThought: async (parent, { originalThoughtId, additionalThought, content }, context) => {
       if (context.user) {
-	const reThoughtCreate = await ReThought.create(
-	  {
-	    reThoughtByUserId: context.user.id,
-	    originalThoughtId,
-	    content
-	  },
-	  {
-	    include:
-	    {
-	      model: User
-	    }
-	  }
-	);
 	
-	const reThought = await ReThought.findByPk(
-	  reThoughtCreate.id,
-	  {
-	    include:
-	    {
-	      model: User
-	    }
-	  }
-	);
-
-	return reThought;
       } else {
 	throw new AuthenticationError("You can not reThought unless your logged in");
       }
