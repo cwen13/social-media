@@ -36,6 +36,7 @@ type Thought {
   userId: ID!
   content: String!
   thoughtReplyOfId: ID
+
   user: User
 }
 
