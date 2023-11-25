@@ -1,42 +1,42 @@
-import React, { useState, useCallback } from "react";
-
+import React, { useState, useCallback, useContext } from "react";
 import { useMutation } from "@apollo/client";
 
 import { ADD_THOUGHT } from "./../../utils/mutations";
-import { QUERY_ALL_THOUGHTS } from "./../../utils/queries";
+import { QUERY_ALL_THOUGHTS, QUERY_MY_THOUGHTS } from "./../../utils/queries";
 
 import "./style.css";
 
-const ThoughtCreate = (props) => {
-
-  const [ thoughtState, setThoughtState ] = useState({thought: ""});
+const ThoughtCreate = ({ userId, pageUserId, page }) => {
+  
+  const refetchOptions = { UserProfile : [ QUERY_MY_THOUGHTS, "getMyThoughts"],
+			   MainFeed: [ QUERY_ALL_THOUGHTS, "getAllThoughts"] }
+  
+  const [ thought, setThought ] = useState("");
   const [ newThought, { error } ] = useMutation(ADD_THOUGHT,{
-    refetchQueries: [
-      QUERY_ALL_THOUGHTS,
-      "getAllThoughts"]
+    refetchQueries: refetchOptions[page]
   });
   
   const handleChange = (event) => {
-    console.log(event.currentTarget.value);
     const value = event.currentTarget.value;
-    setThoughtState({
-      ...thoughtState,
+    setThought({
+      ...thought,
       thought: value,
     });
   };
   
-  const handleThought = async (event) => {
+  const postThought = async (event) => {
     event.preventDefault();
     try {
-      console.log("thought:", thoughtState.thought);
+      console.log("thought:", thought.thought);
       const mutationResponse = await newThought({
 	variables: {
-	  userId: props.userId,
-	  content: thoughtState.thought
+	  userId: userId,
+	  content: thought.thought,
+	  thoughtReplyOfId: null
 	}
       });
-      setThoughtState({
-	...thoughtState,
+      setThought({
+	...thought,
 	thought: ""
       });
       document.querySelector("#thoughtBox").value="";
@@ -47,18 +47,23 @@ const ThoughtCreate = (props) => {
   };
   
   return(
-    <div className="thoughtInput">
-      <label>Add your thought</label>
-      <textarea placeholder="Put your thought into the database"
-		rows="4"
-		cols="33"
-		id="thoughtBox"
-		onChange={handleChange}>
-      </textarea>
-      <button id="postThought" onClick={handleThought}>
-	Thought creation
-      </button>
-    </div>
+    <>
+      {(userId===pageUserId) ? 
+       <div className="thoughtInput">
+	 <label>Add your thought</label>
+	 <textarea placeholder="Put your thought into the database"
+		   rows="4"
+		   cols="33"
+		   id="thoughtBox"
+		   onChange={handleChange}>
+	 </textarea>
+	 <button id="postThought" onClick={postThought}>
+	   Thought creation
+	  </button>
+       </div> :
+       <p>Here is where they enter thoughts </p>
+      }
+    </>
   );
 };
 

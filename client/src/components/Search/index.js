@@ -1,9 +1,13 @@
 import React from "react";
+import { useUSerContext } from "./../../utils/USerContext";
 
-class Search extends React.cComponent{
-  render() {
-    return (
-	<p> the search area</p>
-    );
-  };
+const Search = (props) => {
+
+  const {userId, loginUser, logoutUser} = useUserContext(); 
+  console.log(userId);
+  return (
+    <p> the search area</p>
+  );
 };
+
+export default Search;

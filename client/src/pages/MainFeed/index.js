@@ -1,42 +1,26 @@
-import React, { useState } from "react";
+import React from "react";
+import { useLocation } from "react-router-dom";
 import Feed from "./../../components/Feed/"
 import RecentThoughts from "./../../components/RecentThoughts/"
 import UserInfo from "./../../components/UserInfo";
-
-import { useQuery } from '@apollo/client';
-import { QUERY_ME } from './../../utils/queries';
-
 import "./style.css";
 
-const MainFeed = (props) => {
-  const { loading, error, data } = useQuery(QUERY_ME);
+const MainFeed = () => {  
 
-  let userMe;
-  
-  if ((typeof data === "undefined") || (data.me === null)) {
-    userMe = { id: 0,
-	       userName: "Luky",
-	       firstName:"Lucky",
-	       email:"licky@we.com" };
-  } else {
-    userMe = data.me;
-  }
-  if (loading) return "Loading...";
-  if (error) return `Error ${error.message}`;
-  
+  const page = "MainFeed"
+
   return(
 	<section id="mainFeed">
 	  <ul className="mainPage">
-	    <li id="userInfo"> <UserInfo userId={userMe.id}
-					 userName={userMe.userName}
-					 firstName={userMe.firstName}
-					 email={userMe.email} />
+	    <li id="userInfo">
+	      <UserInfo page={page}/>
 	    </li>
-	    <li id="feed"> <Feed userId={userMe.id}g /> </li>
+	    <li id="feed">
+	      <Feed page={page}/>
+	    </li>
 	  </ul>
 	</section>
   );
-
 };
 
 export default MainFeed;

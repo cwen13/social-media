@@ -33,6 +33,7 @@ const seedDatabase = async () => {
 
   for (let i = 0; i < thoughtSeedData.length; i++) {
     await Thought.create(thoughtSeedData[i]);
+    
   }
 
   for (let i = 0; i < likedSeedData.length; i++) {
@@ -41,6 +42,10 @@ const seedDatabase = async () => {
 
   for (let i = 0; i < friendSeedData.length; i++) {
     await Friend.create(friendSeedData[i]);
+    await Friend.create({
+      userId: friendSeedData[i].friendId,
+      friendId: friendSeedData[i].userId
+    });
   }
   
   process.exit(0);  

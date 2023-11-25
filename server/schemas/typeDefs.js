@@ -31,7 +31,6 @@ type Pending {
   pendingId: ID!
 }
 
-
 type Thought {
   id: ID!
   userId: ID!
@@ -44,8 +43,7 @@ type ReThought {
   id: ID!
   reThoughtByUserId: ID!
   originalThoughtId: ID!
-  additionalThoughtId: ID
-  thought: Thought
+  content: String
   user: User!
 }
 
@@ -61,18 +59,20 @@ type Auth {
 }
 
 type Query {
-  me: User
+  getMe: User!
   getAllUsers: [User!]!
   getUser(userId: ID!): User
   getMyFriends: [User]
-  getFriends(userId: ID!): [User]
+  getUserFriends(userId: ID!): [User]
 
   getMyThoughts: [Thought]
   getAllThoughts: [Thought!]!
-  getAllLiked: [Liked]!
   getThought(thoughtId: ID!): Thought
-  getThoughtLikes(thoughtId: ID!): [User]
   getUserThoughts(userId: ID!): [Thought]!
+
+  getAllLiked: [Thought]
+  getAllMyLiked: [Thought]
+  getThoughtLikes(thoughtId: ID!): [User]
 
   getReplys(thoughtReplyOfId: ID!): [Thought]
   getReThoughts(originalThoughtId: ID!): [ReThought]!
@@ -101,23 +101,24 @@ type Mutation {
   updateFriend(userId: ID!,
                friendId: ID!): Friend!
 
-  addThought(content: String!,
+  addThought(userId: ID!
+             content: String!,
              thoughtReplyOfId: ID): Thought!
   updateThought(thoughtId: ID!,
                 content: String!): Thought!
   removeThought(thoughtId: ID!): Boolean!
 
-  addLiked(thoughtId: ID!): Liked!
+  addLiked(thoughtId: ID!): Boolean!
   removeLiked(thoughtId: ID!): Boolean!
 
   replyToThought(content: String!
                  thoughtReplyOfId: ID!): Thought!
   addReThought(originalThoughtId: ID!,
-               additionalThought: String): ReThought!
+               content: String): ReThought!
 }`;
 
 
-module.exports  = typeDefs;
+module.exports = typeDefs;
  
 
 

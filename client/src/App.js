@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from "react";
+import React, { useState, useEffect, useContext, createContext } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import {
   ApolloClient,
@@ -9,19 +8,26 @@ import {
   useQuery,
   gql
 } from '@apollo/client';
-
-import { setContext } from '@apollo/client/link/context';
+ 
 import './App.css';
+import { setContext } from "@apollo/client/link/context";
+import { QUERY_ME } from "./utils/queries";
 
 import MainFeed from "./pages/MainFeed";
-
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
-import UserProfile from "./pages/UserProfile";
 import Search from "./pages/Search";
+import UserPage from "./pages/UserPage";
+import ThoughtPage from "./pages/ThoughtPage";
+import LikedThoughts from "./pages/LikedThoughts";
+
 import Navbar from "./components/Navbar/";
 import NotFound from "./components/NotFound/";
-
+import ReThought from "./components/ReThought/";
+import Following from "./components/Following/";
+import Blocked from "./components/Blocked/";
+import { UserContextProvider } from "./utils/UserContext";
+import Auth from "./utils/auth";
 
 const httpLink = createHttpLink({
   uri: '/graphql',
@@ -42,27 +48,57 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const App = ()=> {
+
+const App = () => {
+
+  useEffect(() => {
+    if (!Auth.loggedIn()) {
+      localStorage.removeItem("user_id");
+      localStorage.removeItem('id_token');
+    };
+  },[])
+  
   return (
     <ApolloProvider client={client}>
       <Router>
+	<UserContextProvider>
      	  <Navbar />
-          <Routes>	    
+	  <Routes>	    
             <Route 
-              path="/" 
-              element={<MainFeed />} 
+	      path="/" 
+	      element={<MainFeed />} 
             />
 	    <Route 
-              path="/login" 
-              element={<Login />} 
+	      path="/login" 
+	      element={<Login />}
             />
             <Route 
-              path="/signup" 
-              element={<SignUp />} 
+	      path="/signup" 
+	      element={<SignUp />} 
             />
 	    <Route
 	      path="/user/:userId"
-	      element={<UserProfile />}
+	      element={<UserPage />}
+	    />
+	    <Route
+	      path="/user/:userId/following"
+	      element={<Following />}
+	    />
+	    <Route
+	      path="/user/:userId/blocked"
+	      element={<Blocked />}
+	    />
+	    <Route
+	      path="/user/:userId/liked"
+	      element={<LikedThoughts />}
+	    />
+	    <Route
+	      path="/user/:userId/reThoughts"
+	      element={<ReThought />}
+	    />
+	    <Route
+	      path="/thought/:postId"
+	      element={<ThoughtPage />}
 	    />
 	    <Route
 	      path="/search/*"
@@ -73,9 +109,9 @@ const App = ()=> {
 	      element={<NotFound />}
 	    />
           </Routes>
+	</UserContextProvider>
       </Router>
-    </ApolloProvider>
-    
+    </ApolloProvider>    
   );
 }
 
