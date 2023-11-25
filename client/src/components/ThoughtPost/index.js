@@ -94,13 +94,11 @@ const ThoughtPost = (props) => {
     event.preventDefault();
     try {      
       if (userId && !isLiked) {
-	console.log(props.thoughtId);
 	const likedResponse = await likedThought({
 	  variables: {
 	    thoughtId: props.thoughtId
 	  }
 	});
-	console.log("Added");
 	setIsLiked(true);
       } else if (userId && isLiked) {
 	const removeLikedResponse = await removeLikedThought({
@@ -257,7 +255,7 @@ const handleRemove = async (event) => {
 
   const ThoughtsPage = () => {
     switch (props.page) {
-      case "MainFeed":
+    case "MainFeed":
       return(<>
 	       <li className="userName">
 		 UserName:
@@ -269,11 +267,9 @@ const handleRemove = async (event) => {
 	       <li className="userId">User ID: {props.userId}</li>
 	     </>
 	    );
-    case "UserProfile":
-      return(<li> ME </li>);
     case "UserPage":
-      return(<li>{props.userName}</li>);
     case "Reply":
+    case "Liked":
       return(<li>{props.userName}</li>);
     default:
       return(<li> No User I know </li>);

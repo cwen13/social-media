@@ -39,14 +39,6 @@ type Thought {
   user: User
 }
 
-type ReThought {
-  id: ID!
-  reThoughtByUserId: ID!
-  originalThoughtId: ID!
-  content: String
-  user: User!
-}
-
 type Liked {
   id: ID!
   thoughtId: ID!
@@ -75,7 +67,6 @@ type Query {
   getThoughtLikes(thoughtId: ID!): [User]
 
   getReplys(thoughtReplyOfId: ID!): [Thought]
-  getReThoughts(originalThoughtId: ID!): [ReThought]!
 }
 
 type Mutation {
@@ -113,8 +104,6 @@ type Mutation {
 
   replyToThought(content: String!
                  thoughtReplyOfId: ID!): Thought!
-  addReThought(originalThoughtId: ID!,
-               content: String): ReThought!
 }`;
 
 

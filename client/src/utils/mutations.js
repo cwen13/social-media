@@ -138,3 +138,21 @@ mutation replyToThought($content: String!, $thoughtReplyOfId: ID!) {
     thoughtReplyOfId
   }
 }`;
+
+export const RETHOUGHT_THOUGHT = gql`
+mutation addReThought ($originalThoughtId: ID!,
+                       $additionalThought: String) {
+  addReThought (originalThoughtId: $originalThoughtId,
+                additionalThought: $additionalThought) {
+    id
+    reThoughtByUSerID
+    originalThoughtId
+    additionalThoughtId
+    thought
+    user {
+      id
+      userName
+      handle
+    }
+  }
+}`;

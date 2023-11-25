@@ -22,8 +22,20 @@ Thought.init(
     },
     thoughtReplyOfId: {
       // thought id of thought it is a replay to
-      type:DataTypes.INTEGER,
-      allowNull: true
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      unique: false
+    },
+    isReThought: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      unique: false
+    },
+    
+    orignalThoughtId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      unique: false
     },
   },
   {

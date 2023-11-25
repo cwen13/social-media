@@ -249,25 +249,33 @@ const resolvers = {
     },
 
     //STATUS: PENDING
-    addReThought: async (parent, { originalThoughtId, additionalThought }, context) => {
-      let thought = null;
+    addReThought: async (parent, { originalThoughtId, additionalThought, content }, context) => {
       if (context.user) {
-	if (additionalThought !== null) {
-	  thought = await Thought.create({ userId: context.user.id,
-					   content: additionalThought,
-					 });
-	}
-	const reThought = await ReThought.create({ reThoughtByUserId: context.user.id,
-						   originalThoughtId,
-						   additionalThoughtId: (thought === null) ? null : thought.id
-						 });
-	console.log(reThought);
+	const reThoughtCreate = await ReThought.create(
+	  {
+	    reThoughtByUserId: context.user.id,
+	    originalThoughtId,
+	    content
+	  },
+	  {
+	    include:
+	    {
+	      model: User
+	    }
+	  }
+	);
 	
-	const user = await User.findByPk(context.user.id);
-	const reThoughtInfo = { reThought, thought, user };
-	console.log("RETHOGUHTINFO:",reThoughtInfo);
+	const reThought = await ReThought.findByPk(
+	  reThoughtCreate.id,
+	  {
+	    include:
+	    {
+	      model: User
+	    }
+	  }
+	);
 
-	return reThoughtInfo;
+	return reThought;
       } else {
 	throw new AuthenticationError("You can not reThought unless your logged in");
       }

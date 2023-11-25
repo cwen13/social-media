@@ -155,5 +155,11 @@ query getAllMyLiked {
     id
     userId
     content
+    thoughtReplyOfId
+    user {
+      id
+      userName
+      handle
+    }
   }
 }`;

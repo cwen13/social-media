@@ -33,6 +33,7 @@ const seedDatabase = async () => {
 
   for (let i = 0; i < thoughtSeedData.length; i++) {
     await Thought.create(thoughtSeedData[i]);
+    
   }
 
   for (let i = 0; i < likedSeedData.length; i++) {

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect  } from "react";
+// Need to get teh liked list to reload when accessing the page a second time and on
 import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import ThoughtPost from "./../ThoughtPost"
@@ -14,6 +15,8 @@ import "./style.css";
 const Feed = ({ page }) => {
   const { userId } = useParams();
 
+//  const [ refreshLiked, setRefreshLiked ] = useState(true);
+  
   const queryOptions = {
     UserProfile : QUERY_MY_THOUGHTS,
     UserPage: QUERY_USER_THOUGHTS,
@@ -27,23 +30,31 @@ const Feed = ({ page }) => {
     Liked: "getAllMyLiked"
   };
 
-  const { loading: likedLoading, error: likedError, data: likedData } = useQuery(
-    QUERY_MY_LIKED);
+
+  const { loading: likedLoading, error: likedError, data: likedData, refresh: likedRefresh } = useQuery(
+    QUERY_MY_LIKED,
+    {
+      refetchQueries:
+      [ QUERY_MY_LIKED,
+	"getAllMyLiked"
+      ]
+    }
+  );
   const { loading: queryLoading, error: queryError, data: queryData } = useQuery(
     queryOptions[page],
     (page==="UserPage")
       ? {variables: {userId}}
     : "");
 
-  
-  
   if (likedLoading) return "Loading";
   if (queryLoading) return "Loading...";
   if (queryError) return `Error ${queryError.message}`;
 
-  const likedThoughts = (likedData) ? likedData.getAllMyLiked.map(result => result.thoughtId) : [0];
+  const likedThoughts = (likedData) ? likedData.getAllMyLiked.map(result => result.id) : [0];
   const isLiked = (thoughtId) => likedThoughts.includes(thoughtId);
 
+  console.log(queryData);
+  
   return (
 	<div className="feed">
 	  {queryData[thoughts[page]].map(thought => <ThoughtPost userName={thought.user.userName}

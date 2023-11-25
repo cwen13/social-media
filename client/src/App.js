@@ -16,14 +16,13 @@ import { QUERY_ME } from "./utils/queries";
 import MainFeed from "./pages/MainFeed";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
-import UserProfile from "./pages/UserProfile";
 import Search from "./pages/Search";
 import UserPage from "./pages/UserPage";
 import ThoughtPage from "./pages/ThoughtPage";
+import LikedThoughts from "./pages/LikedThoughts";
 
 import Navbar from "./components/Navbar/";
 import NotFound from "./components/NotFound/";
-import Liked from "./components/Liked/";
 import ReThought from "./components/ReThought/";
 import Following from "./components/Following/";
 import Blocked from "./components/Blocked/";
@@ -78,10 +77,6 @@ const App = () => {
 	      element={<SignUp />} 
             />
 	    <Route
-	      path="/user/me"
-	      element={<UserProfile />}
-	    />
-	    <Route
 	      path="/user/:userId"
 	      element={<UserPage />}
 	    />
@@ -95,7 +90,7 @@ const App = () => {
 	    />
 	    <Route
 	      path="/user/:userId/liked"
-	      element={<Liked />}
+	      element={<LikedThoughts />}
 	    />
 	    <Route
 	      path="/user/:userId/reThoughts"
