@@ -28,8 +28,9 @@ Thought.init(
     },
     isReThought: {
       type: DataTypes.BOOLEAN,
-      allowNull: true,
-      unique: false
+      allowNull: false,
+      unique: false,
+      defaultValue: false
     },
     
     orignalThoughtId: {

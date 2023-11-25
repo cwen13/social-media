@@ -1,7 +1,7 @@
 // here will be how to seed the database
 
 const sequelize = require('./../config/connection');
-const { User, ReThought, Friend, Thought, Liked } = require("./../models");
+const { User, Friend, Thought, Liked } = require("./../models");
 const userSeedData = require("./userSeedData.json");
 const thoughtSeedData = require("./thoughtSeedData.json");
 const friendSeedData = require("./friendSeedData.json");
@@ -18,9 +18,6 @@ const seedDatabase = async () => {
     where: {},
   });
   Thought.destroy({
-    where: {},
-  });
-  ReThought.destroy({
     where: {},
   });
   Liked.destroy({
