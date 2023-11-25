@@ -18,7 +18,8 @@ Liked.init(
     },
     likedByUserId: {
       type: DataTypes.INTEGER,
-      allowNunll: false
+      allowNunll: false,
+      unique: false
     },
   },
   {

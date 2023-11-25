@@ -103,24 +103,14 @@ mutation updateThought($thoughtId: ID! $content: String!) {
                 }
 }`;
 
-
 export const REMOVE_THOUGHT = gql`
 mutation removeThought($thoughtId: ID!) { removeThought(thoughtId: $thoughtId) }`;
 
-
-
 export const ADD_FRIEND = gql`
-mutation addFriend($userId: ID!
-                   $friendId: ID!
-                   $sent: String!) {
-  addFriend(userId: $userId
-            friendId: $friendId
-            sent: $sent) {
-    friend {
+mutation addFriend($friendId: ID!) {
+  addFriend(friendId: $friendId) {
       userId
       friendId
-      sent
-    }
   }
 }
 `;
@@ -137,11 +127,32 @@ mutation removeFriend($friendshipId: ID!) {
 export const ADD_LIKED = gql`
 mutation addLiked($thoughtId: ID!) { addLiked(thoughtId: $thoughtId) }`;
 
+export const REMOVE_LIKED = gql`
+mutation removeLiked($thoughtId: ID!) { removeLiked(thoughtId: $thoughtId) }`;
+
 export const REPLY_TO_THOUGHT = gql`
 mutation replyToThought($content: String!, $thoughtReplyOfId: ID!) {
   replyToThought (content: $content, thoughtReplyOfId: $thoughtReplyOfId) {
     id
     content
     thoughtReplyOfId
+  }
+}`;
+
+export const RETHOUGHT_THOUGHT = gql`
+mutation addReThought ($originalThoughtId: ID!,
+                       $additionalThought: String) {
+  addReThought (originalThoughtId: $originalThoughtId,
+                additionalThought: $additionalThought) {
+    id
+    reThoughtByUSerID
+    originalThoughtId
+    additionalThoughtId
+    thought
+    user {
+      id
+      userName
+      handle
+    }
   }
 }`;

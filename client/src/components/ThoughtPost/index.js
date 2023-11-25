@@ -9,6 +9,7 @@ import {
   UPDATE_THOUGHT,
   ADD_LIKED,
   REPLY_TO_THOUGHT,
+  REMOVE_LIKED
 } from "./../../utils/mutations";
 import {
   QUERY_MY_LIKED
@@ -48,7 +49,12 @@ const ThoughtPost = (props) => {
 							       [ QUERY_ALL_THOUGHTS,
 								 "getAllThoughts"
 							       ]});
-  const [ replyToThought, { error, replyError }] = useMutation(REPLY_TO_THOUGHT,
+  const [ removeLikedThought, { error: removeLikedError }] = useMutation(REMOVE_LIKED,
+									 { refetchQueries:
+									   [ QUERY_ALL_THOUGHTS,
+									     "getAllThoughts"
+									   ]});
+  const [ replyToThought, { error: replyError }] = useMutation(REPLY_TO_THOUGHT,
 							       { refetchQueries:
 								 [ QUERY_ALL_THOUGHTS,
 								   "getAllThoughts"
@@ -76,6 +82,7 @@ const ThoughtPost = (props) => {
 	  content: replyContent,
 	  thoughtReplyOfId: props.thoughtId
 	}});
+      setReplyContent("");
       setReplying(false);
     } catch (e) {
       throw new Error("You did not reply to the thought!");
@@ -85,22 +92,31 @@ const ThoughtPost = (props) => {
     
   const handleLiked  = async (event) => {
     event.preventDefault();
-    try {
-      if(userId) {
+    try {      
+      if (userId && !isLiked) {
 	const likedResponse = await likedThought({
 	  variables: {
 	    thoughtId: props.thoughtId
 	  }
 	});
 	setIsLiked(true);
-      }
+      } else if (userId && isLiked) {
+	const removeLikedResponse = await removeLikedThought({
+	  variables: {
+	    thoughtId: props.thoughtId
+	  }
+	});
+	setIsLiked(false);
+      } else {
+	console.log("User needs to be logged in");
+      };
     } catch (e) {
-      throw new Error("No thought removed");
+      throw new Error("No thought thought liked");
       console.log(e);
     }
   };
   
-  const handleRemove = async (event) => {
+const handleRemove = async (event) => {
     event.preventDefault();
     try {
       const removeResponse = await removeThought({
@@ -129,7 +145,6 @@ const ThoughtPost = (props) => {
   };
 
   const handleChangeThought = async (event) => {
-    console.log(event);
     setThoughtText(event.currentTarget.value);
     setCursorPositionThought({ start: event.target.selectionStart,
 			       end: event.target.selectionEnd
@@ -206,11 +221,11 @@ const ThoughtPost = (props) => {
   const RenderThought = () => {
     return (
       <section className="thought">
-	{props.thoughtReplyOfId !== null ? `Reply to thought ID: ${props.thoughtReplyOfId}` : ''}
+	{(props.page !== "Reply") ? (props.thoughtReplyOfId !== null ? `Reply to thought ID: ${props.thoughtReplyOfId}` : '') : ""}
 	<br/>
 	Thought: {props.thought}
 	<div className="actions">
-	  {(props.userId===userId) || (props.page==="UserProfile")
+	  {(props.userId===userId)
 	   ? <MyInteractivity />
 	   : <AllInteractivity />
 	  }
@@ -238,23 +253,41 @@ const ThoughtPost = (props) => {
     );
   };
 
-  return (
-    <section className="entry">
-      <div className="headliner">
-	<ul>
-	  <li className="thoughtId">Thought ID: {props.thoughtId}</li>
-	  {(props.page==="MainFeed")
-	   ? <>
+  const ThoughtsPage = () => {
+    switch (props.page) {
+    case "MainFeed":
+      return(<>
 	       <li className="userName">
 		 UserName:
 		 <Link to={`/user/${props.userId}`}>
-		    {props.userName}
+		   {props.userName}
 		 </Link>
 	       </li>
 	       <li className="pfp">This is a profile pic</li>
 	       <li className="userId">User ID: {props.userId}</li>
 	     </>
-	   : <li> ME </li>}
+	    );
+    case "UserPage":
+    case "Reply":
+    case "Liked":
+      return(<li>{props.userName}</li>);
+    default:
+      return(<li> No User I know </li>);
+    }
+
+
+  }
+  
+  return (
+    <section className="entry">
+      <div className="headliner">
+	<ul>
+	  <li className="thoughtId">Thought ID:
+	    <Link  to={`/thought/${props.thoughtId}`}>
+	      {props.thoughtId}
+	    </Link>
+	  </li>
+	  <ThoughtsPage />
 	</ul>
       </div>
       {isEditing ? <RenderEdit /> : <RenderThought />}

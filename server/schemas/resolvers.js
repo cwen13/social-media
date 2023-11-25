@@ -23,10 +23,13 @@ const resolvers = {
 
     //STATUS: WORKING
     getMyFriends: async (parent, args, context) => {
-      let userFriends = await User.findByPk(context.user.id, {
-	include: { model: User,
-		   as: "friendshipUser",
-		   through: "friend" }})
+      let userFriends = await User.findByPk(context.user.id,
+					    {
+					      include: {
+						model: User,
+						as: "friendshipUser",
+						through: "friend"
+					      }});
       return userFriends.friendshipUser;
     },
     
@@ -64,8 +67,19 @@ const resolvers = {
 				  
     },
 
+    //STATUS: WORKING
     getAllMyLiked: async (parent, args, context) => {
-      return await Liked.findAll({where: { likedByUserId: context.user.id }});
+      const liked =  await User.findByPk(context.user.id, {
+	include: {
+	  model: Thought,
+	  as: "userLiked",
+	  through: "liked",
+	  include: {
+	    model: User,
+	    as: "user"
+	  }
+	}})
+      return liked.userLiked;
 				  
     },    
     
@@ -210,7 +224,10 @@ const resolvers = {
     //STATUS: WORKING
     addLiked: async (parent, { thoughtId }, context) => {
       if (context.user) {
-	return (await Liked.create({thoughtId, likedByUserId: context.user.id}) !== 1);
+	return (await Liked.create({
+	  thoughtId: thoughtId,
+	  likedByUserId: context.user.id
+	}) !== 1);
       } else {
 	throw new AuthenticaitonErro("You need to be logged in to like a thought!");
       }
@@ -232,25 +249,33 @@ const resolvers = {
     },
 
     //STATUS: PENDING
-    addReThought: async (parent, { originalThoughtId, additionalThought }, context) => {
-      let thought = null;
+    addReThought: async (parent, { originalThoughtId, additionalThought, content }, context) => {
       if (context.user) {
-	if (additionalThought !== null) {
-	  thought = await Thought.create({ userId: context.user.id,
-					   content: additionalThought,
-					 });
-	}
-	const reThought = await ReThought.create({ reThoughtByUserId: context.user.id,
-						   originalThoughtId,
-						   additionalThoughtId: (thought === null) ? null : thought.id
-						 });
-	console.log(reThought);
+	const reThoughtCreate = await ReThought.create(
+	  {
+	    reThoughtByUserId: context.user.id,
+	    originalThoughtId,
+	    content
+	  },
+	  {
+	    include:
+	    {
+	      model: User
+	    }
+	  }
+	);
 	
-	const user = await User.findByPk(context.user.id);
-	const reThoughtInfo = { reThought, thought, user };
-	console.log("RETHOGUHTINFO:",reThoughtInfo);
+	const reThought = await ReThought.findByPk(
+	  reThoughtCreate.id,
+	  {
+	    include:
+	    {
+	      model: User
+	    }
+	  }
+	);
 
-	return reThoughtInfo;
+	return reThought;
       } else {
 	throw new AuthenticationError("You can not reThought unless your logged in");
       }

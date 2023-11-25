@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
-import Auth from './../../utils/auth';
 import { useUserContext } from "./../../utils/UserContext";
+import Auth from './../../utils/auth';
 import "./style.css";
 
 const Navbar = () => {
@@ -12,7 +11,8 @@ const Navbar = () => {
   const showNav = () => {
     return (Auth.loggedIn() ? (
       <>
-	<Link to={`/user/me`}>
+	<Link to={`/user/${userId}`}
+ 	      state={{userId: userId}}	>
 	  <h4>Your Profile</h4>
 	</Link>
 	<Link onClick={() => Auth.logout()}>

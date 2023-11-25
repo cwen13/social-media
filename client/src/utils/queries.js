@@ -1,7 +1,5 @@
 import { gql } from '@apollo/client';
 
-
-
 export const QUERY_ME = gql`
 query me {
   getMe {
@@ -36,17 +34,17 @@ query getUser ($userId: ID!) {
 export const QUERY_MY_FRIENDS = gql`
 query getMyFriends {
   getMyFriends {
-    userId
-    userNAme
+    id
+    userName
     handle
   }
 }`;
 
 export const QUERY_USER_FRIENDS = gql`
 query getUserFriends($userId: ID!) {
-  getUserFriends(id: $userId) {
-    userId
-    friendId
+  getUserFriends(userId: $userId) {
+    id
+    userName
   }
 }`;
 
@@ -88,8 +86,11 @@ query getAllLiked {
 export const QUERY_THOUGHT = gql`
 query getThought($thoughtId: ID!) {
   getThought(thoughtId: $thoughtId) {
+    id
     content
+    thoughtReplyOfId
     user{
+      id
       userName
       handle
     }
@@ -99,8 +100,11 @@ query getThought($thoughtId: ID!) {
 export const QUERY_THOUGHT_LIKES = gql`
 query getThoughtLikes ($thoughtId: ID!) {
   getThoughtLikes(thoughtId: $thoughtId) {
+    id
     content
+    thoughtReplyOfId
     user{
+      id
       userName
       handle
     }
@@ -123,8 +127,11 @@ query getUserThoughts ($userId: ID!) {
 export const QUERY_REPLYS = gql`
 query getReplys ($thoughtReplyOfId: ID!) {
   getReplys(thoughtReplyOfId: $thoughtReplyOfId) {
+    id
     content
+    thoughtReplyOfId
     user{
+      id
       userName
       handle
     }
@@ -145,7 +152,14 @@ query getReThoughts ($originalThoughtId: ID!) {
 export const QUERY_MY_LIKED = gql`
 query getAllMyLiked {
   getAllMyLiked {
-    likedByUserId
-    thoughtId
+    id
+    userId
+    content
+    thoughtReplyOfId
+    user {
+      id
+      userName
+      handle
+    }
   }
 }`;
