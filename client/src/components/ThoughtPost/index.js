@@ -183,10 +183,12 @@ const ThoughtPost = (props) => {
 
   const handleChangeThought = (event) => {
     setThoughtText(event.currentTarget.value);
-    setCursorPositionThought({ start: event.target.selectionStart,
-			       end: event.target.selectionEnd
-			     });
-    
+    setCursorPositionThought(
+      {
+	start: event.target.selectionStart,
+	end: event.target.selectionEnd
+      }
+    );
   };
 
   const handleChangeReply = (event) => {
@@ -206,9 +208,6 @@ const ThoughtPost = (props) => {
   const handleReThought = async (event) => {
     event.preventDefault();
     try {
-      console.log("about to add reThought");
-      console.log("thoughtid:", props.thoughtId);
-      console.log("rethought:", reThoughtText);
       const reply = await addReThought({
 	variables: {
 	  originalThoughtId: props.thoughtId,
@@ -233,7 +232,6 @@ const ThoughtPost = (props) => {
 	     RETHOGUHT
 	   </button>
 	 : <section className="reThought">
-	     Thought:
 	     <textarea id="reThoughtTextBox"
 		       name="reThoughtText"
 		       spellCheck="true"
@@ -261,7 +259,6 @@ const ThoughtPost = (props) => {
 	     REPLY!
 	   </button>
 	 : <section className="replying">
-	     Reply:
 	     <textarea id="replyTextBox"
 		       name="replyContent"
 		       spellCheck="true"
@@ -351,7 +348,6 @@ const ThoughtPost = (props) => {
   const RenderEdit = () => {
     return (
       <section className="thought">
-	Thought:
 	<textarea id="thoughtTextBox"
 		  name="thoughtText"
 		  spellCheck="true"
@@ -388,8 +384,6 @@ const ThoughtPost = (props) => {
     default:
       return(<li> No User I know </li>);
     }
-
-
   }
   
   return (
