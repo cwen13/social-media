@@ -9,6 +9,7 @@ type User {
   lastName: String!
   email: String!
   password: String!
+  profilePicture: String
   friends: [User]
   friendOfFriend: [User]
 }
@@ -36,15 +37,9 @@ type Thought {
   userId: ID!
   content: String!
   thoughtReplyOfId: ID
+  isReThought: Boolean!
+  originalThoughtId: ID
   user: User
-}
-
-type ReThought {
-  id: ID!
-  reThoughtByUserId: ID!
-  originalThoughtId: ID!
-  content: String
-  user: User!
 }
 
 type Liked {
@@ -75,7 +70,7 @@ type Query {
   getThoughtLikes(thoughtId: ID!): [User]
 
   getReplys(thoughtReplyOfId: ID!): [Thought]
-  getReThoughts(originalThoughtId: ID!): [ReThought]!
+  getReThoughts(originalThoughtId: ID!): [Thought]
 }
 
 type Mutation {
@@ -86,14 +81,16 @@ type Mutation {
           firstName: String!,
           lastName: String!,
           email: String!,
-          password: String!): Auth!
+          password: String!
+          profilePicture: String): Auth!
   updateUser(userId: ID!,
              userName: String,
              handle: String,
              firstName: String,
              lastName: String,
              email: String,
-             password: String): Auth!
+             password: String
+             profilePicture: String): Auth!
   deleteUser(userId: ID!): Boolean!
 
   addFriend(friendId: ID!): Friend
@@ -103,7 +100,8 @@ type Mutation {
 
   addThought(userId: ID!
              content: String!,
-             thoughtReplyOfId: ID): Thought!
+             thoughtReplyOfId: ID,
+             isReThought: Boolean,): Thought!
   updateThought(thoughtId: ID!,
                 content: String!): Thought!
   removeThought(thoughtId: ID!): Boolean!
@@ -114,7 +112,7 @@ type Mutation {
   replyToThought(content: String!
                  thoughtReplyOfId: ID!): Thought!
   addReThought(originalThoughtId: ID!,
-               content: String): ReThought!
+               additionalThought: String,): Thought
 }`;
 
 

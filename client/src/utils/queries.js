@@ -55,6 +55,8 @@ query getMyThoughts {
     userId
     content
     thoughtReplyOfId
+    isReThought
+    originalThoughtId
     user {
       userName
     }
@@ -68,6 +70,8 @@ query getAllThoughts {
     userId
     content
     thoughtReplyOfId
+    isReThought
+    originalThoughtId
     user {
       id
       userName

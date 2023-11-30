@@ -9,10 +9,12 @@ import {
   UPDATE_THOUGHT,
   ADD_LIKED,
   REPLY_TO_THOUGHT,
-  REMOVE_LIKED
+  REMOVE_LIKED,
+  RETHOUGHT_THOUGHT
 } from "./../../utils/mutations";
 import {
-  QUERY_MY_LIKED
+  QUERY_MY_LIKED,
+  QUERY_THOUGHT
 } from "./../../utils/queries";
 import { QUERY_ALL_THOUGHTS } from "./../../utils/queries";
 
@@ -24,43 +26,67 @@ const ThoughtPost = (props) => {
   
   const thoughtAreaRef = useRef(null);
   const replyAreaRef = useRef(null);
+  const reThoughtAreaRef = useRef(null);
   const { userId, loginUser, logoutUser } = useUserContext();
 
   const [ isEditing, setIsEditing ] = useState(false);
   const [ thoughtText, setThoughtText ] = useState(props.thought);
   const [ cursorPositionThought, setCursorPositionThought ] = useState({ start:0, end: 0 });
   const [ cursorPositionReply, setCursorPositionReply ] = useState({ start:0, end: 0 });
+  const [ cursorPositionReThought, setCursorPositionReThought ] = useState({ start:0, end: 0 });
   const [ isLiked, setIsLiked ] = useState(props.liked);
   const [ replying, setReplying ] = useState(false);
   const [ replyContent, setReplyContent ] = useState("");
+  const [ reThought, setReThought] = useState(false);
+  const [ reThoughtText, setReThoughtText ] = useState("");
   
-  const [ removeThought, { error: removeError }] = useMutation(REMOVE_THOUGHT,
-							       { refetchQueries:
-								 [ QUERY_ALL_THOUGHTS,
-								   "getAllThoughts"
-								 ]});
-  const [ updateThought, { error: updateError }] =  useMutation(UPDATE_THOUGHT,
-								{ refetchQueries:
-								  [ QUERY_ALL_THOUGHTS,
-								    "getAllThoughts"
-								  ]});
-  const [ likedThought, { error: likedError }] = useMutation(ADD_LIKED,
-							     { refetchQueries:
-							       [ QUERY_ALL_THOUGHTS,
-								 "getAllThoughts"
-							       ]});
-  const [ removeLikedThought, { error: removeLikedError }] = useMutation(REMOVE_LIKED,
-									 { refetchQueries:
-									   [ QUERY_ALL_THOUGHTS,
-									     "getAllThoughts"
-									   ]});
-  const [ replyToThought, { error: replyError }] = useMutation(REPLY_TO_THOUGHT,
-							       { refetchQueries:
-								 [ QUERY_ALL_THOUGHTS,
-								   "getAllThoughts"
-								 ]});
+  const [ removeThought, { error: removeError }] = useMutation(
+    REMOVE_THOUGHT,
+    { refetchQueries:
+      [ QUERY_ALL_THOUGHTS,
+	"getAllThoughts"
+      ]});
+  const [ updateThought, { error: updateError }] =  useMutation(
+    UPDATE_THOUGHT,
+    { refetchQueries:
+      [ QUERY_ALL_THOUGHTS,
+	"getAllThoughts"
+      ]});
+  const [ likedThought, { error: likedError }] = useMutation(
+    ADD_LIKED,
+    { refetchQueries:
+      [ QUERY_ALL_THOUGHTS,
+	"getAllThoughts"
+      ]});
+  const [ removeLikedThought, { error: removeLikedError }] = useMutation(
+    REMOVE_LIKED,
+    { refetchQueries:
+      [ QUERY_ALL_THOUGHTS,
+	"getAllThoughts"
+      ]});
+  const [ replyToThought, { error: replyError }] = useMutation(
+    REPLY_TO_THOUGHT,
+    { refetchQueries:
+      [ QUERY_ALL_THOUGHTS,
+	"getAllThoughts"
+      ]});
+  const [ addReThought, { error: rethoughtError }] = useMutation(
+    RETHOUGHT_THOUGHT,
+    { refetchQueries:
+      [ QUERY_ALL_THOUGHTS,
+	"getAllThoughts"
+      ]});
+  const { loading: thoughtLoading, error: thoughtError, data: reThoughtOf } = useQuery(
+    QUERY_THOUGHT,
+    {
+      variables:
+      {
+	thoughtId: props.thoughtReplyOfId
+      }
+    }
+  );
   
-  
+  // for text to be focus during typingin thought
   useEffect(() => {
     if(isEditing) {
       thoughtAreaRef.current.focus();
@@ -68,12 +94,23 @@ const ThoughtPost = (props) => {
     }
   },[thoughtText]);
 
-    useEffect(() => {
+  // for text to be focus during typinging reply
+  useEffect(() => {
     if(replying) {
       replyAreaRef.current.focus();
       replyAreaRef.current.selectionStart = cursorPositionReply.start;
     }
   },[replyContent]);
+  
+    // for text to be focus during typinginreTthought
+  useEffect(() => {
+    if(reThought) {
+      reThoughtAreaRef.current.focus();
+      reThoughtAreaRef.current.selectionStart = cursorPositionReThought.start;    
+    }
+  },[reThoughtText]);
+
+  if(thoughtLoading) return "loading";
   
   const handleReplySubmit = async () => {
     try {
@@ -116,7 +153,7 @@ const ThoughtPost = (props) => {
     }
   };
   
-const handleRemove = async (event) => {
+  const handleRemove = async (event) => {
     event.preventDefault();
     try {
       const removeResponse = await removeThought({
@@ -144,7 +181,7 @@ const handleRemove = async (event) => {
     }; 
   };
 
-  const handleChangeThought = async (event) => {
+  const handleChangeThought = (event) => {
     setThoughtText(event.currentTarget.value);
     setCursorPositionThought({ start: event.target.selectionStart,
 			       end: event.target.selectionEnd
@@ -152,15 +189,68 @@ const handleRemove = async (event) => {
     
   };
 
-  const handleChangeReply = async (event) => {
-
+  const handleChangeReply = (event) => {
     setReplyContent(event.target.value);
     setCursorPositionReply({ start: event.target.selectionStart,
 			     end: event.target.selectionEnd
-			   });
-    
+			   });    
   };
 
+  const handleChangeReThought = (event) => {
+    setReThoughtText(event.currentTarget.value);
+    setCursorPositionReThought({ start: event.target.selectionStart,
+				 end: event.target.selectionEnd
+			       });
+  };
+
+  const handleReThought = async (event) => {
+    event.preventDefault();
+    try {
+      console.log("about to add reThought");
+      console.log("thoughtid:", props.thoughtId);
+      console.log("rethought:", reThoughtText);
+      const reply = await addReThought({
+	variables: {
+	  originalThoughtId: props.thoughtId,
+	  additionalThought: reThoughtText
+	}});
+      console.log("re'ed the thought");
+      setReThoughtText("");
+      setReThought(false);
+    } catch (e) {
+      throw new Error("You did not re the thought!");
+      console.log(e);
+    }
+    
+  }
+  
+  const ReThoughtButtonSection = (event) => {
+    return (
+      <>
+	{!reThought
+	 ? <button id={`reThought-${props.thoughtId}`}
+		   onClick={() => setReThought(true)}>
+	     RETHOGUHT
+	   </button>
+	 : <section className="reThought">
+	     Thought:
+	     <textarea id="reThoughtTextBox"
+		       name="reThoughtText"
+		       spellCheck="true"
+		       placeholder="Additional thoughts?"
+		       onChange={handleChangeReThought}
+		       ref={reThoughtAreaRef}
+		       value={reThoughtText}>
+	     </textarea>
+	     <div className="actions">
+	       <button id={`saveReThought-${props.thoughtId}`}
+		     onClick={handleReThought}> SAVE </button>
+	     </div>
+	   </section>
+	}
+      </>	       
+    );
+  };
   
   const ReplySection = () => {
     return(
@@ -210,20 +300,44 @@ const handleRemove = async (event) => {
 	       LIKE!
 	     </button>
 	     <ReplySection />
-	     <button id={`rethought-${props.thoughtId}`}
-		     onClick={handleRemove}>
-	       RETHOUGHT!
-	     </button>
+	     <ReThoughtButtonSection />
 	   </>
 	  );
   };
-	     
+
+  const ReThoughted = () => {
+    return(
+      <div className="originalThought">
+	 {reThoughtOf.getThought.content}
+      </div>  
+    );
+  };
+  
   const RenderThought = () => {
+    if ((props.isReThought) && (reThoughtOf.getThought !== null)) {
+      return(
+	<section className="thought">
+	  <div className="currentThought">
+	       {props.thought}
+	  </div>
+	  <ReThoughted />
+	  <div className="actions">
+	    {(props.userId===userId)
+	     ? <MyInteractivity />
+	     : <AllInteractivity />
+	    }
+	  </div>
+      </section>
+      );
+    };
+    
     return (
       <section className="thought">
 	{(props.page !== "Reply") ? (props.thoughtReplyOfId !== null ? `Reply to thought ID: ${props.thoughtReplyOfId}` : '') : ""}
 	<br/>
-	Thought: {props.thought}
+	<div className="currentThought">
+	  Thought: {props.thought}
+	</div>
 	<div className="actions">
 	  {(props.userId===userId)
 	   ? <MyInteractivity />

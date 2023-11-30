@@ -18,6 +18,9 @@
 
 .thought {
   padding: 0rem 1rem 0rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .actions {
@@ -30,3 +33,14 @@
   background-color: purple ;
 }
 
+.currentThought {
+  align-self: flex-start;
+}
+
+.originalThought {
+  margin: 5px;
+  padding: 10px;
+  border: solid red 1px;
+  width: 80%;
+	  
+}

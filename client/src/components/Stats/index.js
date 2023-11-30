@@ -13,7 +13,7 @@ import "./style.css";
 
 //Stats will include friend indicator, link to liked,
 //  reThoughts, and 
-const Stats = (props) => {
+const Stats = ({ page }) => {
   const  userPage = useParams().userId;
   const { userId, loginUser, logoutUser } = useUserContext();
 
@@ -71,19 +71,20 @@ const Stats = (props) => {
   
   
   return(
-    <ul className="userStats">
-
-      {((userId === userPage) || (userPage === undefined)) ? "" : friendButton() }
-      <li>Number of friends 
-	{/*This will be a mini scroll box likely a iframe*/}
-	<ul id="friendList">
-	  {friendsData ? friendsData.getUserFriends.map(friend => <FriendList friendId={friend.id}
-									      key={friend.id}
-									      friendName={friend.userName}
-									      page={props.page}
-								  />)
+    <>
+      {(page === "MainFeed") ? "" :
+       <ul className="userStats">
+	 {((userId === userPage) || (userPage === undefined)) ? "" : friendButton() }
+	 <li>Number of friends 
+	   {/*This will be a mini scroll box likely a iframe*/}
+	   <ul id="friendList">
+	     {friendsData ? friendsData.getUserFriends.map(friend => <FriendList friendId={friend.id}
+										 key={friend.id}
+										 friendName={friend.userName}
+										 page={page}
+								     />)
 	   : "There are no friends yet"}
-	</ul>
+	   </ul>
       </li>
       
       <li>Following
@@ -129,6 +130,8 @@ const Stats = (props) => {
 	</Link>
       </li>
     </ul>
+      }
+    </>
   );
 };
 

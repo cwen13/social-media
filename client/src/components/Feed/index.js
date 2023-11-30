@@ -53,19 +53,20 @@ const Feed = ({ page }) => {
   const likedThoughts = (likedData) ? likedData.getAllMyLiked.map(result => result.id) : [0];
   const isLiked = (thoughtId) => likedThoughts.includes(thoughtId);
 
-  console.log(queryData);
-  
   return (
 	<div className="feed">
-	  {queryData[thoughts[page]].map(thought => <ThoughtPost userName={thought.user.userName}
-								 userId={thought.user.id}
-								 thought={thought.content}
-								 thoughtId={thought.id}
-								 thoughtReplyOfId={thought.thoughtReplyOfId}
-								 key={thought.id}
-								 page={page}
-								 liked={isLiked(thought.id)}
-						    />)}
+	  {queryData[thoughts[page]].map(thought =>
+	    <ThoughtPost userName={thought.user.userName}
+			 userId={thought.user.id}
+			 thought={thought.content}
+			 thoughtId={thought.id}
+			 thoughtReplyOfId={thought.thoughtReplyOfId}
+			 key={thought.id}
+			 page={page}
+			 isReThought={thought.isReThought}
+			 originalThoughtId={thought.thoughtReplyOfId}
+			 liked={isLiked(thought.id)}
+	    />)}
 	</div>
   );
 };
