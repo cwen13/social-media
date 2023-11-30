@@ -18,7 +18,8 @@ Thought.init(
     content: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: false
+      unique: false,
+      defaultValue: ""
     },
     thoughtReplyOfId: {
       // thought id of thought it is a replay to
@@ -28,15 +29,10 @@ Thought.init(
     },
     isReThought: {
       type: DataTypes.BOOLEAN,
-      allowNull: true,
-      unique: false
-    },
-    
-    orignalThoughtId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      unique: false
-    },
+      allowNull: false,
+      unique: false,
+      defaultValue: false
+    },    
   },
   {
     sequelize,

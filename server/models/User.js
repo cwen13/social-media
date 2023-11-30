@@ -71,6 +71,13 @@ User.init(
         len: [8, 35]
       }
     },
+    profilePicture: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+	notContain: " ",
+      }
+    },
   },
   {
     hooks: {
