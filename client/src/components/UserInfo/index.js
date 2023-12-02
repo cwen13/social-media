@@ -38,29 +38,10 @@ const UserInfo = ({ page }) => {
 
   const handleEditing = (event) => {
     event.preventDefault();
-    console.log(event.target);
+    console.log(event);
     
   }
-  
-  const editButton = (defaultValue, type, attribute, setAttribute, attributeName) => {
-    return(
-      <>
-	<div id={attributeName}>
-	  <input type="text"
-		 name={attributeName}
-		 value={defaultValue}
-	  >
-	  </input>
-	  <button type="button"
-		  className={attributeName}
-		  onClick={(event) => console.log(event.target)}>
-	    SAVE
-	  </button>
-	</div>
-      </>
-    );
-  }
-  
+    
   const renderLanding = () => {
     return (
       <section> LOGIN TO EXP </section>
@@ -69,58 +50,85 @@ const UserInfo = ({ page }) => {
 
   const renderUserInfo = () => {
     return (
-      <section className="userInfo" >
-	<h1>=^={userName}=^=</h1>
-	{page === "EditProfile" ? editButton(userName,
-					     "text",
-					     userNameEdit,
-					     setUserNameEdit) : ""}
-	<div className="pfp">
-	  {profilePicture
-	   ? <img src={`/images/pfp/${profilePicture}`}
-		  width="150"/>
-	   :
-	   <>
- 	     +==+<br/>
-	     |--|<br/>
-	     +==+
-	   </>
-	  }
-	  {page === "EditProfile" ? editButton(profilePicture,
-					       "image",
-					       profilePictureEdit,
-					       setProfilePictureEdit) : ""}
-	</div>
-	<div className="names">
-	  NAME: {handle}
-	  {page === "EditProfile" ? editButton(handle,
-					       "text",
-					       handleEdit,
-					       setHandleEdit) : ""}
-	</div>
-	<div className="email">
-	  EMAIL: {email}
-	  {page === "EditProfile" ? editButton(email,
-					       "email",
-					       emailEdit,
-					       setEmailEdit) : ""}
-	</div>
-	{ pageUserId !== 0 ? (page !== "EditProfile" ?
-	  
-      	  <ThoughtCreate userId={userId}
-			 pageUserId={pageUserId}
-			 page={page}/> : "" ) :
-	  <p>Sign up or login to start putting your best thougths out there!</p>}
-      </section>
-      {page !== "EditProfile"
-       ? ""
-       : <section classNAme="editUserProfile">
-	   <form >
-	     
+      <>
+	<section className="userInfo" >
+	  <h1>=^={userName}=^=</h1>
+	  <div className="pfp">
+	    {profilePicture
+	     ? <img src={`/images/pfp/${profilePicture}`}
+		    width="150"/>
+	     :
+	     <>
+ 	       +==+<br/>
+	       |--|<br/>
+	       +==+
+	     </>
+	    }
+	  </div>
+	  <div className="names">
+	    NAME: {handle}
+	  </div>
+	  <div className="email">
+	    EMAIL: {email}
+	  </div>
+	  { pageUserId !== 0 ? (page !== "EditProfile" ?
+				
+      				<ThoughtCreate userId={userId}
+					       pageUserId={pageUserId}
+					       page={page}/> : "" ) :
+	    <p>Sign up or login to start putting your best thougths out there!</p>}
+	</section>
+	{page !== "EditProfile"
+	 ? ""
+	 : <section classNAme="editUserProfile">
+	     <form action=""
+		   className="edit-profile-form"
+		   onSubmit={handleEditing}
+	     >
+	       <div className="edit-form">
+		 <label for="userName">UserName</label>
+		 <input type="text"
+			name="userName"
+			id="userName"
+			value={userName}
+		 />
 
-	   </form>
-	 </section>
-       
+	       </div>
+	       
+	       <div className="edit-form">
+		 <label for="profilePicture">ProfilePicture</label>
+		 <input type="file"
+			name="profilePicture"
+			id="profilePicture"
+		 />
+	       </div>
+	       
+	       <div className="edit-form">
+		 <label for="handle"></label>
+		 <input type="text"
+			name="handle"
+			id="handle"
+			value={handle}
+		 />
+
+	       </div>
+	       
+	       <div className="edit-form">
+		 <label for="email">Email</label>
+		 <input type="email"
+			name="email"
+			id="emial"
+			value={email}
+		 />
+		 
+	       </div>
+	       <div class="edit-form"> 
+		 <input type="submit" />
+	       </div>
+	     </form>
+	   </section>
+	}
+      </>
     );
   };
   
