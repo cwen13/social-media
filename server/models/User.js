@@ -74,9 +74,6 @@ User.init(
     profilePicture: {
       type: DataTypes.STRING,
       allowNull: true,
-      validate: {
-	notContain: " ",
-      }
     },
   },
   {

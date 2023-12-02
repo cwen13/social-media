@@ -110,7 +110,7 @@ const ThoughtPost = (props) => {
     }
   },[reThoughtText]);
 
-  if(thoughtLoading) return "loading";
+
   
   const handleReplySubmit = async () => {
     try {
@@ -311,6 +311,7 @@ const ThoughtPost = (props) => {
   };
   
   const RenderThought = () => {
+    if(thoughtLoading) return "loading";
     if ((props.isReThought) && (reThoughtOf.getThought !== null)) {
       return(
 	<section className="thought">

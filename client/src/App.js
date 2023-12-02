@@ -20,6 +20,7 @@ import Search from "./pages/Search";
 import UserPage from "./pages/UserPage";
 import ThoughtPage from "./pages/ThoughtPage";
 import LikedThoughts from "./pages/LikedThoughts";
+import EditProfile from "./pages/EditProfile";
 
 import Navbar from "./components/Navbar/";
 import NotFound from "./components/NotFound/";
@@ -95,6 +96,10 @@ const App = () => {
 	    <Route
 	      path="/user/:userId/reThoughts"
 	      element={<ReThought />}
+	    />
+	    <Route
+	      path="/user/:userId/edit"
+	      element={<EditProfile />}
 	    />
 	    <Route
 	      path="/thought/:postId"
