@@ -25,7 +25,7 @@ query getAllUsers {
 }`;
 
 export const QUERY_USER = gql`
-query getUser ($userId: ID!) {
+query getUser ($userId: ID) {
   getUser (userId: $userId) {
     userName
     handle

@@ -18,7 +18,8 @@ const resolvers = {
 
     //STATUS: WORKING
     getUser: async (parent, { userId }, context) => {
-      return await User.findByPk((!!userId) ? userId : 1);
+      return userId ? await User.findByPk(userId) : null;
+      
 
     },
 

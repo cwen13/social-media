@@ -18,9 +18,11 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Search from "./pages/Search";
 import UserPage from "./pages/UserPage";
+import MyPage from "./pages/MyPage";
 import ThoughtPage from "./pages/ThoughtPage";
 import LikedThoughts from "./pages/LikedThoughts";
 import EditProfile from "./pages/EditProfile";
+import Landing from "./pages/Landing";
 
 import Navbar from "./components/Navbar/";
 import NotFound from "./components/NotFound/";
@@ -67,7 +69,7 @@ const App = () => {
 	  <Routes>	    
             <Route 
 	      path="/" 
-	      element={<MainFeed />} 
+	      element={<Landing />} 
             />
 	    <Route 
 	      path="/login" 
@@ -77,6 +79,10 @@ const App = () => {
 	      path="/signup" 
 	      element={<SignUp />} 
             />
+	    <Route
+	      path="/user/MyPage"
+	      element={<MyPage />}
+	    />
 	    <Route
 	      path="/user/:userId"
 	      element={<UserPage />}

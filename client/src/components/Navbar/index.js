@@ -11,10 +11,6 @@ const Navbar = () => {
   const showNav = () => {
     return (Auth.loggedIn() ? (
       <>
-	<Link to={`/user/${userId}`}
- 	      state={{userId: userId}}	>
-	  <h4>Your Profile</h4>
-	</Link>
 	<Link onClick={() => Auth.logout()}>
 	  <h4>Logout</h4>
 	</Link>
@@ -34,7 +30,7 @@ const Navbar = () => {
   return (
     <>
       <nav className="navbar-nav">
-	  <Link  to="/"><h1>Social-Media site </h1></Link>
+	  <Link  to="/MyPage"><h1>Social-Media site </h1></Link>
 	  <Link to="/search"><h4>Search for user </h4></Link>
 	{showNav()}
       </nav>      

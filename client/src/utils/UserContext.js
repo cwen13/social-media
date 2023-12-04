@@ -19,7 +19,8 @@ export const UserContextProvider = ({ children }) => {
     QUERY_USER,
     {
       variables: { userId }
-    });
+    }
+  );
   
   const [ userName, setUserName ] = useState(null);
   const [ profilePicture , setProfilePicture ] = useState(null);
