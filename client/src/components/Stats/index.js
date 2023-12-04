@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery, useMutation } from '@apollo/client';
 import {
@@ -18,6 +18,10 @@ const Stats = ({ page }) => {
   const { userId, loginUser, logoutUser } = useUserContext();
 
   const [ friendship, setFriendship ] = useState(false);
+
+  useEffect(() => {
+    
+  },[friendship]);
   
   let friendId = userId;
   if (userPage !== undefined) {
@@ -47,26 +51,30 @@ const Stats = ({ page }) => {
   if (myInfoLoading) return "Loading....";
 
   const handleFriendship = async (event) => {
-    await friendshipRequest({
-      variables: {
-
-	friendId: friendId
-      }});
+    await friendshipRequest(
+      {
+	variables:
+	{
+	  friendId: friendId
+	}
+      }
+    );
     setFriendship(true);
   }
   
   const friendButton = (event) => {
-    return (isFriend()) ?
-      <li>
-	This one of your friends
-      </li>
-      :
-      <li> This is not a friend but could be
-	<button id="friendshipButton"
-		onClick={handleFriendship}>
-	  Friendship?
-	</button>
-    </li>
+    return (isFriend() ?
+	    <li>
+	      This one of your friends
+	    </li>
+	    :
+	    <li> This is not a friend but could be
+	      <button id="friendshipButton"
+		      onClick={handleFriendship}>
+		Friendship?
+	      </button>
+	    </li>
+	   )
   };
   
   
@@ -74,19 +82,34 @@ const Stats = ({ page }) => {
     <>
       {(page === "MainFeed") ? "" :
        <ul className="userStats">
-	 {((userId === userPage) || (userPage === undefined)) ? "" : friendButton() }
+	 {((userId === userPage) || (userPage === undefined))
+	  ? ""
+	  : (isFriend() ?
+	     <li>
+	       This one of your friends
+	     </li>
+	     :
+	     <li> This is not a friend but could be
+	       <button id="friendshipButton"
+		       onClick={handleFriendship}>
+		 Friendship?
+	       </button>
+	     </li>
+	   )
+	 }
 	 <li>Number of friends 
 	   {/*This will be a mini scroll box likely a iframe*/}
 	   <ul id="friendList">
-	     {friendsData ? friendsData.getUserFriends.map(friend => <FriendList friendId={friend.id}
-										 key={friend.id}
-										 friendName={friend.userName}
-										 page={page}
-								     />)
-	   : "There are no friends yet"}
+	     {friendsData ? friendsData.getUserFriends.map(friend =>
+	       <FriendList friendId={friend.id}
+			   key={friend.id}
+			   friendName={friend.userName}
+			   page={page}
+	       />)
+		 : "There are no friends yet"}
 	   </ul>
-      </li>
-      
+	 </li>
+	 
       <li>Following
 	{/*This will be a mini scroll box likely a iframe*/}
 	<Following userId={userId} />
@@ -126,7 +149,8 @@ const Stats = ({ page }) => {
       </li>
       
       <li>
-	<Link to="">Edit profile
+	<Link to={`/user/${userId}/edit`}>
+	  Edit profile
 	</Link>
       </li>
     </ul>

@@ -1,19 +1,49 @@
-import React, { useContext, createContext, useState } from "react";
-import { LOGIN_USER } from "./queries";
+import React, { useContext, createContext, useState, useEffect } from "react";
+import { useQuery } from "@apollo/client";
+import { LOGIN_USER, QUERY_USER } from "./queries";
 import Auth from "./auth";
 
 export const UserContext = createContext(null);
 
 export const UserContextProvider = ({ children }) => {
 
-  const [userId, setUserId] = useState(() => {
+  const [ userId, setUserId ] = useState(() => {
     if (Auth.getToken()){
       return Auth.isTokenExpired(Auth.getToken()) ? 0 :
 	localStorage.getItem("user_id") || 0;
     }
     return 0;
   });
+  
+  const { loading, error, data } = useQuery(
+    QUERY_USER,
+    {
+      variables: { userId }
+    });
+  
+  const [ userName, setUserName ] = useState(null);
+  const [ profilePicture , setProfilePicture ] = useState(null);
+  const [ handle, setHandle ] = useState(null);
+  const [ email, setEmail ] = useState(null);
+  
+  useEffect(()=> {
+    const fetchData = () => {
+      try {
+	if(!loading && !error) {
+	  setUserName(data.getUser.userName);
+	  setProfilePicture(data.getUser.profilePicture);
+	  setHandle(data.getUser.handle);
+	  setEmail(data.getUser.email);
+	}
+      } catch (err) {
+	console.error("Did not set data becasue:", err);
+      }
+    };
 
+    fetchData()
+
+  }, [loading, error, data]);
+    
   const loginUser = (newUserId) => {
     setUserId(newUserId);
     return newUserId;
@@ -25,7 +55,14 @@ export const UserContextProvider = ({ children }) => {
   };
   
   return (
-    <UserContext.Provider value={{userId, loginUser, logoutUser}}>
+    <UserContext.Provider value={{userId,
+				  loginUser,
+				  logoutUser,
+				  userName, setUserName,
+				  profilePicture, setProfilePicture,
+				  handle, setHandle,
+				  email, setEmail
+				 }}>
       {children}
     </UserContext.Provider>
   );

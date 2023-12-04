@@ -8,6 +8,7 @@ query me {
     handle
     firstName
     email
+    profilePicture
   }
 }`;
 
@@ -19,16 +20,18 @@ query getAllUsers {
     firstName
     lastName
     email
+    profilePicture
   }
 }`;
 
 export const QUERY_USER = gql`
 query getUser ($userId: ID!) {
-   getUser (userId: $userId) {
-     userName
-     handle
-     email
-   }
+  getUser (userId: $userId) {
+    userName
+    handle
+    email
+    profilePicture
+  }
 }`;
 
 export const QUERY_MY_FRIENDS = gql`
@@ -37,6 +40,7 @@ query getMyFriends {
     id
     userName
     handle
+    profilePicture
   }
 }`;
 

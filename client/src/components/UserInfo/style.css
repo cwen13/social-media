@@ -2,3 +2,13 @@
   text-decoration: underline;
 }
 
+.noEditItem {
+  visibility: collapse;
+}
+
+#userEdit {
+  display: flex;
+  flex-direction: row;
+}
+
+

@@ -6,7 +6,7 @@
     "lastName": "User",
     "email": "no.user@example.com",
     "password": "secretpasswordg",
-    "pfp": ""
+    "profilePicture": ""
   },
   {
     "userName": "john_doe1",
@@ -15,7 +15,7 @@
     "lastName": "Doe",
     "email": "johndoe1@example.com",
     "password": "secretpassword1",
-    "pfp": "Anime-1.jpg"
+    "profilePicture": "Anime-1.jpg"
   },
   {
     "userName": "alice_smith",
@@ -24,7 +24,7 @@
     "lastName": "Smith",
     "email": "alicesmith@example.com",
     "password": "secretpassword2",
-    "pfp": "Anime-2.jpg"
+    "profilePicture": "Anime-2.jpg"
   },
   {
     "userName": "bob_johnson",
@@ -33,7 +33,7 @@
     "lastName": "Johnson",
     "email": "bobjohnson@example.com",
     "password": "secretpassword3",
-    "pfp": "crazyHair.jpg"
+    "profilePicture": "crazyHair.jpg"
   },
   {
     "userName": "susan_wilson",
@@ -42,7 +42,7 @@
     "lastName": "Wilson",
     "email": "susanwilson@example.com",
     "password": "secretpassword4",
-    "pfp": "DennisRitche.jpg"
+    "profilePicture": "DennisRitche.jpg"
   },
   {
     "userName": "david_miller",
@@ -51,7 +51,7 @@
     "lastName": "Miller",
     "email": "davidmiller@example.com",
     "password": "secretpassword5",
-    "pfp": "FLCL-1.jpg"
+    "profilePicture": "FLCL-1.jpg"
   },
   {
     "userName": "linda_anderson",
@@ -60,7 +60,7 @@
     "lastName": "Anderson",
     "email": "lindaanderson@example.com",
     "password": "secretpassword6",
-    "pfp": "FLCL-2.jpg"
+    "profilePicture": "FLCL-2.jpg"
   },
   {
     "userName": "james_thompson",
@@ -69,7 +69,7 @@
     "lastName": "Thompson",
     "email": "jamesthompson@example.com",
     "password": "secretpassword7",
-    "pfp": "FMA.jpg"
+    "profilePicture": "FMA.jpg"
   },
   {
     "userName": "mary_davis",
@@ -78,7 +78,7 @@
     "lastName": "Davis",
     "email": "marydavis@example.com",
     "password": "secretpassword8",
-    "pfp": "Massarati.jpg"
+    "profilePicture": "Massarati.jpg"
   },
   {
     "userName": "robert_clark",
@@ -87,7 +87,7 @@
     "lastName": "Clark",
     "email": "robertclark@example.com",
     "password": "secretpassword9",
-    "pfp": "SusanSarandon.jpg"
+    "profilePicture": "SusanSarandon.jpg"
   },
   {
     "userName": "emily_martin",
@@ -96,7 +96,7 @@
     "lastName": "Martin",
     "email": "emilymartin@example.com",
     "password": "secretpassword10",
-    "pfp": "TomMyspace.jpg"
+    "profilePicture": "TomMyspace.jpg"
   },
   {
     "userName": "michael_wilson",
@@ -105,7 +105,7 @@
     "lastName": "Wilson",
     "email": "michaelwilson@example.com",
     "password": "secretpassword11",
-    "pfp": null
+    "profilePicture": null
   },
   {
     "userName": "jennifer_brown",
@@ -114,7 +114,7 @@
     "lastName": "Brown",
     "email": "jenniferbrown@example.com",
     "password": "secretpassword12",
-    "pfp": null
+    "profilePicture": null
   },
   {
     "userName": "william_davis",
@@ -123,7 +123,7 @@
     "lastName": "Davis",
     "email": "williamdavis@example.com",
     "password": "secretpassword13",
-    "pfp": null
+    "profilePicture": null
   },
   {
     "userName": "laura_johnson",
@@ -132,7 +132,7 @@
     "lastName": "Johnson",
     "email": "laurajohnson@example.com",
     "password": "secretpassword14",
-    "pfp": null
+    "profilePicture": null
   },
   {
     "userName": "laura_P_johnson",
@@ -141,7 +141,7 @@
     "lastName": "Johnson",
     "email": "lauraPjohnson@example.com",
     "password": "secretpassword14P",
-    "pfp": null
+    "profilePicture": null
   },
   {
     "userName": "sarah_wilson",
@@ -150,7 +150,7 @@
     "lastName": "Wilson",
     "email": "sarahwilson@example.com",
     "password": "secretpassword16",
-    "pfp": null
+    "profilePicture": null
   },
   {
     "userName": "samuel_jones",
@@ -159,7 +159,7 @@
     "lastName": "Jones",
     "email": "samueljones@example.com",
     "password": "secretpassword17",
-    "pfp": null
+    "profilePicture": null
   },
   {
     "userName": "olivia_martin",
@@ -168,7 +168,7 @@
     "lastName": "Martin",
     "email": "oliviamartin@example.com",
     "password": "secretpassword18",
-    "pfp": null
+    "profilePicture": null
   },
   {
     "userName": "jacob_clark",
@@ -177,7 +177,7 @@
     "lastName": "Clark",
     "email": "jacobclark@example.com",
     "password": "secretpassword19",
-    "pfp": null
+    "profilePicture": null
   },
   {
     "userName": "emma_miller",
@@ -186,7 +186,7 @@
     "lastName": "Miller",
     "email": "emmamiller@example.com",
     "password": "secretpassword20",
-    "pfp": null
+    "profilePicture": null
   },
   {
     "userName": "noah_brown",
@@ -195,7 +195,7 @@
     "lastName": "Brown",
     "email": "noahbrown@example.com",
     "password": "secretpassword21",
-    "pfp": null
+    "profilePicture": null
   },
   {
     "userName": "mia_davis",
@@ -204,7 +204,7 @@
     "lastName": "Davis",
     "email": "miadavis@example.com",
     "password": "secretpassword22",
-    "pfp": null
+    "profilePicture": null
   },
   {
     "userName": "ethan_smith",
@@ -213,7 +213,7 @@
     "lastName": "Smith",
     "email": "ethansmith@example.com",
     "password": "secretpassword23",
-    "pfp": null
+    "profilePicture": null
   },
   {
     "userName": "ava_johnson",
@@ -222,7 +222,7 @@
     "lastName": "Johnson",
     "email": "avajohnson@example.com",
     "password": "secretpassword24",
-    "pfp": null
+    "profilePicture": null
   },
   {
     "userName": "logan_anderson",
@@ -231,7 +231,7 @@
     "lastName": "Anderson",
     "email": "logananderson@example.com",
     "password": "secretpassword25",
-    "pfp": null
+    "profilePicture": null
   },
   {
     "userName": "mia_thompson",
@@ -240,7 +240,7 @@
     "lastName": "Thompson",
     "email": "miathompson@example.com",
     "password": "secretpassword26",
-    "pfp": null
+    "profilePicture": null
   },
   {
     "userName": "liam_martin",
@@ -249,7 +249,7 @@
     "lastName": "Martin",
     "email": "liammartin@example.com",
     "password": "secretpassword27",
-    "pfp": null
+    "profilePicture": null
   },
   {
     "userName": "olivia_miller",
@@ -258,7 +258,7 @@
     "lastName": "Miller",
     "email": "oliviamiller@example.com",
     "password": "secretpassword28",
-    "pfp": null
+    "profilePicture": null
   },
   {
     "userName": "olivia_bund",
@@ -267,7 +267,7 @@
     "lastName": "Bund",
     "email": "oliviabund@example.com",
     "password": "secretpassword289",
-    "pfp": null
+    "profilePicture": null
   }
 ]
 
