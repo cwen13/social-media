@@ -148,11 +148,6 @@ const Stats = ({ page }) => {
 	</Link>
       </li>
       
-      <li>
-	<Link to={`/user/${userId}/edit`}>
-	  Edit profile
-	</Link>
-      </li>
     </ul>
       }
     </>

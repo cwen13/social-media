@@ -30,7 +30,7 @@ const Navbar = () => {
   return (
     <>
       <nav className="navbar-nav">
-	  <Link  to="/MyPage"><h1>Social-Media site </h1></Link>
+	  <Link  to="/user/MyPage"><h1>Social-Media site </h1></Link>
 	  <Link to="/search"><h4>Search for user </h4></Link>
 	{showNav()}
       </nav>      

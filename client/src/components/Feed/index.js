@@ -18,13 +18,13 @@ const Feed = ({ page }) => {
 //  const [ refreshLiked, setRefreshLiked ] = useState(true);
   
   const queryOptions = {
-    UserProfile : QUERY_MY_THOUGHTS,
+    MyPage : QUERY_MY_THOUGHTS,
     UserPage: QUERY_USER_THOUGHTS,
     MainFeed :  QUERY_ALL_THOUGHTS,
     Liked: QUERY_MY_LIKED
   };
   const thoughts = {
-    UserProfile : "getMyThoughts",
+    MyPage : "getMyThoughts",
     UserPage: "getUserThoughts",
     MainFeed :  "getAllThoughts",
     Liked: "getAllMyLiked"

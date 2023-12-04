@@ -18,7 +18,10 @@ export const UserContextProvider = ({ children }) => {
   const { loading, error, data } = useQuery(
     QUERY_USER,
     {
-      variables: { userId }
+      variables:
+      {
+	userId
+      }
     }
   );
   
@@ -28,23 +31,18 @@ export const UserContextProvider = ({ children }) => {
   const [ email, setEmail ] = useState(null);
   
   useEffect(()=> {
-    const fetchData = () => {
-      try {
-	if(!loading && !error) {
-	  setUserName(data.getUser.userName);
-	  setProfilePicture(data.getUser.profilePicture);
-	  setHandle(data.getUser.handle);
-	  setEmail(data.getUser.email);
-	}
-      } catch (err) {
-	console.error("Did not set data becasue:", err);
+    try {
+      if(!loading && !error && data !== undefined) {
+	setUserName(data.getUser.userName);
+	setProfilePicture(data.getUser.profilePicture);
+	setHandle(data.getUser.handle);
+	setEmail(data.getUser.email);
       }
-    };
-
-    fetchData()
-
+    } catch (err) {
+      console.error("Did not set data becasue:", err);
+    }
   }, [loading, error, data]);
-    
+
   const loginUser = (newUserId) => {
     setUserId(newUserId);
     return newUserId;
@@ -57,8 +55,7 @@ export const UserContextProvider = ({ children }) => {
   
   return (
     <UserContext.Provider value={{userId,
-				  loginUser,
-				  logoutUser,
+				  loginUser, logoutUser,
 				  userName, setUserName,
 				  profilePicture, setProfilePicture,
 				  handle, setHandle,

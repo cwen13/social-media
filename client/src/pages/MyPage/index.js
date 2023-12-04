@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
-import UserInfo from "./../../components/UserInfo";
+import MyProfile from "./../../components/MyProfile";
 import Feed from "./../../components/Feed";
 import Stats from "./../../components/Stats";
-//import "./style.css";
+import "./style.css";
 
 function MyPage() {
 
@@ -13,7 +13,7 @@ function MyPage() {
     <section id="myPage">      
       <ul className="userFeed">
 	<li id="myUserInfo">
-	  <UserInfo page={page}/>
+	  <MyProfile page={page}/>
 	  <Stats page={page}/>
 	</li>
 	<li id="feed">

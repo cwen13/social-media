@@ -6,9 +6,9 @@ import { QUERY_ALL_THOUGHTS, QUERY_MY_THOUGHTS } from "./../../utils/queries";
 
 import "./style.css";
 
-const ThoughtCreate = ({ userId, pageUserId, page }) => {
+const ThoughtCreate = ({ userId, page }) => {
   
-  const refetchOptions = { UserProfile : [ QUERY_MY_THOUGHTS, "getMyThoughts"],
+  const refetchOptions = { MyPage : [ QUERY_MY_THOUGHTS, "getMyThoughts"],
 			   MainFeed: [ QUERY_ALL_THOUGHTS, "getAllThoughts"] }
   
   const [ thought, setThought ] = useState("");
@@ -48,21 +48,18 @@ const ThoughtCreate = ({ userId, pageUserId, page }) => {
   
   return(
     <>
-      {(userId===pageUserId) ? 
-       <div className="thoughtInput">
-	 <label>Add your thought</label>
-	 <textarea placeholder="Put your thought into the database"
-		   rows="4"
-		   cols="33"
-		   id="thoughtBox"
-		   onChange={handleChange}>
-	 </textarea>
-	 <button id="postThought" onClick={postThought}>
-	   Thought creation
-	  </button>
-       </div> :
-       <p>Here is where they enter thoughts </p>
-      }
+      <div className="thoughtInput">
+	<label>Add your thought</label>
+	<textarea placeholder="Put your thought into the database"
+		  rows="4"
+		  cols="33"
+		  id="thoughtBox"
+		  onChange={handleChange}>
+	</textarea>
+	<button id="postThought" onClick={postThought}>
+	  Thought creation
+	</button>
+      </div> 
     </>
   );
 };

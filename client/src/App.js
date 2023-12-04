@@ -69,7 +69,7 @@ const App = () => {
 	  <Routes>	    
             <Route 
 	      path="/" 
-	      element={<Landing />} 
+	      element={<MainFeed />} 
             />
 	    <Route 
 	      path="/login" 
