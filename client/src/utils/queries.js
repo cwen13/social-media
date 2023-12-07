@@ -156,7 +156,24 @@ query getReThoughts ($originalThoughtId: ID!) {
     }
   }
 }`;
- 
+
+export const QUERY_MY_RETHOUGHTS = gql`
+query getMyReThoughts {
+  getMyReThoughts {
+    id
+    userId
+    content
+    isReThought
+    originalThoughtId
+    thoughtReplyOfId
+    user{
+      userName
+      handle
+    }
+  }
+}`;
+
+
 export const QUERY_MY_LIKED = gql`
 query getAllMyLiked {
   getAllMyLiked {

@@ -163,7 +163,33 @@ const resolvers = {
       } else {
 	throw new AuthenticationError("You can query rethoughts unless logged in");
       }
-      
+    },
+    
+    getMyReThoughts: async (parent, args, context) => {
+      if(context.user) {
+	return await Thought.findAll(
+	  {
+	    where:
+	    {
+	      [Op.and]: [
+		{
+		  userId: context.user.id
+		},
+		{
+		  isReThought: true
+		}
+	      ]
+	    },
+	    include:
+	    {
+	      model: User
+	    }
+	  }
+	);
+      } else {
+	throw new AuthenticationError("You can query rethoughts unless logged in");
+      };	
+	
     },
   },
   Mutation: {

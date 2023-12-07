@@ -17,7 +17,6 @@ const MyProfile = ({ page }) => {
 	 email, setEmail
 	} = useUserContext();
 
-  
   const MyInfo = () => {
     return (
       <section className="userInfo" >

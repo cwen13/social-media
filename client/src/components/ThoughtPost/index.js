@@ -40,42 +40,6 @@ const ThoughtPost = (props) => {
   const [ reThought, setReThought] = useState(false);
   const [ reThoughtText, setReThoughtText ] = useState("");
   
-  const [ removeThought, { error: removeError }] = useMutation(
-    REMOVE_THOUGHT,
-    { refetchQueries:
-      [ QUERY_ALL_THOUGHTS,
-	"getAllThoughts"
-      ]});
-  const [ updateThought, { error: updateError }] =  useMutation(
-    UPDATE_THOUGHT,
-    { refetchQueries:
-      [ QUERY_ALL_THOUGHTS,
-	"getAllThoughts"
-      ]});
-  const [ likedThought, { error: likedError }] = useMutation(
-    ADD_LIKED,
-    { refetchQueries:
-      [ QUERY_ALL_THOUGHTS,
-	"getAllThoughts"
-      ]});
-  const [ removeLikedThought, { error: removeLikedError }] = useMutation(
-    REMOVE_LIKED,
-    { refetchQueries:
-      [ QUERY_ALL_THOUGHTS,
-	"getAllThoughts"
-      ]});
-  const [ replyToThought, { error: replyError }] = useMutation(
-    REPLY_TO_THOUGHT,
-    { refetchQueries:
-      [ QUERY_ALL_THOUGHTS,
-	"getAllThoughts"
-      ]});
-  const [ addReThought, { error: rethoughtError }] = useMutation(
-    RETHOUGHT_THOUGHT,
-    { refetchQueries:
-      [ QUERY_ALL_THOUGHTS,
-	"getAllThoughts"
-      ]});
   const { loading: thoughtLoading, error: thoughtError, data: reThoughtOf } = useQuery(
     QUERY_THOUGHT,
     {
@@ -83,6 +47,67 @@ const ThoughtPost = (props) => {
       {
 	thoughtId: props.thoughtReplyOfId
       }
+    }
+  );
+
+  const [ removeThought, { error: removeError }] = useMutation(
+    REMOVE_THOUGHT,
+    {
+      refetchQueries:
+      [
+	QUERY_ALL_THOUGHTS,
+	"getAllThoughts"
+      ]
+    }
+  );
+  const [ updateThought, { error: updateError }] =  useMutation(
+    UPDATE_THOUGHT,
+    {
+      refetchQueries:
+      [
+	QUERY_ALL_THOUGHTS,
+	"getAllThoughts"
+      ]
+    }
+  );
+  const [ likedThought, { error: likedError }] = useMutation(
+    ADD_LIKED,
+    {
+      refetchQueries:
+      [
+	QUERY_ALL_THOUGHTS,
+	"getAllThoughts"
+      ]
+    }
+  );
+  const [ removeLikedThought, { error: removeLikedError }] = useMutation(
+    REMOVE_LIKED,
+    {
+      refetchQueries:
+      [
+	QUERY_ALL_THOUGHTS,
+	"getAllThoughts"
+      ]
+    }
+  );
+  const [ replyToThought, { error: replyError }] = useMutation(
+    REPLY_TO_THOUGHT,
+    {
+      refetchQueries:
+      [
+	QUERY_ALL_THOUGHTS,
+	"getAllThoughts"
+      ]
+    }
+  );
+  const [ addReThought, { error: rethoughtError }] = useMutation(
+    RETHOUGHT_THOUGHT,
+    {
+      refetchQueries:
+      [
+	QUERY_ALL_THOUGHTS,
+	"getAllThoughts"
+      ]
     }
   );
   
@@ -129,7 +154,8 @@ const ThoughtPost = (props) => {
     
   const handleLiked  = async (event) => {
     event.preventDefault();
-    try {      
+    try {
+      console.log("Liked:",userId)
       if (userId && !isLiked) {
 	const likedResponse = await likedThought({
 	  variables: {

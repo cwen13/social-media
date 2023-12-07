@@ -71,6 +71,7 @@ type Query {
 
   getReplys(thoughtReplyOfId: ID!): [Thought]
   getReThoughts(originalThoughtId: ID!): [Thought]
+  getMyReThoughts: [Thought]
 }
 
 type Mutation {

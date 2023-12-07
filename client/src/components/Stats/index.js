@@ -14,89 +14,34 @@ import "./style.css";
 //Stats will include friend indicator, link to liked,
 //  reThoughts, and 
 const Stats = ({ page }) => {
-  const  userPage = useParams().userId;
-  const { userId, loginUser, logoutUser } = useUserContext();
-
+  const { userId,
+	  loginUser,
+	  logoutUser,
+	  userName,
+	  handle,
+	  profilePicture,
+	  email
+	} = useUserContext();
+  let userPage = useParams().userId
+  userPage = (userPage !== undefined) ? userPage : userId;
   const [ friendship, setFriendship ] = useState(false);
 
-  useEffect(() => {
-    
-  },[friendship]);
-  
-  let friendId = userId;
-  if (userPage !== undefined) {
-    friendId = (userId === userPage) ? userId : userPage;
-  }
-  
-  const { loading: myInfoLoading, data: myInfoData, error: myInfoError } = useQuery(QUERY_ME);
   const { loading: friendsLoading, data: friendsData, error: friendsError } = useQuery(
     QUERY_USER_FRIENDS,
-    {variables: { userId: friendId}}
-  );
-
-  const [ friendshipRequest, { error: friendAddError } ] = useMutation(
-    ADD_FRIEND,
-    { refetchQueries: [ QUERY_USER_FRIENDS, "addFriend" ]
-    });
-  
-  const isFriend = () => {
-    if (!friendship) {
-      let friends = friendsData.getUserFriends.map(result => result.id);
-      return friends.includes(userId);
+    {
+      variables: {
+	userId: userPage
+      }
     }
-  };
-
+  );
   
   if (friendsLoading) return "Loading....";
-  if (myInfoLoading) return "Loading....";
 
-  const handleFriendship = async (event) => {
-    await friendshipRequest(
-      {
-	variables:
-	{
-	  friendId: friendId
-	}
-      }
-    );
-    setFriendship(true);
-  }
-  
-  const friendButton = (event) => {
-    return (isFriend() ?
-	    <li>
-	      This one of your friends
-	    </li>
-	    :
-	    <li> This is not a friend but could be
-	      <button id="friendshipButton"
-		      onClick={handleFriendship}>
-		Friendship?
-	      </button>
-	    </li>
-	   )
-  };
-  
-  
   return(
     <>
       {(page === "MainFeed") ? "" :
        <ul className="userStats">
-	 {((userId === userPage) || (userPage === undefined))
-	  ? ""
-	  : (isFriend() ?
-	     <li>
-	       This one of your friends
-	     </li>
-	     :
-	     <li> This is not a friend but could be
-	       <button id="friendshipButton"
-		       onClick={handleFriendship}>
-		 Friendship?
-	       </button>
-	     </li>
-	   )
-	 }
+
 	 <li>Number of friends 
 	   {/*This will be a mini scroll box likely a iframe*/}
 	   <ul id="friendList">
@@ -115,7 +60,7 @@ const Stats = ({ page }) => {
 	<Following userId={userId} />
 	<Link to={`/user/${userId}/friend`}
 	      state={{ userId: userId,
-		       userName: myInfoData.userName }}
+		       userName: userName }}
 	>
 	  See everyone you follow
 	</Link>
@@ -124,7 +69,7 @@ const Stats = ({ page }) => {
       <li>
 	<Link to={`/user/${userId}/liked`}
 	      state={{ userId: userId,
-		       userName: myInfoData.userName }}
+		       userName: userName }}
 	>
 	  Liked thoughts
 	</Link>
@@ -133,7 +78,7 @@ const Stats = ({ page }) => {
       <li>
 	<Link to={`/user/${userId}/reThoughts`}
 	      state={{ userId: userId,
-		       userName: myInfoData.userName }}
+		       userName: userName }}
 	>
 	  Link to reThoughts
 	</Link>
@@ -142,7 +87,7 @@ const Stats = ({ page }) => {
       <li>
 	<Link to={`/user/${userId}/blocked`}
 	      state={{ userId: userId,
-		       userName: myInfoData.userName }}
+		       userName: userName }}
 	>
 	  Blocked
 	</Link>

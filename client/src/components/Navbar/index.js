@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useUserContext } from "./../../utils/UserContext";
 import Auth from './../../utils/auth';
+
 import "./style.css";
 
 const Navbar = () => {
@@ -11,6 +12,12 @@ const Navbar = () => {
   const showNav = () => {
     return (Auth.loggedIn() ? (
       <>
+	<Link to="/user/MyPage">
+	  <h4>My Page</h4>
+	</Link>
+	<Link to="/search">
+	  <h4>Search for user</h4>
+	</Link>
 	<Link onClick={() => Auth.logout()}>
 	  <h4>Logout</h4>
 	</Link>
@@ -30,8 +37,7 @@ const Navbar = () => {
   return (
     <>
       <nav className="navbar-nav">
-	  <Link  to="/user/MyPage"><h1>Social-Media site </h1></Link>
-	  <Link to="/search"><h4>Search for user </h4></Link>
+	<Link  to="/"><h1>Social-Media site</h1></Link>	
 	{showNav()}
       </nav>      
     </>
