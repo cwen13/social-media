@@ -56,7 +56,7 @@ type Auth {
 type Query {
   getMe: User!
   getAllUsers: [User!]!
-  getUser(userId: ID!): User
+  getUser(userId: ID): User
   getMyFriends: [User]
   getUserFriends(userId: ID!): [User]
 
@@ -71,6 +71,7 @@ type Query {
 
   getReplys(thoughtReplyOfId: ID!): [Thought]
   getReThoughts(originalThoughtId: ID!): [Thought]
+  getMyReThoughts: [Thought]
 }
 
 type Mutation {

@@ -18,13 +18,15 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Search from "./pages/Search";
 import UserPage from "./pages/UserPage";
+import MyPage from "./pages/MyPage";
 import ThoughtPage from "./pages/ThoughtPage";
 import LikedThoughts from "./pages/LikedThoughts";
 import EditProfile from "./pages/EditProfile";
+import Landing from "./pages/Landing";
+import ReThoughts from "./pages/ReThoughts/";
 
 import Navbar from "./components/Navbar/";
 import NotFound from "./components/NotFound/";
-import ReThought from "./components/ReThought/";
 import Following from "./components/Following/";
 import Blocked from "./components/Blocked/";
 import { UserContextProvider } from "./utils/UserContext";
@@ -78,6 +80,10 @@ const App = () => {
 	      element={<SignUp />} 
             />
 	    <Route
+	      path="/user/MyPage"
+	      element={<MyPage />}
+	    />
+	    <Route
 	      path="/user/:userId"
 	      element={<UserPage />}
 	    />
@@ -94,8 +100,8 @@ const App = () => {
 	      element={<LikedThoughts />}
 	    />
 	    <Route
-	      path="/user/:userId/reThoughts"
-	      element={<ReThought />}
+	      path="/user/:userId/ReThoughts"
+	      element={<ReThoughts />}
 	    />
 	    <Route
 	      path="/user/:userId/edit"

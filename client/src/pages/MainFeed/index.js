@@ -13,10 +13,6 @@ const MainFeed = () => {
   return(
 	<section id="mainFeed">
 	  <ul className="mainPage">
-	    <li id="userInfo">
-	      <UserInfo page={page}/>
-	      <Stats page={page}/>
-	    </li>
 	    <li id="feed">
 	      <Feed page={page}/>
 	    </li>
