@@ -1,0 +1,19 @@
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/connection');
+
+class Following extends Model {};
+
+Following.init(
+  {
+
+
+  },
+  {
+    sequelize,
+    freezeTableName: true,
+    underscored: true,
+    modelName: "following"
+  }
+);
+
+s = Follwoing

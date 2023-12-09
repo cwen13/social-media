@@ -173,7 +173,6 @@ query getMyReThoughts {
   }
 }`;
 
-
 export const QUERY_MY_LIKED = gql`
 query getAllMyLiked {
   getAllMyLiked {
@@ -188,3 +187,36 @@ query getAllMyLiked {
     }
   }
 }`;
+
+export const QUERY_USER_LIKED = gql`
+query getUserLiked ($userId: ID!) {
+  getUserLiked (userId: $userId) {
+    id
+    userId
+    content
+    thoughtReplyOfId
+    user {
+      id
+      userName
+      handle
+    }
+  }
+}`;
+
+
+export const QUERY_USER_RETHOUGHT = gql`
+query getUserReThoughts ($userId: ID!)  {
+  getUserReThoughts (userId: $userId) {
+    id
+    userId
+    content
+    isReThought
+    originalThoughtId
+    thoughtReplyOfId
+    user{
+      userName
+      handle
+    }
+  }
+}`;
+

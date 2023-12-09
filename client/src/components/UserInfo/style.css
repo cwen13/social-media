@@ -11,4 +11,12 @@
   flex-direction: row;
 }
 
+.userStats {
+  display: flex;
+  flex-direction: column;
+}
 
+#friendsList {
+  display: flex;
+  flex-direction: column;
+}

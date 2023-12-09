@@ -1,5 +1,5 @@
 const { AuthenticationError } = require('apollo-server-express');
-const { User, Friend, Thought, Liked, Blocked, Pending } = require("./../models");
+const { User, Friend, Thought, Liked, Blocked, Pending, Following } = require("./../models");
 const { signToken } = require('../utils/auth');
 const { Op } = require("sequelize");
 
@@ -18,8 +18,7 @@ const resolvers = {
 
     //STATUS: WORKING
     getUser: async (parent, { userId }, context) => {
-      return userId ? await User.findByPk(userId) : null;
-      
+      return await User.findByPk((!!userId) ? userId : 1);
 
     },
 
@@ -92,6 +91,22 @@ const resolvers = {
 	}})
       return liked.userLiked;
     },    
+
+    //STATUS: WORKING
+    getUserLiked: async (parent, { userId }, context) => {
+      const liked =  await User.findByPk(userId, {
+	include: {
+	  model: Thought,
+	  as: "userLiked",
+	  through: "liked",
+	  include: {
+	    model: User,
+	    as: "user"
+	  }
+	}})
+      return liked.userLiked;
+    },    
+
     
     //STATUS: WORKING
     getThought: async(parent, { thoughtId }, context) => {
@@ -164,16 +179,15 @@ const resolvers = {
 	throw new AuthenticationError("You can query rethoughts unless logged in");
       }
     },
-    
-    getMyReThoughts: async (parent, args, context) => {
-      if(context.user) {
-	return await Thought.findAll(
+    getUserReThoughts: async (parent, { userId } , context) => {
+      if (context.user) {
+	const reThoughts = await Thought.findAll(
 	  {
 	    where:
 	    {
 	      [Op.and]: [
 		{
-		  userId: context.user.id
+		  userId: userId
 		},
 		{
 		  isReThought: true
@@ -182,15 +196,16 @@ const resolvers = {
 	    },
 	    include:
 	    {
-	      model: User
+	      model: Thought,
+	      as: "parentThought"
 	    }
 	  }
+
 	);
       } else {
 	throw new AuthenticationError("You can query rethoughts unless logged in");
-      };	
-	
-    },
+      }
+    }
   },
   Mutation: {
 
@@ -253,6 +268,24 @@ const resolvers = {
 	      await Friend.create({userId: friendId, friendId: context.user.id}));
     },
 
+    addPending: async (parent, { friendId }, context) => {
+      return await Pending.create(
+	{
+	  userId: context.user.id,
+	  pendingId: friendId
+	}
+      );
+    },
+
+    addBlocked: async (parent, { blockedId }, context) => {
+      return await Pending.create(
+	{
+	  userId: context.user.id,
+	  blockedId: blockedId
+	}
+      );
+    },
+
     //STATUS: WORKING
     removeFriend: async (parent, { friendId }, context) => {
       return ((await Friend.destroy({where: { userId: context.user.id,
@@ -261,10 +294,6 @@ const resolvers = {
 	       await Friend.destroy({where: { userId: friendId,
 					      friendId: context.user.id }})) === 1);
 	      
-    },
-
-    //STATUS: PENDING
-    updateFriend: async (parent, { userId, friendId }, context) => {
     },
 
     //STATUS: WORKING

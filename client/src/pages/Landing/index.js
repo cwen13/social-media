@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
 import Feed from "./../../components/Feed";
-import Stats from "./../../components/Stats";
 //import "./style.css";
 
 function UserPage() {

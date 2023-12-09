@@ -68,7 +68,29 @@ User.belongsToMany(User, {
   as: "pendingUser",
 });
 
+User.belongsToMany(User,{
+  through: "following",
+  foreignKey: "userId",
+  otherKey: "followingId",
+  as: "followingUsers"
+});
 
+User.belongsToMany(User,{
+  through: "following",
+  foreignKey: "followingId",
+  otherKey: "userId",
+  as: "followers"
+});
+
+Thought.hasOne(Thought, {
+  foreignKey: "thoughtReplayOfId",
+  as: "parentThought"
+});
+		      
+Thought.hasMany(Thought, {
+  foreignKey: "thoughtReplayOfId",
+  as: "childThought"
+});
 
 module.exports = {
   Friend,

@@ -5,7 +5,6 @@ import { useQuery } from "@apollo/client";
 import { QUERY_MY_LIKED } from "./../../utils/queries";
 
 import UserInfo from "./../../components/UserInfo";
-import Stats from "./../../components/Stats";
 import Feed from "./../../components/Feed";
 
 const ReThoughts = () => {
@@ -17,7 +16,6 @@ const ReThoughts = () => {
       <ul className="userFeed">
 	<li id="otherUserInfo">
 	  <UserInfo page={page}/>
-	  <Stats page={page}/>
 	</li>
 	<li id="feed">
 	  <Feed page={page}/>

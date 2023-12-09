@@ -38,7 +38,6 @@ type Thought {
   content: String!
   thoughtReplyOfId: ID
   isReThought: Boolean!
-  originalThoughtId: ID
   user: User
 }
 

@@ -8,28 +8,32 @@ import {
   QUERY_USER_THOUGHTS,
   QUERY_MY_THOUGHTS,
   QUERY_MY_LIKED,
-  QUERY_MY_RETHOUGHTS
+  QUERY_MY_RETHOUGHTS,
+  QUERY_USER_LIKED,
+  QUERY_USER_RETHOUGHT
 } from "./../../utils/queries";
 
 import "./style.css";
 
-const Feed = ({ page }) => {
-  const userId = useParams().userId;
+const Feed = (props) => {
+  const userPageId = useParams().userId;
+
+  console.log("UID:",userPageId)
   
   const queryOptions = {
     MyPage : QUERY_MY_THOUGHTS,
     UserPage: QUERY_USER_THOUGHTS,
     MainFeed :  QUERY_ALL_THOUGHTS,
-    Liked: QUERY_MY_LIKED,
-    MyReThoughts: QUERY_MY_RETHOUGHTS
+    Liked: QUERY_USER_LIKED,
+    ReThoughts: QUERY_MY_RETHOUGHTS
   };
 
   const thoughts = {
     MyPage : "getMyThoughts",
     UserPage: "getUserThoughts",
     MainFeed :  "getAllThoughts",
-    Liked: "getAllMyLiked",
-    MyReThoughts: "getMyReThoughts"
+    Liked: "getUserLiked",
+    ReThoughts: "getUserReThoughts"
   };
 
 
@@ -46,33 +50,60 @@ const Feed = ({ page }) => {
 
   
   const { loading: queryLoading, error: queryError, data: queryData } = useQuery(
-    queryOptions[page],
-    (page==="UserPage")
-      ? {
-	variables:
-	{
-	  userId
-	}
+    queryOptions[props.page],
+    {
+      variables:
+      {
+	userId: userPageId
       }
-    : "");
+    }
+  );
 
   if (likedLoading) return "Loading";
   if (queryLoading) return "Loading";
-  if (queryError) return `QError ${queryError.message}`;
+  if (queryError) return `Q Error ${queryError.message}`;
   
   const likedThoughts = (likedData) ? likedData.getAllMyLiked.map(result => result.id) : [0];
   const isLiked = (thoughtId) => likedThoughts.includes(thoughtId);
 
+  console.log(queryData)
+  
+  let noData;
+  if (queryData === null) {
+    switch (props.page) {
+    case "MyPage":
+      noData = "I have not posted anything yet";
+      break;
+    case "UserPage":
+      noData = "User has not posted anything yet";
+      break;
+    case "MainFeed":
+      noData = "othing to see here";
+      break;
+    case "Liked":
+      noData = "I have not liked anythingyet";
+      break;
+    case "ReThoughts":
+      noData = "I have not rethought anything yet";
+      break;
+    default:
+      noData = null;
+      break;
+    }
+  }
+      
+  
   return (
 	<div className="feed">
-	  {queryData[thoughts[page]].map(thought =>
+	  {(noData === null) ? noData :
+	    queryData[thoughts[props.page]].map(thought =>
 	    <ThoughtPost userName={thought.user.userName}
 			 userId={thought.user.id}
 			 thought={thought.content}
 			 thoughtId={thought.id}
 			 thoughtReplyOfId={thought.thoughtReplyOfId}
 			 key={thought.id}
-			 page={page}
+			 page={props.page}
 			 isReThought={thought.isReThought}
 			 originalThoughtId={thought.thoughtReplyOfId}
 			 liked={isLiked(thought.id)}

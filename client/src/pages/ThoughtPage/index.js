@@ -8,7 +8,6 @@ import {
   QUERY_REPLYS
 } from "./../../utils/queries";
 import UserInfo from "./../../components/UserInfo";
-import Stats from "./../../components/Stats";
 import ThoughtPost from "./../../components/ThoughtPost";
 import ThoughtReplys from "./../../components/ThoughtReplys";
 
@@ -37,7 +36,6 @@ const ThoughtPage = () => {
       <ul className="userFeed">
 	<li id="otherUserInfo">
 	  <UserInfo page={page}/>
-	  <Stats page={page}/>
 	</li>
 	<li id="feed">
 	  <ThoughtPost userName={thought.user.userName}
