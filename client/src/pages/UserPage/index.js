@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 import UserInfo from "./../../components/UserInfo";
 import Feed from "./../../components/Feed";
-import Stats from "./../../components/Stats";
 import "./style.css";
 
 function UserPage() {
@@ -14,7 +13,6 @@ function UserPage() {
       <ul className="userFeed">
 	<li id="otherUserInfo">
 	  <UserInfo page={page}/>
-	  <Stats page={page}/>
 	</li>
 	<li id="feed">
 	  <Feed page={page}/>

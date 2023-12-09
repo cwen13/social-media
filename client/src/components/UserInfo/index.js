@@ -1,15 +1,27 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { useParams } from "react-router-dom";
-import { QUERY_USER, QUERY_USER_FRIENDS } from "./../../utils/queries";
+import { Link, useParams } from "react-router-dom";
+import {
+  QUERY_USER,
+  QUERY_USER_FRIENDS
+} from "./../../utils/queries";
 import { ADD_FRIEND } from "./../../utils/mutations";
+import Following from "./../Following";
+import FriendList from "./../FriendList";
 import ThoughtCreate from "./../ThoughtCreate"
 import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
 const UserInfo = ({ page }) => {
   const [ user, setUser] = useState({}); 
-  const { userId } = useUserContext();
+  const { userId,
+	  loginUser,
+	  logoutUser,
+	  userName,
+	  handle,
+	  profilePicture,
+	  email
+	} = useUserContext();
   let userPageId = useParams().userId;
   userPageId = (userPageId !== undefined) ? userPageId : userId;
 
@@ -86,7 +98,7 @@ const UserInfo = ({ page }) => {
     return (
       <div className="friendship">
 	{(userId === userPageId)
-	 ? ""
+	 ? "Are you your friend?"
 	 : (isFriend() ?
 	    <h4>
 	      This one of your friends
@@ -108,30 +120,78 @@ const UserInfo = ({ page }) => {
     
   };
 
+  const RenderStats = () => {
+    return(
+      <ul className="userStats">
+	<li>Number of friends 
+	  {/*This will be a mini scroll box likely a iframe*/}
+	  <ul id="friendsList">
+	    {dataFriends ? dataFriends.getUserFriends.map(friend =>
+	      <FriendList friendId={friend.id}
+			  key={friend.id}
+			  friendName={friend.userName}
+			  page={page}
+	      />)
+		: "There are no friends yet"}
+	  </ul>
+	</li>
+	
+	<li>Following
+	  {/*This will be a mini scroll box likely a iframe*/}
+	  <Following userId={userId} />
+	  <Link to={`/user/${userPageId}/following`}>
+	    See everyone you follow
+	  </Link>
+	</li>
+	
+	<li>
+	  <Link to={`/user/${userPageId}/liked`}>
+	    Liked thoughts
+	  </Link>
+	</li>
+	
+	<li>
+	  <Link to={`/user/${userPageId}/reThoughts`}>
+	    Link to reThoughts
+	  </Link>
+	</li>
+	
+	<li>
+	  <Link to={`/user/${userPageId}/blocked`}>
+	    Blocked
+	  </Link>
+	</li>	
+      </ul>
+    );
+  }
+
   
   return (
-    <section className="userInfo" >
-      <h1>=^={user.userName}=^=</h1>
-      <div className="pfp">
-	{user.profilePicture
-	 ? <img src={`/images/pfp/${user.profilePicture}`}
-		width="150"/>
-	 :
-	 <>
- 	   +==+<br/>
-	   |--|<br/>
-	   +==+
-	 </>
-	}
-      </div>
-      <div className="names">
-	NAME: {user.handle}
-      </div>
-      <div className="email">
-	EMAIL: {user.email}
-      </div>
-      <RenderFriendship />
-    </section>
+    <>
+      <section className="userInfo" >
+	<h1>=^={user.userName}=^=</h1>
+	<div className="pfp">
+	  {user.profilePicture
+	   ? <img src={`/images/pfp/${user.profilePicture}`}
+		  width="150"/>
+	   :
+	   <>
+ 	     +==+<br/>
+	     |--|<br/>
+	     +==+
+	   </>
+	  }
+	</div>
+	<div className="names">
+	  NAME: {user.handle}
+	</div>
+	<div className="email">
+	  EMAIL: {user.email}
+	</div>
+	<RenderFriendship />
+      </section>
+      <RenderStats />
+    </>
   );
 };
 

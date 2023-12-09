@@ -39,7 +39,7 @@ const ThoughtPost = (props) => {
   const [ replyContent, setReplyContent ] = useState("");
   const [ reThought, setReThought] = useState(false);
   const [ reThoughtText, setReThoughtText ] = useState("");
-  
+
   const { loading: thoughtLoading, error: thoughtError, data: reThoughtOf } = useQuery(
     QUERY_THOUGHT,
     {
@@ -49,7 +49,8 @@ const ThoughtPost = (props) => {
       }
     }
   );
-
+    
+  
   const [ removeThought, { error: removeError }] = useMutation(
     REMOVE_THOUGHT,
     {

@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 
-class Thought extends Model{};
+class ReThought extends Model{};
 
-Thought.init(
+ReThought.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -11,25 +11,24 @@ Thought.init(
       primaryKey: true,
       autoIncrement: true
     },
-    userId: {
+    reThoughtOfId: {
       type: DataTypes.INTEGER,
-      allowNull: false,  
+      allowNull: false
+      
     },
-    content: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: false,
-      defaultValue: ""
-    },
+    reThoughtThoughtId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   },
-  {
+    {
     sequelize,
     freezeTableName: true,
     underscored: true,
-    modelName: 'thought',
+    modelName: 'reThought',
   }
 );
 
-module.exports = Thought;
+module.exports = ReThought;
 
     

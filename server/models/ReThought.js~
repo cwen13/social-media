@@ -1,0 +1,20 @@
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/connection');
+
+class ReThought extends Model{};
+
+ReThought.init(
+  {
+
+  },
+    {
+    sequelize,
+    freezeTableName: true,
+    underscored: true,
+    modelName: 'thought',
+  }
+);
+
+module.exports = ReThought;
+
+    

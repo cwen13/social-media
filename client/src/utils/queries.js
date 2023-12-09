@@ -133,8 +133,8 @@ query getUserThoughts ($userId: ID!) {
 }`;
 
 export const QUERY_REPLYS = gql`
-query getReplys ($thoughtReplyOfId: ID!) {
-  getReplys(thoughtReplyOfId: $thoughtReplyOfId) {
+query getThoughtReplys ($thoughtReplyOfId: ID!) {
+  getThoughtReplys(thoughtReplyOfId: $thoughtReplyOfId) {
     id
     content
     thoughtReplyOfId
@@ -147,8 +147,8 @@ query getReplys ($thoughtReplyOfId: ID!) {
 }`;
 
 export const QUERY_RETHOUGHTS = gql`
-query getReThoughts ($originalThoughtId: ID!) {
-  getReThoughts(originalThoughtId: $originalThoughtId) {
+query getThoughtReThoughts ($originalThoughtId: ID!) {
+  getThoughtReThoughts(originalThoughtId: $originalThoughtId) {
     content
     user{
       userName
@@ -173,7 +173,6 @@ query getMyReThoughts {
   }
 }`;
 
-
 export const QUERY_MY_LIKED = gql`
 query getAllMyLiked {
   getAllMyLiked {
@@ -188,3 +187,36 @@ query getAllMyLiked {
     }
   }
 }`;
+
+export const QUERY_USER_LIKED = gql`
+query getUserLiked ($userId: ID!) {
+  getUserLiked (userId: $userId) {
+    id
+    userId
+    content
+    thoughtReplyOfId
+    user {
+      id
+      userName
+      handle
+    }
+  }
+}`;
+
+
+export const QUERY_USER_RETHOUGHT = gql`
+query getUserReThoughts ($userId: ID!)  {
+  getUserReThoughts (userId: $userId) {
+    id
+    userId
+    content
+    isReThought
+    originalThoughtId
+    thoughtReplyOfId
+    user{
+      userName
+      handle
+    }
+  }
+}`;
+
