@@ -1,5 +1,15 @@
 const { AuthenticationError } = require('apollo-server-express');
-const { User, Friend, Thought, Liked, Blocked, Pending, Following } = require("./../models");
+const {
+  User,
+  Friend,
+  Thought,
+  Liked,
+  Blocked,
+  Pending,
+  Following,
+  Reply,
+  ReThought
+      } = require("./../models");
 const { signToken } = require('../utils/auth');
 const { Op } = require("sequelize");
 
@@ -24,13 +34,16 @@ const resolvers = {
 
     //STATUS: WORKING
     getMyFriends: async (parent, args, context) => {
-      let userFriends = await User.findByPk(context.user.id,
-					    {
-					      include: {
-						model: User,
-						as: "friendshipUser",
-						through: "friend"
-					      }});
+      let userFriends = await User.findByPk(
+	context.user.id,
+	{
+	  include: {
+	    model: User,
+	    as: "friendshipUser",
+	    through: "friend"
+	  }
+	}
+      );
       return userFriends.friendshipUser;
     },
     
@@ -56,7 +69,6 @@ const resolvers = {
     },
 
     //STATUS: WORKING
-    //Display descending
     getAllThoughts: async (parent, args, context) => {
       return await Thought.findAll(
 	{
@@ -103,10 +115,9 @@ const resolvers = {
 	    model: User,
 	    as: "user"
 	  }
-	}})
+	}});
       return liked.userLiked;
     },    
-
     
     //STATUS: WORKING
     getThought: async(parent, { thoughtId }, context) => {
@@ -130,82 +141,157 @@ const resolvers = {
 
     //STATUS: WORKING
     getUserThoughts: async (parent, { userId }, context) => {
-      return await Thought.findAll({
-	where: {userId: userId},
-	include: {model: User},
-      });
-
-    },
-
-    //STATUS: WORKING
-    getReplys: async (parent, { thoughtReplyOfId }, context) => {
       return await Thought.findAll(
 	{
 	  where:
 	  {
-	    thoughtReplyOfId
+	    userId: userId
 	  },
 	  include:
 	  {
 	    model: User
-	  }
+	  },
 	}
       );
     },
 
-    //STATUS: PENDING
-    getReThoughts: async (parent, { originalThoughtId }, context) => {
-      if (context.user) {
-	const reThoughts = await Thought.findAll(
+    //STATUS: WORKING
+    getThoughtReplys: async (parent, { thoughtId }, context) => {
+      const replys = await Thought.findByPk(
+	thoughtId,
+	{
+	  include:
 	  {
-	    where:
-	    {
-	      [Op.and]: [
-		{
-		  originalThoughtId: originalThoughtId
-		},
-		{
-		  isReThought: true
-		}
-	      ]
-	    },
+	    model: Thought,
+	    as: "replyThought",
+	    through:"reply",
 	    include:
 	    {
-	      model: Thought
+		model: User,
+		as:"user"
+	      }
+	  }
+	}
+      );
+      return replys.replyThought;
+    },
+
+    getThoughtReThoughts: async (parent, { thoughtId } , context) => {
+      if (context.user) {
+	const reThoughts = await Thought.findByPk(
+	  thoughtId,
+	  {
+	    include:
+	    {
+	      model: Thought,
+	      as: "reThoughtThought",
+	      through: "reThought",
+	      include:
+	      {
+		model: User,
+		as: "user"
+	      }
 	    }
 	  }
 	);
+	return reThoughts;
       } else {
 	throw new AuthenticationError("You can query rethoughts unless logged in");
       }
     },
-    getUserReThoughts: async (parent, { userId } , context) => {
-      if (context.user) {
-	const reThoughts = await Thought.findAll(
+
+    //STATUS: WORKING
+    getUserReThoughts: async (parent, { userId }, context) => {
+      const allReThoughts = await ReThought.findAll();
+      const allReThoughtsData = allReThoughts.map(entry => entry.get({ plain: true }));
+      
+      const allUserThoughts = await Thought.findAll(
+	{
+	  where:
 	  {
-	    where:
-	    {
-	      [Op.and]: [
-		{
-		  userId: userId
-		},
-		{
-		  isReThought: true
-		}
-	      ]
-	    },
+	    userId: userId
+	  },
+	  attributes: ["id"]
+	}
+      );					  
+      const allUserThoughtsData = allUserThoughts.map(entry => entry.get({ plain: true }))
+	    .map(id => id.id);
+    
+      const userReThoughtIds = allReThoughtsData.filter(
+	thought => allUserThoughtsData.includes(thought.reThoughtThoughtId)
+      );
+
+      const reThoughts = await Thought.findAll(
+	{
+	  where:
+	  {
+	    id: userReThoughtIds.map(thought => thought.reThoughtOfId)
+	  },
+	  include:
+	  {
+	    model: Thought,
+	    as: "reThoughtThought",
+	    through: "reThought",
 	    include:
 	    {
-	      model: Thought,
-	      as: "parentThought"
+	      model: User,
+	      as: "user",
 	    }
 	  }
+	}
+      );
+      return reThoughts;      
+    },
 
-	);
-      } else {
-	throw new AuthenticationError("You can query rethoughts unless logged in");
-      }
-    }
+    //STATUS: WORKING
+    getUserReplys: async (parent, { userId }, context) => {
+      const allReplys = await Reply.findAll();
+      const allReplysData = allReplys.map(entry => entry.get({ plain: true }));
+      console.log(allReplysData);
+      
+      const allUserThoughts = await Thought.findAll(
+	{
+	  where:
+	  {
+	    userId: userId
+	  },
+	  attributes: ["id"]
+	}
+      );					  
+      const allUserThoughtsData = allUserThoughts.map(
+	entry => entry.get({ plain: true })).map(id => id.id);
+    
+      const userReplyIds = allReplysData.filter(
+	thought => allUserThoughtsData.includes(thought.replyOfId)
+      );
+
+      console.log("AUSERTH:",allUserThoughtsData);
+      console.log("REPLYS:",userReplyIds);
+      
+      const replys = await Thought.findAll(
+	{
+	  where:
+	  {
+	    id: userReplyIds.map(thought => thought.replyThoughtId)
+	  },
+	  include:
+	  {
+	    model: Thought,
+	    as: "replyThought",
+	    through: "reply",
+	    include:
+	    {
+	      model: User,
+	      as: "user",
+	    }
+	  }
+	}
+      );
+      
+      console.log(replys);
+      return replys;      
+    },
+
   },
   Mutation: {
 
@@ -297,11 +383,10 @@ const resolvers = {
     },
 
     //STATUS: WORKING
-    addThought: async (parent, { content, thoughtReplyOfId }, context) =>{ 
+    addThought: async (parent, { content }, context) =>{ 
       if (context.user) {
 	let thought =  await Thought.create({ userId: context.user.id,
 					      content: content,
-					      thoughtReplyOfId,
 					    });
 	return await Thought.findByPk(thought.id,
 				      { include: { model: User }});				     
@@ -354,26 +439,36 @@ const resolvers = {
     },
     
     //STATUS: WORKING
-    replyToThought: async (parent, { content, thoughtReplyOfId}, context) => {
-      let thoughtReply =  await Thought.create({ userId: context.user.id,
-						 content: content,
-						 thoughtReplyOfId });
-      
-      return thoughtReply;
+    replyToThought: async (parent, { content, thoughtId}, context) => {
+      const thoughtReply =  await Thought.create(
+	{
+	  userId: context.user.id,
+	  content: content,
+	}
+      );
+      return await Reply.create(
+	{
+	  replyOfId: thoughtId,
+	  replyThoughtId: thoughtReply.id
+	}
+      )
     },
 
     //STATUS: PENDING
     addReThought: async (parent, { originalThoughtId, additionalThought }, context) => {
       if (context.user) {
-	const reThought = await Thought.create(
+	const reThoughtThought = await Thought.create(
 	  {
 	    userId: context.user.id,
 	    content: additionalThought,
-	    thoughtReplyOfId: originalThoughtId,
-	    isReThought: true,
 	  }
 	);
-	return Thought.findByPk(reThought.id);
+	return await ReThought.create(
+	  {
+	    reThoughtOfId: originalThoughtId,
+	    reThoughtThoughtId: reThoughtThought.id
+	  }
+	);
       } else {
 	throw new AuthenticationError("You can not reThought unless your logged in");
       }

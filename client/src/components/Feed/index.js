@@ -55,7 +55,7 @@ const Feed = (props) => {
       variables:
       {
 	userId: userPageId
-      }
+      
     }
   );
 

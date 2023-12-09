@@ -133,8 +133,8 @@ query getUserThoughts ($userId: ID!) {
 }`;
 
 export const QUERY_REPLYS = gql`
-query getReplys ($thoughtReplyOfId: ID!) {
-  getReplys(thoughtReplyOfId: $thoughtReplyOfId) {
+query getThoughtReplys ($thoughtReplyOfId: ID!) {
+  getThoughtReplys(thoughtReplyOfId: $thoughtReplyOfId) {
     id
     content
     thoughtReplyOfId
@@ -147,8 +147,8 @@ query getReplys ($thoughtReplyOfId: ID!) {
 }`;
 
 export const QUERY_RETHOUGHTS = gql`
-query getReThoughts ($originalThoughtId: ID!) {
-  getReThoughts(originalThoughtId: $originalThoughtId) {
+query getThoughtReThoughts ($originalThoughtId: ID!) {
+  getThoughtReThoughts(originalThoughtId: $originalThoughtId) {
     content
     user{
       userName
