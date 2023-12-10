@@ -58,7 +58,7 @@ const UserInfo = ({ page }) => {
   );
 
   useEffect(() => {
-    if (!userLoading && !userError && userData !== undefined ) {
+    if (!userLoading && !userError && userData !== undefined && userPageId !== 0) {
       setUser(
 	{
 	  ...user,
@@ -122,75 +122,84 @@ const UserInfo = ({ page }) => {
 
   const RenderStats = () => {
     return(
-      <ul className="userStats">
-	<li>Number of friends 
-	  {/*This will be a mini scroll box likely a iframe*/}
-	  <ul id="friendsList">
-	    {dataFriends ? dataFriends.getUserFriends.map(friend =>
-	      <FriendList friendId={friend.id}
-			  key={friend.id}
-			  friendName={friend.userName}
-			  page={page}
-	      />)
-		: "There are no friends yet"}
-	  </ul>
-	</li>
-	
-	<li>Following
-	  {/*This will be a mini scroll box likely a iframe*/}
-	  <Following userId={userId} />
-	  <Link to={`/user/${userPageId}/following`}>
-	    See everyone you follow
-	  </Link>
-	</li>
-	
-	<li>
-	  <Link to={`/user/${userPageId}/liked`}>
-	    Liked thoughts
-	  </Link>
-	</li>
-	
-	<li>
-	  <Link to={`/user/${userPageId}/reThoughts`}>
-	    Link to reThoughts
-	  </Link>
-	</li>
-	
-	<li>
-	  <Link to={`/user/${userPageId}/blocked`}>
-	    Blocked
-	  </Link>
-	</li>	
-      </ul>
+      <>
+	{userPageId === 0 ? <h2> No user Stats yet </h2>
+	 : <ul className="userStats">
+	     <li>Number of friends 
+	       {/*This will be a mini scroll box likely a iframe*/}
+	       <ul id="friendsList">
+		 {dataFriends ? dataFriends.getUserFriends.map(friend =>
+		   <FriendList friendId={friend.id}
+			       key={friend.id}
+			       friendName={friend.userName}
+			       page={page}
+		   />)
+		     : "There are no friends yet"}
+	       </ul>
+	     </li>
+	     
+	     <li>Following
+	       {/*This will be a mini scroll box likely a iframe*/}
+	       <Following userId={userId} />
+	       <Link to={`/user/${userPageId}/following`}>
+		 See everyone you follow
+	       </Link>
+	     </li>
+	     
+	     <li>
+	       <Link to={`/user/${userPageId}/liked`}>
+		 Liked thoughts
+	       </Link>
+	     </li>
+	     
+	     <li>
+	       <Link to={`/user/${userPageId}/reThoughts`}>
+		 Link to reThoughts
+	       </Link>
+	     </li>
+	     
+	     <li>
+	       <Link to={`/user/${userPageId}/blocked`}>
+		 Blocked
+	       </Link>
+	     </li>	
+	   </ul>}
+	</>
     );
-  }
-
+	}
+  
   
   return (
     <>
       <section className="userInfo" >
-	<h1>=^={user.userName}=^=</h1>
-	<div className="pfp">
-	  {user.profilePicture
-	   ? <img src={`/images/pfp/${user.profilePicture}`}
-		  width="150"/>
-	   :
-	   <>
- 	     +==+<br/>
-	     |--|<br/>
-	     +==+
-	   </>
-	  }
-	</div>
-	<div className="names">
-	  NAME: {user.handle}
-	</div>
-	<div className="email">
-	  EMAIL: {user.email}
-	</div>
-	<RenderFriendship />
+	{userPageId === 0
+	 ?<h1>No one is logged in here</h1>
+	 :<>
+	    <h1>=^={user.userName}=^=</h1>
+	    <div className="pfp">
+	      {user.profilePicture
+	       ? <img src={`/images/pfp/${user.profilePicture}`}
+		      width="150"/>
+	       :
+	       <>
+ 		 +==+<br/>
+		 |--|<br/>
+		 +==+
+	       </>
+	      }
+	    </div>
+	    <div className="names">
+	      NAME: {user.handle}
+	    </div>
+	    <div className="email">
+	      EMAIL: {user.email}
+	    </div>
+	  </>}
+	{userPageId ===0
+	 ? <h2>There are no firnds yet</h2>
+	 : <RenderFriendship />}
       </section>
-      <RenderStats />
+      <RenderStats />      
     </>
   );
 };

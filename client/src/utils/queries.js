@@ -73,9 +73,6 @@ query getAllThoughts {
     id
     userId
     content
-    thoughtReplyOfId
-    isReThought
-    originalThoughtId
     user {
       id
       userName

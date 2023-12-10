@@ -17,8 +17,6 @@ import "./style.css";
 
 const Feed = (props) => {
   const userPageId = useParams().userId;
-
-  console.log("UID:",userPageId)
   
   const queryOptions = {
     MyPage : QUERY_MY_THOUGHTS,
@@ -48,22 +46,21 @@ const Feed = (props) => {
     }
   );
 
+  const queryString = (props.page === "MainFeed" && userPageId === undefined || userPageId === 0) ? "" : `{variables:{userId: ${userPageId}}}`;
+
+  console.log("query string:",queryString);
+  
   
   const { loading: queryLoading, error: queryError, data: queryData } = useQuery(
     queryOptions[props.page],
-    {
-      variables:
-      {
-	userId: userPageId
-      
-    }
+    queryString    
   );
 
   if (likedLoading) return "Loading";
   if (queryLoading) return "Loading";
   if (queryError) return `Q Error ${queryError.message}`;
   
-  const likedThoughts = (likedData) ? likedData.getAllMyLiked.map(result => result.id) : [0];
+  const likedThoughts = (likedData) ? likedData.getAllMyLiked.map(result => result.id) : [];
   const isLiked = (thoughtId) => likedThoughts.includes(thoughtId);
 
   console.log(queryData)
