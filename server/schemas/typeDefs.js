@@ -81,8 +81,11 @@ type Query {
 
   getThoughtReplys(thoughtId: ID!): [Thought]
   getThoughtReThoughts(thoughtId: ID!): [Thought]
-  getUserReThoughts(userId: ID!): [Thought]
   getMyReThoughts: [Thought]
+  getUserReThoughts(userId: ID!): [Thought]
+  getAllReThoughtIds: [ReThought]
+  getThoughtReThought(thoughtId: ID!) Thought
+  getAllReplyIds: [Reply]
   getUserReplys(userId: ID!): [Thought]
 }
 

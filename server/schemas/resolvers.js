@@ -228,19 +228,34 @@ const resolvers = {
 	    id: userReThoughtIds.map(thought => thought.reThoughtOfId)
 	  },
 	  include:
-	  {
-	    model: Thought,
-	    as: "reThoughtThought",
-	    through: "reThought",
-	    include:
+	  [
 	    {
-	      model: User,
-	      as: "user",
+	      model: User
+	    },
+	    {
+	      model: Thought,
+	      as: "reThoughtThought",
+	      through: "reThought",
+	      include:
+	      {
+		model: User,
+		as: "user",
+	      }
 	    }
-	  }
+	  ]
 	}
       );
+      //path to get to rethough and user
+      console.log(reThoughts[0].reThoughtThought[0].user);
+      
       return reThoughts;      
+    },
+
+    getAllReThoughtIds: async (parent, args, context) => {
+      return (await ReThought.findAll({})).map(entry => entry.get({ plain: true }));
+    },
+    getAllReplyIds: async (parent, args, context) => {
+      return (await Reply.findAll({})).map(entry => entry.get({plain:true}));
     },
 
     //STATUS: WORKING
