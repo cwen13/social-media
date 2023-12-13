@@ -3,3 +3,8 @@
   display:flex;
   flex-direction: column;
 }
+
+.feedPosts {
+  display: flex;
+  flex-direction: column;
+}

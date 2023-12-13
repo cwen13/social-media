@@ -11,15 +11,13 @@ import {
 } from "./../../../utils/queries";
 import { QUERY_ALL_THOUGHTS } from "./../../../utils/queries";
 
-const ReThoughtPost = (props) => {
+const ReThoughtPost = () => {
 
   return(
     <section className="thought reThought">
       <div className="currentThought">
-	{props.thought}
       </div>
       <div className="thought">
-	{replyThought}
       </div>
     </section>
   );

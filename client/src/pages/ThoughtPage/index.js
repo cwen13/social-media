@@ -8,8 +8,8 @@ import {
   QUERY_REPLYS
 } from "./../../utils/queries";
 import UserInfo from "./../../components/UserInfo";
-import ThoughtPost from "./../../components/ThoughtPost";
-import ThoughtReplys from "./../../components/ThoughtReplys";
+import ThoughtPost from "./../../components/Posts/ThoughtPost";
+//import ThoughtReplys from "./../../components/ThoughtReplys";
 
 const ThoughtPage = () => {
   const page = "ThoughtPage";
@@ -47,7 +47,6 @@ const ThoughtPage = () => {
 		       page={page}
 		       liked={isLiked(thought.id)}
 	  />
-	  <ThoughtReplys postId={postId} />
 	</li>
       </ul>
     </section>);

@@ -9,12 +9,14 @@ import {
   QUERY_MY_LIKED,
   QUERY_USER_LIKED,
   QUERY_USER_RETHOUGHTS,
-  QUERY_ALL_RETHOUGHT_IDS
+  QUERY_ALL_RETHOUGHT_IDS,
+  QUERY_ALL_REPLY_IDS
 } from "./../../utils/queries";
 import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
 const Feed = (props) => {
+  console.log(<ThoughtPost/>);
   let userPageId = useParams().userId;
 
   const { userId } = useUserContext();
@@ -37,32 +39,26 @@ const Feed = (props) => {
     MyReThoughts: "getUserReThoughts"
   };
 
-  const { loading: reThoughtIdsLoading, error: reThoughtIdsError, data: reThoughtIdsData } = useQuery(QUERY_ALL_RETHOUGHT_IDS)
-
-  const { loading: likedLoading, error: likedError, data: likedData, refresh: likedRefresh } = useQuery(
-    QUERY_MY_LIKED,
-    {
-      refetchQueries:
-      [
-	QUERY_MY_LIKED,
-	"getAllMyLiked"
-      ]
-    }
-  );
-
   const { loading: replyIdsLoading, error: replyIdsError, data: replyIdsData } = useQuery(QUERY_ALL_REPLY_IDS);
+  const { loading: reThoughtIdsLoading, error: reThoughtIdsError, data: reThoughtIdsData } = useQuery(QUERY_ALL_RETHOUGHT_IDS);
+  
   
   const queryString = (props.page === "MainFeed" && userPageId === undefined || userPageId === 0)
 	? ""
 	: { variables: { userId: userPageId }};
-
+  
+  const { loading: likedIdsLoading, error: likedIdsError, data: likedIdsData, refresh: likedIdsRefresh } = useQuery(
+    QUERY_MY_LIKED,
+    queryString
+  );
+  
   const { loading: queryLoading, error: queryError, data: queryData } = useQuery(
     queryOptions[props.page],
     queryString    
   );
   
-  if (likedLoading) return "Loading";
-  if (queryLoading) return "Loading";
+  if (likedIdsLoading) return "Loading Likes";
+  if (queryLoading) return "Loading Query";
   if (queryError) return `Q Error ${queryError.message}`;
   if (reThoughtIdsLoading) return "Loading rethought ids";
   if (replyIdsLoading) return "Loading reply ids";
@@ -70,14 +66,12 @@ const Feed = (props) => {
   const reThoughtIds = new Set(reThoughtIdsData.getAllReThoughtIds.map(entry => entry.reThoughtOfId));
   const isReThought = (thoughtId) => reThoughtIds.has(thoughtId);
 
-  const replyIds = new Set(reThought.getAllReplyIds.map(entry => entry.replyOfId));
+  const replyIds = new Set(replyIdsData.getAllReplyIds.map(entry => entry.replyOfId));
   const isReply = (thoughtId) => replyIds.has(thoughtId);
   
-  const likedThoughts = (likedData) ? likedData.getAllMyLiked.map(result => result.id) : [];
+  const likedThoughts = (likedIdsData) ? likedIdsData.getAllMyLiked.map(result => result.id) : [];
   const isLiked = (thoughtId) => likedThoughts.includes(thoughtId);
 
-  console.log(queryData)
-  
   let noData;
   if (queryData === null) {
     switch (props.page) {
@@ -104,6 +98,7 @@ const Feed = (props) => {
   
   return (
     <div className="feed">
+      <ul className="feedPosts">
       {(noData === null) ? noData :
        queryData[thoughts[props.page]].map(thought =>
 	 <ThoughtPost key={thought.id}
@@ -112,10 +107,11 @@ const Feed = (props) => {
 		      thought={thought.content}
 		      liked={isLiked(thought.id)}
 		      isReThought={isReThought(thought.id)}
-		      isReply{isReply(thought.id)}
+		      isReply={isReply(thought.id)}
 		      userId={thought.user.id}
 		      userName={thought.user.userName}
 	 />)}
+	</ul>
     </div>
   );
 };

@@ -32,7 +32,7 @@ export const UserContextProvider = ({ children }) => {
   
   useEffect(()=> {
     try {
-      if(!loading && !error && data !== undefined && data !==null) {
+      if(!loading && !error && data !== undefined && data.getUser !== null) {
 	setUserName(data.getUser.userName);
 	setProfilePicture(data.getUser.profilePicture);
 	setHandle(data.getUser.handle);

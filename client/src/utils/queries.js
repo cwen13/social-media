@@ -218,3 +218,11 @@ query getAllReplyIds {
     replyThoughtId
   }
 }`;
+
+export const QUERY_ALL_LIKED_IDS = gql`
+query getUserLikedId ($userId: ID!) {
+  getUserLikedIds (userId: $userId) {
+    thoughtId
+    likedByUserId
+  }
+}`;

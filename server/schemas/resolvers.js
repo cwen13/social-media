@@ -306,6 +306,9 @@ const resolvers = {
       console.log(replys);
       return replys;      
     },
+    getUserLikedIds: async (parent, { userId }, context) => {
+      return (await Liked.findAll({})).map(entry => entry.get({ plain: true }));
+    },
 
   },
   Mutation: {

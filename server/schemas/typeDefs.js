@@ -76,6 +76,7 @@ type Query {
 
   getAllLiked: [Thought]
   getAllMyLiked: [Thought]
+  getUserLikedIds(userId: ID!): [Liked]
   getThoughtLikes(thoughtId: ID!): [User]
   getUserLiked(userId: ID!): [Thought]
 
@@ -84,7 +85,7 @@ type Query {
   getMyReThoughts: [Thought]
   getUserReThoughts(userId: ID!): [Thought]
   getAllReThoughtIds: [ReThought]
-  getThoughtReThought(thoughtId: ID!) Thought
+  getThoughtReThought(thoughtId: ID!): Thought
   getAllReplyIds: [Reply]
   getUserReplys(userId: ID!): [Thought]
 }
