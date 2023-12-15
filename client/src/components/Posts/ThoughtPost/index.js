@@ -181,7 +181,7 @@ const ThoughtPost = (props) => {
       const reply = await replyToThought({
 	variables: {
 	  content: replyText,
-	  thoughtReplyOfId: props.thoughtId
+	  thoughtReplygOfId: props.thoughtId
 	}});
       setReplyText("");
       setIsReplying(false);
@@ -389,10 +389,20 @@ const ThoughtPost = (props) => {
       return <SingleThoughtPost/>;
       break;
     case "Reply":
-      return <ReplyPost/>;
+      return <ReplyPost page={props.page}
+			replyId={props.thoughtId}
+			reply={props.thought}
+			replyUserId={props.userId}
+			replyUserName={props.userName}
+			liked={props.liked}/>;
       break;
-    case "ReTought":
-      return <ReThoughtPost/>;
+    case "ReThought":
+      return <ReThoughtPost page={props.page}
+			    reThoughtId={props.thoughtId}
+			    reThought={props.thought}
+			    reThoughtUserId={props.userId}
+			    reThoughtUserName={props.userName}
+			    liked={props.Liked}/>;
       break;
     default:
       break;
@@ -405,9 +415,16 @@ const ThoughtPost = (props) => {
       <li>
 	<section className="authorInfo">
 	  <ul>
-	    <li>UserName: { props.userName }</li>
-	    <li>User Id: { props.userId }</li>
-	    <li>Thought Id: { props.thoughtId }</li>
+	    <li>UserName:
+	      <Link to={`/user/${props.userId}`}>
+		{ props.userName } (id: {props.userId})
+	      </Link>
+	    </li>
+	    <li>Thought Id:
+	      <Link to={`/thought/${props.thoughtId}`}>
+		{ props.thoughtId }
+	      </Link>
+	    </li>
 	  </ul>	
 	</section>
 	{PostPicker()}

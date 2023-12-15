@@ -16,7 +16,6 @@ import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
 const Feed = (props) => {
-  console.log(<ThoughtPost/>);
   let userPageId = useParams().userId;
 
   const { userId } = useUserContext();
@@ -63,10 +62,10 @@ const Feed = (props) => {
   if (reThoughtIdsLoading) return "Loading rethought ids";
   if (replyIdsLoading) return "Loading reply ids";
     
-  const reThoughtIds = new Set(reThoughtIdsData.getAllReThoughtIds.map(entry => entry.reThoughtOfId));
+  const reThoughtIds = new Set(reThoughtIdsData.getAllReThoughtIds.map(entry => entry.reThoughtThoughtId));
   const isReThought = (thoughtId) => reThoughtIds.has(thoughtId);
 
-  const replyIds = new Set(replyIdsData.getAllReplyIds.map(entry => entry.replyOfId));
+  const replyIds = new Set(replyIdsData.getAllReplyIds.map(entry => entry.replyThoughtId));
   const isReply = (thoughtId) => replyIds.has(thoughtId);
   
   const likedThoughts = (likedIdsData) ? likedIdsData.getAllMyLiked.map(result => result.id) : [];

@@ -7,17 +7,52 @@ import { useMutation, useQuery } from "@apollo/client"
 import {
 } from "./../../../utils/mutations";
 import {
-  
+  QUERY_THOUGHT,
+  QUERY_RETHOUGHT_ID_PAIRS,
+  QUERY_RETHOUGHT_ORIGINAL_THOUGHT
 } from "./../../../utils/queries";
 import { QUERY_ALL_THOUGHTS } from "./../../../utils/queries";
 
-const ReThoughtPost = () => {
+const ReThoughtPost = (props) => {
 
+  console.log(props);
+  
+  const {loading: thoughtLoading, error: thoughtError, data: thoughtData } = useQuery(
+    QUERY_RETHOUGHT_ORIGINAL_THOUGHT,
+    {
+      variables:
+      {
+	reThoughtId: props.reThoughtId
+      }
+    }
+  );
+
+  if(thoughtLoading) return "Loading";
+
+  console.log(thoughtData);
+
+  const originalThought = thoughtData.getReThoughtOriginalThought;
+  
   return(
-    <section className="thought reThought">
-      <div className="currentThought">
+    <section className="thought">
+      <div className="reThought">
       </div>
-      <div className="thought">
+      <div className="originalThought">
+	<section className="authorInfo">
+	  <ul>
+	    <li>UserName: {originalThought.user.userName}
+	      <Link to={`/user/${props.userId}`}>
+	      </Link>
+	    </li>
+	    <li>Thought Id:
+	      <Link to={`/thought/${props.thoughtId}`}>
+		{ props.thoughtId }
+	      </Link>
+	    </li>
+	  </ul>	
+	</section>
+	{originalThought.content}
+
       </div>
     </section>
   );

@@ -43,18 +43,21 @@ type Liked {
   id: ID!
   thoughtId: ID!
   likedByUserId: ID!
+  thought: Thought
 }
 
 type Reply {
   id: ID!
   replyOfId: ID!
   replyThoughtId: ID!
+  thought: Thought
 }
 
 type ReThought {
   id: ID!
   reThoughtOfId: ID!
   reThoughtThoughtId: ID!
+  thought: Thought
 }
 
 type Auth {
@@ -85,9 +88,13 @@ type Query {
   getMyReThoughts: [Thought]
   getUserReThoughts(userId: ID!): [Thought]
   getAllReThoughtIds: [ReThought]
-  getThoughtReThought(thoughtId: ID!): Thought
   getAllReplyIds: [Reply]
   getUserReplys(userId: ID!): [Thought]
+  getReThoughtIdPairs(originalId: ID!): ReThought
+  getReplyIdPairs(originalId: ID!): Reply
+  getReThoughtOriginalThought(reThoughtId: ID!): Thought
+  getReplyOriginalThought(replyId: ID!): Thought
+
 }
 
 type Mutation {

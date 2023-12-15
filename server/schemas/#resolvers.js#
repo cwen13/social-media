@@ -200,8 +200,6 @@ const resolvers = {
       }
     },
 
-    
-
     getThoughtReThoughts: async (parent, { thoughtId } , context) => {
       if (context.user) {
 	const reThoughts = await Thought.findByPk(
