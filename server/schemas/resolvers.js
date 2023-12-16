@@ -58,6 +58,37 @@ const resolvers = {
       return userFriends.friendshipUser;
     },
 
+    //STATUS: 
+    getMyFollowing: async (parent, args, context) => {
+      let userFollowing = await User.findByPk(
+	context.user.id,
+	{
+	  include: {
+	    model: User,
+	    as: "followingUsers",
+	    through: "follow"
+	  }
+	}
+      );
+      return userFollowing.followingUsers;
+    },
+    
+    //STATUS: 
+    getUserFollowing: async (parent, { userId }, context) => {
+      let userFollowing = await User.findByPk(
+	userId,
+	{
+	  include:
+	  {
+	    model: User,
+	    as: "followingUsers",
+	    through: "follow"
+	  }
+	}
+      )
+      return userFollowing.followingUsers;
+    },
+    
     //STATUS: WORKING
     getMyThoughts: async (parent, args, context) => {
       //return await Thought.findAll({ where: { userId: context.user.id }});
@@ -163,7 +194,7 @@ const resolvers = {
 	  include:
 	  {
 	    model: Thought,
-	    as: "replyThought",
+	    as: "replyThoughts",
 	    through:"reply",
 	    include:
 	    {
@@ -176,15 +207,34 @@ const resolvers = {
       return replys.replyThought;
     },
 
+    getReplyOriginalThought: async (parent, { replyId } , context) => {
+	const originalThought = await Thought.findByPk(
+	  replyId,
+	  {
+	    include:
+	    {
+	      model: Thought,
+	      as: "originalReplyThought",
+	      through: "reply",
+	      include:
+	      {
+		model: User,
+		as: "user"
+	      }
+	    }
+	  }
+	);
+	return originalThought.originalReplyThought[0];
+    },
+
     getThoughtReThoughts: async (parent, { thoughtId } , context) => {
-      if (context.user) {
 	const reThoughts = await Thought.findByPk(
 	  thoughtId,
 	  {
 	    include:
 	    {
 	      model: Thought,
-	      as: "reThoughtThought",
+	      as: "reThoughtThoughts",
 	      through: "reThought",
 	      include:
 	      {
@@ -194,10 +244,27 @@ const resolvers = {
 	    }
 	  }
 	);
-	return reThoughts;
-      } else {
-	throw new AuthenticationError("You can query rethoughts unless logged in");
-      }
+	return reThoughts.reThoughtThoughts;
+    },
+
+    getReThoughtOriginalThought: async (parent, { reThoughtId } , context) => {
+	const originalThought = await Thought.findByPk(
+	  reThoughtId,
+	  {
+	    include:
+	    {
+	      model: Thought,
+	      as: "originalReThoughtThought",
+	      through: "reThought",
+	      include:
+	      {
+		model: User,
+		as: "user"
+	      }
+	    }
+	  }
+	);
+	return originalThought.originalReThoughtThought[0];
     },
 
     //STATUS: WORKING
@@ -228,19 +295,34 @@ const resolvers = {
 	    id: userReThoughtIds.map(thought => thought.reThoughtOfId)
 	  },
 	  include:
-	  {
-	    model: Thought,
-	    as: "reThoughtThought",
-	    through: "reThought",
-	    include:
+	  [
 	    {
-	      model: User,
-	      as: "user",
+	      model: User
+	    },
+	    {
+	      model: Thought,
+	      as: "reThoughtThought",
+	      through: "reThought",
+	      include:
+	      {
+		model: User,
+		as: "user",
+	      }
 	    }
-	  }
+	  ]
 	}
       );
+      //path to get to rethough and user
+      console.log(reThoughts[0].reThoughtThought[0].user);
+      
       return reThoughts;      
+    },
+
+    getAllReThoughtIds: async (parent, args, context) => {
+      return (await ReThought.findAll({})).map(entry => entry.get({ plain: true }));
+    },
+    getAllReplyIds: async (parent, args, context) => {
+      return (await Reply.findAll({})).map(entry => entry.get({plain:true}));
     },
 
     //STATUS: WORKING
@@ -290,6 +372,39 @@ const resolvers = {
       
       console.log(replys);
       return replys;      
+    },
+    getUserLikedIds: async (parent, { userId }, context) => {
+      return (await Liked.findAll({})).map(entry => entry.get({ plain: true }));
+    },
+    getReThoughtIdPairs: async (parent, { originalThoughtId }, context) => {
+      return await ReThought.findAll(
+	{
+	  where:
+	  {
+	    reThoughtThoughtId: originalThoughtId
+	  }
+	}
+      );
+    },
+    getReplyIdPairs: async (parent, { originalThoughtId }, context) => {
+      return await Reply.findAll(
+	{
+	  where:
+	  {
+	    replyThoughtId: originalThoughtId
+	  },
+	  include:
+	  {
+	    model: Thought,
+	    include:
+	    {
+	      model: User
+	    }
+	  }
+	  
+	}
+      );
+
     },
 
   },
@@ -350,10 +465,22 @@ const resolvers = {
     addFriend: async (parent, { friendId }, context) => {      
       // making two entries so only one column needs to be quired
       // when collecting all of a user's friends
-      return (await Friend.create({userId: context.user.id, friendId}) &&
-	      await Friend.create({userId: friendId, friendId: context.user.id}));
+      return ((await Friend.create({userId: context.user.id, friendId}) &&
+	       await Friend.create({userId: friendId, friendId: context.user.id})) !== null)
     },
 
+    //STATUS: 
+    addFollow: async (parent, { followingId }, context) => {
+      console.log("FOLLOWID:",followingId);
+      console.log("USERID:",context.user.id);
+      return (await Following.create(
+	{
+	  userId: context.user.id,
+	  followingId
+	}) !== null);
+    },
+
+    
     addPending: async (parent, { friendId }, context) => {
       return await Pending.create(
 	{
@@ -382,6 +509,12 @@ const resolvers = {
 	      
     },
 
+    //STATUS: WORKING
+    removeFollow: async (parent, { followingId }, context) => {
+      return (await Following.destroy({where: { userId: context.user.id, followingId }}) === 1)
+    },
+
+    
     //STATUS: WORKING
     addThought: async (parent, { content }, context) =>{ 
       if (context.user) {

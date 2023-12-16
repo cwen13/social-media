@@ -28,4 +28,4 @@ Following.init(
   }
 );
 
-module.exports = Follwoing
+module.exports = Following

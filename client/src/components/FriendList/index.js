@@ -2,15 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./style.css"
 
-const FriendList = (props) => {
+const UserList = (props) => {
 
   return(
-      <li className="friend">
-	<Link to={`/user/${props.friendId}`}>
-	   {props.friendName}
+    <li className={props.listOf}>
+	<Link to={`/user/${props.userId}`}>
+	   {props.userName}
 	</Link>
       </li>
   );
 };
 
-export default FriendList;
+export default UserList;

@@ -20,6 +20,12 @@ type Friend {
   friendId: ID!
 }
 
+type Following {
+  id: ID!
+  userId: ID!
+  followingId: ID!
+}
+
 type Block {
   id: ID!
   userId: ID!
@@ -43,18 +49,21 @@ type Liked {
   id: ID!
   thoughtId: ID!
   likedByUserId: ID!
+  thought: Thought
 }
 
 type Reply {
   id: ID!
   replyOfId: ID!
   replyThoughtId: ID!
+  thought: Thought
 }
 
 type ReThought {
   id: ID!
   reThoughtOfId: ID!
   reThoughtThoughtId: ID!
+  thought: Thought
 }
 
 type Auth {
@@ -68,6 +77,8 @@ type Query {
   getUser(userId: ID): User
   getMyFriends: [User]
   getUserFriends(userId: ID!): [User]
+  getMyFollowing: [User]
+  getUserFollowing(userId: ID!): [User]
 
   getMyThoughts: [Thought]
   getAllThoughts: [Thought!]!
@@ -76,14 +87,22 @@ type Query {
 
   getAllLiked: [Thought]
   getAllMyLiked: [Thought]
+  getUserLikedIds(userId: ID!): [Liked]
   getThoughtLikes(thoughtId: ID!): [User]
   getUserLiked(userId: ID!): [Thought]
 
   getThoughtReplys(thoughtId: ID!): [Thought]
   getThoughtReThoughts(thoughtId: ID!): [Thought]
-  getUserReThoughts(userId: ID!): [Thought]
   getMyReThoughts: [Thought]
+  getUserReThoughts(userId: ID!): [Thought]
+  getAllReThoughtIds: [ReThought]
+  getAllReplyIds: [Reply]
   getUserReplys(userId: ID!): [Thought]
+  getReThoughtIdPairs(originalId: ID!): ReThought
+  getReplyIdPairs(originalId: ID!): Reply
+  getReThoughtOriginalThought(reThoughtId: ID!): Thought
+  getReplyOriginalThought(replyId: ID!): Thought
+
 }
 
 type Mutation {
@@ -112,6 +131,11 @@ type Mutation {
                friendId: ID!): Boolean!
   addPending(friendID: ID!): Boolean!
   addBlocked(blockedId: ID!): Boolean!
+
+  addFollow(followingId: ID!): Boolean!
+  removeFollow(followingId: ID!): Boolean!
+  updateFollow(userId: ID!,
+               followingId: ID!): Boolean!
 
   addThought(content: String!): Thought!
   updateThought(thoughtId: ID!,

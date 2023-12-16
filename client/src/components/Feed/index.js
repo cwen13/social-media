@@ -2,72 +2,74 @@ import React, { useEffect  } from "react";
 // Need to get teh liked list to reload when accessing the page a second time and on
 import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
-import ThoughtPost from "./../ThoughtPost"
+import ThoughtPost from "./../Posts/ThoughtPost"
 import {
   QUERY_ALL_THOUGHTS,
   QUERY_USER_THOUGHTS,
-  QUERY_MY_THOUGHTS,
   QUERY_MY_LIKED,
-  QUERY_MY_RETHOUGHTS,
   QUERY_USER_LIKED,
-  QUERY_USER_RETHOUGHT
+  QUERY_USER_RETHOUGHTS,
+  QUERY_ALL_RETHOUGHT_IDS,
+  QUERY_ALL_REPLY_IDS
 } from "./../../utils/queries";
-
+import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
 const Feed = (props) => {
-  const userPageId = useParams().userId;
+  let userPageId = useParams().userId;
 
-  console.log("UID:",userPageId)
+  const { userId } = useUserContext();
+  userPageId = (userPageId !== undefined) ? userPageId : userId;
   
   const queryOptions = {
-    MyPage : QUERY_MY_THOUGHTS,
+    MyPage : QUERY_USER_THOUGHTS,
     UserPage: QUERY_USER_THOUGHTS,
     MainFeed :  QUERY_ALL_THOUGHTS,
     Liked: QUERY_USER_LIKED,
-    ReThoughts: QUERY_MY_RETHOUGHTS
+    MyReThoughts: QUERY_USER_RETHOUGHTS
   };
 
   const thoughts = {
-    MyPage : "getMyThoughts",
+    MyPage : "getUserThoughts",
     UserPage: "getUserThoughts",
     MainFeed :  "getAllThoughts",
     Liked: "getUserLiked",
-    ReThoughts: "getUserReThoughts"
+    MyReThoughts: "getUserReThoughts"
   };
 
-
-  const { loading: likedLoading, error: likedError, data: likedData, refresh: likedRefresh } = useQuery(
+  const { loading: replyIdsLoading, error: replyIdsError, data: replyIdsData } = useQuery(QUERY_ALL_REPLY_IDS);
+  const { loading: reThoughtIdsLoading, error: reThoughtIdsError, data: reThoughtIdsData } = useQuery(QUERY_ALL_RETHOUGHT_IDS);
+  
+  
+  const queryString = (props.page === "MainFeed" && userPageId === undefined || userPageId === 0)
+	? ""
+	: { variables: { userId: userPageId }};
+  
+  const { loading: likedIdsLoading, error: likedIdsError, data: likedIdsData, refresh: likedIdsRefresh } = useQuery(
     QUERY_MY_LIKED,
-    {
-      refetchQueries:
-      [
-	QUERY_MY_LIKED,
-	"getAllMyLiked"
-      ]
-    }
+    queryString
   );
-
   
   const { loading: queryLoading, error: queryError, data: queryData } = useQuery(
     queryOptions[props.page],
-    {
-      variables:
-      {
-	userId: userPageId
-      
-    }
+    queryString    
   );
-
-  if (likedLoading) return "Loading";
-  if (queryLoading) return "Loading";
-  if (queryError) return `Q Error ${queryError.message}`;
   
-  const likedThoughts = (likedData) ? likedData.getAllMyLiked.map(result => result.id) : [0];
+  if (likedIdsLoading) return "Loading Likes";
+  if (queryLoading) return "Loading Query";
+  if (queryError) return `Q Error ${queryError.message}`;
+  if (reThoughtIdsLoading) return "Loading rethought ids";
+  if (replyIdsLoading) return "Loading reply ids";
+    
+  const reThoughtIds = new Set(reThoughtIdsData.getAllReThoughtIds.map(entry => entry.reThoughtThoughtId));
+  const isReThought = (thoughtId) => reThoughtIds.has(thoughtId);
+
+  const replyIds = new Set(replyIdsData.getAllReplyIds.map(entry => entry.replyThoughtId));
+  const isReply = (thoughtId) => replyIds.has(thoughtId);
+  
+  const likedThoughts = (likedIdsData) ? likedIdsData.getAllMyLiked.map(result => result.id) : [];
   const isLiked = (thoughtId) => likedThoughts.includes(thoughtId);
 
-  console.log(queryData)
-  
   let noData;
   if (queryData === null) {
     switch (props.page) {
@@ -91,24 +93,24 @@ const Feed = (props) => {
       break;
     }
   }
-      
   
   return (
-	<div className="feed">
-	  {(noData === null) ? noData :
-	    queryData[thoughts[props.page]].map(thought =>
-	    <ThoughtPost userName={thought.user.userName}
-			 userId={thought.user.id}
-			 thought={thought.content}
-			 thoughtId={thought.id}
-			 thoughtReplyOfId={thought.thoughtReplyOfId}
-			 key={thought.id}
-			 page={props.page}
-			 isReThought={thought.isReThought}
-			 originalThoughtId={thought.thoughtReplyOfId}
-			 liked={isLiked(thought.id)}
-	    />)}
-	</div>
+    <div className="feed">
+      <ul className="feedPosts">
+      {(noData === null) ? noData :
+       queryData[thoughts[props.page]].map(thought =>
+	 <ThoughtPost key={thought.id}
+		      page={props.page}
+		      thoughtId={thought.id}
+		      thought={thought.content}
+		      liked={isLiked(thought.id)}
+		      isReThought={isReThought(thought.id)}
+		      isReply={isReply(thought.id)}
+		      userId={thought.user.id}
+		      userName={thought.user.userName}
+	 />)}
+	</ul>
+    </div>
   );
 };
 	  

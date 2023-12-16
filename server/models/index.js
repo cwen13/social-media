@@ -6,6 +6,7 @@ const Blocked = require("./Blocked");
 const Pending = require("./Pending");
 const ReThought = require("./ReThought");
 const Reply = require("./Reply");
+const Following = require("./Following");
 
 Thought.belongsTo(User, {
   foreignKey: "userId",
@@ -87,28 +88,28 @@ Thought.belongsToMany(Thought,{
   through: "reThought",
   foreignKey: "reThoughtOfId",
   otherKey: "reThoughtThoughtId",
-  as: "reThoughtThought"
+  as: "reThoughtThoughts"
 });
 
 Thought.belongsToMany(Thought,{
   through: "reThought",
   foreignKey: "reThoughtThoughtId",
   otherKey: "reThoughtOfId",
-  as: "orginalReThoughtThought"
+  as: "originalReThoughtThought"
 });
 
 Thought.belongsToMany(Thought,{
   through: "reply",
   foreignKey: "replyOfId",
   otherKey: "replyThoughtId",
-  as: "replyThought"
+  as: "replyThoughts"
 });
 
 Thought.belongsToMany(Thought,{
   through: "reply",
   foreignKey: "replyThoughtId",
   otherKey: "replyOfId",
-  as: "orginalReplyThought"
+  as: "originalReplyThought"
 });
 
 
@@ -121,5 +122,6 @@ module.exports = {
   Blocked,
   Pending,
   ReThought,
-  Reply
+  Reply,
+  Following
 };
