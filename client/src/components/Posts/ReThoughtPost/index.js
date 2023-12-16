@@ -27,15 +27,16 @@ const ReThoughtPost = (props) => {
     }
   );
 
-  if(thoughtLoading) return "Loading";
-
+  if(thoughtLoading) return(<>Loading</>);
+  console.log(thoughtError);
   console.log(thoughtData);
 
   const originalThought = thoughtData.getReThoughtOriginalThought;
   
-  return(
+  return (
     <section className="thought">
       <div className="reThought">
+	{props.reThought}
       </div>
       <div className="originalThought">
 	<section className="authorInfo">
@@ -46,13 +47,12 @@ const ReThoughtPost = (props) => {
 	    </li>
 	    <li>Thought Id:
 	      <Link to={`/thought/${props.thoughtId}`}>
-		{ props.thoughtId }
+		{ originalThought.id }
 	      </Link>
 	    </li>
 	  </ul>	
 	</section>
 	{originalThought.content}
-
       </div>
     </section>
   );

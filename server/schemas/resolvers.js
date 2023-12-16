@@ -177,7 +177,6 @@ const resolvers = {
     },
 
     getReplyOriginalThought: async (parent, { replyId } , context) => {
-      if (context.user) {
 	const originalThought = await Thought.findByPk(
 	  replyId,
 	  {
@@ -195,15 +194,9 @@ const resolvers = {
 	  }
 	);
 	return originalThought.originalReplyThought[0];
-      } else {
-	throw new AuthenticationError("You can query rethoughts unless logged in");
-      }
     },
 
-    
-
     getThoughtReThoughts: async (parent, { thoughtId } , context) => {
-      if (context.user) {
 	const reThoughts = await Thought.findByPk(
 	  thoughtId,
 	  {
@@ -221,13 +214,9 @@ const resolvers = {
 	  }
 	);
 	return reThoughts.reThoughtThoughts;
-      } else {
-	throw new AuthenticationError("You can query rethoughts unless logged in");
-      }
     },
 
     getReThoughtOriginalThought: async (parent, { reThoughtId } , context) => {
-      if (context.user) {
 	const originalThought = await Thought.findByPk(
 	  reThoughtId,
 	  {
@@ -245,9 +234,6 @@ const resolvers = {
 	  }
 	);
 	return originalThought.originalReThoughtThought[0];
-      } else {
-	throw new AuthenticationError("You can query rethoughts unless logged in");
-      }
     },
 
     //STATUS: WORKING

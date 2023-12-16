@@ -144,15 +144,7 @@ mutation addReThought ($originalThoughtId: ID!,
                        $additionalThought: String) {
   addReThought (originalThoughtId: $originalThoughtId,
                 additionalThought: $additionalThought) {
-    id
-    content
-    thoughtReplyOfId
-    isReThought
-    originalThoughtId
-    user {
-      id
-      userName
-      handle
-    }
-  }
+    reThoughtOfId
+    reThoughtThoughtId
+ }
 }`;

@@ -15,7 +15,9 @@ import {
 import {
   QUERY_MY_LIKED,
   QUERY_THOUGHT,
-  QUERY_ALL_THOUGHTS
+  QUERY_ALL_THOUGHTS,
+  QUERY_ALL_REPLY_IDS,
+  QUERY_ALL_RETHOUGHT_IDS
 } from "./../../../utils/queries";
 import ReplyPost from "./../ReplyPost";
 import ReThoughtPost from "./../ReThoughtPost";
@@ -101,8 +103,18 @@ const ThoughtPost = (props) => {
     {
       refetchQueries:
       [
-	QUERY_ALL_THOUGHTS,
-	"getAllThoughts"
+	[
+	  QUERY_ALL_THOUGHTS,
+	  "getAllThoughts"
+	],
+	[
+	  QUERY_ALL_REPLY_IDS,
+	  "getAllReplyIds"
+	],
+	[
+	  QUERY_ALL_RETHOUGHT_IDS,
+	  "getAllReThoughtIds"
+	]
       ]
     }
   );

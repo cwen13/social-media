@@ -20,7 +20,6 @@ const Feed = (props) => {
 
   const { userId } = useUserContext();
   userPageId = (userPageId !== undefined) ? userPageId : userId;
-
   
   const queryOptions = {
     MyPage : QUERY_USER_THOUGHTS,
