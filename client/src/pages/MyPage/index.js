@@ -2,14 +2,14 @@ import React, { useState } from "react";
 
 import MyProfile from "./../../components/MyProfile";
 import Feed from "./../../components/Feed";
-import "./style.css";
+import "./../MainStyles/style.css";
 
 function MyPage() {
 
   const page = "MyPage"
   
   return(
-    <section id="myPage">      
+    <section id="feedContainer">      
       <ul className="userFeed">
 	<li id="myUserInfo">
 	  <MyProfile page={page}/>

@@ -11,6 +11,8 @@ import UserInfo from "./../../components/UserInfo";
 import ThoughtPost from "./../../components/Posts/ThoughtPost";
 //import ThoughtReplys from "./../../components/ThoughtReplys";
 
+import "./../MainStyles/style.css";
+
 const ThoughtPage = () => {
   const page = "ThoughtPage";
   const { postId } = useParams();
@@ -32,7 +34,7 @@ const ThoughtPage = () => {
   const thought = thoughtData.getThought;
   
   return(
-    <section id="thoughtPostPage">
+    <section id="feedContainer">
       <ul className="userFeed">
 	<li id="otherUserInfo">
 	  <UserInfo page={page}/>

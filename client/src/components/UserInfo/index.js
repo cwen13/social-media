@@ -29,7 +29,7 @@ const UserInfo = ({ page }) => {
 	} = useUserContext();
   let userPageId = useParams().userId;
   userPageId = (userPageId !== undefined) ? userPageId : userId;
-
+  
   const [ friendship, setFriendship ] = useState(false);
   const [ following, setFollowing ] = useState(false);
   const [ blocked, setBlocked ] = useState(false);
@@ -125,6 +125,11 @@ const UserInfo = ({ page }) => {
 
   if(userLoading) return "Loading...";
   if(userError) return `Error ${userError.message}`;
+
+  if(loadingFriends) return "Loading Friends";
+  if(loadingFollowing) return "Loading Following";
+  if(loadingBlocked) return "Loading Blocked";
+  
   
   const isFriend = () => {
     if (!loadingFriends && dataFriends) {
@@ -260,10 +265,10 @@ const UserInfo = ({ page }) => {
       <>
 	{userPageId === 0 ? <h2> No user Stats yet </h2>
 	 : <ul className="userStats">
-	     <li>Number of friends 
+	     <li>Friends 
 	       {/*This will be a mini scroll box likely a iframe*/}
 	       <ul id="friendsList">
-		 {dataFriends ? dataFriends.getUserFriends.map(friend =>
+		 {dataFriends.getUserFriends !== undefined ? dataFriends.getUserFriends.map(friend =>
 		   <UserList userId={friend.id}
 			     key={friend.id}
 			     userName={friend.userName}
@@ -277,8 +282,8 @@ const UserInfo = ({ page }) => {
 	     <li>
 	       {/*This will be a mini scroll box likely a iframe*/}
 	       Following
-	       <ul id="followsList">
-		 {dataFollowing ? dataFollowing.getUserFollowing.map(follow =>
+	       <ul id="followingList">
+		 {dataFollowing.getUserFollowing !== undefined ? dataFollowing.getUserFollowing.map(follow =>
 		   <UserList userId={follow.id}
 			     key={follow.id}
 			     userName={follow.userName}
@@ -292,6 +297,16 @@ const UserInfo = ({ page }) => {
 	       <Link to={`/user/${userPageId}/blocked`}>
 		 Blocked
 	       </Link>
+	       <ul id="blockedList">
+		 {dataBlocked.getUSerBlocked !== undefined ? dataBlocked.getUserBlocked.map(block =>
+		   <UserList userId={block.id}
+			     key={block.id}
+			     userName={block.userName}
+			     page={page}
+			     listOf="blockedList"
+		   />)
+		     : "There are no blocks yet"}
+	       </ul>
 	     </li>	
 	     <li>
 	       <Link to={`/user/${userPageId}/liked`}>

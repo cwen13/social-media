@@ -2,8 +2,8 @@
   width: 70%;
 }
 
-#mainFeed {
-  width: 100%;
+#feedContainer {
+  width: 1000px;
 }
 
 #mainFeed .mainPage {

@@ -23,7 +23,7 @@ import ReplyPost from "./../ReplyPost";
 import ReThoughtPost from "./../ReThoughtPost";
 import { useUserContext } from "./../../../utils/UserContext";
 
-import "./style.css";
+import "./../PostStyling/style.css";
 
 const ThoughtPost = (props) => {
 
@@ -42,6 +42,7 @@ const ThoughtPost = (props) => {
   const thoughtAreaRef = useRef(null);
   const reThoughtAreaRef = useRef(null);
 
+  const [ canEditRemove, setCanEditRemove ] = useState(userId === props.userId);
   const [ cursorPositionReply, setCursorPositionReply ] = useState({ start:0, end: 0 });
   const [ cursorPositionReThought, setCursorPositionReThought ] = useState({ start:0, end: 0 });
   const [ cursorPositionThought, setCursorPositionThought ] = useState({ start:0, end: 0 }); 
@@ -163,6 +164,8 @@ const ThoughtPost = (props) => {
   },[replyText]);
 
 
+  
+  
   // updating the textareas
   const handleChangeReThought = (event) => {
     setReThoughtText(event.currentTarget.value);
@@ -193,27 +196,10 @@ const ThoughtPost = (props) => {
       }
     );
   }; 
- 
-  const handleReplySubmit = async () => {
-    try {
-      const reply = await replyToThought(
-	{
-	  variables:
-	  {
-	    content: replyText,
-	    thoughtId: props.thoughtId
-	  }
-	}
-      );
-      setReplyText("");
-      setIsReplying(false);
-    } catch (e) {
-      throw new Error("You did not reply to the thought!");
-      console.log(e);
-    }
-  };
-  
-  
+
+  //------------------------
+  //-------RETHOUGHT-BUTTON-
+  //------------------------  
   const handleReThought = async (event) => {
     event.preventDefault();
     try {
@@ -234,70 +220,7 @@ const ThoughtPost = (props) => {
       console.log(e);
     }
   };
-  
-  
-  const handleSave = async (event) => {
-    event.preventDefault();
-    try {
-      const updateThoughtResponse = await updateThought(
-	{
-	  variables:
-	  {
-	    thoughtId: props.thoughtId,
-	    content: thoughtText
-	  }
-	}
-      );
-      setIsEditing(false);
-    } catch (e) {
-      console.log("Thought update was not commited to memory")
-      console.log(e)
-    }; 
-  };
-  
-  
-  const handleRemove = async (event) => {
-    event.preventDefault();
-    try {
-      const removeResponse = await removeThought({
-	variables: {
-	  thoughtId: props.thoughtId
-	}});
-    } catch (e) {
-      throw new Error("No thought removed");
-      console.log(e);
-    };
-  };
-  
-  const handleLiked  = async (event) => {
-    event.preventDefault();
-    try {
-      if (userId && !isLiked) {
-	const likedResponse = await likedThought({
-	  variables: {
-	    thoughtId: props.thoughtId
-	  }
-	});
-	setIsLiked(true);
-      } else if (userId && isLiked) {
-	const removeLikedResponse = await removeLikedThought({
-	  variables: {
-	    thoughtId: props.thoughtId
-	  }
-	});
-	setIsLiked(false);
-      } else {
-	console.log("User needs to be logged in");
-      };
-    } catch (e) {
-      throw new Error("No thought thought liked");
-      console.log(e);
-    }
-  };
 
-  //------------------------
-  //-------RETHOUGHT-BUTTON-
-  //------------------------  
   const ReThoughtBtn = (props) => {    
     return (
       <>
@@ -328,11 +251,31 @@ const ThoughtPost = (props) => {
   //-------------------
   //-------EDIT-BUTTON-
   //-------------------
+  const handleSave = async (event) => {
+    event.preventDefault();
+    setIsEditing(false);
+    try {
+      const updateThoughtResponse = await updateThought(
+	{
+	  variables:
+	  {
+	    thoughtId: props.thoughtId,
+	    content: thoughtText
+	  }
+	}
+      );
+    } catch (e) {
+      console.log("Thought update was not commited to memory")
+      console.log(e)
+    }; 
+  };
+
   const EditBtn = (props) => {
     return (
       <>
 	{!isEditing
 	 ? <button id={`edit-${props.thoughtId}`}
+		   disabled={!canEditRemove}
 		   onClick={() => setIsEditing(!isEditing)}>EDIT!
 	   </button>
 	 : <section className="thought">
@@ -355,6 +298,32 @@ const ThoughtPost = (props) => {
   //-------------------
   //-------LIKE-BUTTON-
   //-------------------
+  const handleLiked  = async (event) => {
+    event.preventDefault();
+    try {
+      if (userId && !isLiked) {
+	const likedResponse = await likedThought({
+	  variables: {
+	    thoughtId: props.thoughtId
+	  }
+	});
+	setIsLiked(true);
+      } else if (userId && isLiked) {
+	const removeLikedResponse = await removeLikedThought({
+	  variables: {
+	    thoughtId: props.thoughtId
+	  }
+	});
+	setIsLiked(false);
+      } else {
+	console.log("User needs to be logged in");
+      };
+    } catch (e) {
+      throw new Error("No thought thought liked");
+      console.log(e);
+    }
+  };
+
   const LikeBtn = (props) => {
     return(
       <button id={`liked-${props.thoughtId}`}
@@ -368,9 +337,23 @@ const ThoughtPost = (props) => {
   //---------------------
   //-------REMOVE-BUTTON-
   //---------------------
+  const handleRemove = async (event) => {
+    event.preventDefault();
+    try {
+      const removeResponse = await removeThought({
+	variables: {
+	  thoughtId: props.thoughtId
+	}});
+    } catch (e) {
+      throw new Error("No thought removed");
+      console.log(e);
+    };
+  };
+
   const RemoveBtn = (props) => {    
     return(
       <button id={`remove-${props.thoughtId}`}
+	      disabled={!canEditRemove}
 	      onClick={handleRemove}>Remove!
       </button> 
     ); 
@@ -379,6 +362,25 @@ const ThoughtPost = (props) => {
   //--------------------
   //-------REPLY-BUTTON-
   //--------------------
+  const handleReplySubmit = async () => {
+    try {
+      const reply = await replyToThought(
+	{
+	  variables:
+	  {
+	    content: replyText,
+	    thoughtId: props.thoughtId
+	  }
+	}
+      );
+      setReplyText("");
+      setIsReplying(false);
+    } catch (e) {
+      throw new Error("You did not reply to the thought!");
+      console.log(e);
+    }
+  };
+
   const ReplyBtn = (props) => {
     return(
       <>

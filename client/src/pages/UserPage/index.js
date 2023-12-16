@@ -2,14 +2,14 @@ import React, { useState } from "react";
 
 import UserInfo from "./../../components/UserInfo";
 import Feed from "./../../components/Feed";
-import "./style.css";
+import "./../MainStyles/style.css";
 
 function UserPage() {
 
   const page = "UserPage"
   
   return(
-    <section id="userPage">      
+    <section id="feedContainer">      
       <ul className="userFeed">
 	<li id="otherUserInfo">
 	  <UserInfo page={page}/>

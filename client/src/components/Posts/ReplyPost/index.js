@@ -6,6 +6,8 @@ import {
 } from "./../../../utils/queries";
 import { QUERY_ALL_THOUGHTS } from "./../../../utils/queries";
 
+import "./../PostStyling/style.css";
+
 const ReplyPost = (props) => {
 
   const { loading: replyLoading, error: replyError, data: replyData } = useQuery(

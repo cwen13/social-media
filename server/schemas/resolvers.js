@@ -289,6 +289,10 @@ const resolvers = {
 	  {
 	    userId: userId
 	  },
+	  include:
+	  {
+	    model: User
+	  },
 	  attributes: ["id"]
 	}
       );					  
@@ -307,6 +311,11 @@ const resolvers = {
 	    id: reThoughtIds
 	  },
 	  include:
+	  [
+	    {
+	      model: User
+	    },
+	    
 	    {
 	      model: Thought,
 	      through: "reThought",
@@ -316,6 +325,7 @@ const resolvers = {
 		model: User,
  	      }
 	    }
+	  ]
 	}
       );
       //path to get to rethough and user

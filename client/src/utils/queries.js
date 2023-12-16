@@ -216,6 +216,7 @@ query getUserReThoughts ($userId: ID!)  {
     userId
     content
     user{
+      id
       userName
       handle
     }

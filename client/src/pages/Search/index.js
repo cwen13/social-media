@@ -4,6 +4,8 @@ import { useUserContext } from "./../../utils/UserContext";
 import UserInfo from "./../../components/UserInfo";
 import UserList from "./../../components/UserList"
 
+import "./../MainStyles/style.css";
+
 function Search() {
   const { userId, setUserId } = useUserContext;
 

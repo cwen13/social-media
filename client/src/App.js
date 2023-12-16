@@ -65,6 +65,7 @@ const App = () => {
     <ApolloProvider client={client}>
       <Router>
 	<UserContextProvider>
+	  <section className="siteContainer">
      	  <Navbar />
 	  <Routes>	    
             <Route 
@@ -120,6 +121,7 @@ const App = () => {
 	      element={<NotFound />}
 	    />
           </Routes>
+	    </section>
 	</UserContextProvider>
       </Router>
     </ApolloProvider>    

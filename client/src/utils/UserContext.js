@@ -55,11 +55,16 @@ export const UserContextProvider = ({ children }) => {
   
   return (
     <UserContext.Provider value={{userId,
-				  loginUser, logoutUser,
-				  userName, setUserName,
-				  profilePicture, setProfilePicture,
-				  handle, setHandle,
-				  email, setEmail
+				  loginUser,
+				  logoutUser,
+				  userName,
+				  setUserName,
+				  profilePicture,
+				  setProfilePicture,
+				  handle,
+				  setHandle,
+				  email,
+				  setEmail
 				 }}>
       {children}
     </UserContext.Provider>

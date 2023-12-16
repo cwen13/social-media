@@ -26,7 +26,7 @@ const Feed = (props) => {
     UserPage: QUERY_USER_THOUGHTS,
     MainFeed :  QUERY_ALL_THOUGHTS,
     Liked: QUERY_USER_LIKED,
-    MyReThoughts: QUERY_USER_RETHOUGHTS
+    UserReThoughts: QUERY_USER_RETHOUGHTS
   };
 
   const thoughts = {
@@ -34,7 +34,7 @@ const Feed = (props) => {
     UserPage: "getUserThoughts",
     MainFeed :  "getAllThoughts",
     Liked: "getUserLiked",
-    MyReThoughts: "getUserReThoughts"
+    UserReThoughts: "getUserReThoughts"
   };
 
   const { loading: replyIdsLoading, error: replyIdsError, data: replyIdsData } = useQuery(QUERY_ALL_REPLY_IDS);
