@@ -289,3 +289,10 @@ query getReplyOriginalThought ($replyId: ID!) {
   }
 }`;
 
+export const QUERY_USER_BLOCKED = gql`
+query getUserBlocked ($userId: ID!) {
+  getUserBlocked(userId: $userId) {
+    id
+    userName
+  }
+}`;

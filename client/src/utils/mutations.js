@@ -123,11 +123,11 @@ export const REMOVE_LIKED = gql`
 mutation removeLiked($thoughtId: ID!) { removeLiked(thoughtId: $thoughtId) }`;
 
 export const REPLY_TO_THOUGHT = gql`
-mutation replyToThought($content: String!, $thoughtReplyOfId: ID!) {
-  replyToThought (content: $content, thoughtReplyOfId: $thoughtReplyOfId) {
+mutation replyToThought($content: String!, $thoughtId: ID!) {
+  replyToThought (content: $content, thoughtId: $thoughtId) {
     id
-    content
-    thoughtReplyOfId
+    replyOfId
+    replyThoughtId
   }
 }`;
 
@@ -149,4 +149,14 @@ mutation addFollow($followingId: ID!) {
 export const REMOVE_FOLLOW = gql`
 mutation removeFollow($followingId: ID!) {
   removeFollow(id: $followingId)
+}`;
+
+export const ADD_BLOCKED = gql`
+mutation addBlocked($blockedId: ID!) {
+  addBlocked(blockedId: $blockedId)
+}`;
+
+export const REMOVE_BLOCKED = gql`
+mutation removeBlocked($blockedId: ID!) {
+  removeBlocked(blockedId: $blockedId)
 }`;

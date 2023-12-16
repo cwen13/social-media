@@ -4,14 +4,15 @@ import { Link, useParams } from "react-router-dom";
 import {
   QUERY_USER,
   QUERY_USER_FRIENDS,
-  QUERY_USER_FOLLOWING
+  QUERY_USER_FOLLOWING,
+  QUERY_USER_BLOCKED
 } from "./../../utils/queries";
 import {
   ADD_FRIEND,
-  ADD_FOLLOW
+  ADD_FOLLOW,
+  ADD_BLOCKED
 } from "./../../utils/mutations";
-import Following from "./../Following";
-import UserList from "./../FriendList";
+import UserList from "./../UserList";
 import ThoughtCreate from "./../ThoughtCreate"
 import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
@@ -31,6 +32,7 @@ const UserInfo = ({ page }) => {
 
   const [ friendship, setFriendship ] = useState(false);
   const [ following, setFollowing ] = useState(false);
+  const [ blocked, setBlocked ] = useState(false);
   
   
   const {lodaing: userLoading, error: userError, data: userData} = useQuery(
@@ -63,6 +65,16 @@ const UserInfo = ({ page }) => {
     }
   )
 
+  const { loading:loadingBlocked , error: errorBlocked, data: dataBlocked } = useQuery(
+    QUERY_USER_BLOCKED,
+    {
+      variables:
+      {
+	userId: userPageId
+      }
+    }
+  )
+
   
   const [ friendshipRequest, { error: friendAddError } ] = useMutation(
     ADD_FRIEND,
@@ -84,6 +96,17 @@ const UserInfo = ({ page }) => {
     }
   );
 
+  const [ blockAdd, { error: blockAddError } ] = useMutation(
+    ADD_BLOCKED,
+    {
+      refetchQueries:
+      [
+	QUERY_USER_BLOCKED, "getUserBlocking"
+      ]
+    }
+  );
+  
+  
   
   useEffect(() => {
     if (!userLoading && !userError && userData !== undefined && userPageId !== 0) {
@@ -111,6 +134,7 @@ const UserInfo = ({ page }) => {
   };
   
   const handleFriendship = async (event) => {
+    event.preventDefault();
     await friendshipRequest(
       {
 	variables:
@@ -152,6 +176,7 @@ const UserInfo = ({ page }) => {
   };
   
   const handleFollowing = async (event) => {
+    event.preventDefault();
     console.log(userPageId)
     await followAdd(
       {
@@ -188,6 +213,48 @@ const UserInfo = ({ page }) => {
     );
   };
 
+  const isBlocked = () => {
+    if (!loadingBlocked && dataBlocked) {
+      let blocked = dataBlocked.getUserBlocked.map(result => result.id);
+      return blocked.includes(userId);
+    }
+  };
+  
+  const handleBlocked = async (event) => {
+    event.preventDefault();
+    await blockAdd(
+      {
+	variables:
+	{
+	  blockedId: userPageId
+	}
+      }
+    );
+    setBlocked(true);
+  }
+
+  const RenderBlocked = () => {
+    return(
+      <div className="blocked">
+	{(userId === userPageId)
+	 ? "Who are you blocked?"
+	 : (isBlocked() ?
+	    <h4>
+	      This one of your blocked users
+	    </h4>
+	    :
+	    <div> This could be the start of a very nice <br />
+	      <button id="friendshipButton"
+		      onClick={handleBlocked}>
+ 		blocking?
+	      </button>
+	    </div>
+	   )
+	}
+      </div>
+    );
+  };
+  
   const RenderStats = () => {
     return(
       <>
@@ -209,9 +276,7 @@ const UserInfo = ({ page }) => {
 	     
 	     <li>
 	       {/*This will be a mini scroll box likely a iframe*/}
-	       <Link to={`/user/${userPageId}/following`}>
-		 Following
-	       </Link>
+	       Following
 	       <ul id="followsList">
 		 {dataFollowing ? dataFollowing.getUserFollowing.map(follow =>
 		   <UserList userId={follow.id}
@@ -224,6 +289,11 @@ const UserInfo = ({ page }) => {
 	       </ul>
 	     </li>
 	     <li>
+	       <Link to={`/user/${userPageId}/blocked`}>
+		 Blocked
+	       </Link>
+	     </li>	
+	     <li>
 	       <Link to={`/user/${userPageId}/liked`}>
 		 Liked thoughts
 	       </Link>
@@ -233,11 +303,6 @@ const UserInfo = ({ page }) => {
 		 Link to reThoughts
 	       </Link>
 	     </li>
-	     <li>
-	       <Link to={`/user/${userPageId}/blocked`}>
-		 Blocked
-	       </Link>
-	     </li>	
 	   </ul>}
 	</>
     );
@@ -270,12 +335,18 @@ const UserInfo = ({ page }) => {
 	      EMAIL: {user.email}
 	    </div>
 	  </>}
+	<ThoughtCreate userId={userPageId}
+		       page={page} />
 	{userPageId === 0
 	 ? <h2>There are no friend yet</h2>
 	 : <RenderFriendship />}
 	{userPageId === 0
 	 ? <h2>There are no followings yet</h2>
 	 : <RenderFollowing />}
+	{userPageId === 0
+	 ? <h2>There are no followings yet</h2>
+	 : <RenderBlocked />}
+
 	
       </section>
       <RenderStats />      

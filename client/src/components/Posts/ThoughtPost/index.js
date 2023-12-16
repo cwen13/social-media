@@ -60,8 +60,14 @@ const ThoughtPost = (props) => {
     {
       refetchQueries:
       [
-	QUERY_ALL_THOUGHTS,
-	"getAllThoughts"
+	[
+	  QUERY_ALL_THOUGHTS,
+	  "getAllThoughts"
+	],
+	[
+	  QUERY_MY_LIKED,
+	  "getAllMyLiked"
+	]
       ]
     }
   );
@@ -190,11 +196,15 @@ const ThoughtPost = (props) => {
  
   const handleReplySubmit = async () => {
     try {
-      const reply = await replyToThought({
-	variables: {
-	  content: replyText,
-	  thoughtReplygOfId: props.thoughtId
-	}});
+      const reply = await replyToThought(
+	{
+	  variables:
+	  {
+	    content: replyText,
+	    thoughtId: props.thoughtId
+	  }
+	}
+      );
       setReplyText("");
       setIsReplying(false);
     } catch (e) {
@@ -207,11 +217,15 @@ const ThoughtPost = (props) => {
   const handleReThought = async (event) => {
     event.preventDefault();
     try {
-      const reply = await addReThought({
-	variables: {
-	  originalThoughtId: props.thoughtId,
-	  additionalThought: reThoughtText
-	}});
+      const reply = await addReThought(
+	{
+	  variables:
+	  {
+	    originalThoughtId: props.thoughtId,
+	    additionalThought: reThoughtText
+	  }
+	}
+      );
       console.log("re'ed the thought");
       setReThoughtText("");
       setIsReThought(false);
@@ -225,11 +239,15 @@ const ThoughtPost = (props) => {
   const handleSave = async (event) => {
     event.preventDefault();
     try {
-      const updateThoughtResponse = await updateThought({
-	variables: {
-	  thoughtId: props.thoughtId,
-	  content: thoughtText
-	}});
+      const updateThoughtResponse = await updateThought(
+	{
+	  variables:
+	  {
+	    thoughtId: props.thoughtId,
+	    content: thoughtText
+	  }
+	}
+      );
       setIsEditing(false);
     } catch (e) {
       console.log("Thought update was not commited to memory")
@@ -443,6 +461,7 @@ const ThoughtPost = (props) => {
 	<section className="bottom-buttons">
 	  <LikeBtn />
 	  <ReThoughtBtn />
+	  <ReplyBtn />
 	  <EditBtn />
 	  <RemoveBtn />
 	</section>

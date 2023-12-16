@@ -14,6 +14,7 @@ Thought.belongsTo(User, {
 		      
 User.hasMany(Thought, {
   foreignKey: "userId",
+  as: "thoughtAuthor"
 });
 
 User.belongsToMany(Thought, {
