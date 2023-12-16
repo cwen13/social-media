@@ -66,62 +66,62 @@ const App = () => {
       <Router>
 	<UserContextProvider>
 	  <section className="siteContainer">
-     	  <Navbar />
-	  <Routes>	    
-            <Route 
-	      path="/" 
-	      element={<MainFeed />} 
-            />
-	    <Route 
-	      path="/login" 
-	      element={<Login />}
-            />
-            <Route 
-	      path="/signup" 
-	      element={<SignUp />} 
-            />
-	    <Route
-	      path="/user/MyPage"
-	      element={<MyPage />}
-	    />
-	    <Route
-	      path="/user/:userId"
-	      element={<UserPage />}
-	    />
-	    <Route
-	      path="/user/:userId/following"
-	      element={<Following />}
-	    />
-	    <Route
-	      path="/user/:userId/blocked"
-	      element={<Blocked />}
-	    />
-	    <Route
-	      path="/user/:userId/liked"
-	      element={<LikedThoughts />}
-	    />
-	    <Route
-	      path="/user/:userId/ReThoughts"
-	      element={<ReThoughts />}
-	    />
-	    <Route
-	      path="/user/:userId/edit"
-	      element={<EditProfile />}
-	    />
-	    <Route
-	      path="/thought/:postId"
-	      element={<ThoughtPage />}
-	    />
-	    <Route
-	      path="/search/*"
-	      element={<Search />}
-	    />
-	    <Route 
-	      path='*' 
-	      element={<NotFound />}
-	    />
-          </Routes>
-	    </section>
+     	    <Navbar />
+	    <Routes>	    
+              <Route 
+		path="/" 
+		element={<MainFeed />} 
+              />
+	      <Route 
+		path="/login" 
+		element={<Login />}
+              />
+              <Route 
+		path="/signup" 
+		element={<SignUp />} 
+              />
+	      <Route
+		path="/user/MyPage"
+		element={<MyPage />}
+	      />
+	      <Route
+		path="/user/:userId"
+		element={<UserPage />}
+	      />
+	      <Route
+		path="/user/:userId/following"
+		element={<Following />}
+	      />
+	      <Route
+		path="/user/:userId/blocked"
+		element={<Blocked />}
+	      />
+	      <Route
+		path="/user/:userId/liked"
+		element={<LikedThoughts />}
+	      />
+	      <Route
+		path="/user/:userId/ReThoughts"
+		element={<ReThoughts />}
+	      />
+	      <Route
+		path="/user/:userId/edit"
+		element={<EditProfile />}
+	      />
+	      <Route
+		path="/thought/:postId"
+		element={<ThoughtPage />}
+	      />
+	      <Route
+		path="/search/*"
+		element={<Search />}
+	      />
+	      <Route 
+		path='*' 
+		element={<NotFound />}
+	      />
+            </Routes>
+	  </section>
 	</UserContextProvider>
       </Router>
     </ApolloProvider>    
