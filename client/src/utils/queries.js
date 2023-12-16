@@ -52,6 +52,25 @@ query getUserFriends($userId: ID!) {
   }
 }`;
 
+export const QUERY_MY_FOLLOWING = gql`
+query getMyFollowing {
+  getMyFollowing {
+    id
+    userName
+    handle
+    profilePicture
+  }
+}`;
+
+export const QUERY_USER_FOLLOWING = gql`
+query getUserFollowing($userId: ID!) {
+  getUserFollowing(userId: $userId) {
+    id
+    userName
+  }
+}`;
+
+
 export const QUERY_MY_THOUGHTS = gql`
 query getMyThoughts {
   getMyThoughts {

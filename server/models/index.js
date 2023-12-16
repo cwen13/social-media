@@ -6,6 +6,7 @@ const Blocked = require("./Blocked");
 const Pending = require("./Pending");
 const ReThought = require("./ReThought");
 const Reply = require("./Reply");
+const Following = require("./Following");
 
 Thought.belongsTo(User, {
   foreignKey: "userId",
@@ -121,5 +122,6 @@ module.exports = {
   Blocked,
   Pending,
   ReThought,
-  Reply
+  Reply,
+  Following
 };

@@ -20,6 +20,12 @@ type Friend {
   friendId: ID!
 }
 
+type Following {
+  id: ID!
+  userId: ID!
+  followingId: ID!
+}
+
 type Block {
   id: ID!
   userId: ID!
@@ -71,6 +77,8 @@ type Query {
   getUser(userId: ID): User
   getMyFriends: [User]
   getUserFriends(userId: ID!): [User]
+  getMyFollowing: [User]
+  getUserFollowing(userId: ID!): [User]
 
   getMyThoughts: [Thought]
   getAllThoughts: [Thought!]!
@@ -123,6 +131,11 @@ type Mutation {
                friendId: ID!): Boolean!
   addPending(friendID: ID!): Boolean!
   addBlocked(blockedId: ID!): Boolean!
+
+  addFollow(followingId: ID!): Boolean!
+  removeFollow(followingId: ID!): Boolean!
+  updateFollow(userId: ID!,
+               followingId: ID!): Boolean!
 
   addThought(content: String!): Thought!
   updateThought(thoughtId: ID!,

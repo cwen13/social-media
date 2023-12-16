@@ -14,8 +14,6 @@ import {
 import { QUERY_ALL_THOUGHTS } from "./../../../utils/queries";
 
 const ReThoughtPost = (props) => {
-
-  console.log(props);
   
   const {loading: thoughtLoading, error: thoughtError, data: thoughtData } = useQuery(
     QUERY_RETHOUGHT_ORIGINAL_THOUGHT,
@@ -28,9 +26,6 @@ const ReThoughtPost = (props) => {
   );
 
   if(thoughtLoading) return(<>Loading</>);
-  console.log(thoughtError);
-  console.log(thoughtData);
-
   const originalThought = thoughtData.getReThoughtOriginalThought;
   
   return (

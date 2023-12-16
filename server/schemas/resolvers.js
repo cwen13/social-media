@@ -58,6 +58,37 @@ const resolvers = {
       return userFriends.friendshipUser;
     },
 
+    //STATUS: 
+    getMyFollowing: async (parent, args, context) => {
+      let userFollowing = await User.findByPk(
+	context.user.id,
+	{
+	  include: {
+	    model: User,
+	    as: "followingUsers",
+	    through: "follow"
+	  }
+	}
+      );
+      return userFollowing.followingUsers;
+    },
+    
+    //STATUS: 
+    getUserFollowing: async (parent, { userId }, context) => {
+      let userFollowing = await User.findByPk(
+	userId,
+	{
+	  include:
+	  {
+	    model: User,
+	    as: "followingUsers",
+	    through: "follow"
+	  }
+	}
+      )
+      return userFollowing.followingUsers;
+    },
+    
     //STATUS: WORKING
     getMyThoughts: async (parent, args, context) => {
       //return await Thought.findAll({ where: { userId: context.user.id }});
@@ -434,10 +465,22 @@ const resolvers = {
     addFriend: async (parent, { friendId }, context) => {      
       // making two entries so only one column needs to be quired
       // when collecting all of a user's friends
-      return (await Friend.create({userId: context.user.id, friendId}) &&
-	      await Friend.create({userId: friendId, friendId: context.user.id}));
+      return ((await Friend.create({userId: context.user.id, friendId}) &&
+	       await Friend.create({userId: friendId, friendId: context.user.id})) !== null)
     },
 
+    //STATUS: 
+    addFollow: async (parent, { followingId }, context) => {
+      console.log("FOLLOWID:",followingId);
+      console.log("USERID:",context.user.id);
+      return (await Following.create(
+	{
+	  userId: context.user.id,
+	  followingId
+	}) !== null);
+    },
+
+    
     addPending: async (parent, { friendId }, context) => {
       return await Pending.create(
 	{
@@ -466,6 +509,12 @@ const resolvers = {
 	      
     },
 
+    //STATUS: WORKING
+    removeFollow: async (parent, { followingId }, context) => {
+      return (await Following.destroy({where: { userId: context.user.id, followingId }}) === 1)
+    },
+
+    
     //STATUS: WORKING
     addThought: async (parent, { content }, context) =>{ 
       if (context.user) {
