@@ -11,14 +11,14 @@ function UserPage() {
   return(
     <section id="feedContainer">      
       <ul className="userFeed">
-	<li id="otherUserInfo">
+	<li id="userInfo">
 	  <UserInfo page={page}/>
 	</li>
 	<li id="feed">
 	  <Feed page={page}/>
 	</li>
       </ul>
-      </section>
+    </section>
   );
 };
 

@@ -11,7 +11,7 @@ function MyPage() {
   return(
     <section id="feedContainer">      
       <ul className="userFeed">
-	<li id="myUserInfo">
+	<li id="userInfo">
 	  <MyProfile page={page}/>
 	</li>
 	<li id="feed">

@@ -75,29 +75,35 @@ const resolvers = {
     
     //STATUS: 
     getUserFollowing: async (parent, { userId }, context) => {
-      const userFollowing = await User.findByPk(
-	userId,
-	{
-	  include:
+      return (
+	await User.findByPk(
+	  userId,
 	  {
-	    model: User,
-	    as: "followingUsers",
-	    through: "follow"
+	    include:
+	    {
+	      model: User,
+	      as: "followingUsers",
+	      through: "follow"
+	    }
 	  }
-	}
-      )
-      return userFollowing.followingUsers;
+	)
+      ).followingUsers;
     },
 
     getUserBlocked: async (parent, { userId }, context) => {
-      return await Blocked.findAll(
-	{
-	  where:
+      return (
+	await User.findByPk(
+	  userId,
 	  {
-	    userId
+	    include:
+	    {
+	      model: User,
+	      as: "blockedUser",
+	      through: "blocked"
+	    }
 	  }
-	}
-      )
+	)
+      ).blockedUser;
     },
     
     //STATUS: WORKING
@@ -507,7 +513,7 @@ const resolvers = {
     },
 
     addBlocked: async (parent, { blockedId }, context) => {
-      return (await Pending.create(
+      return (await Blocked.create(
 	{
 	  userId: context.user.id,
 	  blockedId: blockedId

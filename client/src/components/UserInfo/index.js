@@ -74,7 +74,6 @@ const UserInfo = ({ page }) => {
       }
     }
   )
-
   
   const [ friendshipRequest, { error: friendAddError } ] = useMutation(
     ADD_FRIEND,
@@ -124,13 +123,14 @@ const UserInfo = ({ page }) => {
   },[userLoading, userError, userData]);
 
   if(userLoading) return "Loading...";
-  if(userError) return `Error ${userError.message}`;
-
+  if(userError) return `Error USEr ${userError.message}`;
   if(loadingFriends) return "Loading Friends";
   if(loadingFollowing) return "Loading Following";
   if(loadingBlocked) return "Loading Blocked";
-  
-  
+  if(errorBlocked) return `Error Blocked ${errorBlocked.message}`;
+  //-------------------------
+  //-------FRIENDSHIP-BUTTON-
+  //-------------------------
   const isFriend = () => {
     if (!loadingFriends && dataFriends) {
       let friends = dataFriends.getUserFriends.map(result => result.id);
@@ -173,6 +173,9 @@ const UserInfo = ({ page }) => {
     )
   };
 
+  //-------------------
+  //-----FOLLOW-BUTTON-
+  //-------------------
   const isFollowed = () => {
     if (!loadingFollowing && dataFollowing) {
       let following = dataFollowing.getUserFollowing.map(result => result.id);
@@ -217,7 +220,10 @@ const UserInfo = ({ page }) => {
       </div>
     );
   };
-
+  
+  //----------------------
+  //-------BLOCKED-BUTTON-
+  //----------------------
   const isBlocked = () => {
     if (!loadingBlocked && dataBlocked) {
       let blocked = dataBlocked.getUserBlocked.map(result => result.id);
@@ -298,7 +304,8 @@ const UserInfo = ({ page }) => {
 		 Blocked
 	       </Link>
 	       <ul id="blockedList">
-		 {dataBlocked.getUSerBlocked !== undefined ? dataBlocked.getUserBlocked.map(block =>
+		 {console.log(dataBlocked)}
+		 {dataBlocked.getUserBlocked !== undefined ? dataBlocked.getUserBlocked.map(block =>
 		   <UserList userId={block.id}
 			     key={block.id}
 			     userName={block.userName}
@@ -360,9 +367,7 @@ const UserInfo = ({ page }) => {
 	 : <RenderFollowing />}
 	{userPageId === 0
 	 ? <h2>There are no followings yet</h2>
-	 : <RenderBlocked />}
-
-	
+	 : <RenderBlocked />}	
       </section>
       <RenderStats />      
     </>

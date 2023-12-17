@@ -14,7 +14,7 @@ const LikedThoughts = () => {
   return(
     <section id="feedContainer">      
       <ul className="userFeed">
-	<li id="otherUserInfo">
+	<li id="userInfo">
 	  <UserInfo page={page}/>
 	</li>
 	<li id="feed">

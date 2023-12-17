@@ -5,7 +5,7 @@ const Following = () => {
   return(
     <div className="followingList">
       Following list will go here
-      </div>
+    </div>
   );
 };
 

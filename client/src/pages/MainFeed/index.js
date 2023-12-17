@@ -11,7 +11,7 @@ const MainFeed = () => {
   return(
     <section id="feedContainer">
       <ul className="mainPage">
-	<li id="otherUserInfo">
+	<li id="userInfo">
 	  <UserInfo page={page}/>
 	</li>
 	<li id="feed">
