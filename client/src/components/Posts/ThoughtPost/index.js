@@ -212,7 +212,6 @@ const ThoughtPost = (props) => {
 	  }
 	}
       );
-      console.log("re'ed the thought");
       setReThoughtText("");
       setIsReThought(false);
     } catch (e) {
@@ -302,18 +301,22 @@ const ThoughtPost = (props) => {
     event.preventDefault();
     try {
       if (userId && !isLiked) {
-	const likedResponse = await likedThought({
-	  variables: {
-	    thoughtId: props.thoughtId
+	const likedResponse = await likedThought(
+	  {
+	    variables: {
+	      thoughtId: props.thoughtId
+	    }
 	  }
-	});
+	);
 	setIsLiked(true);
       } else if (userId && isLiked) {
-	const removeLikedResponse = await removeLikedThought({
-	  variables: {
-	    thoughtId: props.thoughtId
+	const removeLikedResponse = await removeLikedThought(
+	  {
+	    variables: {
+	      thoughtId: props.thoughtId
+	    }
 	  }
-	});
+	);
 	setIsLiked(false);
       } else {
 	console.log("User needs to be logged in");

@@ -60,17 +60,18 @@ const resolvers = {
 
     //STATUS: 
     getMyFollowing: async (parent, args, context) => {
-      const userFollowing = await User.findByPk(
-	context.user.id,
-	{
-	  include: {
-	    model: User,
-	    as: "followingUsers",
-	    through: "follow"
+      return(
+	await User.findByPk(
+	  context.user.id,
+	  {
+	    include: {
+	      model: User,
+	      as: "followingUsers",
+	      through: "follow"
+	    }
 	  }
-	}
-      );
-      return userFollowing.followingUsers;
+	)
+      ).followingUsers;
     },
     
     //STATUS: 
@@ -105,6 +106,23 @@ const resolvers = {
 	)
       ).blockedUser;
     },
+
+    getMyBlockedUsers: async (parent, args, context) => {
+      return (
+	await User.findByPk(
+	  context.user.id,
+	  {
+	    include:
+	    {
+	      model: User,
+	      as: "blockedUser",
+	      through: "blocked"
+	    }
+	  }
+	)
+      ).blockedUser;
+    },
+
     
     //STATUS: WORKING
     getMyThoughts: async (parent, args, context) => {
@@ -589,10 +607,12 @@ const resolvers = {
     //STATUS: WORKING
     addLiked: async (parent, { thoughtId }, context) => {
       if (context.user) {
-	return (await Liked.create({
-	  thoughtId: thoughtId,
-	  likedByUserId: context.user.id
-	}) !== 1);
+	return (await Liked.create(
+	  {
+	    thoughtId: thoughtId,
+	    likedByUserId: context.user.id
+	  }
+	) !== 1);
       } else {
 	throw new AuthenticaitonErro("You need to be logged in to like a thought!");
       }

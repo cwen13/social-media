@@ -1,6 +1,10 @@
 import React, { useContext, createContext, useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
-import { LOGIN_USER, QUERY_USER } from "./queries";
+import {
+  LOGIN_USER,
+  QUERY_USER,
+  QUERY_MY_BLOCKED_USERS
+} from "./queries";
 import Auth from "./auth";
 
 export const UserContext = createContext(null);
@@ -14,6 +18,10 @@ export const UserContextProvider = ({ children }) => {
     }
     return 0;
   });
+
+  const [ blockedList, setBlockedList ] = useState([]);
+  
+  const { loading: loadingBlockedList, error: errorBlockedList, data: dataBlockedList } = useQuery(QUERY_MY_BLOCKED_USERS);
   
   const { loading, error, data } = useQuery(
     QUERY_USER,
@@ -29,6 +37,17 @@ export const UserContextProvider = ({ children }) => {
   const [ profilePicture , setProfilePicture ] = useState(null);
   const [ handle, setHandle ] = useState(null);
   const [ email, setEmail ] = useState(null);
+
+  useEffect(() => {
+    if (!loadingBlockedList && !errorBlockedList) {
+      setBlockedList(
+	[
+	  ...blockedList,
+	  dataBlockedList
+	]
+      );
+    }
+  }, [loadingBlockedList, errorBlockedList, dataBlockedList]);
   
   useEffect(()=> {
     try {
@@ -64,7 +83,9 @@ export const UserContextProvider = ({ children }) => {
 				  handle,
 				  setHandle,
 				  email,
-				  setEmail
+				  setEmail,
+				  blockedList,
+				  setBlockedList
 				 }}>
       {children}
     </UserContext.Provider>

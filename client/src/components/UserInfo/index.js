@@ -5,12 +5,14 @@ import {
   QUERY_USER,
   QUERY_USER_FRIENDS,
   QUERY_USER_FOLLOWING,
-  QUERY_USER_BLOCKED
+  QUERY_USER_BLOCKED,
+  QUERY_MY_BLOCKED_USERS
 } from "./../../utils/queries";
 import {
   ADD_FRIEND,
   ADD_FOLLOW,
-  ADD_BLOCKED
+  ADD_BLOCKED,
+  REMOVE_BLOCKED
 } from "./../../utils/mutations";
 import UserList from "./../UserList";
 import ThoughtCreate from "./../ThoughtCreate"
@@ -25,7 +27,9 @@ const UserInfo = ({ page }) => {
 	  userName,
 	  handle,
 	  profilePicture,
-	  email
+	  email,
+	  blockedList,
+	  setBlockedList
 	} = useUserContext();
   let userPageId = useParams().userId;
   userPageId = (userPageId !== undefined) ? userPageId : userId;
@@ -74,6 +78,11 @@ const UserInfo = ({ page }) => {
       }
     }
   )
+
+  const { loading:loadingMyBlocked , error: errorMyBlocked, data: dataMyBlocked } = useQuery(
+    QUERY_MY_BLOCKED_USERS
+  );
+     
   
   const [ friendshipRequest, { error: friendAddError } ] = useMutation(
     ADD_FRIEND,
@@ -100,12 +109,20 @@ const UserInfo = ({ page }) => {
     {
       refetchQueries:
       [
-	QUERY_USER_BLOCKED, "getUserBlocking"
+	QUERY_USER_BLOCKED, "getMyBlockedUsers"
       ]
     }
   );
-  
-  
+
+  const [ blockRemove, { error: blockRemoveError } ] = useMutation(
+    REMOVE_BLOCKED,
+    {
+      refetchQueries:
+      [
+	QUERY_MY_BLOCKED_USERS, "getMyBlockedUsers"
+      ]
+    }
+  );
   
   useEffect(() => {
     if (!userLoading && !userError && userData !== undefined && userPageId !== 0) {
@@ -123,11 +140,12 @@ const UserInfo = ({ page }) => {
   },[userLoading, userError, userData]);
 
   if(userLoading) return "Loading...";
-  if(userError) return `Error USEr ${userError.message}`;
+  if(userError) return `Error UsEr ${userError.message}`;
   if(loadingFriends) return "Loading Friends";
   if(loadingFollowing) return "Loading Following";
   if(loadingBlocked) return "Loading Blocked";
   if(errorBlocked) return `Error Blocked ${errorBlocked.message}`;
+
   //-------------------------
   //-------FRIENDSHIP-BUTTON-
   //-------------------------
@@ -233,15 +251,41 @@ const UserInfo = ({ page }) => {
   
   const handleBlocked = async (event) => {
     event.preventDefault();
-    await blockAdd(
-      {
-	variables:
+    if (blockedByMe()) {
+      await blockRemove(
 	{
-	  blockedId: userPageId
+	  variables:
+	  {
+	    blockedId: userPageId
+	  }
 	}
-      }
-    );
-    setBlocked(true);
+      );
+      setBlocked(false);
+      setBlockedList(
+	[
+	  ...blockedList.filter(block => block !== userPageId)
+	  
+	]
+      );
+    } else {
+      
+      await blockAdd(
+	{
+	  variables:
+	  {
+	    blockedId: userPageId
+	  }
+	}
+      );
+      setBlocked(true);
+      setBlockedList(
+	[
+	  ...blockedList,
+	  userPageId
+	]
+      );
+      
+    }
   }
 
   const RenderBlocked = () => {
@@ -249,10 +293,16 @@ const UserInfo = ({ page }) => {
       <div className="blocked">
 	{(userId === userPageId)
 	 ? "Who are you blocked?"
-	 : (isBlocked() ?
+	 : (blockedByMe() ?
+	    <>
 	    <h4>
 	      This one of your blocked users
 	    </h4>
+	    <button id="friendshipButton"
+		    onClick={handleBlocked}>
+ 	      Unblock?
+	    </button>
+	    </>
 	    :
 	    <div> This could be the start of a very nice <br />
 	      <button id="friendshipButton"
@@ -265,12 +315,34 @@ const UserInfo = ({ page }) => {
       </div>
     );
   };
+
+
+  //------------------------------------
+  //----check-if-User-have-them-blocked-
+  //------------------------------------
+  const blockedByMe = () => {
+    if (!loadingMyBlocked && dataMyBlocked) {
+      let myBlocked = dataMyBlocked.getMyBlockedUsers.map(result => result.id);
+      return myBlocked.includes(userPageId);
+    }
+  };
   
   const RenderStats = () => {
     return(
       <>
 	{userPageId === 0 ? <h2> No user Stats yet </h2>
 	 : <ul className="userStats">
+	     <li>
+	       <Link to={`/user/${userPageId}/liked`}>
+		 Liked thoughts
+	       </Link>
+	     </li>
+	     <li>
+	       <Link to={`/user/${userPageId}/reThoughts`}>
+		 Link to reThoughts
+	       </Link>
+	     </li>
+	     
 	     <li>Friends 
 	       {/*This will be a mini scroll box likely a iframe*/}
 	       <ul id="friendsList">
@@ -304,7 +376,6 @@ const UserInfo = ({ page }) => {
 		 Blocked
 	       </Link>
 	       <ul id="blockedList">
-		 {console.log(dataBlocked)}
 		 {dataBlocked.getUserBlocked !== undefined ? dataBlocked.getUserBlocked.map(block =>
 		   <UserList userId={block.id}
 			     key={block.id}
@@ -315,20 +386,10 @@ const UserInfo = ({ page }) => {
 		     : "There are no blocks yet"}
 	       </ul>
 	     </li>	
-	     <li>
-	       <Link to={`/user/${userPageId}/liked`}>
-		 Liked thoughts
-	       </Link>
-	     </li>
-	     <li>
-	       <Link to={`/user/${userPageId}/reThoughts`}>
-		 Link to reThoughts
-	       </Link>
-	     </li>
 	   </ul>}
-	</>
+      </>
     );
-	}
+  };
   
   
   return (
@@ -345,7 +406,7 @@ const UserInfo = ({ page }) => {
 	       :
 	       <>
  		 +==+<br/>
-		 |--|<br/>
+		 |-----|<br/>
 		 +==+
 	       </>
 	      }
@@ -353,23 +414,25 @@ const UserInfo = ({ page }) => {
 	    <div className="names">
 	      NAME: {user.handle}
 	    </div>
+	    {blockedByMe() ? "" :
 	    <div className="email">
 	      EMAIL: {user.email}
-	    </div>
+	    </div>}
 	  </>}
+	{userPageId !== userId ? "" :
 	<ThoughtCreate userId={userPageId}
-		       page={page} />
-	{userPageId === 0
+		       page={page} />}
+	{userPageId === 0 || blockedByMe()
 	 ? <h2>There are no friend yet</h2>
 	 : <RenderFriendship />}
-	{userPageId === 0
+	{userPageId === 0 || blockedByMe()
 	 ? <h2>There are no followings yet</h2>
 	 : <RenderFollowing />}
 	{userPageId === 0
 	 ? <h2>There are no followings yet</h2>
 	 : <RenderBlocked />}	
       </section>
-      <RenderStats />      
+      {blockedByMe() ? "" : <RenderStats />}
     </>
   );
 };

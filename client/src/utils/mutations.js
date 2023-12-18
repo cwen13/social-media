@@ -112,9 +112,7 @@ mutation addFriend($friendId: ID!) {
 }`;
 
 export const REMOVE_FRIEND = gql`
-mutation removeFriend($friendshipId: ID!) {
-  removeFriend(id: $friendshipId)
-}`;
+mutation removeFriend($friendshipId: ID!) { removeFriend(id: $friendshipId) }`;
 
 export const ADD_LIKED = gql`
 mutation addLiked($thoughtId: ID!) { addLiked(thoughtId: $thoughtId) }`;
@@ -147,16 +145,10 @@ mutation addFollow($followingId: ID!) {
 }`;
 
 export const REMOVE_FOLLOW = gql`
-mutation removeFollow($followingId: ID!) {
-  removeFollow(id: $followingId)
-}`;
+mutation removeFollow($followingId: ID!) { removeFollow(id: $followingId) }`;
 
 export const ADD_BLOCKED = gql`
-mutation addBlocked($blockedId: ID!) {
-  addBlocked(blockedId: $blockedId)
-}`;
+mutation addBlocked($blockedId: ID!) { addBlocked(blockedId: $blockedId) }`;
 
 export const REMOVE_BLOCKED = gql`
-mutation removeBlocked($blockedId: ID!) {
-  removeBlocked(blockedId: $blockedId)
-}`;
+mutation removeBlocked($blockedId: ID!) { removeBlocked(blockedId: $blockedId) }`;

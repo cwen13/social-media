@@ -91,6 +91,7 @@ type Query {
   getThoughtLikes(thoughtId: ID!): [User]
   getUserLiked(userId: ID!): [Thought]
   getUserBlocked(userId: ID!): [User]
+  getMyBlockedUsers: [User]
 
   getThoughtReplys(thoughtId: ID!): [Thought]
   getThoughtReThoughts(thoughtId: ID!): [Thought]

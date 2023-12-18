@@ -297,3 +297,12 @@ query getUserBlocked ($userId: ID!) {
     userName
   }
 }`;
+
+export const QUERY_MY_BLOCKED_USERS = gql`
+query getMyBlockedUsers {
+  getMyBlockedUsers {
+    id
+    userName
+    handle
+  }
+}`;

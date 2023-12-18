@@ -10,7 +10,8 @@ import {
   QUERY_USER_LIKED,
   QUERY_USER_RETHOUGHTS,
   QUERY_ALL_RETHOUGHT_IDS,
-  QUERY_ALL_REPLY_IDS
+  QUERY_ALL_REPLY_IDS,
+  QUERY_MY_BLOCKED_USERS
 } from "./../../utils/queries";
 import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
@@ -54,6 +55,11 @@ const Feed = (props) => {
     queryOptions[props.page],
     queryString    
   );
+
+    const { loading:loadingMyBlocked , error: errorMyBlocked, data: dataMyBlocked } = useQuery(
+    QUERY_MY_BLOCKED_USERS
+  );
+  
   
   if (likedIdsLoading) return "Loading Likes";
   if (queryLoading) return "Loading Query";
@@ -93,23 +99,46 @@ const Feed = (props) => {
       break;
     }
   }
+
+  //------------------------------------
+  //----check-if-User-have-them-blocked-
+  //------------------------------------
+  const blockedByMe = () => {
+    if (!loadingMyBlocked && dataMyBlocked) {
+      let myBlocked = dataMyBlocked.getMyBlockedUsers.map(result => result.id);
+      return myBlocked.includes(userPageId);
+    }
+  };
+
+
+  const RenderBlockedThought = () => {
+    return(
+      <li className="authorInfo">
+	  <h2>
+	    You have blocked this user
+	  </h2>
+      </li>
+    );
+  };
+
   
   return (
     <div className="feed">
       <ul className="feedPosts">
-      {(noData === null) ? noData :
-       queryData[thoughts[props.page]].map(thought =>
-	 <ThoughtPost key={thought.id}
-		      page={props.page}
-		      thoughtId={thought.id}
-		      thought={thought.content}
-		      liked={isLiked(thought.id)}
-		      isReThought={isReThought(thought.id)}
-		      isReply={isReply(thought.id)}
-		      userId={thought.user.id}
-		      userName={thought.user.userName}
-	 />)}
-	</ul>
+	{blockedByMe() ? <RenderBlockedThought /> :
+	(noData === null) ? noData :
+	 queryData[thoughts[props.page]].map(thought =>
+	   <ThoughtPost key={thought.id}
+			page={props.page}
+			thoughtId={thought.id}
+			thought={thought.content}
+			liked={isLiked(thought.id)}
+			isReThought={isReThought(thought.id)}
+			isReply={isReply(thought.id)}
+			userId={thought.user.id}
+			userName={thought.user.userName}
+	   />)}
+      </ul>
     </div>
   );
 };
