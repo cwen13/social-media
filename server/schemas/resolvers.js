@@ -108,19 +108,18 @@ const resolvers = {
     },
 
     getMyBlockedUsers: async (parent, args, context) => {
-      return (
-	await User.findByPk(
-	  context.user.id,
+      let blocked = await User.findByPk(
+	context.user.id,
+	{
+	  include:
 	  {
-	    include:
-	    {
-	      model: User,
-	      as: "blockedUser",
-	      through: "blocked"
-	    }
+	    model: User,
+	    as: "blockedUser",
+	    through: "blocked"
 	  }
-	)
-      ).blockedUser;
+	}
+      )
+      return blocked.blockedUser;
     },
 
     
@@ -157,17 +156,16 @@ const resolvers = {
 
     //STATUS: WORKING
     getAllMyLiked: async (parent, args, context) => {
-      const liked =  await User.findByPk(context.user.id, {
-	include: {
-	  model: Thought,
-	  as: "userLiked",
-	  through: "liked",
-	  include: {
-	    model: User,
-	    as: "user"
+      return(
+	await Liked.findAll(
+	  {
+	    where:
+	    {
+	      likedByUserId: context.user.id
+	    }
 	  }
-	}})
-      return liked.userLiked;
+	)
+      );
     },    
 
     //STATUS: WORKING
@@ -569,9 +567,12 @@ const resolvers = {
     //STATUS: WORKING
     addThought: async (parent, { content }, context) =>{ 
       if (context.user) {
-	let thought =  await Thought.create({ userId: context.user.id,
-					      content: content,
-					    });
+	let thought =  await Thought.create(
+	  {
+	    userId: context.user.id,
+	    content: content,
+	  }
+	);
 	return await Thought.findByPk(thought.id,
 				      { include: { model: User }});				     
       } else {

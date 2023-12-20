@@ -36,7 +36,7 @@ const ThoughtPost = (props) => {
     thoughtType = "Thought";
   }
   
-  const { userId, loginUser, logoutUser } = useUserContext();
+  const { userId, loginUser, logoutUser, likedList, setLikedList } = useUserContext();
   
   const replyAreaRef = useRef(null);
   const thoughtAreaRef = useRef(null);
@@ -300,42 +300,56 @@ const ThoughtPost = (props) => {
   const handleLiked  = async (event) => {
     event.preventDefault();
     try {
-      if (userId && !isLiked) {
+      if (!props.liked) {
 	const likedResponse = await likedThought(
 	  {
-	    variables: {
+	    variables:
+	    {
 	      thoughtId: props.thoughtId
 	    }
 	  }
 	);
 	setIsLiked(true);
-      } else if (userId && isLiked) {
+	setLikedList(
+	  [
+	    ...likedList,
+	    props.thoughtId
+	    ]
+	);
+      } else {
 	const removeLikedResponse = await removeLikedThought(
 	  {
-	    variables: {
+	    variables:
+	    {
 	      thoughtId: props.thoughtId
 	    }
 	  }
 	);
 	setIsLiked(false);
-      } else {
-	console.log("User needs to be logged in");
-      };
+	setLikedList(
+	  [
+	    ...likedList.filter(entry => entry !== props.thoughtId)
+	  ]
+	);
+      }
     } catch (e) {
       throw new Error("No thought thought liked");
       console.log(e);
     }
   };
 
-  const LikeBtn = (props) => {
+  const LikeBtn = () => {
     return(
       <button id={`liked-${props.thoughtId}`}
-	      className={isLiked ? "liked-thought" : "not-liked-thought"}
+	      className={props.liked
+			 ? "liked-thought"
+			 : "not-liked"}
 	      onClick={handleLiked}>
 	LIKE!
       </button>
     )
   };
+  
   
   //---------------------
   //-------REMOVE-BUTTON-

@@ -183,14 +183,8 @@ query getMyReThoughts {
 export const QUERY_MY_LIKED = gql`
 query getAllMyLiked {
   getAllMyLiked {
-    id
-    userId
-    content
-    user {
-      id
-      userName
-      handle
-    }
+    thoughtId
+    likedByUserId
   }
 }`;
 
@@ -303,6 +297,5 @@ query getMyBlockedUsers {
   getMyBlockedUsers {
     id
     userName
-    handle
   }
 }`;

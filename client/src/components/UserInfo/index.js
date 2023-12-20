@@ -5,8 +5,7 @@ import {
   QUERY_USER,
   QUERY_USER_FRIENDS,
   QUERY_USER_FOLLOWING,
-  QUERY_USER_BLOCKED,
-  QUERY_MY_BLOCKED_USERS
+  QUERY_USER_BLOCKED
 } from "./../../utils/queries";
 import {
   ADD_FRIEND,
@@ -38,7 +37,6 @@ const UserInfo = ({ page }) => {
   const [ following, setFollowing ] = useState(false);
   const [ blocked, setBlocked ] = useState(false);
   
-  
   const {lodaing: userLoading, error: userError, data: userData} = useQuery(
     QUERY_USER,
     {
@@ -57,7 +55,7 @@ const UserInfo = ({ page }) => {
 	userId: userPageId
       }
     }
-  )
+  );
 
   const { loading:loadingFollowing , error: errorFollowing, data: dataFollowing } = useQuery(
     QUERY_USER_FOLLOWING,
@@ -67,22 +65,7 @@ const UserInfo = ({ page }) => {
 	userId: userPageId
       }
     }
-  )
-
-  const { loading:loadingBlocked , error: errorBlocked, data: dataBlocked } = useQuery(
-    QUERY_USER_BLOCKED,
-    {
-      variables:
-      {
-	userId: userPageId
-      }
-    }
-  )
-
-  const { loading:loadingMyBlocked , error: errorMyBlocked, data: dataMyBlocked } = useQuery(
-    QUERY_MY_BLOCKED_USERS
   );
-     
   
   const [ friendshipRequest, { error: friendAddError } ] = useMutation(
     ADD_FRIEND,
@@ -105,23 +88,11 @@ const UserInfo = ({ page }) => {
   );
 
   const [ blockAdd, { error: blockAddError } ] = useMutation(
-    ADD_BLOCKED,
-    {
-      refetchQueries:
-      [
-	QUERY_USER_BLOCKED, "getMyBlockedUsers"
-      ]
-    }
+    ADD_BLOCKED
   );
 
   const [ blockRemove, { error: blockRemoveError } ] = useMutation(
-    REMOVE_BLOCKED,
-    {
-      refetchQueries:
-      [
-	QUERY_MY_BLOCKED_USERS, "getMyBlockedUsers"
-      ]
-    }
+    REMOVE_BLOCKED
   );
   
   useEffect(() => {
@@ -143,8 +114,6 @@ const UserInfo = ({ page }) => {
   if(userError) return `Error UsEr ${userError.message}`;
   if(loadingFriends) return "Loading Friends";
   if(loadingFollowing) return "Loading Following";
-  if(loadingBlocked) return "Loading Blocked";
-  if(errorBlocked) return `Error Blocked ${errorBlocked.message}`;
 
   //-------------------------
   //-------FRIENDSHIP-BUTTON-
@@ -167,7 +136,7 @@ const UserInfo = ({ page }) => {
       }
     );
     setFollowing(true);
-  }
+  };
   
   const RenderFriendship = () => {
     return (
@@ -188,7 +157,7 @@ const UserInfo = ({ page }) => {
 	   )
 	}
       </ div>
-    )
+    );
   };
 
   //-------------------
@@ -243,10 +212,7 @@ const UserInfo = ({ page }) => {
   //-------BLOCKED-BUTTON-
   //----------------------
   const isBlocked = () => {
-    if (!loadingBlocked && dataBlocked) {
-      let blocked = dataBlocked.getUserBlocked.map(result => result.id);
-      return blocked.includes(userId);
-    }
+    return blockedList.filter( user => user.id === userPageId) === [];
   };
   
   const handleBlocked = async (event) => {
@@ -263,7 +229,7 @@ const UserInfo = ({ page }) => {
       setBlocked(false);
       setBlockedList(
 	[
-	  ...blockedList.filter(block => block !== userPageId)
+	  ...blockedList.filter(block => block.id !== userPageId)
 	  
 	]
       );
@@ -320,12 +286,8 @@ const UserInfo = ({ page }) => {
   //------------------------------------
   //----check-if-User-have-them-blocked-
   //------------------------------------
-  const blockedByMe = () => {
-    if (!loadingMyBlocked && dataMyBlocked) {
-      let myBlocked = dataMyBlocked.getMyBlockedUsers.map(result => result.id);
-      return myBlocked.includes(userPageId);
-    }
-  };
+  const blockedByMe = () => blockedList.includes(userPageId);
+  
   
   const RenderStats = () => {
     return(
@@ -376,7 +338,7 @@ const UserInfo = ({ page }) => {
 		 Blocked
 	       </Link>
 	       <ul id="blockedList">
-		 {dataBlocked.getUserBlocked !== undefined ? dataBlocked.getUserBlocked.map(block =>
+		 {blockedList.length > 0 ? blockedList.map(block =>
 		   <UserList userId={block.id}
 			     key={block.id}
 			     userName={block.userName}
@@ -390,7 +352,6 @@ const UserInfo = ({ page }) => {
       </>
     );
   };
-  
   
   return (
     <>

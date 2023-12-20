@@ -19,7 +19,7 @@ import "./style.css";
 const Feed = (props) => {
   let userPageId = useParams().userId;
 
-  const { userId } = useUserContext();
+  const { userId, blockedList, likedList, setLikedList } = useUserContext();
   userPageId = (userPageId !== undefined) ? userPageId : userId;
   
   const queryOptions = {
@@ -45,12 +45,7 @@ const Feed = (props) => {
   const queryString = (props.page === "MainFeed" && userPageId === undefined || userPageId === 0)
 	? ""
 	: { variables: { userId: userPageId }};
-  
-  const { loading: likedIdsLoading, error: likedIdsError, data: likedIdsData, refresh: likedIdsRefresh } = useQuery(
-    QUERY_MY_LIKED,
-    queryString
-  );
-  
+    
   const { loading: queryLoading, error: queryError, data: queryData } = useQuery(
     queryOptions[props.page],
     queryString    
@@ -60,8 +55,6 @@ const Feed = (props) => {
     QUERY_MY_BLOCKED_USERS
   );
   
-  
-  if (likedIdsLoading) return "Loading Likes";
   if (queryLoading) return "Loading Query";
   if (queryError) return `Q Error ${queryError.message}`;
   if (reThoughtIdsLoading) return "Loading rethought ids";
@@ -72,9 +65,8 @@ const Feed = (props) => {
 
   const replyIds = new Set(replyIdsData.getAllReplyIds.map(entry => entry.replyThoughtId));
   const isReply = (thoughtId) => replyIds.has(thoughtId);
-  
-  const likedThoughts = (likedIdsData) ? likedIdsData.getAllMyLiked.map(result => result.id) : [];
-  const isLiked = (thoughtId) => likedThoughts.includes(thoughtId);
+
+  const isLiked = (thoughtId) => likedList.includes(thoughtId);
 
   let noData;
   if (queryData === null) {
@@ -103,12 +95,7 @@ const Feed = (props) => {
   //------------------------------------
   //----check-if-User-have-them-blocked-
   //------------------------------------
-  const blockedByMe = () => {
-    if (!loadingMyBlocked && dataMyBlocked) {
-      let myBlocked = dataMyBlocked.getMyBlockedUsers.map(result => result.id);
-      return myBlocked.includes(userPageId);
-    }
-  };
+  const blockedByMe = () => blockedList.includes(userPageId);
 
 
   const RenderBlockedThought = () => {
@@ -121,7 +108,6 @@ const Feed = (props) => {
     );
   };
 
-  
   return (
     <div className="feed">
       <ul className="feedPosts">

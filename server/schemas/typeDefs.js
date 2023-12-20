@@ -26,7 +26,7 @@ type Following {
   followingId: ID!
 }
 
-type Block {
+type Blocked {
   id: ID!
   userId: ID!
   blockedId: ID!
@@ -86,7 +86,7 @@ type Query {
   getUserThoughts(userId: ID!): [Thought]!
 
   getAllLiked: [Thought]
-  getAllMyLiked: [Thought]
+  getAllMyLiked: [Liked]
   getUserLikedIds(userId: ID!): [Liked]
   getThoughtLikes(thoughtId: ID!): [User]
   getUserLiked(userId: ID!): [Thought]

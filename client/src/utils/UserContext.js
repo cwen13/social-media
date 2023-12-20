@@ -3,13 +3,14 @@ import { useQuery } from "@apollo/client";
 import {
   LOGIN_USER,
   QUERY_USER,
-  QUERY_MY_BLOCKED_USERS
+  QUERY_MY_BLOCKED_USERS,
+  QUERY_MY_LIKED,
 } from "./queries";
 import Auth from "./auth";
 
 export const UserContext = createContext(null);
 
-export const UserContextProvider = ({ children }) => {
+export const UserContextProvider = ({children}) => {
 
   const [ userId, setUserId ] = useState(() => {
     if (Auth.getToken()){
@@ -19,11 +20,22 @@ export const UserContextProvider = ({ children }) => {
     return 0;
   });
 
+  const [ userName, setUserName ] = useState(null);
+  const [ profilePicture , setProfilePicture ] = useState(null);
+  const [ handle, setHandle ] = useState(null);
+  const [ email, setEmail ] = useState(null);
   const [ blockedList, setBlockedList ] = useState([]);
+  const [ likedList, setLikedList ] = useState([]);
   
-  const { loading: loadingBlockedList, error: errorBlockedList, data: dataBlockedList } = useQuery(QUERY_MY_BLOCKED_USERS);
+  const { loading: loadingBlockedList, error: errorBlockedList, data: dataBlockedList } = useQuery(
+    QUERY_MY_BLOCKED_USERS
+  );
+
+  const { loading: loadingLiked, error: errorLiked, data: dataLiked } =  useQuery(
+    QUERY_MY_LIKED
+  );
   
-  const { loading, error, data } = useQuery(
+  const { loading: loadingUser, error: errorUser, data: dataUser } = useQuery(
     QUERY_USER,
     {
       variables:
@@ -33,34 +45,41 @@ export const UserContextProvider = ({ children }) => {
     }
   );
   
-  const [ userName, setUserName ] = useState(null);
-  const [ profilePicture , setProfilePicture ] = useState(null);
-  const [ handle, setHandle ] = useState(null);
-  const [ email, setEmail ] = useState(null);
-
   useEffect(() => {
-    if (!loadingBlockedList && !errorBlockedList) {
+    if (!loadingBlockedList && !errorBlockedList && dataBlockedList !== null) {
+      console.log("DATA:",dataBlockedList);
       setBlockedList(
 	[
 	  ...blockedList,
-	  dataBlockedList
+	  ...dataBlockedList.getMyBlockedUsers
 	]
       );
     }
   }, [loadingBlockedList, errorBlockedList, dataBlockedList]);
   
+  useEffect(() => {
+    if (!loadingLiked && !errorLiked) {
+      setLikedList(
+	[
+	  ...likedList,
+	  ...dataLiked.getAllMyLiked.map(liked => liked.thoughtId)
+	]
+      );
+    }
+  }, [loadingLiked, errorLiked, dataLiked]);
+  
   useEffect(()=> {
     try {
-      if(!loading && !error && data !== undefined && data.getUser !== null) {
-	setUserName(data.getUser.userName);
-	setProfilePicture(data.getUser.profilePicture);
-	setHandle(data.getUser.handle);
-	setEmail(data.getUser.email);
+      if(!loadingUser && !errorUser && dataUser !== undefined && dataUser.getUser !== null) {
+	setUserName(dataUser.getUser.userName);
+	setProfilePicture(dataUser.getUser.profilePicture);
+	setHandle(dataUser.getUser.handle);
+	setEmail(dataUser.getUser.email);
       }
     } catch (err) {
-      console.error("Did not set data becasue:", err);
+      console.error("Did not set dataUser becasue:", err);
     }
-  }, [loading, error, data]);
+  }, [loadingUser, errorUser, dataUser]);
 
   const loginUser = (newUserId) => {
     setUserId(newUserId);
@@ -85,7 +104,9 @@ export const UserContextProvider = ({ children }) => {
 				  email,
 				  setEmail,
 				  blockedList,
-				  setBlockedList
+				  setBlockedList,
+				  likedList,
+				  setLikedList
 				 }}>
       {children}
     </UserContext.Provider>
