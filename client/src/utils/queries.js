@@ -93,6 +93,7 @@ query getAllThoughts {
     user {
       id
       userName
+      handle
     }
   }
 }`;
