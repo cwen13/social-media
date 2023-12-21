@@ -47,14 +47,14 @@ export const UserContextProvider = ({children}) => {
   
   useEffect(() => {
     if (!loadingBlockedList && !errorBlockedList && dataBlockedList !== null) {
-      console.log("DATA:",dataBlockedList);
       setBlockedList(
 	[
 	  ...blockedList,
-	  ...dataBlockedList.getMyBlockedUsers
+	  ...dataBlockedList.getMyBlockedUsers.map(user => {return {id: user.id, userName: user.userName}})
 	]
       );
     }
+    
   }, [loadingBlockedList, errorBlockedList, dataBlockedList]);
   
   useEffect(() => {

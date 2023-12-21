@@ -115,10 +115,10 @@ const resolvers = {
 	  {
 	    model: User,
 	    as: "blockedUser",
-	    through: "blocked"
+	    through: "blocked",
 	  }
 	}
-      )
+      );
       return blocked.blockedUser;
     },
 
@@ -350,9 +350,6 @@ const resolvers = {
 	  ]
 	}
       );
-      //path to get to rethough and user
-      console.log(reThoughts);
-      
       return reThoughts;      
     },
 

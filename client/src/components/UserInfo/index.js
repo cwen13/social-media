@@ -18,7 +18,7 @@ import ThoughtCreate from "./../ThoughtCreate"
 import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
-const UserInfo = ({ page }) => {
+const UserInfo = ({ page, blocked, setBlocked }) => {
   const [ user, setUser] = useState({}); 
   const { userId,
 	  loginUser,
@@ -35,8 +35,7 @@ const UserInfo = ({ page }) => {
   
   const [ friendship, setFriendship ] = useState(false);
   const [ following, setFollowing ] = useState(false);
-  const [ blocked, setBlocked ] = useState(false);
-  
+
   const {lodaing: userLoading, error: userError, data: userData} = useQuery(
     QUERY_USER,
     {
@@ -100,7 +99,7 @@ const UserInfo = ({ page }) => {
       setUser(
 	{
 	  ...user,
-	  userId: userData.getUser.userId,
+	  id: userData.getUser.id,
 	  userName: userData.getUser.userName,
 	  handle: userData.getUser.handle,
 	  email: userData.getUser.email,
@@ -110,6 +109,7 @@ const UserInfo = ({ page }) => {
     }
   },[userLoading, userError, userData]);
 
+  
   if(userLoading) return "Loading...";
   if(userError) return `Error UsEr ${userError.message}`;
   if(loadingFriends) return "Loading Friends";
@@ -211,13 +211,10 @@ const UserInfo = ({ page }) => {
   //----------------------
   //-------BLOCKED-BUTTON-
   //----------------------
-  const isBlocked = () => {
-    return blockedList.filter( user => user.id === userPageId) === [];
-  };
   
   const handleBlocked = async (event) => {
     event.preventDefault();
-    if (blockedByMe()) {
+    if (blocked) {
       await blockRemove(
 	{
 	  variables:
@@ -230,11 +227,9 @@ const UserInfo = ({ page }) => {
       setBlockedList(
 	[
 	  ...blockedList.filter(block => block.id !== userPageId)
-	  
 	]
       );
     } else {
-      
       await blockAdd(
 	{
 	  variables:
@@ -247,19 +242,22 @@ const UserInfo = ({ page }) => {
       setBlockedList(
 	[
 	  ...blockedList,
-	  userPageId
+	  {
+	    id: userPageId,
+	    userName: userName
+	  }
 	]
       );
       
     }
-  }
+  };
 
   const RenderBlocked = () => {
     return(
       <div className="blocked">
 	{(userId === userPageId)
 	 ? "Who are you blocked?"
-	 : (blockedByMe() ?
+	 : (blocked ?
 	    <>
 	    <h4>
 	      This one of your blocked users
@@ -286,9 +284,6 @@ const UserInfo = ({ page }) => {
   //------------------------------------
   //----check-if-User-have-them-blocked-
   //------------------------------------
-  const blockedByMe = () => blockedList.includes(userPageId);
-  
-  
   const RenderStats = () => {
     return(
       <>
@@ -338,14 +333,15 @@ const UserInfo = ({ page }) => {
 		 Blocked
 	       </Link>
 	       <ul id="blockedList">
-		 {blockedList.length > 0 ? blockedList.map(block =>
-		   <UserList userId={block.id}
-			     key={block.id}
-			     userName={block.userName}
-			     page={page}
-			     listOf="blockedList"
-		   />)
-		     : "There are no blocks yet"}
+		 {blockedList.length > 0
+		  ? blockedList.map(block =>
+		    <UserList userId={block.id}
+			      key={block.id}
+			      userName={block.userName}
+			      page={page}
+			      listOf="blockedList"
+		    />)
+		  : "There are no blocks yet"}
 	       </ul>
 	     </li>	
 	   </ul>}
@@ -375,7 +371,7 @@ const UserInfo = ({ page }) => {
 	    <div className="names">
 	      NAME: {user.handle}
 	    </div>
-	    {blockedByMe() ? "" :
+	    {blocked ? "" :
 	    <div className="email">
 	      EMAIL: {user.email}
 	    </div>}
@@ -383,17 +379,17 @@ const UserInfo = ({ page }) => {
 	{userPageId !== userId ? "" :
 	<ThoughtCreate userId={userPageId}
 		       page={page} />}
-	{userPageId === 0 || blockedByMe()
+	{userPageId === 0 || blocked
 	 ? <h2>There are no friend yet</h2>
 	 : <RenderFriendship />}
-	{userPageId === 0 || blockedByMe()
+	{userPageId === 0 || blocked
 	 ? <h2>There are no followings yet</h2>
 	 : <RenderFollowing />}
 	{userPageId === 0
 	 ? <h2>There are no followings yet</h2>
 	 : <RenderBlocked />}	
       </section>
-      {blockedByMe() ? "" : <RenderStats />}
+      {blocked ? "" : <RenderStats />}
     </>
   );
 };

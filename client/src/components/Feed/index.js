@@ -19,7 +19,7 @@ import "./style.css";
 const Feed = (props) => {
   let userPageId = useParams().userId;
 
-  const { userId, blockedList, likedList, setLikedList } = useUserContext();
+  const { userId, likedList, setLikedList } = useUserContext();
   userPageId = (userPageId !== undefined) ? userPageId : userId;
   
   const queryOptions = {
@@ -51,10 +51,6 @@ const Feed = (props) => {
     queryString    
   );
 
-    const { loading:loadingMyBlocked , error: errorMyBlocked, data: dataMyBlocked } = useQuery(
-    QUERY_MY_BLOCKED_USERS
-  );
-  
   if (queryLoading) return "Loading Query";
   if (queryError) return `Q Error ${queryError.message}`;
   if (reThoughtIdsLoading) return "Loading rethought ids";
@@ -92,12 +88,6 @@ const Feed = (props) => {
     }
   }
 
-  //------------------------------------
-  //----check-if-User-have-them-blocked-
-  //------------------------------------
-  const blockedByMe = () => blockedList.includes(userPageId);
-
-
   const RenderBlockedThought = () => {
     return(
       <li className="authorInfo">
@@ -111,7 +101,7 @@ const Feed = (props) => {
   return (
     <div className="feed">
       <ul className="feedPosts">
-	{blockedByMe() ? <RenderBlockedThought /> :
+	{props.blocked ? <RenderBlockedThought /> :
 	(noData === null) ? noData :
 	 queryData[thoughts[props.page]].map(thought =>
 	   <ThoughtPost key={thought.id}

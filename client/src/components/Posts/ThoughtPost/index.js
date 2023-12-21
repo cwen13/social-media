@@ -301,7 +301,7 @@ const ThoughtPost = (props) => {
     event.preventDefault();
     try {
       if (!props.liked) {
-	const likedResponse = await likedThought(
+	 await likedThought(
 	  {
 	    variables:
 	    {
@@ -317,7 +317,7 @@ const ThoughtPost = (props) => {
 	    ]
 	);
       } else {
-	const removeLikedResponse = await removeLikedThought(
+	await removeLikedThought(
 	  {
 	    variables:
 	    {
