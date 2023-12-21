@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client';
 import { useParams } from "react-router-dom";
 import { QUERY_USER } from './../../utils/queries';
 import ThoughtCreate from "./../ThoughtCreate"
+import UserInfo from "./../UserInfo";
 import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
@@ -17,39 +18,10 @@ const MyProfile = ({ page }) => {
 	 email, setEmail
 	} = useUserContext();
 
-  const MyInfo = () => {
-    return (
-      <section className="userInfo" >
-	<h1>=^={userName}=^=</h1>
-	<div className="pfp">
-	  {profilePicture
-	   ? <img src={`/images/pfp/${profilePicture}`}
-		  width="150"/>
-	   :
-	   <>
- 	     +==+<br/>
-	     |--|<br/>
-	     +==+
-	   </>
-	  }
-	</div>
-	<div className="names">
-	  NAME: {handle}
-	</div>
-	<div className="email">
-	  EMAIL: {email}
-	</div>
-      </section>
-    );
-  };
-
 
   return(
     <>
-      <MyInfo />
-      <ThoughtCreate userId={userId}
-		     page={page}/>
-      
+      <UserInfo />
     </>
   );
 };

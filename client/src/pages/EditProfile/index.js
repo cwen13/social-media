@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 
 import UserInfo from "./../../components/UserInfo";
-//import "./style.css";
+import "./../MainStyles/style.css";
 
 const EditProfile = () => {
   
   const page="EditProfile";
   
   return(
-    <section id="userEdit">
+    <section id="feedContainer">
       <UserInfo page={page} />
     </section>
   );

@@ -10,7 +10,8 @@ import {
   QUERY_USER_LIKED,
   QUERY_USER_RETHOUGHTS,
   QUERY_ALL_RETHOUGHT_IDS,
-  QUERY_ALL_REPLY_IDS
+  QUERY_ALL_REPLY_IDS,
+  QUERY_MY_BLOCKED_USERS
 } from "./../../utils/queries";
 import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
@@ -18,7 +19,7 @@ import "./style.css";
 const Feed = (props) => {
   let userPageId = useParams().userId;
 
-  const { userId } = useUserContext();
+  const { userId, likedList, setLikedList } = useUserContext();
   userPageId = (userPageId !== undefined) ? userPageId : userId;
   
   const queryOptions = {
@@ -26,7 +27,7 @@ const Feed = (props) => {
     UserPage: QUERY_USER_THOUGHTS,
     MainFeed :  QUERY_ALL_THOUGHTS,
     Liked: QUERY_USER_LIKED,
-    MyReThoughts: QUERY_USER_RETHOUGHTS
+    UserReThoughts: QUERY_USER_RETHOUGHTS
   };
 
   const thoughts = {
@@ -34,7 +35,7 @@ const Feed = (props) => {
     UserPage: "getUserThoughts",
     MainFeed :  "getAllThoughts",
     Liked: "getUserLiked",
-    MyReThoughts: "getUserReThoughts"
+    UserReThoughts: "getUserReThoughts"
   };
 
   const { loading: replyIdsLoading, error: replyIdsError, data: replyIdsData } = useQuery(QUERY_ALL_REPLY_IDS);
@@ -44,18 +45,12 @@ const Feed = (props) => {
   const queryString = (props.page === "MainFeed" && userPageId === undefined || userPageId === 0)
 	? ""
 	: { variables: { userId: userPageId }};
-  
-  const { loading: likedIdsLoading, error: likedIdsError, data: likedIdsData, refresh: likedIdsRefresh } = useQuery(
-    QUERY_MY_LIKED,
-    queryString
-  );
-  
+    
   const { loading: queryLoading, error: queryError, data: queryData } = useQuery(
     queryOptions[props.page],
     queryString    
   );
-  
-  if (likedIdsLoading) return "Loading Likes";
+
   if (queryLoading) return "Loading Query";
   if (queryError) return `Q Error ${queryError.message}`;
   if (reThoughtIdsLoading) return "Loading rethought ids";
@@ -66,9 +61,8 @@ const Feed = (props) => {
 
   const replyIds = new Set(replyIdsData.getAllReplyIds.map(entry => entry.replyThoughtId));
   const isReply = (thoughtId) => replyIds.has(thoughtId);
-  
-  const likedThoughts = (likedIdsData) ? likedIdsData.getAllMyLiked.map(result => result.id) : [];
-  const isLiked = (thoughtId) => likedThoughts.includes(thoughtId);
+
+  const isLiked = (thoughtId) => likedList.includes(thoughtId);
 
   let noData;
   if (queryData === null) {
@@ -93,23 +87,34 @@ const Feed = (props) => {
       break;
     }
   }
-  
+
+  const RenderBlockedThought = () => {
+    return(
+      <li className="authorInfo">
+	  <h2>
+	    You have blocked this user
+	  </h2>
+      </li>
+    );
+  };
+
   return (
     <div className="feed">
       <ul className="feedPosts">
-      {(noData === null) ? noData :
-       queryData[thoughts[props.page]].map(thought =>
-	 <ThoughtPost key={thought.id}
-		      page={props.page}
-		      thoughtId={thought.id}
-		      thought={thought.content}
-		      liked={isLiked(thought.id)}
-		      isReThought={isReThought(thought.id)}
-		      isReply={isReply(thought.id)}
-		      userId={thought.user.id}
-		      userName={thought.user.userName}
-	 />)}
-	</ul>
+	{props.blocked ? <RenderBlockedThought /> :
+	(noData === null) ? noData :
+	 queryData[thoughts[props.page]].map(thought =>
+	   <ThoughtPost key={thought.id}
+			page={props.page}
+			thoughtId={thought.id}
+			thought={thought.content}
+			liked={isLiked(thought.id)}
+			isReThought={isReThought(thought.id)}
+			isReply={isReply(thought.id)}
+			userId={thought.user.id}
+			userName={thought.user.userName}
+	   />)}
+      </ul>
     </div>
   );
 };

@@ -1,0 +1,24 @@
+#feed {
+  width: 90%;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+#feedContainer {
+  width: 1000px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+#mainFeed .mainPage {
+  width: 100%;
+  display: flex;
+  flex-direction:row;
+}
+
+#userInfo {
+  width: 25%;
+}

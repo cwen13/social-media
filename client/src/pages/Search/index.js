@@ -2,7 +2,9 @@ import React, { useState } from "react";
 
 import { useUserContext } from "./../../utils/UserContext";
 import UserInfo from "./../../components/UserInfo";
-import FriendList from "./../../components/FriendList"
+import UserList from "./../../components/UserList"
+
+import "./../MainStyles/style.css";
 
 function Search() {
   const { userId, setUserId } = useUserContext;
@@ -30,7 +32,7 @@ function Search() {
       <p>SEARCH THE SITE</p>
       <section className="leftCol">
 	<UserInfo id="userInfo" />
-	<FriendList id="friends"/>
+	<UserList id="friends"/>
       </section>
       <section id="search"
 	       className="rightCol">

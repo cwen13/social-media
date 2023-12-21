@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from 'react';
 
-const Following = (props) => {
+
+const Following = () => {
   return(
-    <p> This is where who you are following will be shown</p>
+    <div className="followingList">
+      Following list will go here
+    </div>
   );
 };
 
-export default Following;
+export default Following
+      

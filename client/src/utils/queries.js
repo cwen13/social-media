@@ -27,6 +27,7 @@ query getAllUsers {
 export const QUERY_USER = gql`
 query getUser ($userId: ID) {
   getUser (userId: $userId) {
+    id
     userName
     handle
     email
@@ -183,14 +184,8 @@ query getMyReThoughts {
 export const QUERY_MY_LIKED = gql`
 query getAllMyLiked {
   getAllMyLiked {
-    id
-    userId
-    content
-    user {
-      id
-      userName
-      handle
-    }
+    thoughtId
+    likedByUserId
   }
 }`;
 
@@ -216,6 +211,7 @@ query getUserReThoughts ($userId: ID!)  {
     userId
     content
     user{
+      id
       userName
       handle
     }
@@ -289,3 +285,18 @@ query getReplyOriginalThought ($replyId: ID!) {
   }
 }`;
 
+export const QUERY_USER_BLOCKED = gql`
+query getUserBlocked ($userId: ID!) {
+  getUserBlocked(userId: $userId) {
+    id
+    userName
+  }
+}`;
+
+export const QUERY_MY_BLOCKED_USERS = gql`
+query getMyBlockedUsers {
+  getMyBlockedUsers {
+    id
+    userName
+  }
+}`;

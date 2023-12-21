@@ -14,6 +14,7 @@ Thought.belongsTo(User, {
 		      
 User.hasMany(Thought, {
   foreignKey: "userId",
+  as: "thoughtAuthor"
 });
 
 User.belongsToMany(Thought, {
@@ -46,14 +47,14 @@ User.belongsToMany(User, {
   through: "blocked",
   foreignKey: "userId",
   otherKey: "blockedId",
-  as: "blockingUser",
+  as: "blockedUser",
 });
 
 User.belongsToMany(User, {
   through: "blocked",
   foreignKey: "blockedId",
   otherKey: "userId",
-  as: "blockedUser",
+  as: "blockingUser",
 });
 
 User.belongsToMany(User, {

@@ -6,15 +6,17 @@ import { QUERY_MY_LIKED } from "./../../utils/queries";
 
 import UserInfo from "./../../components/UserInfo";
 import Feed from "./../../components/Feed";
+import "./../MainStyles/style.css";
+
 
 const ReThoughts = () => {
 
-  const page = "MyReThoughts"
+  const page = "UserReThoughts"
   
   return(
-    <section id="userPage">      
+    <section id="feedContainer">
       <ul className="userFeed">
-	<li id="otherUserInfo">
+	<li id="userInfo">
 	  <UserInfo page={page}/>
 	</li>
 	<li id="feed">

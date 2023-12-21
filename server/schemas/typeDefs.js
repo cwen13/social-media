@@ -26,10 +26,10 @@ type Following {
   followingId: ID!
 }
 
-type Block {
+type Blocked {
   id: ID!
   userId: ID!
-  blockId: ID!
+  blockedId: ID!
 }
 
 type Pending {
@@ -86,10 +86,12 @@ type Query {
   getUserThoughts(userId: ID!): [Thought]!
 
   getAllLiked: [Thought]
-  getAllMyLiked: [Thought]
+  getAllMyLiked: [Liked]
   getUserLikedIds(userId: ID!): [Liked]
   getThoughtLikes(thoughtId: ID!): [User]
   getUserLiked(userId: ID!): [Thought]
+  getUserBlocked(userId: ID!): [User]
+  getMyBlockedUsers: [User]
 
   getThoughtReplys(thoughtId: ID!): [Thought]
   getThoughtReThoughts(thoughtId: ID!): [Thought]
@@ -131,6 +133,7 @@ type Mutation {
                friendId: ID!): Boolean!
   addPending(friendID: ID!): Boolean!
   addBlocked(blockedId: ID!): Boolean!
+  removeBlocked(blockedId: ID!): Boolean!
 
   addFollow(followingId: ID!): Boolean!
   removeFollow(followingId: ID!): Boolean!
@@ -148,7 +151,7 @@ type Mutation {
   replyToThought(content: String!
                  thoughtId: ID!): Reply!
   addReThought(originalThoughtId: ID!,
-               additionalThought: String,): ReThought
+               additionalThought: String,): ReThought!
 }`;
 
 

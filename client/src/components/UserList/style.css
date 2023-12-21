@@ -1,0 +1,15 @@
+#friendsList {
+  display: flex;
+  flex-direction: column;
+}
+
+#followingList {
+  display: flex;
+  flex-direction: column;
+}
+
+#blockedList {
+  display: flex;
+  flex-direction: column;
+}
+

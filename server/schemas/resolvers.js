@@ -49,7 +49,7 @@ const resolvers = {
     
     //STATUS: WORKING
     getUserFriends: async (parent, { userId }, context) => {
-      let userFriends = await User.findByPk(userId, {
+      const userFriends = await User.findByPk(userId, {
 	include: {
 	  model: User,
 	  as: "friendshipUser",
@@ -60,34 +60,68 @@ const resolvers = {
 
     //STATUS: 
     getMyFollowing: async (parent, args, context) => {
-      let userFollowing = await User.findByPk(
-	context.user.id,
-	{
-	  include: {
-	    model: User,
-	    as: "followingUsers",
-	    through: "follow"
+      return(
+	await User.findByPk(
+	  context.user.id,
+	  {
+	    include: {
+	      model: User,
+	      as: "followingUsers",
+	      through: "follow"
+	    }
 	  }
-	}
-      );
-      return userFollowing.followingUsers;
+	)
+      ).followingUsers;
     },
     
     //STATUS: 
     getUserFollowing: async (parent, { userId }, context) => {
-      let userFollowing = await User.findByPk(
-	userId,
+      return (
+	await User.findByPk(
+	  userId,
+	  {
+	    include:
+	    {
+	      model: User,
+	      as: "followingUsers",
+	      through: "follow"
+	    }
+	  }
+	)
+      ).followingUsers;
+    },
+
+    getUserBlocked: async (parent, { userId }, context) => {
+      return (
+	await User.findByPk(
+	  userId,
+	  {
+	    include:
+	    {
+	      model: User,
+	      as: "blockedUser",
+	      through: "blocked"
+	    }
+	  }
+	)
+      ).blockedUser;
+    },
+
+    getMyBlockedUsers: async (parent, args, context) => {
+      let blocked = await User.findByPk(
+	context.user.id,
 	{
 	  include:
 	  {
 	    model: User,
-	    as: "followingUsers",
-	    through: "follow"
+	    as: "blockedUser",
+	    through: "blocked",
 	  }
 	}
-      )
-      return userFollowing.followingUsers;
+      );
+      return blocked.blockedUser;
     },
+
     
     //STATUS: WORKING
     getMyThoughts: async (parent, args, context) => {
@@ -122,17 +156,16 @@ const resolvers = {
 
     //STATUS: WORKING
     getAllMyLiked: async (parent, args, context) => {
-      const liked =  await User.findByPk(context.user.id, {
-	include: {
-	  model: Thought,
-	  as: "userLiked",
-	  through: "liked",
-	  include: {
-	    model: User,
-	    as: "user"
+      return(
+	await Liked.findAll(
+	  {
+	    where:
+	    {
+	      likedByUserId: context.user.id
+	    }
 	  }
-	}})
-      return liked.userLiked;
+	)
+      );
     },    
 
     //STATUS: WORKING
@@ -278,43 +311,45 @@ const resolvers = {
 	  {
 	    userId: userId
 	  },
+	  include:
+	  {
+	    model: User
+	  },
 	  attributes: ["id"]
 	}
       );					  
+      
       const allUserThoughtsData = allUserThoughts.map(entry => entry.get({ plain: true }))
-	    .map(id => id.id);
-    
+	    .map(id => id.id);    
       const userReThoughtIds = allReThoughtsData.filter(
 	thought => allUserThoughtsData.includes(thought.reThoughtThoughtId)
       );
-
+      
+      const reThoughtIds = userReThoughtIds.map(thought => thought.reThoughtThoughtId)      
       const reThoughts = await Thought.findAll(
 	{
 	  where:
 	  {
-	    id: userReThoughtIds.map(thought => thought.reThoughtOfId)
+	    id: reThoughtIds
 	  },
 	  include:
 	  [
 	    {
 	      model: User
 	    },
+	    
 	    {
 	      model: Thought,
-	      as: "reThoughtThought",
 	      through: "reThought",
+	      as: "originalReThoughtThought",
 	      include:
 	      {
 		model: User,
-		as: "user",
-	      }
+ 	      }
 	    }
 	  ]
 	}
       );
-      //path to get to rethough and user
-      console.log(reThoughts[0].reThoughtThought[0].user);
-      
       return reThoughts;      
     },
 
@@ -491,14 +526,25 @@ const resolvers = {
     },
 
     addBlocked: async (parent, { blockedId }, context) => {
-      return await Pending.create(
+      return (await Blocked.create(
 	{
 	  userId: context.user.id,
 	  blockedId: blockedId
 	}
-      );
+      ) !== null);
     },
 
+    removeBlocked: async (parent, { blockedId }, context) => {
+      return (await Blocked.destroy(
+	{
+	  where:
+	  {
+	    blockedId
+	  }
+	}
+      ) === 1);
+    },
+    
     //STATUS: WORKING
     removeFriend: async (parent, { friendId }, context) => {
       return ((await Friend.destroy({where: { userId: context.user.id,
@@ -518,9 +564,12 @@ const resolvers = {
     //STATUS: WORKING
     addThought: async (parent, { content }, context) =>{ 
       if (context.user) {
-	let thought =  await Thought.create({ userId: context.user.id,
-					      content: content,
-					    });
+	let thought =  await Thought.create(
+	  {
+	    userId: context.user.id,
+	    content: content,
+	  }
+	);
 	return await Thought.findByPk(thought.id,
 				      { include: { model: User }});				     
       } else {
@@ -556,10 +605,12 @@ const resolvers = {
     //STATUS: WORKING
     addLiked: async (parent, { thoughtId }, context) => {
       if (context.user) {
-	return (await Liked.create({
-	  thoughtId: thoughtId,
-	  likedByUserId: context.user.id
-	}) !== 1);
+	return (await Liked.create(
+	  {
+	    thoughtId: thoughtId,
+	    likedByUserId: context.user.id
+	  }
+	) !== 1);
       } else {
 	throw new AuthenticaitonErro("You need to be logged in to like a thought!");
       }
@@ -567,8 +618,15 @@ const resolvers = {
 
     //STATUS: WORKING
     removeLiked: async (parent, { thoughtId }, context) => {
-      return (await Liked.destroy({ where: { thoughtId,
-					     likedByUserId: context.user.id }}) === 1);
+      return (await Liked.destroy(
+	{
+	  where:
+	  {
+	    thoughtId,
+	    likedByUserId: context.user.id
+	  }
+	}
+      ) === 1);
     },
     
     //STATUS: WORKING
@@ -579,6 +637,7 @@ const resolvers = {
 	  content: content,
 	}
       );
+
       return await Reply.create(
 	{
 	  replyOfId: thoughtId,

@@ -4,7 +4,10 @@
   align-items: center;
 }
 
+#thoughtBox {
+}
+
 .thoughtInput button {
-  width: 33%;
+  width: 90%;
 }
 

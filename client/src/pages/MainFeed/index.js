@@ -2,16 +2,16 @@ import React from "react";
 import Feed from "./../../components/Feed/"
 import RecentThoughts from "./../../components/RecentThoughts/"
 import UserInfo from "./../../components/UserInfo";
-import "./style.css";
+import "./../MainStyles/style.css";
 
 const MainFeed = () => {  
 
   const page = "MainFeed"
 
   return(
-    <section id="mainFeed">
+    <section id="feedContainer">
       <ul className="mainPage">
-	<li id="otherUserInfo">
+	<li id="userInfo">
 	  <UserInfo page={page}/>
 	</li>
 	<li id="feed">

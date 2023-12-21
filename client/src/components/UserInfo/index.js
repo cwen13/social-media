@@ -4,19 +4,21 @@ import { Link, useParams } from "react-router-dom";
 import {
   QUERY_USER,
   QUERY_USER_FRIENDS,
-  QUERY_USER_FOLLOWING
+  QUERY_USER_FOLLOWING,
+  QUERY_USER_BLOCKED
 } from "./../../utils/queries";
 import {
   ADD_FRIEND,
-  ADD_FOLLOW
+  ADD_FOLLOW,
+  ADD_BLOCKED,
+  REMOVE_BLOCKED
 } from "./../../utils/mutations";
-import Following from "./../Following";
-import UserList from "./../FriendList";
+import UserList from "./../UserList";
 import ThoughtCreate from "./../ThoughtCreate"
 import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
-const UserInfo = ({ page }) => {
+const UserInfo = ({ page, blocked, setBlocked }) => {
   const [ user, setUser] = useState({}); 
   const { userId,
 	  loginUser,
@@ -24,15 +26,16 @@ const UserInfo = ({ page }) => {
 	  userName,
 	  handle,
 	  profilePicture,
-	  email
+	  email,
+	  blockedList,
+	  setBlockedList
 	} = useUserContext();
   let userPageId = useParams().userId;
   userPageId = (userPageId !== undefined) ? userPageId : userId;
-
+  
   const [ friendship, setFriendship ] = useState(false);
   const [ following, setFollowing ] = useState(false);
-  
-  
+
   const {lodaing: userLoading, error: userError, data: userData} = useQuery(
     QUERY_USER,
     {
@@ -51,7 +54,7 @@ const UserInfo = ({ page }) => {
 	userId: userPageId
       }
     }
-  )
+  );
 
   const { loading:loadingFollowing , error: errorFollowing, data: dataFollowing } = useQuery(
     QUERY_USER_FOLLOWING,
@@ -61,8 +64,7 @@ const UserInfo = ({ page }) => {
 	userId: userPageId
       }
     }
-  )
-
+  );
   
   const [ friendshipRequest, { error: friendAddError } ] = useMutation(
     ADD_FRIEND,
@@ -84,13 +86,20 @@ const UserInfo = ({ page }) => {
     }
   );
 
+  const [ blockAdd, { error: blockAddError } ] = useMutation(
+    ADD_BLOCKED
+  );
+
+  const [ blockRemove, { error: blockRemoveError } ] = useMutation(
+    REMOVE_BLOCKED
+  );
   
   useEffect(() => {
     if (!userLoading && !userError && userData !== undefined && userPageId !== 0) {
       setUser(
 	{
 	  ...user,
-	  userId: userData.getUser.userId,
+	  id: userData.getUser.id,
 	  userName: userData.getUser.userName,
 	  handle: userData.getUser.handle,
 	  email: userData.getUser.email,
@@ -100,9 +109,15 @@ const UserInfo = ({ page }) => {
     }
   },[userLoading, userError, userData]);
 
-  if(userLoading) return "Loading...";
-  if(userError) return `Error ${userError.message}`;
   
+  if(userLoading) return "Loading...";
+  if(userError) return `Error UsEr ${userError.message}`;
+  if(loadingFriends) return "Loading Friends";
+  if(loadingFollowing) return "Loading Following";
+
+  //-------------------------
+  //-------FRIENDSHIP-BUTTON-
+  //-------------------------
   const isFriend = () => {
     if (!loadingFriends && dataFriends) {
       let friends = dataFriends.getUserFriends.map(result => result.id);
@@ -111,6 +126,7 @@ const UserInfo = ({ page }) => {
   };
   
   const handleFriendship = async (event) => {
+    event.preventDefault();
     await friendshipRequest(
       {
 	variables:
@@ -120,7 +136,7 @@ const UserInfo = ({ page }) => {
       }
     );
     setFollowing(true);
-  }
+  };
   
   const RenderFriendship = () => {
     return (
@@ -141,9 +157,12 @@ const UserInfo = ({ page }) => {
 	   )
 	}
       </ div>
-    )
+    );
   };
 
+  //-------------------
+  //-----FOLLOW-BUTTON-
+  //-------------------
   const isFollowed = () => {
     if (!loadingFollowing && dataFollowing) {
       let following = dataFollowing.getUserFollowing.map(result => result.id);
@@ -152,6 +171,7 @@ const UserInfo = ({ page }) => {
   };
   
   const handleFollowing = async (event) => {
+    event.preventDefault();
     console.log(userPageId)
     await followAdd(
       {
@@ -187,16 +207,103 @@ const UserInfo = ({ page }) => {
       </div>
     );
   };
+  
+  //----------------------
+  //-------BLOCKED-BUTTON-
+  //----------------------
+  
+  const handleBlocked = async (event) => {
+    event.preventDefault();
+    if (blocked) {
+      await blockRemove(
+	{
+	  variables:
+	  {
+	    blockedId: userPageId
+	  }
+	}
+      );
+      setBlocked(false);
+      setBlockedList(
+	[
+	  ...blockedList.filter(block => block.id !== userPageId)
+	]
+      );
+    } else {
+      await blockAdd(
+	{
+	  variables:
+	  {
+	    blockedId: userPageId
+	  }
+	}
+      );
+      setBlocked(true);
+      setBlockedList(
+	[
+	  ...blockedList,
+	  {
+	    id: userPageId,
+	    userName: userName
+	  }
+	]
+      );
+      
+    }
+  };
 
+  const RenderBlocked = () => {
+    return(
+      <div className="blocked">
+	{(userId === userPageId)
+	 ? "Who are you blocked?"
+	 : (blocked ?
+	    <>
+	    <h4>
+	      This one of your blocked users
+	    </h4>
+	    <button id="friendshipButton"
+		    onClick={handleBlocked}>
+ 	      Unblock?
+	    </button>
+	    </>
+	    :
+	    <div> This could be the start of a very nice <br />
+	      <button id="friendshipButton"
+		      onClick={handleBlocked}>
+ 		blocking?
+	      </button>
+	    </div>
+	   )
+	}
+      </div>
+    );
+  };
+
+
+  //------------------------------------
+  //----check-if-User-have-them-blocked-
+  //------------------------------------
   const RenderStats = () => {
     return(
       <>
 	{userPageId === 0 ? <h2> No user Stats yet </h2>
 	 : <ul className="userStats">
-	     <li>Number of friends 
+	     <li>
+	       <Link to={`/user/${userPageId}/liked`}>
+		 Liked thoughts
+	       </Link>
+	     </li>
+	     <li>
+	       <Link to={`/user/${userPageId}/reThoughts`}>
+		 Link to reThoughts
+	       </Link>
+	     </li>
+	     
+	     <li>Friends 
 	       {/*This will be a mini scroll box likely a iframe*/}
 	       <ul id="friendsList">
-		 {dataFriends ? dataFriends.getUserFriends.map(friend =>
+		 {dataFriends.getUserFriends !== undefined ? dataFriends.getUserFriends.map(friend =>
 		   <UserList userId={friend.id}
 			     key={friend.id}
 			     userName={friend.userName}
@@ -209,11 +316,9 @@ const UserInfo = ({ page }) => {
 	     
 	     <li>
 	       {/*This will be a mini scroll box likely a iframe*/}
-	       <Link to={`/user/${userPageId}/following`}>
-		 Following
-	       </Link>
-	       <ul id="followsList">
-		 {dataFollowing ? dataFollowing.getUserFollowing.map(follow =>
+	       Following
+	       <ul id="followingList">
+		 {dataFollowing.getUserFollowing !== undefined ? dataFollowing.getUserFollowing.map(follow =>
 		   <UserList userId={follow.id}
 			     key={follow.id}
 			     userName={follow.userName}
@@ -224,25 +329,25 @@ const UserInfo = ({ page }) => {
 	       </ul>
 	     </li>
 	     <li>
-	       <Link to={`/user/${userPageId}/liked`}>
-		 Liked thoughts
-	       </Link>
-	     </li>
-	     <li>
-	       <Link to={`/user/${userPageId}/reThoughts`}>
-		 Link to reThoughts
-	       </Link>
-	     </li>
-	     <li>
 	       <Link to={`/user/${userPageId}/blocked`}>
 		 Blocked
 	       </Link>
+	       <ul id="blockedList">
+		 {blockedList.length > 0
+		  ? blockedList.map(block =>
+		    <UserList userId={block.id}
+			      key={block.id}
+			      userName={block.userName}
+			      page={page}
+			      listOf="blockedList"
+		    />)
+		  : "There are no blocks yet"}
+	       </ul>
 	     </li>	
 	   </ul>}
-	</>
+      </>
     );
-	}
-  
+  };
   
   return (
     <>
@@ -258,7 +363,7 @@ const UserInfo = ({ page }) => {
 	       :
 	       <>
  		 +==+<br/>
-		 |--|<br/>
+		 |-----|<br/>
 		 +==+
 	       </>
 	      }
@@ -266,19 +371,25 @@ const UserInfo = ({ page }) => {
 	    <div className="names">
 	      NAME: {user.handle}
 	    </div>
+	    {blocked ? "" :
 	    <div className="email">
 	      EMAIL: {user.email}
-	    </div>
+	    </div>}
 	  </>}
-	{userPageId === 0
+	{userPageId !== userId ? "" :
+	<ThoughtCreate userId={userPageId}
+		       page={page} />}
+	{userPageId === 0 || blocked
 	 ? <h2>There are no friend yet</h2>
 	 : <RenderFriendship />}
-	{userPageId === 0
+	{userPageId === 0 || blocked
 	 ? <h2>There are no followings yet</h2>
 	 : <RenderFollowing />}
-	
+	{userPageId === 0
+	 ? <h2>There are no followings yet</h2>
+	 : <RenderBlocked />}	
       </section>
-      <RenderStats />      
+      {blocked ? "" : <RenderStats />}
     </>
   );
 };

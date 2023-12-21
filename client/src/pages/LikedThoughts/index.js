@@ -12,9 +12,9 @@ const LikedThoughts = () => {
   const page = "Liked";
   
   return(
-    <section id="userPage">      
+    <section id="feedContainer">      
       <ul className="userFeed">
-	<li id="otherUserInfo">
+	<li id="userInfo">
 	  <UserInfo page={page}/>
 	</li>
 	<li id="feed">

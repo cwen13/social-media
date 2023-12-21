@@ -13,6 +13,8 @@ import {
 } from "./../../../utils/queries";
 import { QUERY_ALL_THOUGHTS } from "./../../../utils/queries";
 
+import "./../PostStyling/style.css";
+
 const ReThoughtPost = (props) => {
   
   const {loading: thoughtLoading, error: thoughtError, data: thoughtData } = useQuery(
