@@ -15,7 +15,7 @@ Following.init(
       type: DataTypes.INTEGER,
       allowNunll: false
     },
-    follwoingId: {
+    followingId: {
       type: DataTypes.INTEGER,
       allowNunll: false
     },    

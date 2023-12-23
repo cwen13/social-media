@@ -315,7 +315,8 @@ const resolvers = {
 	  {
 	    model: User
 	  },
-	  attributes: ["id"]
+	  attributes: ["id"],
+	  	order : [["id", "DESC"]],
 	}
       );					  
       
@@ -506,16 +507,14 @@ const resolvers = {
 
     //STATUS: 
     addFollow: async (parent, { followingId }, context) => {
-      console.log("FOLLOWID:",followingId);
-      console.log("USERID:",context.user.id);
       return (await Following.create(
 	{
 	  userId: context.user.id,
-	  followingId
-	}) !== null);
+	  followingId: followingId
+	}
+      ) !== null);
     },
 
-    
     addPending: async (parent, { friendId }, context) => {
       return await Pending.create(
 	{

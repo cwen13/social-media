@@ -19,7 +19,7 @@ import "./style.css";
 const Feed = (props) => {
   let userPageId = useParams().userId;
 
-  const { userId, likedList, setLikedList } = useUserContext();
+  const { userId, likedList, setLikedList, blockedList } = useUserContext();
   userPageId = (userPageId !== undefined) ? userPageId : userId;
   
   const queryOptions = {
@@ -88,11 +88,15 @@ const Feed = (props) => {
     }
   }
 
+  const blockedUser = (postsUserId) => {
+    return userId !== postsUserId && blockedList.filter(blockedUser => blockedUser.id === postsUserId).length !== 0;
+  }
+  
   const RenderBlockedThought = () => {
     return(
       <li className="authorInfo">
 	  <h2>
-	    You have blocked this user
+	    You have blocked this user or there are no thoughts here
 	  </h2>
       </li>
     );
@@ -101,9 +105,10 @@ const Feed = (props) => {
   return (
     <div className="feed">
       <ul className="feedPosts">
-	{props.blocked ? <RenderBlockedThought /> :
+	{(props.blocked || (queryData[thoughts[props.page]].length === 0)) ? <RenderBlockedThought /> :
 	(noData === null) ? noData :
 	 queryData[thoughts[props.page]].map(thought =>
+	   (blockedUser(thought.user.id) ? "" :
 	   <ThoughtPost key={thought.id}
 			page={props.page}
 			thoughtId={thought.id}
@@ -113,7 +118,7 @@ const Feed = (props) => {
 			isReply={isReply(thought.id)}
 			userId={thought.user.id}
 			userName={thought.user.userName}
-	   />)}
+	   />))}
       </ul>
     </div>
   );
