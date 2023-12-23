@@ -11,19 +11,19 @@ const seedDatabase = async () => {
 
   await sequelize.sync({force:true});
 
-  User.destroy({
-    where: {},
-  });
-  Friend.destroy({
-    where: {},
-  });
-  Thought.destroy({
-    where: {},
-  });
-  Liked.destroy({
-    where:{},
-  });
-
+//  User.destroy({
+//    where: {},
+//  });
+//  Friend.destroy({
+//    where: {},
+//  });
+//  Thought.destroy({
+//    where: {},
+//  });
+//  Liked.destroy({
+//    where:{},
+//  });
+//
   for (let i = 0; i < userSeedData.length; i++) {
     await User.create(userSeedData[i]);
   }

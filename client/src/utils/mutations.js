@@ -152,3 +152,21 @@ mutation addBlocked($blockedId: ID!) { addBlocked(blockedId: $blockedId) }`;
 
 export const REMOVE_BLOCKED = gql`
 mutation removeBlocked($blockedId: ID!) { removeBlocked(blockedId: $blockedId) }`;
+
+
+export const SEND_FRIEND_REQUEST = gql`mutation sendFriendRequest ($pendingId: ID!) {
+sendFriendRequest(pendingId: $pendingId)
+}`;
+
+export const DENY_FRIEND_REQUEST = gql`mutation denyFriendRequest ($denyFriendRequestPendingId2: ID!) {
+  denyFriendRequest(pendingId: $denyFriendRequestPendingId2)
+}`;
+
+export const APPROVE_FREIEND_REQUEST = gql`mutation addFriend ($addFriendFriendId3: ID!   ) { 
+  addFriend(friendId: $addFriendFriendId3)
+}`;
+
+export const REMOVE_FRIEND = gql`mutation removefriend ($removeFriendFriendId2: ID!   ) {
+  removeFriend(friendId: $removeFriendFriendId2)
+}`;
+

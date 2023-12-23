@@ -13,11 +13,13 @@ Pending.init(
     },
     userId: {
       type: DataTypes.INTEGER,
-      allowNunll: false
+      allowNunll: false,
+      unique: false
     },
     pendingId: {
       type: DataTypes.INTEGER,
-      allowNunll: false
+      allowNunll: false,
+      unique: false
     },
   },
   {
