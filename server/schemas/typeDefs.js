@@ -75,8 +75,11 @@ type Query {
   getMe: User!
   getAllUsers: [User!]!
   getUser(userId: ID): User
+
   getMyFriends: [User]
   getUserFriends(userId: ID!): [User]
+  getMyFriendRequests: [Pending]
+
   getMyFollowing: [User]
   getUserFollowing(userId: ID!): [User]
 
@@ -127,26 +130,25 @@ type Mutation {
              profilePicture: String): Auth!
   deleteUser(userId: ID!): Boolean!
 
-  addFriend(friendId: ID!): Boolean!
-  removeFriend(friendId: ID!): Boolean!
-  updateFriend(userId: ID!,
-               friendId: ID!): Boolean!
-  addPending(friendID: ID!): Boolean!
   addBlocked(blockedId: ID!): Boolean!
   removeBlocked(blockedId: ID!): Boolean!
 
   addFollow(followingId: ID!): Boolean!
   removeFollow(followingId: ID!): Boolean!
-  updateFollow(userId: ID!,
-               followingId: ID!): Boolean!
+
+  addLiked(thoughtId: ID!): Boolean!
+  removeLiked(thoughtId: ID!): Boolean!
+
+  sendFriendRequest(pendingId: ID!): Boolean!
+  denyFriendRequest(pendingId: ID!): Boolean!
+  addFriend(friendId: ID!): Boolean!
+  removeFriend(friendId: ID!): Boolean!
 
   addThought(content: String!): Thought!
   updateThought(thoughtId: ID!,
                 content: String!): Thought!
   removeThought(thoughtId: ID!): Boolean!
 
-  addLiked(thoughtId: ID!): Boolean!
-  removeLiked(thoughtId: ID!): Boolean!
 
   replyToThought(content: String!
                  thoughtId: ID!): Reply!

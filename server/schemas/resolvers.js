@@ -58,6 +58,17 @@ const resolvers = {
       return userFriends.friendshipUser;
     },
 
+    getMyFriendRequests: async (parent, args, context) => {
+      return await Pending.findAll(
+	{
+	  where:
+	  {
+	    userId: context.user.id
+	  }
+	}
+      );
+    },
+
     //STATUS: 
     getMyFollowing: async (parent, args, context) => {
       return(
@@ -364,7 +375,6 @@ const resolvers = {
     getUserReplys: async (parent, { userId }, context) => {
       const allReplys = await Reply.findAll();
       const allReplysData = allReplys.map(entry => entry.get({ plain: true }));
-      console.log(allReplysData);
       
       const allUserThoughts = await Thought.findAll(
 	{
@@ -381,9 +391,6 @@ const resolvers = {
       const userReplyIds = allReplysData.filter(
 	thought => allUserThoughtsData.includes(thought.replyOfId)
       );
-
-      console.log("AUSERTH:",allUserThoughtsData);
-      console.log("REPLYS:",userReplyIds);
       
       const replys = await Thought.findAll(
 	{
@@ -405,7 +412,6 @@ const resolvers = {
 	}
       );
       
-      console.log(replys);
       return replys;      
     },
     getUserLikedIds: async (parent, { userId }, context) => {
@@ -500,14 +506,41 @@ const resolvers = {
     addFriend: async (parent, { friendId }, context) => {      
       // making two entries so only one column needs to be quired
       // when collecting all of a user's friends
-      return ((await Friend.create({userId: context.user.id, friendId}) &&
-	       await Friend.create({userId: friendId, friendId: context.user.id})) !== null)
+      try {
+	const isValidRequest = await Pending.findAll(
+	  {
+	    where:
+	    {
+	      pendingId: friendId
+	    }
+	  }
+	)
+	if(isValidRequest) {
+	  await Pending.destroy(
+	    {
+	      where:
+	      {
+		[Op.and]:
+		[
+		  { userId: context.user.id },
+		  { pendingId: friendId }
+		]
+	      }
+	    }
+	  );
+	  
+	  return ((await Friend.create({userId: context.user.id, friendId}) &&
+		   await Friend.create({userId: friendId, friendId: context.user.id})) !== null)
+	} else {
+	  return false;
+	}
+      }catch (err) {
+	console.log(err.message);
+      }
     },
 
     //STATUS: 
     addFollow: async (parent, { followingId }, context) => {
-      console.log("FOLLOWID:",followingId);
-      console.log("USERID:",context.user.id);
       return (await Following.create(
 	{
 	  userId: context.user.id,
@@ -515,16 +548,32 @@ const resolvers = {
 	}) !== null);
     },
 
-    
-    addPending: async (parent, { friendId }, context) => {
-      return await Pending.create(
+    //STATUS: WORKING
+    sendFriendRequest: async (parent, { pendingId }, context) => {
+      return (await Pending.create(
 	{
 	  userId: context.user.id,
-	  pendingId: friendId
+	  pendingId: pendingId
 	}
-      );
+      ) !== null);
     },
 
+    denyFriendRequest: async (parent, { pendingId }, context) => {
+      return (await Pending.destroy(
+	{
+	  where:
+	  {
+	    [Op.and]:
+	    [
+	      { userId: context.user.id },
+	      {pendingId: pendingId }
+	    ]
+	  }
+	}
+      ) !== null);
+
+    },
+	      
     addBlocked: async (parent, { blockedId }, context) => {
       return (await Blocked.create(
 	{
