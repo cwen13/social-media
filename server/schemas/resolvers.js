@@ -8,7 +8,8 @@ const {
   Pending,
   Following,
   Reply,
-  ReThought
+  ReThought,
+  Notification
       } = require("./../models");
 const { signToken } = require('../utils/auth');
 const { Op } = require("sequelize");
@@ -449,6 +450,18 @@ const resolvers = {
 
     },
 
+    getMyNotifications: async (parent, args, context) => {
+      return await Notification.findAll(
+	{
+	  where:
+	  {
+	    toUser: context.user.id
+	  }
+	}
+      );
+
+    },
+
   },
   Mutation: {
 
@@ -542,26 +555,47 @@ const resolvers = {
 
     //STATUS: 
     addFollow: async (parent, { followingId }, context) => {
-      return (await Following.create(
+      const follow = await Following.create(
 	{
 	  userId: context.user.id,
 	  followingId: followingId
 	}
-      ) !== null);
+      );
+      const notification = await Notification.create(
+	{
+	  fromUser: context.user.id,
+	  toUser: followingId,
+	  followed: true
+	}
+      )
+      return (follow !== null && notification !== null);
     },
 
     //STATUS: WORKING
     sendFriendRequest: async (parent, { pendingId }, context) => {
-      return (await Pending.create(
-	{
-	  userId: context.user.id,
-	  pendingId: pendingId
-	}
-      ) !== null);
+      try {
+	const pending = await Pending.create(
+	  {
+	    userId: context.user.id,
+	    pendingId: pendingId
+	  }
+	);
+	const notification = await Notification.create(
+	  {
+	    fromUser: context.user.id,
+	    toUser: pendingId,
+	    friendRequest: true
+	  }
+	);
+	return (pending !== null && notification !== null);
+      } catch (err) {
+	console.error(err.message);
+      }
+      return false;
     },
 
     denyFriendRequest: async (parent, { pendingId }, context) => {
-      return (await Pending.destroy(
+      const deny = await Pending.destroy(
 	{
 	  where:
 	  {
@@ -572,7 +606,21 @@ const resolvers = {
 	    ]
 	  }
 	}
-      ) !== null);
+      );
+      const acknowledge = await Notification.update(
+	{
+	  acknowledge: true
+	},
+	{
+	  where:
+	  {
+	    fromUser: pendingId,
+	    toUser: context.user.id,
+	    friendRequest: true
+	  }
+	}
+      );
+      return (deny !== null && acknowledge !== null);
 
     },
 	      
@@ -656,12 +704,19 @@ const resolvers = {
     //STATUS: WORKING
     addLiked: async (parent, { thoughtId }, context) => {
       if (context.user) {
-	return (await Liked.create(
+	const liked = await Liked.create(
 	  {
 	    thoughtId: thoughtId,
 	    likedByUserId: context.user.id
 	  }
-	) !== 1);
+	)
+	const acknowledge = await Notification.create(
+	  {
+	    fromUser: context.user.id,
+	    likedThoughtId: thoughtId
+	  }
+	);
+	return ( liked === 1 && acknowledge !==null);
       } else {
 	throw new AuthenticaitonErro("You need to be logged in to like a thought!");
       }
@@ -689,14 +744,21 @@ const resolvers = {
 	}
       );
 
-      return await Reply.create(
+      const reply = await Reply.create(
 	{
 	  replyOfId: thoughtId,
 	  replyThoughtId: thoughtReply.id
 	}
       )
+      const acknowledge = await Notification.create(
+	{
+	  fromUser: context.user.id,
+	  likedThoughtId: thoughtId
+	}
+      );
+      return reply;
     },
-
+    
     //STATUS: PENDING
     addReThought: async (parent, { originalThoughtId, additionalThought }, context) => {
       if (context.user) {
@@ -706,16 +768,40 @@ const resolvers = {
 	    content: additionalThought,
 	  }
 	);
-	return await ReThought.create(
+	
+	const reThought = await ReThought.create(
 	  {
 	    reThoughtOfId: originalThoughtId,
 	    reThoughtThoughtId: reThoughtThought.id
 	  }
 	);
+	
+	const acknowledge = await Notification.create(
+	  {
+	    fromUser: context.user.id,
+	    likedThoughtId: reThoughtThought.id
+	  }
+	);
+	
+	return reThought;
+
       } else {
 	throw new AuthenticationError("You can not reThought unless your logged in");
       }
       
+    },
+    acknowledgeNotifcation: async (parent, { notificationId }, context) => {
+      return (await Notification.update(
+	{
+	  acknowledge: true
+	},
+	{
+	  where:
+	  {
+	    id: notificationId
+	  }
+	}
+      ) !== null);
     }
   }
 };

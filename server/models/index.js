@@ -31,6 +31,7 @@ Thought.belongsToMany(User, {
   as: "thoughtLikes"
 })
 
+// User to User
 User.belongsToMany(User, {
   through: "friend",
   foreignKey: "userId",
@@ -87,6 +88,7 @@ User.belongsToMany(User,{
   as: "followers"
 });
 
+// Thought to (Re)Thought
 Thought.belongsToMany(Thought,{
   through: "reThought",
   foreignKey: "reThoughtOfId",
@@ -115,8 +117,30 @@ Thought.belongsToMany(Thought,{
   as: "originalReplyThought"
 });
 
+// Notification relations
+User.belongsToMany(User, {
+  through: "notification",
+  foreignKey: "fromUser",
+  as: "fromUser"
+});
 
+Thought.belongsToMany(Liked, {
+  through: "notification",
+  foreignKey: "likedThoughtId",
+  as: "newLikedThought"
+});
 
+Thought.belongsToMany(Thought, {
+  through: "notification",
+  foreignKey: "replyToId",
+  as: "newReply"
+});
+
+Thought.belongsToMany(Thought, {
+  through: "notification",
+  foreignKey: "reThoughtToId",
+  as: "newReThought"
+});
 
 
 

@@ -162,11 +162,7 @@ export const DENY_FRIEND_REQUEST = gql`mutation denyFriendRequest ($denyFriendRe
   denyFriendRequest(pendingId: $denyFriendRequestPendingId2)
 }`;
 
-export const APPROVE_FREIEND_REQUEST = gql`mutation addFriend ($addFriendFriendId3: ID!   ) { 
+export const APPROVE_FRIEND_REQUEST = gql`mutation addFriend ($addFriendFriendId3: ID!   ) { 
   addFriend(friendId: $addFriendFriendId3)
-}`;
-
-export const REMOVE_FRIEND = gql`mutation removefriend ($removeFriendFriendId2: ID!   ) {
-  removeFriend(friendId: $removeFriendFriendId2)
 }`;
 
