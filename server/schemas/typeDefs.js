@@ -157,7 +157,7 @@ type Mutation {
 
   sendFriendRequest(pendingId: ID!): Boolean!
   denyFriendRequest(pendingId: ID!): Boolean!
-  addFriend(friendId: ID!): Boolean!
+  approveFriendRequest(friendId: ID!): Boolean!
   removeFriend(friendId: ID!): Boolean!
 
   addThought(content: String!): Thought!

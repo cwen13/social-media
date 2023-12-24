@@ -517,7 +517,7 @@ const resolvers = {
 
     //STATUS: WORKING
     //Need to update in future to check if userId is valid
-    addFriend: async (parent, { friendId }, context) => {      
+    approveFriendRequest: async (parent, { friendId }, context) => {      
       // making two entries so only one column needs to be quired
       // when collecting all of a user's friends
       try {
@@ -542,6 +542,20 @@ const resolvers = {
 	      }
 	    }
 	  );
+	  await Notification.update(
+	    {
+	      acknowledge: true
+	    },
+	    {
+	      where:
+	      {
+		fromUser: friendId,
+		toUser: context.user.id,
+		friendRequest: true
+	      }
+	    }
+	  );
+	  
 	  
 	  return ((await Friend.create({userId: context.user.id, friendId}) &&
 		   await Friend.create({userId: friendId, friendId: context.user.id})) !== null)
@@ -607,6 +621,7 @@ const resolvers = {
 	  }
 	}
       );
+      
       const acknowledge = await Notification.update(
 	{
 	  acknowledge: true
@@ -704,19 +719,25 @@ const resolvers = {
     //STATUS: WORKING
     addLiked: async (parent, { thoughtId }, context) => {
       if (context.user) {
-	const liked = await Liked.create(
-	  {
-	    thoughtId: thoughtId,
-	    likedByUserId: context.user.id
-	  }
-	)
-	const acknowledge = await Notification.create(
-	  {
-	    fromUser: context.user.id,
-	    likedThoughtId: thoughtId
-	  }
-	);
-	return ( liked === 1 && acknowledge !==null);
+	try {
+	  const liked = await Liked.create(
+	    {
+	      thoughtId: thoughtId,
+	      likedByUserId: context.user.id
+	    }
+	  )
+
+	  const acknowledge = await Notification.create(
+	    {
+	      fromUser: context.user.id,
+	      likedThoughtId: thoughtId
+	    }
+	  );
+	  
+	  return ( liked !== null && acknowledge !== null);
+	} catch (err) {
+	  console.error(err.message);
+	}
       } else {
 	throw new AuthenticaitonErro("You need to be logged in to like a thought!");
       }
@@ -753,7 +774,7 @@ const resolvers = {
       const acknowledge = await Notification.create(
 	{
 	  fromUser: context.user.id,
-	  likedThoughtId: thoughtId
+	  replyToId: thoughtId
 	}
       );
       return reply;
@@ -779,7 +800,7 @@ const resolvers = {
 	const acknowledge = await Notification.create(
 	  {
 	    fromUser: context.user.id,
-	    likedThoughtId: reThoughtThought.id
+	    reThoughtId: reThoughtThought.id
 	  }
 	);
 	

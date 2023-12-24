@@ -17,7 +17,8 @@ Notification.init(
     },
     toUser: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
+      defaultValue: 0
     },
     friendRequest: {
       type: DataTypes.BOOLEAN,
@@ -39,7 +40,7 @@ Notification.init(
       allowNulll: true,
       unique: false
     },
-    reThouhghtId: {
+    reThoughtId: {
       type: DataTypes.INTEGER,
       allowNulll: true,
       unique: false
