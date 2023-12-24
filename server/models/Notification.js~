@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 
-class Following extends Model {};
+class Notification extends Model{};
 
-Following.init(
+Notification.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -13,19 +13,21 @@ Following.init(
     },
     userId: {
       type: DataTypes.INTEGER,
-      allowNunll: false
+      allowNull: false,  
     },
-    followingId: {
-      type: DataTypes.INTEGER,
-      allowNunll: false
-    },    
+    content: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: false,
+      defaultValue: ""
+    },
   },
   {
     sequelize,
     freezeTableName: true,
     underscored: true,
-    modelName: "following"
+    modelName: 'thought',
   }
 );
 
-module.exports = Following
+module.exports = Notification;

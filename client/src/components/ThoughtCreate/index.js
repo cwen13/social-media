@@ -32,7 +32,6 @@ const ThoughtCreate = ({ userId, page }) => {
 	variables: {
 	  userId: userId,
 	  content: thought.thought,
-	  thoughtReplyOfId: null
 	}
       });
       setThought({

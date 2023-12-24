@@ -326,7 +326,8 @@ const resolvers = {
 	  {
 	    model: User
 	  },
-	  attributes: ["id"]
+	  attributes: ["id"],
+	  	order : [["id", "DESC"]],
 	}
       );					  
       
@@ -544,8 +545,9 @@ const resolvers = {
       return (await Following.create(
 	{
 	  userId: context.user.id,
-	  followingId
-	}) !== null);
+	  followingId: followingId
+	}
+      ) !== null);
     },
 
     //STATUS: WORKING

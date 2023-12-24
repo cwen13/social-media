@@ -10,14 +10,10 @@ import { useUserContext } from "./../../utils/UserContext";
 function UserPage() {
 
   const page = "UserPage"
-
   const { userId, blockedList } = useUserContext();
-
 
   const userPageId = useParams().userId
   const [ blocked, setBlocked ] = useState(userId !== userPageId && blockedList.filter(blockedUser => blockedUser.id === userPageId).length !== 0);
-
-  console.log("BLOCKED:",blocked);				   
 
   return(
     <section id="feedContainer">      

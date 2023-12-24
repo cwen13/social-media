@@ -7,6 +7,8 @@ const Pending = require("./Pending");
 const ReThought = require("./ReThought");
 const Reply = require("./Reply");
 const Following = require("./Following");
+const Notification = require("./Notification");
+
 
 Thought.belongsTo(User, {
   foreignKey: "userId",
@@ -115,6 +117,9 @@ Thought.belongsToMany(Thought,{
 
 
 
+
+
+
 module.exports = {
   Friend,
   User,
@@ -124,5 +129,6 @@ module.exports = {
   Pending,
   ReThought,
   Reply,
-  Following
+  Following,
+  Notification
 };

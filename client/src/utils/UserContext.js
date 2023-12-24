@@ -5,6 +5,8 @@ import {
   QUERY_USER,
   QUERY_MY_BLOCKED_USERS,
   QUERY_MY_LIKED,
+  QUERY_MY_FRIENDS,
+  QUERY_MY_FOLLOWING
 } from "./queries";
 import Auth from "./auth";
 
@@ -26,6 +28,8 @@ export const UserContextProvider = ({children}) => {
   const [ email, setEmail ] = useState(null);
   const [ blockedList, setBlockedList ] = useState([]);
   const [ likedList, setLikedList ] = useState([]);
+  const [ friendList, setFriendList ] = useState([]);
+  const [ followList, setFollowList ] = useState([]);
   
   const { loading: loadingBlockedList, error: errorBlockedList, data: dataBlockedList } = useQuery(
     QUERY_MY_BLOCKED_USERS
@@ -34,6 +38,15 @@ export const UserContextProvider = ({children}) => {
   const { loading: loadingLiked, error: errorLiked, data: dataLiked } =  useQuery(
     QUERY_MY_LIKED
   );
+  
+  const { loading: loadingFriendList, error: errorFriendList, data: dataFriendList } = useQuery(
+    QUERY_MY_FRIENDS
+  );
+  
+  const { loading: loadingFollowList, error: errorFollowList, data: dataFollowList } = useQuery(
+      QUERY_MY_FOLLOWING
+  );
+
   
   const { loading: loadingUser, error: errorUser, data: dataUser } = useQuery(
     QUERY_USER,
@@ -54,10 +67,6 @@ export const UserContextProvider = ({children}) => {
 	]
       );
     }
-    
-  }, [loadingBlockedList, errorBlockedList, dataBlockedList]);
-  
-  useEffect(() => {
     if (!loadingLiked && !errorLiked) {
       setLikedList(
 	[
@@ -66,9 +75,26 @@ export const UserContextProvider = ({children}) => {
 	]
       );
     }
-  }, [loadingLiked, errorLiked, dataLiked]);
-  
-  useEffect(()=> {
+
+    if (!loadingFriendList && !errorFriendList && dataFriendList !== null) {
+      setFriendList(
+	[
+	  ...friendList,
+	  ...dataFriendList.getMyFriends.map(user => {return {id: user.id, userName: user.userName}})
+	]
+      );
+    }
+
+    if (!loadingFollowList && !errorFollowList && dataFollowList !== null) {
+      setFollowList(
+	[
+	  ...followList,
+	  ...dataFollowList.getMyFollowing.map(user => {return {id: user.id, userName: user.userName}})
+	]
+      );
+    }
+
+
     try {
       if(!loadingUser && !errorUser && dataUser !== undefined && dataUser.getUser !== null) {
 	setUserName(dataUser.getUser.userName);
@@ -79,7 +105,11 @@ export const UserContextProvider = ({children}) => {
     } catch (err) {
       console.error("Did not set dataUser becasue:", err);
     }
-  }, [loadingUser, errorUser, dataUser]);
+  }, [loadingUser, errorUser, dataUser,
+      loadingLiked, errorLiked, dataLiked,
+      loadingBlockedList, errorBlockedList, dataBlockedList,
+      loadingFollowList, errorFollowList, dataFollowList,
+      loadingFriendList, errorFriendList, dataFriendList]);
 
   const loginUser = (newUserId) => {
     setUserId(newUserId);
@@ -90,6 +120,7 @@ export const UserContextProvider = ({children}) => {
     localStorage.setItem("user_id",0);
     setUserId(0);
   };
+
   
   return (
     <UserContext.Provider value={{userId,
@@ -106,7 +137,11 @@ export const UserContextProvider = ({children}) => {
 				  blockedList,
 				  setBlockedList,
 				  likedList,
-				  setLikedList
+				  setLikedList,
+				  friendList,
+				  setFriendList,
+				  followList,
+				  setFollowList,
 				 }}>
       {children}
     </UserContext.Provider>

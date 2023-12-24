@@ -8,10 +8,14 @@ import {
   QUERY_USER_BLOCKED
 } from "./../../utils/queries";
 import {
-  ADD_FRIEND,
   ADD_FOLLOW,
   ADD_BLOCKED,
-  REMOVE_BLOCKED
+  REMOVE_BLOCKED,
+  REMOVE_FOLLOW,
+  REMOVE_FRIEND,
+  SEND_FRIEND_REQUEST,
+  DENY_FRIEND_REQUEST,
+  APPROVE_FRIEND_REQUEST,
 } from "./../../utils/mutations";
 import UserList from "./../UserList";
 import ThoughtCreate from "./../ThoughtCreate"
@@ -28,13 +32,17 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	  profilePicture,
 	  email,
 	  blockedList,
-	  setBlockedList
+	  setBlockedList,
+	  friendList,
+	  setFriendList,
+	  followList,
+	  setFollowList,
 	} = useUserContext();
   let userPageId = useParams().userId;
   userPageId = (userPageId !== undefined) ? userPageId : userId;
   
-  const [ friendship, setFriendship ] = useState(false);
-  const [ following, setFollowing ] = useState(false);
+  const [ friendship, setFriendship ] = useState(userId !== userPageId && friendList.filter(friendUser => friendUser.id === userPageId).length !== 0);
+  const [ following, setFollowing ] = useState(userId !== userPageId && followList.filter(followUser => followUser.id === userPageId).length !== 0);
 
   const {lodaing: userLoading, error: userError, data: userData} = useQuery(
     QUERY_USER,
@@ -49,7 +57,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   const { loading:loadingFriends , error: errorFriends, data: dataFriends } = useQuery(
     QUERY_USER_FRIENDS,
     {
-      variables:
+     variables:
       {
 	userId: userPageId
       }
@@ -67,27 +75,31 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   );
   
   const [ friendshipRequest, { error: friendAddError } ] = useMutation(
-    ADD_FRIEND,
-    {
-      refetchQueries:
-      [
-	QUERY_USER_FRIENDS, "getUserFriends"
-      ]
-    }
+    SEND_FRIEND_REQUEST,
   );
-
+  
+  const [ approveFriendshipRequest, { error: appriveFriendRequestError } ] = useMutation(
+    APPROVE_FRIEND_REQUEST,
+  );
+  
+  const [ denyFriendshipRequest, { error: denyFriendRequestError } ] = useMutation(
+    DENY_FRIEND_REQUEST,
+  );
+  
+  const [ friendRemove, { error: friendRemoveError } ] = useMutation(
+    REMOVE_FRIEND,
+  );
+  
   const [ followAdd, { error: followAddError } ] = useMutation(
     ADD_FOLLOW,
-    {
-      refetchQueries:
-      [
-	QUERY_USER_FOLLOWING, "getUserFollowing"
-      ]
-    }
   );
 
+  const [ followRemove, { error: followRemoveError } ] = useMutation(
+    REMOVE_FOLLOW,
+  );
+        
   const [ blockAdd, { error: blockAddError } ] = useMutation(
-    ADD_BLOCKED
+    ADD_BLOCKED,
   );
 
   const [ blockRemove, { error: blockRemoveError } ] = useMutation(
@@ -118,24 +130,34 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   //-------------------------
   //-------FRIENDSHIP-BUTTON-
   //-------------------------
-  const isFriend = () => {
-    if (!loadingFriends && dataFriends) {
-      let friends = dataFriends.getUserFriends.map(result => result.id);
-      return friends.includes(userId);
-    }
-  };
-  
   const handleFriendship = async (event) => {
     event.preventDefault();
-    await friendshipRequest(
-      {
-	variables:
+    if(friendship) {
+      await friendRemove(
 	{
-	  friendId: userPageId
+	  variables:
+	  {
+	    friendingId: userPageId
+	  }
 	}
-      }
-    );
-    setFollowing(true);
+      );
+      setFriendship(false);
+      setFriendList(
+	[
+	  ...friendList.filter(friend => friend.id !== userPageId)
+	]
+      );
+
+    } else {
+      await friendshipRequest(
+	{
+	  variables:
+	  {
+	    pendingId: userPageId
+	  }
+	}
+      );
+    };
   };
   
   const RenderFriendship = () => {
@@ -143,7 +165,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
       <div className="friendship">
 	{(userId === userPageId)
 	 ? "Are you your friend?"
-	 : (isFriend() ?
+	 : (friendship ?
 	    <h4>
 	      This one of your friends
 	    </h4>
@@ -162,37 +184,54 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 
   //-------------------
   //-----FOLLOW-BUTTON-
-  //-------------------
-  const isFollowed = () => {
-    if (!loadingFollowing && dataFollowing) {
-      let following = dataFollowing.getUserFollowing.map(result => result.id);
-      return following.includes(userId);
-    }
-  };
-  
+  //------------------- 
   const handleFollowing = async (event) => {
     event.preventDefault();
-    console.log(userPageId)
-    await followAdd(
-      {
-	variables:
+    if(following) {
+      await followRemove(
 	{
-	  followingId: userPageId
+	  variables:
+	  {
+	    followingId: userPageId
+	  }
 	}
-      }
-    );
-    setFollowing(true);
-  }
-
+      );
+      setFollowing(false);
+      setFollowList(
+	[
+	  ...followList.filter(follow => follow.id !== userPageId)
+	]
+      );
+    } else {
+      await followAdd(
+	{
+	  variables:
+	  {
+	    followingId: userPageId
+	  }
+	}
+      );
+      setFollowing(true);
+      setFollowList(
+	[
+	  ...followList,
+	  {
+	    id: userPageId,
+	    userName: userName
+	  }
+	]
+      );
+    };
+  };
   
   const RenderFollowing = () => {
     return(
       <div className="followingship">
 	{(userId === userPageId)
 	 ? "Who are you following?"
-	 : (isFollowed() ?
+	 : (following ?
 	    <h4>
-	      This one of your followed
+	      This one of your followed accounts
 	    </h4>
 	    :
 	    <div> This could be the start of a very nice <br />
