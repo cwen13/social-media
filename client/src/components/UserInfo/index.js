@@ -8,12 +8,14 @@ import {
   QUERY_USER_BLOCKED
 } from "./../../utils/queries";
 import {
-  ADD_FRIEND,
   ADD_FOLLOW,
   ADD_BLOCKED,
   REMOVE_BLOCKED,
   REMOVE_FOLLOW,
-  REMOVE_FRIEND
+  REMOVE_FRIEND,
+  SEND_FRIEND_REQUEST,
+  DENY_FRIEND_REQUEST,
+  APPROVE_FRIEND_REQUEST,
 } from "./../../utils/mutations";
 import UserList from "./../UserList";
 import ThoughtCreate from "./../ThoughtCreate"
@@ -55,7 +57,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   const { loading:loadingFriends , error: errorFriends, data: dataFriends } = useQuery(
     QUERY_USER_FRIENDS,
     {
-      variables:
+     variables:
       {
 	userId: userPageId
       }
@@ -73,13 +75,21 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   );
   
   const [ friendshipRequest, { error: friendAddError } ] = useMutation(
-    ADD_FRIEND,
+    SEND_FRIEND_REQUEST,
   );
-
+  
+  const [ approveFriendshipRequest, { error: appriveFriendRequestError } ] = useMutation(
+    APPROVE_FRIEND_REQUEST,
+  );
+  
+  const [ denyFriendshipRequest, { error: denyFriendRequestError } ] = useMutation(
+    DENY_FRIEND_REQUEST,
+  );
+  
   const [ friendRemove, { error: friendRemoveError } ] = useMutation(
     REMOVE_FRIEND,
   );
-
+  
   const [ followAdd, { error: followAddError } ] = useMutation(
     ADD_FOLLOW,
   );
@@ -143,19 +153,9 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	{
 	  variables:
 	  {
-	    friendId: userPageId
+	    pendingId: userPageId
 	  }
 	}
-      );
-      setFriendship(true);
-      setFriendList(
-	[
-	  ...friendList,
-	  {
-	    id: userPageId,
-	    userName: userName
-	  }
-	]
       );
     };
   };
