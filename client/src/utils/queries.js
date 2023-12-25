@@ -306,21 +306,40 @@ query getMyBlockedUsers {
   }
 }`;
 
+//export const GET_MY_NOTIFICAITONS = gql`
+//query getMyNotifications {
+//  getMyNotifications {
+//    fromUser
+//    friendRequest
+//    followed
+//    likedThoughtId
+//    replyToId
+//    reThoughtId
+//    acknowledge
+//  }
+//}`;
+
+
 export const GET_MY_NOTIFICAITONS = gql`
 query getMyNotifications {
   getMyNotifications {
-    fromUser
-    friendRequest
-    followed
-    likedThoughtId
-    replyToId
-    reThoughtId
-    acknowledge
+    friendRequests {
+      id
+    }
+    followers {
+      id
+    }
+    likes {
+      id
+    }
+    replys {
+      id
+    }
+    reThoughts {
+      id
+    }
+
   }
 }`;
 
-//export const query_friend_requests = gql`
-//query getMyFriendQuests {
-//
-//}`;
 

@@ -31,7 +31,8 @@ const Notifications = (props) => {
   }, [ notificationsLoading, notificationsError, notificationsData ])
 
   if(notificationsLoading) return "Loading notifications";
-  
+
+  console.log("NOTIFS:",notificationsData);
   
   const RenderFriendRequest = () => {
     

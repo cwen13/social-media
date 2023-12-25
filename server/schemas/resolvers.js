@@ -228,7 +228,7 @@ const resolvers = {
 
     //STATUS: WORKING
     getUserThoughts: async (parent, { userId }, context) => {
-      return await Thought.findAll(
+      const userThoughts = await Thought.findAll(
 	{
 	  where:
 	  {
@@ -241,6 +241,8 @@ const resolvers = {
 	  },
 	}
       );
+      console.log(userThoughts);
+      return userThoughts;
     },
 
     //STATUS: WORKING
@@ -483,7 +485,7 @@ const resolvers = {
       const frs = notifications
 	    .filter(notif => notif.friendRequest)
 	    .map(request => request.fromUser);
-      const notifFriendRequests = await Pending.findAll(
+      const friendRequests = await Pending.findAll(
 	{
 	  where:
 	  {
@@ -496,14 +498,14 @@ const resolvers = {
 	  }
 	}
       );
-      //      console.log("FRIENDREQUEST:",notifFriendRequests[0].requestingFriend);
+//            console.log("FRIENDREQUEST:",friendRequests);
 
       // Get followers
       const fs = notifications
 	    .filter(notif => notif.followed)
 	    .map(request => request.fromUser);
 //      console.log("FS:",fs);
-      const notifFollows = await Following.findAll(
+      const followers = await Following.findAll(
 	{
 	  where:
 	  {
@@ -516,16 +518,16 @@ const resolvers = {
 	  }
 	}
       );
-//      console.log("FOLLOWS:",notifFollows[0].follower);
+//      console.log("FOLLOWS:",followers);
 
       // Get likes
-      const likes = notifications
+      const liked = notifications
 	    .filter(notif => notif.likedThoughtId)
 	    .map(likes => {return {fromUser: likes.fromUser,
 				   likedThoughtId: likes.likedThoughtId}});
       
 //      console.log("LIKES:",likes);
-      const notifLikes = await Promise.all(likes
+      const likedList = await Promise.all(liked
 					   .map(async like =>
 					     await Liked.findAll(
 					       {
@@ -553,21 +555,20 @@ const resolvers = {
 					       }
 					     )
 					   )
-					  );
-      
-      //      console.log("LIKED NOTIFS:", notifLikes);
-//      console.log("LIKES:", ...notifLikes[0]);
+				      );
+      const likes = likedList.map(like => like[0]);
+      console.log("LIKED NOTIFS:", likes);
       
       // Get replys
-      const replys = notifications
+      const replyed = notifications
 	    .filter(notif => notif.replyToId)
 	    .map(replys => replys.replyToId);
       //      console.log("Replys:",replys);
-      const notifReplys = await Reply.findAll(
+      const replys = await Reply.findAll(
 	{
 	  where:
 	  {
-	    replyOfId: replys	    
+	    replyOfId: replyed	    
 	  },
 	  include:
 	  [
@@ -592,18 +593,18 @@ const resolvers = {
 	  ]
 	}
       );
-//      console.log("REPLYS:",notifReplys);
+//      console.log("REPLYS:", replys);
 
       // Get reThoughts
-      const reThoughts = notifications
+      const reThoughted = notifications
 	    .filter(notif => notif.reThoughtId)
 	    .map(reThoughts => reThoughts.reThoughtId);
 //      console.log(reThoughts);
-      const notifReThoughts = await ReThought.findAll(
+      const reThoughts = await ReThought.findAll(
 	{
 	  where:
 	  {
-	    reThoughtThoughtId: reThoughts
+	    reThoughtThoughtId: reThoughted
 	  },
 	  include:
 	  [
@@ -628,20 +629,21 @@ const resolvers = {
 	  ]
 	}
       );
-//      console.log("RETHOUGHTS:",notifReThoughts);
+//      console.log("RETHOUGHTS:",reThoughts);
 
       const NotificationList =
-	    [
-	      ...notifFriendRequests,
-	      ...notifFollows,
-	      ...notifLikes,
-	      ...notifReplys,
-	      ...notifReThoughts
-	    ]
+	    {
+	      
+	      friendRequests,
+	      followers,
+	      likes,
+	      replys,
+	      reThoughts
+	    }
 
 //      console.log(NotificationList);
       
-      return notifications;
+      return NotificationList;
     },
   },
   Mutation: {

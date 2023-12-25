@@ -35,6 +35,7 @@ type NotificationList {
   likes: [Liked]
   replys: [Reply]
   reThoughts: [ReThought]
+  
 }
 
 
@@ -82,6 +83,7 @@ type Friend {
 type Pending {
   id: ID!
   userId: ID!
+  requestingFriend: User
   pendingId: ID!
 }
 
@@ -132,7 +134,7 @@ type Query {
   getReThoughtOriginalThought(reThoughtId: ID!): Thought
   getReplyOriginalThought(replyId: ID!): Thought
 
-  getMyNotifications: [Notification]
+  getMyNotifications: NotificationList
 
 }
 

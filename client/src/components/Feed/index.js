@@ -51,8 +51,6 @@ const Feed = (props) => {
     queryString    
   );
 
-  console.log(queryString);
-  
   if (queryLoading) return "Loading Query";
   if (queryError) return `Q Error ${queryError.message}`;
   if (reThoughtIdsLoading) return "Loading rethought ids";
