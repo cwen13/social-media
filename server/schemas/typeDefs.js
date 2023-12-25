@@ -24,9 +24,18 @@ type Notification {
   replyToId: ID
   reThoughtId: ID
   acknowledge: Boolean!
-  user: User!
+  user: User
   thought: Thought
 }
+
+type NotificationList {
+  friendRequests: [Pending]
+  followers: [Following]
+  likes: [Liked]
+  replys: [Reply]
+  reThoughts: [ReThought]
+}
+
 
 type Thought {
   id: ID!
@@ -54,6 +63,7 @@ type Liked {
   thoughtId: ID!
   likedByUserId: ID!
   thought: Thought
+  user: User
 }
 
 type Following {
@@ -92,7 +102,6 @@ type Query {
 
   getMyFriends: [User]
   getUserFriends(userId: ID!): [User]
-  getMyFriendRequests: [Pending]
 
   getMyFollowing: [User]
   getUserFollowing(userId: ID!): [User]
@@ -122,7 +131,7 @@ type Query {
   getReThoughtOriginalThought(reThoughtId: ID!): Thought
   getReplyOriginalThought(replyId: ID!): Thought
 
-  getMyNotifications: [Notification]
+  getMyNotifications: [NotificationList]
 
 }
 
@@ -152,7 +161,8 @@ type Mutation {
   addFollow(followingId: ID!): Boolean!
   removeFollow(followingId: ID!): Boolean!
 
-  addLiked(thoughtId: ID!): Boolean!
+  addLiked(thoughtId: ID!,
+           thoughtUserId: ID!): Boolean!
   removeLiked(thoughtId: ID!): Boolean!
 
   sendFriendRequest(pendingId: ID!): Boolean!
@@ -167,9 +177,11 @@ type Mutation {
 
 
   replyToThought(content: String!
-                 thoughtId: ID!): Reply!
+                 thoughtId: ID!
+                 thoughtUserId: ID!): Reply!
   addReThought(originalThoughtId: ID!,
-               additionalThought: String,): ReThought!
+               additionalThought: String,
+               originalThoughtUserId: ID!): ReThought!
   acknowledgeNotifcation(notificationId: ID!): Boolean!
 }`;
 

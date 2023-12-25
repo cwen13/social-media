@@ -59,17 +59,6 @@ const resolvers = {
       return userFriends.friendshipUser;
     },
 
-    getMyFriendRequests: async (parent, args, context) => {
-      return await Pending.findAll(
-	{
-	  where:
-	  {
-	    userId: context.user.id
-	  }
-	}
-      );
-    },
-
     //STATUS: 
     getMyFollowing: async (parent, args, context) => {
       return(
@@ -416,9 +405,11 @@ const resolvers = {
       
       return replys;      
     },
+
     getUserLikedIds: async (parent, { userId }, context) => {
       return (await Liked.findAll({})).map(entry => entry.get({ plain: true }));
     },
+
     getReThoughtIdPairs: async (parent, { originalThoughtId }, context) => {
       return await ReThought.findAll(
 	{
@@ -429,6 +420,7 @@ const resolvers = {
 	}
       );
     },
+
     getReplyIdPairs: async (parent, { originalThoughtId }, context) => {
       return await Reply.findAll(
 	{
@@ -447,11 +439,11 @@ const resolvers = {
 	  
 	}
       );
-
     },
 
     getMyNotifications: async (parent, args, context) => {
-      return await Notification.findAll(
+      // Get all notifications
+      const notifications = await Notification.findAll(
 	{
 	  where:
 	  {
@@ -459,9 +451,167 @@ const resolvers = {
 	  }
 	}
       );
+//      console.log("NOTIFS:",notifications)
 
+      // Get friend requessts
+      const frs = notifications
+	    .filter(notif => notif.friendRequest)
+	    .map(request => request.fromUser);
+      const notifFriendRequests = await Pending.findAll(
+	{
+	  where:
+	  {
+	    userId: frs
+	  },
+	  include:
+	  {
+	    model: User,
+	    as: "requestingFriend"
+	  }
+	}
+      );
+      //      console.log("FRIENDREQUEST:",notifFriendRequests[0].requestingFriend);
+
+      // Get followers
+      const fs = notifications
+	    .filter(notif => notif.followed)
+	    .map(request => request.fromUser);
+//      console.log("FS:",fs);
+      const notifFollows = await Following.findAll(
+	{
+	  where:
+	  {
+	    userId: fs
+	  },
+	  include:
+	  {
+	    model: User,
+	    as: "follower"
+	  }
+	}
+      );
+//      console.log("FOLLOWS:",notifFollows[0].follower);
+
+      // Get likes
+      const likes = notifications
+	    .filter(notif => notif.likedThoughtId)
+	    .map(likes => {return {fromUser: likes.fromUser,
+				   likedThoughtId: likes.likedThoughtId}});
+      
+//      console.log("LIKES:",likes);
+      const notifLikes = await Promise.all(likes
+					   .map(async like =>
+					     await Liked.findAll(
+					       {
+						 where:
+						 {
+						   likedByUserId: like.fromUser,
+						   thoughtId: like.likedThoughtId
+						 },
+						 include:
+						 [
+						   {
+						     model: User,
+						     as: "thoughtLiker"
+						   },
+						   {
+						     model: Thought,
+						     as: "likedThought"
+						   }
+						 ]
+					       }
+					     )
+					   )
+					  );
+      
+      //      console.log("LIKED NOTIFS:", notifLikes);
+      console.log("LIKES:", ...notifLikes[0]);
+      
+      // Get replys
+      const replys = notifications
+	    .filter(notif => notif.replyToId)
+	    .map(replys => replys.replyToId);
+      //      console.log("Replys:",replys);
+      const notifReplys = await Reply.findAll(
+	{
+	  where:
+	  {
+	    replyOfId: replys	    
+	  },
+	  include:
+	  [
+	    {
+	      model: Thought,
+	      as: "replyThought",
+	      include:	    
+	      {
+		model: User,
+		as: "userThought"
+	      }
+	    },
+	    {
+	      model: Thought,
+	      as: "originalReplyThought",
+	      include:	    
+	      {
+		model: User,
+		as: "userThought"
+	      }
+	    }
+	  ]
+	}
+      );
+//      console.log("REPLYS:",notifReplys);
+
+      // Get reThoughts
+      const reThoughts = notifications
+	    .filter(notif => notif.reThoughtId)
+	    .map(reThoughts => reThoughts.reThoughtId);
+//      console.log(reThoughts);
+      const notifReThoughts = await ReThought.findAll(
+	{
+	  where:
+	  {
+	    reThoughtThoughtId: reThoughts
+	  },
+	  include:
+	  [
+	    {
+	      model: Thought,
+	      as: "reThoughtThought",
+	      include:	    
+	      {
+		model: User,
+		as: "userThought"
+	      }
+	    },
+	    {
+	      model: Thought,
+	      as: "originalReThoughtThought",
+	      include:	    
+	      {
+		model: User,
+		as: "userThought"
+	      }
+	    }
+	  ]
+	}
+      );
+//      console.log("RETHOUGHTS:",notifReThoughts);
+
+      const NotificationList =
+	    [
+	      ...notifFriendRequests,
+	      ...notifFollows,
+	      ...notifLikes,
+	      ...notifReplys,
+	      ...notifReThoughts
+	    ]
+
+//      console.log(NotificationList);
+      
+      return notifications;
     },
-
   },
   Mutation: {
 
@@ -717,7 +867,7 @@ const resolvers = {
     },
 
     //STATUS: WORKING
-    addLiked: async (parent, { thoughtId }, context) => {
+    addLiked: async (parent, { thoughtId, thoughtUserId }, context) => {
       if (context.user) {
 	try {
 	  const liked = await Liked.create(
@@ -730,6 +880,7 @@ const resolvers = {
 	  const acknowledge = await Notification.create(
 	    {
 	      fromUser: context.user.id,
+	      toUser: thoughtUserId,
 	      likedThoughtId: thoughtId
 	    }
 	  );
@@ -757,7 +908,7 @@ const resolvers = {
     },
     
     //STATUS: WORKING
-    replyToThought: async (parent, { content, thoughtId}, context) => {
+    replyToThought: async (parent, { content, thoughtId, thoughtUserId}, context) => {
       const thoughtReply =  await Thought.create(
 	{
 	  userId: context.user.id,
@@ -769,11 +920,13 @@ const resolvers = {
 	{
 	  replyOfId: thoughtId,
 	  replyThoughtId: thoughtReply.id
+	  
 	}
       )
       const acknowledge = await Notification.create(
 	{
 	  fromUser: context.user.id,
+	   toUser: thoughtUserId,
 	  replyToId: thoughtId
 	}
       );
@@ -781,7 +934,7 @@ const resolvers = {
     },
     
     //STATUS: PENDING
-    addReThought: async (parent, { originalThoughtId, additionalThought }, context) => {
+    addReThought: async (parent, { originalThoughtId, additionalThought, originalThoughtUserId }, context) => {
       if (context.user) {
 	const reThoughtThought = await Thought.create(
 	  {
@@ -800,6 +953,7 @@ const resolvers = {
 	const acknowledge = await Notification.create(
 	  {
 	    fromUser: context.user.id,
+	    toUser: originalThoughtUserId,
 	    reThoughtId: reThoughtThought.id
 	  }
 	);

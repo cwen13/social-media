@@ -208,6 +208,7 @@ const ThoughtPost = (props) => {
 	  variables:
 	  {
 	    originalThoughtId: props.thoughtId,
+	    originalThoughtUserId: props.userId,
 	    additionalThought: reThoughtText
 	  }
 	}
@@ -305,7 +306,8 @@ const ThoughtPost = (props) => {
 	  {
 	    variables:
 	    {
-	      thoughtId: props.thoughtId
+	      thoughtId: props.thoughtId,
+	      thoughtUserId: props.userId
 	    }
 	  }
 	);
@@ -386,7 +388,8 @@ const ThoughtPost = (props) => {
 	  variables:
 	  {
 	    content: replyText,
-	    thoughtId: props.thoughtId
+	    thoughtId: props.thoughtId,
+	    thoughtUserId: props.userId
 	  }
 	}
       );

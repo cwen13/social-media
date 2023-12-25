@@ -12,6 +12,7 @@ const Notification = require("./Notification");
 
 Thought.belongsTo(User, {
   foreignKey: "userId",
+  as: "userThought"
 });
 		      
 User.hasMany(Thought, {
@@ -140,6 +141,67 @@ Thought.belongsToMany(Thought, {
   through: "notification",
   foreignKey: "reThoughtToId",
   as: "newReThought"
+});
+
+
+//Extra relations for juntction tables
+// to work with notifcations
+Pending.belongsTo(User, {
+  foreignKey: "userId",
+  otherKey: "pendingId",
+  as: "requestingFriend"
+});
+
+Pending.belongsTo(User, {
+  foreignKey: "pendingId",
+  otherKey: "userId",
+  as: "requestedFriend"
+});
+
+Following.belongsTo(User, {
+  foreignKey: "userId",
+  otherKey:"followingId",
+  as: "follower"
+});
+
+Following.belongsTo(User, {
+  foreignKey: "followingId",
+  otherKey: "userId",
+  as: "followed"
+});
+
+Liked.belongsTo(User, {
+  foreignKey: "likedByUserId",
+  as: "thoughtLiker"
+});
+
+Liked.belongsTo(Thought, {
+  foreignKey: "thoughtId",
+  as: "likedThought"
+});
+
+Reply.belongsTo(Thought, {
+  foreignKey: "replyThoughtId",
+  otherKey: "replyOfId",
+  as: "originalReplyThought"
+});
+
+Reply.belongsTo(Thought, {
+  foreignKey: "replyOfId",
+  otherKey: "replyThoughtId",
+  as: "replyThought"
+});
+
+ReThought.belongsTo(Thought, {
+  foreignKey: "reThoughtOfId",
+  otherKey: "reThoughtThoughtId",
+  as: "originalReThoughtThought"
+});
+
+ReThought.belongsTo(Thought, {
+  foreignKey: "reThoughtThoughtId",
+  otherKey: "reThoughtThoughtId",
+  as: "reThoughtThought"
 });
 
 

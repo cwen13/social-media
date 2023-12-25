@@ -19,6 +19,7 @@ import {
 } from "./../../utils/mutations";
 import UserList from "./../UserList";
 import ThoughtCreate from "./../ThoughtCreate"
+import Notifications from "./../Notifications";
 import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
@@ -415,9 +416,13 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	      EMAIL: {user.email}
 	    </div>}
 	  </>}
-	{userPageId !== userId ? "" :
-	<ThoughtCreate userId={userPageId}
-		       page={page} />}
+	{userPageId === userId
+	 ? <>
+	     <ThoughtCreate userId={userPageId}
+			    page={page} />
+	     <Notifications />
+	 </>
+	 : ""}
 	{userPageId === 0 || blocked
 	 ? <h2>There are no friend yet</h2>
 	 : <RenderFriendship />}
@@ -426,7 +431,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	 : <RenderFollowing />}
 	{userPageId === 0
 	 ? <h2>There are no followings yet</h2>
-	 : <RenderBlocked />}	
+	 : <RenderBlocked />}
       </section>
       {blocked ? "" : <RenderStats />}
     </>

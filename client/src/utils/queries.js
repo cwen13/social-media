@@ -301,3 +301,27 @@ query getMyBlockedUsers {
     userName
   }
 }`;
+
+export const GET_MY_NOTIFICAITONS = gql`
+query getMyNotifications {
+  getMyNotifications {
+    fromUser
+    friendRequest
+    followed
+    likedThoughtId
+    replyToId
+    reThoughtId
+    acknowledge
+    user {
+      userName
+      handle
+      profilePicture
+    }
+  }
+}`;
+
+//export const query_friend_requests = gql`
+//query getMyFriendQuests {
+//
+//}`;
+

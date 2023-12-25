@@ -115,14 +115,16 @@ export const REMOVE_FRIEND = gql`
 mutation removeFriend($friendshipId: ID!) { removeFriend(id: $friendshipId) }`;
 
 export const ADD_LIKED = gql`
-mutation addLiked($thoughtId: ID!) { addLiked(thoughtId: $thoughtId) }`;
+mutation addLiked($thoughtId: ID!, $thoughtUserId: ID!) {
+  addLiked(thoughtId: $thoughtId, thoughtUserId: $thoughtUserId)
+}`;
 
 export const REMOVE_LIKED = gql`
 mutation removeLiked($thoughtId: ID!) { removeLiked(thoughtId: $thoughtId) }`;
 
 export const REPLY_TO_THOUGHT = gql`
-mutation replyToThought($content: String!, $thoughtId: ID!) {
-  replyToThought (content: $content, thoughtId: $thoughtId) {
+mutation replyToThought($content: String!, $thoughtId: ID!, $thoughtUserId: ID!) {
+  replyToThought (content: $content, thoughtId: $thoughtId, thoughtUserId: $thoughtUserId) {
     id
     replyOfId
     replyThoughtId
@@ -131,9 +133,11 @@ mutation replyToThought($content: String!, $thoughtId: ID!) {
 
 export const RETHOUGHT_THOUGHT = gql`
 mutation addReThought ($originalThoughtId: ID!,
-                       $additionalThought: String) {
+                       $additionalThought: String,
+                       $originalThoughtUserId: ID!) {
   addReThought (originalThoughtId: $originalThoughtId,
-                additionalThought: $additionalThought) {
+                additionalThought: $additionalThought
+                originalThoughtUserId: $originalThoughtUserId) {
     reThoughtOfId
     reThoughtThoughtId
  }
