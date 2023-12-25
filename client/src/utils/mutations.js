@@ -58,25 +58,24 @@ mutation updateUser(
       email: $email
       password: $password
     ) {
-user {
-id
-userName
-  }
-}
-}
-`
+  user {
+    id
+    userName
+      }
+   }
+}`;
+
 
 export const DELETE_USER = gql`
 mutation deleteUser($userId: ID!) {
   deleteUser(id: $userId) {
-user {
+  user {
     id
     userName
     email
-}
+   }
  }
-}
-`;
+}`;
 
 export const ADD_THOUGHT = gql`
   mutation addThought($content: String!) {
@@ -84,7 +83,7 @@ export const ADD_THOUGHT = gql`
       id
       userId
       content
-      user {
+      thoughtAuthor {
         userName
       }
     }
@@ -96,7 +95,7 @@ mutation updateThought($thoughtId: ID! $content: String!) {
                 content: $content) {
                   id
                   content
-                  user{
+                  thoughtAuthor {
                     userName
                     handle
                   }

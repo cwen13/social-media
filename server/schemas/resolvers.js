@@ -127,27 +127,49 @@ const resolvers = {
     //STATUS: WORKING
     getMyThoughts: async (parent, args, context) => {
       //return await Thought.findAll({ where: { userId: context.user.id }});
-      return await Thought.findAll({
-	where: { userId: context.user.id },
-	include : { model: User,},
-	order : [["id", "DESC"]],
-      });
+      return await Thought.findAll(
+	{
+	  where:
+	  {
+	    userId: context.user.id
+	  },
+	  include:
+	  {
+	    model: User,
+	    as: "thoughtAuthor"
+	  },
+	  order:
+	  [
+	    [
+	      "id",
+	      "DESC"
+	    ]
+	  ],
+	}
+      );
     },
 
     //STATUS: WORKING
     getAllThoughts: async (parent, args, context) => {
-      return await Thought.findAll(
+      const thoughts = await Thought.findAll(
 	{
 	  include:
 	  {
-	    model: User
+	    model: User,
+	    as: "thoughtAuthor"
 	  },
 	  order:
-	  [[
-	    "id", "DESC"
-	  ]]
+	  [
+	    [
+	      "id",
+	      "DESC"
+	    ]
+	  ]
 	}
       );
+
+      console.log(thoughts);
+      return thoughts;
     },
 
     //STATUS: WORKING
@@ -178,7 +200,7 @@ const resolvers = {
 	  through: "liked",
 	  include: {
 	    model: User,
-	    as: "user"
+	    as: "thoughtAuthor"
 	  }
 	}});
       return liked.userLiked;
@@ -214,7 +236,8 @@ const resolvers = {
 	  },
 	  include:
 	  {
-	    model: User
+	    model: User,
+	    as: "thoughtAuthor"
 	  },
 	}
       );
@@ -233,7 +256,7 @@ const resolvers = {
 	    include:
 	    {
 		model: User,
-		as:"user"
+		as: "thoughtAuthor"
 	      }
 	  }
 	}
@@ -253,7 +276,7 @@ const resolvers = {
 	      include:
 	      {
 		model: User,
-		as: "user"
+		as: "thoughtAuthor"
 	      }
 	    }
 	  }
@@ -273,7 +296,7 @@ const resolvers = {
 	      include:
 	      {
 		model: User,
-		as: "user"
+		as: "thoughtAuthor"
 	      }
 	    }
 	  }
@@ -293,7 +316,7 @@ const resolvers = {
 	      include:
 	      {
 		model: User,
-		as: "user"
+		as: "thoughtAuthor"
 	      }
 	    }
 	  }
@@ -314,7 +337,8 @@ const resolvers = {
 	  },
 	  include:
 	  {
-	    model: User
+	    model: User,
+	    as: "thoughtAuthor"
 	  },
 	  attributes: ["id"],
 	  	order : [["id", "DESC"]],
@@ -337,7 +361,8 @@ const resolvers = {
 	  include:
 	  [
 	    {
-	      model: User
+	      model: User,
+	      as: "thoughtAuthor"
 	    },
 	    
 	    {
@@ -347,6 +372,7 @@ const resolvers = {
 	      include:
 	      {
 		model: User,
+		as: "thoughtAuthor"
  	      }
 	    }
 	  ]
@@ -397,7 +423,7 @@ const resolvers = {
 	    include:
 	    {
 	      model: User,
-	      as: "user",
+	      as: "thoughtAuthor",
 	    }
 	  }
 	}
@@ -516,7 +542,12 @@ const resolvers = {
 						   },
 						   {
 						     model: Thought,
-						     as: "likedThought"
+						     as: "likedThought",
+						     include:
+						     {
+						       model: User,
+						       as:"thoughtAuthor"
+						     }
 						   }
 						 ]
 					       }
@@ -525,7 +556,7 @@ const resolvers = {
 					  );
       
       //      console.log("LIKED NOTIFS:", notifLikes);
-      console.log("LIKES:", ...notifLikes[0]);
+//      console.log("LIKES:", ...notifLikes[0]);
       
       // Get replys
       const replys = notifications
@@ -546,7 +577,7 @@ const resolvers = {
 	      include:	    
 	      {
 		model: User,
-		as: "userThought"
+		as: "thoughtAuthor"
 	      }
 	    },
 	    {
@@ -555,7 +586,7 @@ const resolvers = {
 	      include:	    
 	      {
 		model: User,
-		as: "userThought"
+		as: "thoughtAuthor"
 	      }
 	    }
 	  ]
@@ -582,7 +613,7 @@ const resolvers = {
 	      include:	    
 	      {
 		model: User,
-		as: "userThought"
+		as: "thoughtAuthor"
 	      }
 	    },
 	    {
@@ -591,7 +622,7 @@ const resolvers = {
 	      include:	    
 	      {
 		model: User,
-		as: "userThought"
+		as: "thoughtAuthor"
 	      }
 	    }
 	  ]
@@ -834,8 +865,16 @@ const resolvers = {
 	    content: content,
 	  }
 	);
-	return await Thought.findByPk(thought.id,
-				      { include: { model: User }});				     
+	return await Thought.findByPk(
+	  thought.id,
+	  {
+	    include:
+	    {
+	      model: User,
+	      as: "thoughtAuthor"
+	    }
+	  }
+	);				     
       } else {
 	//Need to replace with different error
 	throw new Error("Something went wrong");
@@ -926,7 +965,7 @@ const resolvers = {
       const acknowledge = await Notification.create(
 	{
 	  fromUser: context.user.id,
-	   toUser: thoughtUserId,
+	  toUser: thoughtUserId,
 	  replyToId: thoughtId
 	}
       );

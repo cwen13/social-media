@@ -14,6 +14,7 @@ type User {
   friendOfFriend: [User]
 }
 
+
 type Notification {
   id: ID!
   fromUser: ID!
@@ -41,7 +42,7 @@ type Thought {
   id: ID!
   userId: ID!
   content: String!
-  user: User
+  thoughtAuthor: User
 }
 
 type Reply {
@@ -131,7 +132,7 @@ type Query {
   getReThoughtOriginalThought(reThoughtId: ID!): Thought
   getReplyOriginalThought(replyId: ID!): Thought
 
-  getMyNotifications: [NotificationList]
+  getMyNotifications: [Notification]
 
 }
 

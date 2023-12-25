@@ -37,7 +37,7 @@ const ThoughtPost = (props) => {
   }
   
   const { userId, loginUser, logoutUser, likedList, setLikedList } = useUserContext();
-  
+    console.log(props);  
   const replyAreaRef = useRef(null);
   const thoughtAreaRef = useRef(null);
   const reThoughtAreaRef = useRef(null);
@@ -300,6 +300,7 @@ const ThoughtPost = (props) => {
   //-------------------
   const handleLiked  = async (event) => {
     event.preventDefault();
+
     try {
       if (!props.liked) {
 	 await likedThought(

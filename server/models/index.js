@@ -12,12 +12,12 @@ const Notification = require("./Notification");
 
 Thought.belongsTo(User, {
   foreignKey: "userId",
-  as: "userThought"
+  as: "thoughtAuthor"
 });
 		      
 User.hasMany(Thought, {
   foreignKey: "userId",
-  as: "thoughtAuthor"
+  as: "userThought"
 });
 
 User.belongsToMany(Thought, {
