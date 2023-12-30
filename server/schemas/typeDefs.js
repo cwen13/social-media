@@ -17,6 +17,7 @@ type User {
 
 type Notification {
   id: ID!
+  createdAt: String!
   fromUser: ID!
   toUser: ID
   friendRequest: Boolean
@@ -39,60 +40,60 @@ type NotificationList {
 
 type Thought {
   id: ID!
+  createdAt: String!
   userId: ID!
   content: String!
   thoughtAuthor: User
-  createdAt: String
 }
 
 type Reply {
   id: ID!
+  createdAt: String!
   replyOfId: ID!
   replyThoughtId: ID!
   replyThought: Thought
   originalReplyThought: Thought
-  createdAt: String
 }
 
 type ReThought {
   id: ID!
+  createdAt: String!
   reThoughtOfId: ID!
   reThoughtThoughtId: ID!
   reThoughtThought: Thought
   originalReThoughtThought: Thought
-  createdAt: String
 }
 
 type Liked {
   id: ID!
+  createdAt: String!
   thoughtId: ID!
   likedByUserId: ID!
   thoughtLiker: User
   likedThought: Thought
-  createdAt: String
 }
 
 type Following {
   id: ID!
+  createdAt: String!
   userId: ID!
   followingId: ID!
   follower: User
-  createdAt: String
 }
 
 type Friend {
   id: ID!
+  createdAt: String!
   userId: ID!
   friendId: ID!
-  createdAt: String
 }
 
 type Pending {
   id: ID!
+  createdAt: String!
   userId: ID!
   requestingFriend: User
   pendingId: ID!
-  createdAt: String
 }
 
 type Blocked {

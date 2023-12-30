@@ -195,13 +195,13 @@ Reply.belongsTo(Thought, {
 ReThought.belongsTo(Thought, {
   foreignKey: "reThoughtOfId",
   otherKey: "reThoughtThoughtId",
-  as: "reThoughtThought"
+  as: "originalReThoughtThought"
 });
 
 ReThought.belongsTo(Thought, {
   foreignKey: "reThoughtThoughtId",
   otherKey: "reThoughtOfId",
-  as: "originalReThoughtThought"
+  as: "reThoughtThought"
 });
 
 

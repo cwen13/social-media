@@ -319,6 +319,7 @@ query getMyNotifications {
       replyToId
       reThoughtOfId
       acknowledge
+      createdAt
     }
     friendRequests {
       id

@@ -481,7 +481,7 @@ const resolvers = {
 
 	}
       );
-      console.log("NOTIFS:",notifications)
+//      console.log("NOTIFS:",notifications)
 
       // Get friend requessts
       const frs = notifications
@@ -601,12 +601,12 @@ const resolvers = {
       const reThoughted = notifications
 	    .filter(notif => notif.reThoughtOfId)
 	    .map(reThoughts => reThoughts.reThoughtOfId);
-//      console.log(reThoughts);
+//      console.log(reThoughted);
       const reThoughts = await ReThought.findAll(
 	{
 	  where:
 	  {
-	    reThoughtThoughtId: reThoughted
+	    reThoughtOfId: reThoughted
 	  },
 	  include:
 	  [
