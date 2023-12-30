@@ -399,6 +399,12 @@ query getMyNotifications {
   }
 }`;
 
-
+export const QUERY_MY_PENDING_REQUESTS = gql`
+query getMyPendingRequests {
+  getMyPendingRequests {
+    userId
+    pendingId
+  }
+}`;
 
 

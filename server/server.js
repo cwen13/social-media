@@ -31,7 +31,7 @@ if (process.env.NODE_ENV === 'production') {
 const startApolloServer = async (typeDefs, resolvers) => {
   await server.start();
   server.applyMiddleware({ app }); 
-  db.sync({ force: true }).then(() => {
+  db.sync({ force: false }).then(() => {
     app.listen(PORT, (error) => {
       console.log(`API server running on port ${PORT}!`);
       console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);

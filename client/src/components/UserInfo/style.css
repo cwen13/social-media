@@ -10,10 +10,12 @@
 .userStats {
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
 }
 
 .userInfo {
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex-shrink: 0;
 }

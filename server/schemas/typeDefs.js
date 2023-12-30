@@ -115,6 +115,7 @@ type Query {
 
   getMyFriends: [User]
   getUserFriends(userId: ID!): [User]
+  getMyPendingRequests: [Pending]
 
   getMyFollowing: [User]
   getUserFollowing(userId: ID!): [User]

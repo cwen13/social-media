@@ -5,7 +5,8 @@ import {
   QUERY_USER,
   QUERY_USER_FRIENDS,
   QUERY_USER_FOLLOWING,
-  QUERY_USER_BLOCKED
+  QUERY_USER_BLOCKED,
+  QUERY_MY_PENDING_REQUESTS
 } from "./../../utils/queries";
 import {
   ADD_FOLLOW,
@@ -27,6 +28,8 @@ import "./style.css";
 
 const UserInfo = ({ page, blocked, setBlocked }) => {
   const [ user, setUser] = useState({}); 
+  const [ pending, setPending ] = useState(false);
+  
   const { userId,
 	  loginUser,
 	  logoutUser,
@@ -41,12 +44,17 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	  followList,
 	  setFollowList,
 	} = useUserContext();
+
   let userPageId = useParams().userId;
   userPageId = (userPageId !== undefined) ? userPageId : userId;
   
   const [ friendship, setFriendship ] = useState(userId !== userPageId && friendList.filter(friendUser => friendUser.id === userPageId).length !== 0);
   const [ following, setFollowing ] = useState(userId !== userPageId && followList.filter(followUser => followUser.id === userPageId).length !== 0);
 
+  const { loading: pendingLoading, error: pendingError, data: pendingData } = useQuery(
+    QUERY_MY_PENDING_REQUESTS
+  );
+  
   const {lodaing: userLoading, error: userError, data: userData} = useQuery(
     QUERY_USER,
     {
@@ -129,7 +137,8 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   if(userError) return `Error UsEr ${userError.message}`;
   if(loadingFriends) return "Loading Friends";
   if(loadingFollowing) return "Loading Following";
-
+  if(pendingLoading) return "Loading Pending";
+  
   //-------------------------
   //-------FRIENDSHIP-BUTTON-
   //-------------------------
@@ -160,10 +169,15 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	  }
 	}
       );
+      setPending(true);
     };
   };
   
   const RenderFriendship = () => {
+    if(Object.keys(pendingData).length > 0
+       && pendingData.getMyPendingRequests
+       .filter((entry) =>  entry.pendingId == userPageId).length > 0) setPending(true);
+    
     return (
       <div className="friendship">
 	{(userId === userPageId)
@@ -172,13 +186,17 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	    <h4>
 	      This one of your friends
 	    </h4>
-	    :
+	    : (pending ? <h4>
+			   Waiting on thier approval
+			 </h4>
+	       :
 	    <div> This could be the start of a very nice <br />
 	      <button id="friendshipButton"
 		      onClick={handleFriendship}>
  		  Friendship?
 	      </button>
 	    </div>
+	      )
 	   )
 	}
       </ div>

@@ -1,4 +1,4 @@
-import React, { useEffect  } from "react";
+import React, { useState, useEffect  } from "react";
 // Need to get teh liked list to reload when accessing the page a second time and on
 import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
@@ -17,8 +17,11 @@ import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
 const Feed = (props) => {
+
   let userPageId = useParams().userId;
 
+  const [ recentThought, setRecentThought ] = useState({});
+  
   const { userId, likedList, setLikedList, blockedList } = useUserContext();
   userPageId = (userPageId !== undefined) ? userPageId : userId;
   
@@ -38,13 +41,15 @@ const Feed = (props) => {
     UserReThoughts: "getUserReThoughts"
   };
 
-  const { loading: replyIdsLoading, error: replyIdsError, data: replyIdsData } = useQuery(QUERY_ALL_REPLY_IDS);
-  const { loading: reThoughtIdsLoading, error: reThoughtIdsError, data: reThoughtIdsData } = useQuery(QUERY_ALL_RETHOUGHT_IDS);
-  
+  const { loading: replyIdsLoading, error: replyIdsError, data: replyIdsData } = useQuery(
+    QUERY_ALL_REPLY_IDS
+  );
+  const { loading: reThoughtIdsLoading, error: reThoughtIdsError, data: reThoughtIdsData } = useQuery(
+    QUERY_ALL_RETHOUGHT_IDS
+  );
   
   const queryString = (props.page === "MainFeed" && userPageId === undefined || userPageId === 0)
-	? ""
-	: { variables: { userId: userPageId }};
+	? "" : { variables: { userId: userPageId }};
   
   const { loading: queryLoading, error: queryError, data: queryData } = useQuery(
     queryOptions[props.page],
@@ -56,6 +61,7 @@ const Feed = (props) => {
   if (reThoughtIdsLoading) return "Loading rethought ids";
   if (replyIdsLoading) return "Loading reply ids";
 
+  
   const reThoughtIds = new Set(reThoughtIdsData.getAllReThoughtIds.map(entry => entry.reThoughtThoughtId));
   const isReThought = (thoughtId) => reThoughtIds.has(thoughtId);
 

@@ -26,11 +26,29 @@ const Notifications = (props) => {
     GET_MY_NOTIFICATIONS
   );
   
-  const [ approveFriend, { error: approveError }] = useMutation(APPROVE_FRIEND_REQUEST);
-  const [ denyFriend, { error: denyError }] = useMutation(DENY_FRIEND_REQUEST);
+  const [ approveFriend, { error: approveError }] = useMutation(
+    APPROVE_FRIEND_REQUEST,
+    {
+      refetchQueries:
+      [
+	GET_MY_NOTIFICATIONS,
+	"getMyNotifications"
+      ]
+    }
+  );
+  const [ denyFriend, { error: denyError }] = useMutation(
+    DENY_FRIEND_REQUEST,
+    {
+      refetchQueries:
+      [
+	GET_MY_NOTIFICATIONS,
+	"getMyNotifications"
+      ]
+    }
+  );
   const [ ackNotif, { error: ackNotifError }] = useMutation(
     ACKNOWLEDGE_NOTIFICATION,
-      {
+    {
       refetchQueries:
       [
 	GET_MY_NOTIFICATIONS,
@@ -47,7 +65,6 @@ const Notifications = (props) => {
 	  ...(notificationsData.getMyNotifications)
 	}
       )
-      console.log(notificationsData);
     }
   },[notificationsLoading, notificationsError, notificationsData]);
 
