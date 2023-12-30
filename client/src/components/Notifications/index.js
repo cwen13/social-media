@@ -36,6 +36,7 @@ const Notifications = (props) => {
       ]
     }
   );
+
   const [ denyFriend, { error: denyError }] = useMutation(
     DENY_FRIEND_REQUEST,
     {
@@ -46,6 +47,7 @@ const Notifications = (props) => {
       ]
     }
   );
+
   const [ ackNotif, { error: ackNotifError }] = useMutation(
     ACKNOWLEDGE_NOTIFICATION,
     {
@@ -78,34 +80,40 @@ const Notifications = (props) => {
   
   const notifFindId = (props) => {
     if(Object.keys(notifications !== 0)) {
+      console.log(notifications);
       let notifs = notifications.notifications;
       switch(props.__typename) {
       case "Following":
-	return (notifs.filter((entry) =>
+	let notifFollowing =  notifs.filter((entry) =>
 	  (entry.fromUser === props.fromUser
-	   && entry.followed === true)))[0].id;
+	   && entry.followed === true));
+	if (notifFollowing.length > 0)  return notifFollowing[0].id;
 	break;
       case "Pending":
-	return (notifs.filter((entry) =>
+	let notifPending =  notifs.filter((entry) =>
 	  (entry.fromUser === props.fromUser
-	   && entry.friendRequest === true)))[0].id;
+	   && entry.friendRequest === true));
+	if (notifPending.length > 0)  return notifPending[0].id;
 	break;
       case "Liked":
-	return (notifs.filter((entry) =>
+	let notifLiked = notifs.filter((entry) =>
 	  (entry.fromUser === props.thoughtLiker.id
-	   && entry.likedThoughtId === props.likedThought.id)))[0].id;
+	   && entry.likedThoughtId === props.likedThought.id))
+	if(notifLiked.length > 0) return notifLiked[0].id;
 	break;
       case "ReThought":
-	return(notifs.filter((entry) =>
+	let notifReThought = notifs.filter((entry) =>
 	  (entry.fromUser === props.reThoughtThought.thoughtAuthor.id
 	   && entry.reThoughtOfId === props.originalReThoughtThought.id
-	   && createdNearBy(entry.createdAt, props.createdAt))))[0].id;
+	   && createdNearBy(entry.createdAt, props.createdAt)));
+	if(notifReThought.length > 0) return notifReThought[0].id;
 	break;
       case "Reply":
-	return (notifs.filter((entry) =>
+	let notifReply = notifs.filter((entry) =>
 	  (entry.fromUser === props.replyThought.thoughtAuthor.id
 	   && entry.replyToId === props.originalReplyThought.id
-	   && createdNearBy(entry.createdAt, props.createdAt))))[0].id;
+	   && createdNearBy(entry.createdAt, props.createdAt)));
+	if(notifReply.length > 0) return notifReply[0].id;
 	break;
       default:
 	return 0;
@@ -115,25 +123,28 @@ const Notifications = (props) => {
   };
   
   const RenderFriendRequests = (props) => {
+    console.log("PROPS:",props);
     const notifId = notifFindId(props)
     const approve = async (event) => {
       event.preventDefault();
-      const newFriend = await approveFriend(
+      const approveRequest = await approveFriend(
 	{
 	  variables:
 	  {
-	    friendId: props.user.id
+	    friendId: props.requestingFriend.id
 	  }
 	}
       );
     };
+    console.log(approveError);
+    
     const disapprove = async (event) => {
       event.preventDefault();
-      const denyFriend = await denyFriend(
+      const denyRequest = await denyFriend(
 	{
 	  variables:
 	  {
-	    pendingId: props.user.id
+	    pendingId: props.requestingFriend.id
 	  }
 	}
       );

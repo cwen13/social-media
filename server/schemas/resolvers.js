@@ -646,6 +646,7 @@ const resolvers = {
       
       return NotificationList;
     },
+    
     getMyPendingRequests: async (parent, args, context) => {
       return  await Pending.findAll(
 	{
@@ -722,7 +723,8 @@ const resolvers = {
 	      pendingId: friendId
 	    }
 	  }
-	)
+	) > 0;
+	console.log(isValidRequest);
 	if(isValidRequest) {
 	  await Pending.destroy(
 	    {

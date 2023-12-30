@@ -23,7 +23,7 @@ Notification.init(
     friendRequest: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
-      unique: false
+      unique: true
     },
     followed: {
       type: DataTypes.BOOLEAN,
