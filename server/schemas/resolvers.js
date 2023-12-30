@@ -150,7 +150,7 @@ const resolvers = {
     },
 
     //STATUS: WORKING
-    getAllThoughts: async (parent, args, context) => {
+    getAllThoughts: async (parent, { blockedList }, context) => {
       const thoughts = await Thought.findAll(
 	{
 	  include:
@@ -168,7 +168,7 @@ const resolvers = {
 	}
       );
 
-      console.log(thoughts);
+//      console.log(thoughts);
       return thoughts;
     },
 
@@ -364,7 +364,7 @@ const resolvers = {
 	  [
 	    {
 	      model: User,
-	      as: "thoughtAuthor"
+	      as: "thoughtAuthor",
 	    },
 	    
 	    {
@@ -475,11 +475,13 @@ const resolvers = {
 	{
 	  where:
 	  {
-	    toUser: context.user.id
-	  }
+	    toUser: context.user.id,
+	    acknowledge: false
+	  },
+
 	}
       );
-//      console.log("NOTIFS:",notifications)
+      console.log("NOTIFS:",notifications)
 
       // Get friend requessts
       const frs = notifications
@@ -518,7 +520,7 @@ const resolvers = {
 	  }
 	}
       );
-//      console.log("FOLLOWS:",followers);
+//      console.log("FOLLOWS:",followers[0]);
 
       // Get likes
       const liked = notifications
@@ -557,7 +559,7 @@ const resolvers = {
 					   )
 				      );
       const likes = likedList.map(like => like[0]);
-      console.log("LIKED NOTIFS:", likes);
+//      console.log("LIKED NOTIFS:", likes);
       
       // Get replys
       const replyed = notifications
@@ -597,8 +599,8 @@ const resolvers = {
 
       // Get reThoughts
       const reThoughted = notifications
-	    .filter(notif => notif.reThoughtId)
-	    .map(reThoughts => reThoughts.reThoughtId);
+	    .filter(notif => notif.reThoughtOfId)
+	    .map(reThoughts => reThoughts.reThoughtOfId);
 //      console.log(reThoughts);
       const reThoughts = await ReThought.findAll(
 	{
@@ -633,14 +635,13 @@ const resolvers = {
 
       const NotificationList =
 	    {
-	      
+	      notifications, 
 	      friendRequests,
 	      followers,
 	      likes,
 	      replys,
 	      reThoughts
 	    }
-
 //      console.log(NotificationList);
       
       return NotificationList;
@@ -995,7 +996,7 @@ const resolvers = {
 	  {
 	    fromUser: context.user.id,
 	    toUser: originalThoughtUserId,
-	    reThoughtId: reThoughtThought.id
+	    reThoughtOfId: originalThoughtId
 	  }
 	);
 	
@@ -1006,7 +1007,7 @@ const resolvers = {
       }
       
     },
-    acknowledgeNotifcation: async (parent, { notificationId }, context) => {
+    acknowledgeNotification: async (parent, { notificationId }, context) => {
       return (await Notification.update(
 	{
 	  acknowledge: true

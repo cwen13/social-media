@@ -183,26 +183,27 @@ Liked.belongsTo(Thought, {
 Reply.belongsTo(Thought, {
   foreignKey: "replyThoughtId",
   otherKey: "replyOfId",
-  as: "originalReplyThought"
+  as: "replyThought"
 });
 
 Reply.belongsTo(Thought, {
   foreignKey: "replyOfId",
   otherKey: "replyThoughtId",
-  as: "replyThought"
+  as: "originalReplyThought"
 });
 
 ReThought.belongsTo(Thought, {
   foreignKey: "reThoughtOfId",
   otherKey: "reThoughtThoughtId",
-  as: "originalReThoughtThought"
+  as: "reThoughtThought"
 });
 
 ReThought.belongsTo(Thought, {
   foreignKey: "reThoughtThoughtId",
-  otherKey: "reThoughtThoughtId",
-  as: "reThoughtThought"
+  otherKey: "reThoughtOfId",
+  as: "originalReThoughtThought"
 });
+
 
 
 

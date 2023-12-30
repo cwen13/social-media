@@ -23,19 +23,17 @@ type Notification {
   followed: Boolean
   likedThoughtId: ID
   replyToId: ID
-  reThoughtId: ID
+  reThoughtOfId: ID
   acknowledge: Boolean!
-  user: User
-  thought: Thought
 }
 
 type NotificationList {
+  notifications: [Notification]
   friendRequests: [Pending]
   followers: [Following]
   likes: [Liked]
   replys: [Reply]
-  reThoughts: [ReThought]
-  
+  reThoughts: [ReThought]  
 }
 
 
@@ -44,40 +42,49 @@ type Thought {
   userId: ID!
   content: String!
   thoughtAuthor: User
+  createdAt: String
 }
 
 type Reply {
   id: ID!
   replyOfId: ID!
   replyThoughtId: ID!
-  thought: Thought
+  replyThought: Thought
+  originalReplyThought: Thought
+  createdAt: String
 }
 
 type ReThought {
   id: ID!
   reThoughtOfId: ID!
   reThoughtThoughtId: ID!
-  thought: Thought
+  reThoughtThought: Thought
+  originalReThoughtThought: Thought
+  createdAt: String
 }
 
 type Liked {
   id: ID!
   thoughtId: ID!
   likedByUserId: ID!
-  thought: Thought
-  user: User
+  thoughtLiker: User
+  likedThought: Thought
+  createdAt: String
 }
 
 type Following {
   id: ID!
   userId: ID!
   followingId: ID!
+  follower: User
+  createdAt: String
 }
 
 type Friend {
   id: ID!
   userId: ID!
   friendId: ID!
+  createdAt: String
 }
 
 type Pending {
@@ -85,12 +92,14 @@ type Pending {
   userId: ID!
   requestingFriend: User
   pendingId: ID!
+  createdAt: String
 }
 
 type Blocked {
   id: ID!
   userId: ID!
   blockedId: ID!
+  createdAt: String
 }
 
 type Auth {
@@ -135,7 +144,9 @@ type Query {
   getReplyOriginalThought(replyId: ID!): Thought
 
   getMyNotifications: NotificationList
+  getMyNotificationIds: [Notification]
 
+  getLikedNotification(likedId: ID!, fromUser: ID!): Notification
 }
 
 type Mutation {
@@ -185,7 +196,7 @@ type Mutation {
   addReThought(originalThoughtId: ID!,
                additionalThought: String,
                originalThoughtUserId: ID!): ReThought!
-  acknowledgeNotifcation(notificationId: ID!): Boolean!
+  acknowledgeNotification(notificationId: ID!): Boolean!
 }`;
 
 

@@ -21,6 +21,8 @@ import UserList from "./../UserList";
 import ThoughtCreate from "./../ThoughtCreate"
 import Notifications from "./../Notifications";
 import { useUserContext } from "./../../utils/UserContext";
+import AuthService from "./../../utils/auth";
+
 import "./style.css";
 
 const UserInfo = ({ page, blocked, setBlocked }) => {
@@ -416,7 +418,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	      EMAIL: {user.email}
 	    </div>}
 	  </>}
-	{userPageId === userId
+	{userPageId === userId && userPageId !== 0
 	 ? <>
 	     <ThoughtCreate userId={userPageId}
 			    page={page} />

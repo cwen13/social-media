@@ -161,11 +161,15 @@ export const SEND_FRIEND_REQUEST = gql`mutation sendFriendRequest ($pendingId: I
 sendFriendRequest(pendingId: $pendingId)
 }`;
 
-export const DENY_FRIEND_REQUEST = gql`mutation denyFriendRequest ($denyFriendRequestPendingId2: ID!) {
-  denyFriendRequest(pendingId: $denyFriendRequestPendingId2)
+export const DENY_FRIEND_REQUEST = gql`mutation denyFriendRequest ($pendingId: ID!) {
+  denyFriendRequest(pendingId: $pendingId)
 }`;
 
-export const APPROVE_FRIEND_REQUEST = gql`mutation addFriend ($addFriendFriendId3: ID!   ) { 
-  addFriend(friendId: $addFriendFriendId3)
+export const APPROVE_FRIEND_REQUEST = gql`mutation addFriend ($friendId: ID!) { 
+  addFriend(friendId: $friendId)
 }`;
 
+export const ACKNOWLEDGE_NOTIFICATION = gql`
+mutation acknowledgeNotification ($notificationId: ID!) {
+  acknowledgeNotification (notificationId: $notificationId)
+}`;

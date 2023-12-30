@@ -40,7 +40,7 @@ Notification.init(
       allowNulll: true,
       unique: false
     },
-    reThoughtId: {
+    reThoughtOfId: {
       type: DataTypes.INTEGER,
       allowNulll: true,
       unique: false

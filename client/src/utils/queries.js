@@ -306,40 +306,98 @@ query getMyBlockedUsers {
   }
 }`;
 
-//export const GET_MY_NOTIFICAITONS = gql`
-//query getMyNotifications {
-//  getMyNotifications {
-//    fromUser
-//    friendRequest
-//    followed
-//    likedThoughtId
-//    replyToId
-//    reThoughtId
-//    acknowledge
-//  }
-//}`;
-
-
-export const GET_MY_NOTIFICAITONS = gql`
+export const GET_MY_NOTIFICATIONS = gql`
 query getMyNotifications {
   getMyNotifications {
+    notifications {
+      id
+      fromUser
+      toUser
+      friendRequest
+      followed
+      likedThoughtId
+      replyToId
+      reThoughtOfId
+      acknowledge
+    }
     friendRequests {
       id
+      createdAt
+      requestingFriend {
+        id
+        userName
+        handle
+      }
     }
     followers {
       id
+      createdAt
+      follower {
+        id
+        userName
+        handle
+      }
     }
     likes {
       id
+      createdAt
+      thoughtLiker {
+        id
+        userName
+        handle
+      }
+      likedThought {
+        id
+        content
+      }
     }
     replys {
       id
+      createdAt
+      replyThought {
+        id
+        content
+        thoughtAuthor {
+          id
+          userName
+          handle
+        }
+      }
+      originalReplyThought {
+        id
+        content
+        thoughtAuthor {
+          id
+          userName
+          handle
+        }
+      }        
     }
     reThoughts {
       id
+      createdAt
+      reThoughtThought {
+        id
+        content
+        thoughtAuthor {
+          id
+          userName
+          handle
+        }
+      }
+      originalReThoughtThought {
+        id
+        content
+        thoughtAuthor {
+          id
+          userName
+          handle
+        }
+      }
     }
-
   }
 }`;
+
+
 
 

@@ -37,7 +37,6 @@ const ThoughtPost = (props) => {
   }
   
   const { userId, loginUser, logoutUser, likedList, setLikedList } = useUserContext();
-
   const replyAreaRef = useRef(null);
   const thoughtAreaRef = useRef(null);
   const reThoughtAreaRef = useRef(null);

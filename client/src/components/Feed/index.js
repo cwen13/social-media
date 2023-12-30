@@ -28,7 +28,7 @@ const Feed = (props) => {
     MainFeed :  QUERY_ALL_THOUGHTS,
     Liked: QUERY_USER_LIKED,
     UserReThoughts: QUERY_USER_RETHOUGHTS
-  };
+  }
 
   const thoughts = {
     MyPage : "getUserThoughts",
