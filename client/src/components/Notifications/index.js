@@ -10,7 +10,6 @@ import {
 
 import {
   GET_MY_NOTIFICATIONS,
-  GET_MY_NOTIFICATION_IDS
 } from "./../../utils/queries";
 
 import { useUserContext } from "./../../utils/UserContext";
@@ -29,7 +28,16 @@ const Notifications = (props) => {
   
   const [ approveFriend, { error: approveError }] = useMutation(APPROVE_FRIEND_REQUEST);
   const [ denyFriend, { error: denyError }] = useMutation(DENY_FRIEND_REQUEST);
-  const [ ackNotif, { error: ackNotifError }] = useMutation(ACKNOWLEDGE_NOTIFICATION);
+  const [ ackNotif, { error: ackNotifError }] = useMutation(
+    ACKNOWLEDGE_NOTIFICATION,
+      {
+      refetchQueries:
+      [
+	GET_MY_NOTIFICATIONS,
+	"getMyNotifications"
+      ]
+    }
+  );
   
   useEffect(() =>{
     if(!notificationsLoading && !notificationsError && notificationsData !== undefined){
@@ -39,6 +47,7 @@ const Notifications = (props) => {
 	  ...(notificationsData.getMyNotifications)
 	}
       )
+      console.log(notificationsData);
     }
   },[notificationsLoading, notificationsError, notificationsData]);
 
