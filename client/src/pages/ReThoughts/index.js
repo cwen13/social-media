@@ -15,14 +15,8 @@ const ReThoughts = () => {
   
   return(
     <section id="feedContainer">
-      <ul className="userFeed">
-	<li id="userInfo">
-	  <UserInfo page={page}/>
-	</li>
-	<li id="feed">
-	  <Feed page={page}/>
-	</li>
-      </ul>
+      <UserInfo id="userInfo" page={page}/>
+      <Feed id="feed" page={page}/>
     </section>
   );
 };

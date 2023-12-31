@@ -35,11 +35,7 @@ const ThoughtPage = () => {
   
   return(
     <section id="feedContainer">
-      <ul className="userFeed">
-	<li id="userInfo">
-	  <UserInfo page={page}/>
-	</li>
-	<li id="feed">
+	  <UserInfo id="userInfo"  page={page}/>
 	  <ThoughtPost userName={thought.user.userName}
 		       userId={thought.user.id}
 		       thought={thought.content}
@@ -49,8 +45,6 @@ const ThoughtPage = () => {
 		       page={page}
 		       liked={isLiked(thought.id)}
 	  />
-	</li>
-      </ul>
     </section>);
 };
 

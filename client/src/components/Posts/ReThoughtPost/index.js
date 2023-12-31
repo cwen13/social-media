@@ -38,7 +38,7 @@ const ReThoughtPost = (props) => {
       <div className="originalThought">
 	<section className="authorInfo">
 	  <ul>
-	    <li>UserName: {originalThought.user.userName}
+	    <li>UserName: {originalThought.thoughtAuthoruserName}
 	      <Link to={`/user/${props.userId}`}>
 	      </Link>
 	    </li>

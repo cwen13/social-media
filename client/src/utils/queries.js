@@ -78,7 +78,8 @@ query getMyThoughts {
     id
     userId
     content
-    user {
+    thoughtAuthor {
+      id
       userName
     }
   }
@@ -90,7 +91,7 @@ query getAllThoughts {
     id
     userId
     content
-    user {
+    thoughtAuthor {
       id
       userName
       handle
@@ -111,7 +112,7 @@ query getThought($thoughtId: ID!) {
   getThought(thoughtId: $thoughtId) {
     id
     content
-    user{
+    thoughtAuthor {
       id
       userName
       handle
@@ -124,7 +125,7 @@ query getThoughtLikes ($thoughtId: ID!) {
   getThoughtLikes(thoughtId: $thoughtId) {
     id
     content
-    user{
+    thoughtAuthor {
       id
       userName
       handle
@@ -138,7 +139,8 @@ query getUserThoughts ($userId: ID!) {
   getUserThoughts (userId: $userId) {
     id
     content
-    user{
+    thoughtAuthor {
+      id
       userName
       handle
     }
@@ -150,7 +152,7 @@ query getThoughtReplys ($thoughtId: ID!) {
   getThoughtReplys(thoughtId: $thoughtId) {
     id
     content
-    user{
+    thoughtAuthor {
       id
       userName
       handle
@@ -162,7 +164,8 @@ export const QUERY_RETHOUGHT = gql`
 query getThoughtReThoughts ($originalThoughtId: ID!) {
   getThoughtReThoughts(originalThoughtId: $originalThoughtId) {
     content
-    user{
+    thoughtAuthor {
+      id
       userName
       handle
     }
@@ -175,7 +178,8 @@ query getMyReThoughts {
     id
     userId
     content
-    user{
+    thoughtAuthor {
+      id
       userName
       handle
     }
@@ -196,7 +200,7 @@ query getUserLiked ($userId: ID!) {
     id
     userId
     content
-    user {
+    thoughtAuthor {
       id
       userName
       handle
@@ -211,7 +215,7 @@ query getUserReThoughts ($userId: ID!)  {
     id
     userId
     content
-    user{
+    thoughtAuthor {
       id
       userName
       handle
@@ -265,7 +269,7 @@ query getReThoughtOriginalThought ($reThoughtId: ID!) {
   getReThoughtOriginalThought (reThoughtId: $reThoughtId) {
     id
     content
-    user {
+    thoughtAuthor {
       id
       userName
       handle
@@ -278,7 +282,7 @@ query getReplyOriginalThought ($replyId: ID!) {
   getReplyOriginalThought (replyId: $replyId) {
     id
     content
-    user {
+    thoughtAuthor {
       id
       userName
       handle
@@ -301,3 +305,106 @@ query getMyBlockedUsers {
     userName
   }
 }`;
+
+export const GET_MY_NOTIFICATIONS = gql`
+query getMyNotifications {
+  getMyNotifications {
+    notifications {
+      id
+      fromUser
+      toUser
+      friendRequest
+      followed
+      likedThoughtId
+      replyToId
+      reThoughtOfId
+      acknowledge
+      createdAt
+    }
+    friendRequests {
+      id
+      createdAt
+      requestingFriend {
+        id
+        userName
+        handle
+      }
+    }
+    followers {
+      id
+      createdAt
+      follower {
+        id
+        userName
+        handle
+      }
+    }
+    likes {
+      id
+      createdAt
+      thoughtLiker {
+        id
+        userName
+        handle
+      }
+      likedThought {
+        id
+        content
+      }
+    }
+    replys {
+      id
+      createdAt
+      replyThought {
+        id
+        content
+        thoughtAuthor {
+          id
+          userName
+          handle
+        }
+      }
+      originalReplyThought {
+        id
+        content
+        thoughtAuthor {
+          id
+          userName
+          handle
+        }
+      }        
+    }
+    reThoughts {
+      id
+      createdAt
+      reThoughtThought {
+        id
+        content
+        thoughtAuthor {
+          id
+          userName
+          handle
+        }
+      }
+      originalReThoughtThought {
+        id
+        content
+        thoughtAuthor {
+          id
+          userName
+          handle
+        }
+      }
+    }
+  }
+}`;
+
+export const QUERY_MY_PENDING_REQUESTS = gql`
+query getMyPendingRequests {
+  getMyPendingRequests {
+    userId
+    pendingId
+  }
+}`;
+
+

@@ -11,44 +11,52 @@ Notification.init(
       primaryKey: true,
       autoIncrement: true
     },
-    friendRequestFromId: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true
+    fromUser: {
+      type: DataTypes.INTEGER,
+      allowNull: false,      
     },
-    followedById: {
+    toUser: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: 0
+    },
+    friendRequest: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      unique: true
+    },
+    followed: {
       type: DataTypes.BOOLEAN,
       allowNulll: true,
+      unique: false
     },
     likedThoughtId: {
       type: DataTypes.INTEGER,
       allowNulll: true,
-    },
-    LikedThoughtById: {
-      type: DataTypes.INTEGER,
-      allowNulll: true,
+      unique: false
     },
     replyToId: {
       type: DataTypes.INTEGER,
       allowNulll: true,
+      unique: false
     },
-    replyById: {
+    reThoughtOfId: {
       type: DataTypes.INTEGER,
       allowNulll: true,
+      unique: false
     },
-    reThouhghtId: {
-      type: DataTypes.INTEGER,
-      allowNulll: true,
-    },
-    reThoughtById: {
-      type: DataTypes.INTEGER,
-      allowNulll: true,
-    },
+    acknowledge: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      unique: false
+    }
   },
   {
     sequelize,
     freezeTableName: true,
     underscored: true,
-    modelName: 'notificaiton',
+    modelName: 'notification',
   }
 );
 

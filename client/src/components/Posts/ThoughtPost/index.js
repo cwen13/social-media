@@ -37,7 +37,6 @@ const ThoughtPost = (props) => {
   }
   
   const { userId, loginUser, logoutUser, likedList, setLikedList } = useUserContext();
-  
   const replyAreaRef = useRef(null);
   const thoughtAreaRef = useRef(null);
   const reThoughtAreaRef = useRef(null);
@@ -208,6 +207,7 @@ const ThoughtPost = (props) => {
 	  variables:
 	  {
 	    originalThoughtId: props.thoughtId,
+	    originalThoughtUserId: props.userId,
 	    additionalThought: reThoughtText
 	  }
 	}
@@ -299,13 +299,15 @@ const ThoughtPost = (props) => {
   //-------------------
   const handleLiked  = async (event) => {
     event.preventDefault();
+
     try {
       if (!props.liked) {
 	 await likedThought(
 	  {
 	    variables:
 	    {
-	      thoughtId: props.thoughtId
+	      thoughtId: props.thoughtId,
+	      thoughtUserId: props.userId
 	    }
 	  }
 	);
@@ -386,7 +388,8 @@ const ThoughtPost = (props) => {
 	  variables:
 	  {
 	    content: replyText,
-	    thoughtId: props.thoughtId
+	    thoughtId: props.thoughtId,
+	    thoughtUserId: props.userId
 	  }
 	}
       );
@@ -496,3 +499,4 @@ const ThoughtPost = (props) => {
 };
 
 export default ThoughtPost;
+

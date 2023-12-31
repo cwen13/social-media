@@ -1,4 +1,4 @@
-import React, { useEffect  } from "react";
+import React, { useState, useEffect  } from "react";
 // Need to get teh liked list to reload when accessing the page a second time and on
 import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
@@ -17,8 +17,11 @@ import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
 const Feed = (props) => {
+
   let userPageId = useParams().userId;
 
+  const [ recentThought, setRecentThought ] = useState({});
+  
   const { userId, likedList, setLikedList, blockedList } = useUserContext();
   userPageId = (userPageId !== undefined) ? userPageId : userId;
   
@@ -28,7 +31,7 @@ const Feed = (props) => {
     MainFeed :  QUERY_ALL_THOUGHTS,
     Liked: QUERY_USER_LIKED,
     UserReThoughts: QUERY_USER_RETHOUGHTS
-  };
+  }
 
   const thoughts = {
     MyPage : "getUserThoughts",
@@ -38,14 +41,16 @@ const Feed = (props) => {
     UserReThoughts: "getUserReThoughts"
   };
 
-  const { loading: replyIdsLoading, error: replyIdsError, data: replyIdsData } = useQuery(QUERY_ALL_REPLY_IDS);
-  const { loading: reThoughtIdsLoading, error: reThoughtIdsError, data: reThoughtIdsData } = useQuery(QUERY_ALL_RETHOUGHT_IDS);
-  
+  const { loading: replyIdsLoading, error: replyIdsError, data: replyIdsData } = useQuery(
+    QUERY_ALL_REPLY_IDS
+  );
+  const { loading: reThoughtIdsLoading, error: reThoughtIdsError, data: reThoughtIdsData } = useQuery(
+    QUERY_ALL_RETHOUGHT_IDS
+  );
   
   const queryString = (props.page === "MainFeed" && userPageId === undefined || userPageId === 0)
-	? ""
-	: { variables: { userId: userPageId }};
-    
+	? "" : { variables: { userId: userPageId }};
+  
   const { loading: queryLoading, error: queryError, data: queryData } = useQuery(
     queryOptions[props.page],
     queryString    
@@ -55,7 +60,8 @@ const Feed = (props) => {
   if (queryError) return `Q Error ${queryError.message}`;
   if (reThoughtIdsLoading) return "Loading rethought ids";
   if (replyIdsLoading) return "Loading reply ids";
-    
+
+  
   const reThoughtIds = new Set(reThoughtIdsData.getAllReThoughtIds.map(entry => entry.reThoughtThoughtId));
   const isReThought = (thoughtId) => reThoughtIds.has(thoughtId);
 
@@ -101,14 +107,14 @@ const Feed = (props) => {
       </li>
     );
   };
-
+  
   return (
     <div className="feed">
       <ul className="feedPosts">
 	{(props.blocked || (queryData[thoughts[props.page]].length === 0)) ? <RenderBlockedThought /> :
 	(noData === null) ? noData :
 	 queryData[thoughts[props.page]].map(thought =>
-	   (blockedUser(thought.user.id) ? "" :
+	   (blockedUser(thought.thoughtAuthor.id) ? "" :
 	   <ThoughtPost key={thought.id}
 			page={props.page}
 			thoughtId={thought.id}
@@ -116,8 +122,8 @@ const Feed = (props) => {
 			liked={isLiked(thought.id)}
 			isReThought={isReThought(thought.id)}
 			isReply={isReply(thought.id)}
-			userId={thought.user.id}
-			userName={thought.user.userName}
+			userId={thought.thoughtAuthor.id}
+			userName={thought.thoughtAuthor.userName}
 	   />))}
       </ul>
     </div>

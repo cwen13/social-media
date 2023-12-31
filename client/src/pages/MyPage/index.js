@@ -5,20 +5,14 @@ import Feed from "./../../components/Feed";
 import "./../MainStyles/style.css";
 
 function MyPage() {
-
+  
   const page = "MyPage"
   
   return(
     <section id="feedContainer">      
-      <ul className="userFeed">
-	<li id="userInfo">
-	  <MyProfile page={page}/>
-	</li>
-	<li id="feed">
-	  <Feed page={page}/>
-	</li>
-      </ul>
-      </section>
+      <MyProfile id="userInfo" page={page}/>
+      <Feed id="feed" page={page}/>      
+    </section>
   );
 };
 

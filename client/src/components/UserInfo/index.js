@@ -5,7 +5,8 @@ import {
   QUERY_USER,
   QUERY_USER_FRIENDS,
   QUERY_USER_FOLLOWING,
-  QUERY_USER_BLOCKED
+  QUERY_USER_BLOCKED,
+  QUERY_MY_PENDING_REQUESTS
 } from "./../../utils/queries";
 import {
   ADD_FOLLOW,
@@ -19,11 +20,16 @@ import {
 } from "./../../utils/mutations";
 import UserList from "./../UserList";
 import ThoughtCreate from "./../ThoughtCreate"
+import Notifications from "./../Notifications";
 import { useUserContext } from "./../../utils/UserContext";
+import AuthService from "./../../utils/auth";
+
 import "./style.css";
 
 const UserInfo = ({ page, blocked, setBlocked }) => {
   const [ user, setUser] = useState({}); 
+  const [ pending, setPending ] = useState(false);
+  
   const { userId,
 	  loginUser,
 	  logoutUser,
@@ -38,12 +44,17 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	  followList,
 	  setFollowList,
 	} = useUserContext();
+
   let userPageId = useParams().userId;
   userPageId = (userPageId !== undefined) ? userPageId : userId;
-  
+
   const [ friendship, setFriendship ] = useState(userId !== userPageId && friendList.filter(friendUser => friendUser.id === userPageId).length !== 0);
   const [ following, setFollowing ] = useState(userId !== userPageId && followList.filter(followUser => followUser.id === userPageId).length !== 0);
 
+  const { loading: pendingLoading, error: pendingError, data: pendingData } = useQuery(
+    QUERY_MY_PENDING_REQUESTS
+  );
+  
   const {lodaing: userLoading, error: userError, data: userData} = useQuery(
     QUERY_USER,
     {
@@ -54,7 +65,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
     }
   );
 
-  const { loading:loadingFriends , error: errorFriends, data: dataFriends } = useQuery(
+  const { loading:loadingFriends , error: friendsError, data: friendsData } = useQuery(
     QUERY_USER_FRIENDS,
     {
      variables:
@@ -64,7 +75,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
     }
   );
 
-  const { loading:loadingFollowing , error: errorFollowing, data: dataFollowing } = useQuery(
+  const { loading:followingLoading , error: errorFollowing, data: dataFollowing } = useQuery(
     QUERY_USER_FOLLOWING,
     {
       variables:
@@ -119,14 +130,22 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	}
       );
     }
-  },[userLoading, userError, userData]);
+    if(friendList !== 0) {
+      setFriendship(userId !== userPageId && friendList.filter(friendUser => friendUser.id === userPageId).length !== 0)
+    }
+    if(followList !== 0) {
+      setFollowing(userId !== userPageId && followList.filter(followUser => followUser.id === userPageId).length !== 0)
+    }
+    
+  },[userLoading, userError, userData, friendList, followList]);
 
   
   if(userLoading) return "Loading...";
   if(userError) return `Error UsEr ${userError.message}`;
   if(loadingFriends) return "Loading Friends";
-  if(loadingFollowing) return "Loading Following";
-
+  if(followingLoading) return "Loading Following";
+  if(pendingLoading) return "Loading Pending";
+  
   //-------------------------
   //-------FRIENDSHIP-BUTTON-
   //-------------------------
@@ -157,10 +176,15 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	  }
 	}
       );
+      setPending(true);
     };
   };
   
   const RenderFriendship = () => {
+    if(Object.keys(pendingData).length > 0
+       && pendingData.getMyPendingRequests
+       .filter((entry) =>  entry.pendingId == userPageId).length > 0) setPending(true);
+    
     return (
       <div className="friendship">
 	{(userId === userPageId)
@@ -169,13 +193,17 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	    <h4>
 	      This one of your friends
 	    </h4>
-	    :
+	    : (pending ? <h4>
+			   Waiting on thier approval
+			 </h4>
+	       :
 	    <div> This could be the start of a very nice <br />
 	      <button id="friendshipButton"
 		      onClick={handleFriendship}>
  		  Friendship?
 	      </button>
 	    </div>
+	      )
 	   )
 	}
       </ div>
@@ -342,7 +370,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	     <li>Friends 
 	       {/*This will be a mini scroll box likely a iframe*/}
 	       <ul id="friendsList">
-		 {dataFriends.getUserFriends !== undefined ? dataFriends.getUserFriends.map(friend =>
+		 {friendsData.getUserFriends !== undefined ? friendsData.getUserFriends.map(friend =>
 		   <UserList userId={friend.id}
 			     key={friend.id}
 			     userName={friend.userName}
@@ -415,10 +443,14 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	      EMAIL: {user.email}
 	    </div>}
 	  </>}
-	{userPageId !== userId ? "" :
-	<ThoughtCreate userId={userPageId}
-		       page={page} />}
-	{userPageId === 0 || blocked
+	{userPageId === userId && userPageId !== 0
+	 ? <>
+	     <ThoughtCreate userId={userPageId}
+			    page={page} />
+	     <Notifications />
+	 </>
+	 : ""}
+	{userPageId === 0 || blocked 
 	 ? <h2>There are no friend yet</h2>
 	 : <RenderFriendship />}
 	{userPageId === 0 || blocked
@@ -426,9 +458,9 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	 : <RenderFollowing />}
 	{userPageId === 0
 	 ? <h2>There are no followings yet</h2>
-	 : <RenderBlocked />}	
+	 : <RenderBlocked />}
+	{blocked ? "" : <RenderStats />}
       </section>
-      {blocked ? "" : <RenderStats />}
     </>
   );
 };
