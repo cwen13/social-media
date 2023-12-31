@@ -65,7 +65,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
     }
   );
 
-  const { loading:loadingFriends , error: errorFriends, data: dataFriends } = useQuery(
+  const { loading:loadingFriends , error: friendsError, data: friendsData } = useQuery(
     QUERY_USER_FRIENDS,
     {
      variables:
@@ -75,7 +75,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
     }
   );
 
-  const { loading:loadingFollowing , error: errorFollowing, data: dataFollowing } = useQuery(
+  const { loading:followingLoading , error: errorFollowing, data: dataFollowing } = useQuery(
     QUERY_USER_FOLLOWING,
     {
       variables:
@@ -143,7 +143,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   if(userLoading) return "Loading...";
   if(userError) return `Error UsEr ${userError.message}`;
   if(loadingFriends) return "Loading Friends";
-  if(loadingFollowing) return "Loading Following";
+  if(followingLoading) return "Loading Following";
   if(pendingLoading) return "Loading Pending";
   
   //-------------------------
@@ -370,7 +370,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	     <li>Friends 
 	       {/*This will be a mini scroll box likely a iframe*/}
 	       <ul id="friendsList">
-		 {dataFriends.getUserFriends !== undefined ? dataFriends.getUserFriends.map(friend =>
+		 {friendsData.getUserFriends !== undefined ? friendsData.getUserFriends.map(friend =>
 		   <UserList userId={friend.id}
 			     key={friend.id}
 			     userName={friend.userName}
@@ -459,8 +459,8 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	{userPageId === 0
 	 ? <h2>There are no followings yet</h2>
 	 : <RenderBlocked />}
+	{blocked ? "" : <RenderStats />}
       </section>
-      {blocked ? "" : <RenderStats />}
     </>
   );
 };

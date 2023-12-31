@@ -17,17 +17,13 @@ function UserPage() {
 
   return(
     <section id="feedContainer">      
-      <ul className="userFeed">
-	<li id="userInfo">
-	  <UserInfo page={page}
-		    blocked={blocked}
-		    setBlocked={setBlocked}/>
-	</li>
-	<li id="feed">
-	  <Feed page={page}
-		blocked={blocked}/>
-	</li>
-      </ul>
+      <UserInfo id="userInfo"
+		page={page}
+		blocked={blocked}
+		setBlocked={setBlocked}/>
+      <Feed id="feed"
+	    page={page}
+	    blocked={blocked}/>
     </section>
   );
 };

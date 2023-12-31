@@ -241,7 +241,7 @@ const resolvers = {
 	  },
 	}
       );
-      console.log(userThoughts);
+//      console.log(userThoughts);
       return userThoughts;
     },
 
@@ -725,7 +725,7 @@ const resolvers = {
 	    }
 	  }
 	);
-	console.log("ISVALID:",isValidRequest);
+
 	if(isValidRequest) {
 	  await Pending.destroy(
 	    {

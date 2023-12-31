@@ -1,3 +1,4 @@
+
 .App {
   text-align: center;
 }
@@ -45,6 +46,11 @@ ul {
 
 ul li {
   border: 0.125rem solid red;
+}
+
+
+body {
+  background-color: silver;
 }
 
 @keyframes App-logo-spin {

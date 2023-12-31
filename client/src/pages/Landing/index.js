@@ -9,11 +9,8 @@ function UserPage() {
   
   return(
     <section id="feedContainer">      
-      <ul className="userFeed">
-	<li id="feed">
-	  <Feed page={page}/>
-	</li>
-      </ul>
+      <Feed id="feed"
+	    page={page}/>
       </section>
   );
 };

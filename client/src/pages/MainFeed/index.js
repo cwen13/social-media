@@ -10,14 +10,8 @@ const MainFeed = () => {
 
   return(
     <section id="feedContainer">
-      <ul className="mainPage">
-	<li id="userInfo">
-	  <UserInfo page={page}/>
-	</li>
-	<li id="feed">
-	  <Feed page={page}/>
-	</li>
-      </ul>
+      <UserInfo id="userInfo" page={page}/>
+      <Feed id="feed"  page={page}/>
     </section>
   );
 };
