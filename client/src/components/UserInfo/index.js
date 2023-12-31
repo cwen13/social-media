@@ -47,7 +47,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 
   let userPageId = useParams().userId;
   userPageId = (userPageId !== undefined) ? userPageId : userId;
-  
+
   const [ friendship, setFriendship ] = useState(userId !== userPageId && friendList.filter(friendUser => friendUser.id === userPageId).length !== 0);
   const [ following, setFollowing ] = useState(userId !== userPageId && followList.filter(followUser => followUser.id === userPageId).length !== 0);
 
@@ -130,7 +130,14 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	}
       );
     }
-  },[userLoading, userError, userData]);
+    if(friendList !== 0) {
+      setFriendship(userId !== userPageId && friendList.filter(friendUser => friendUser.id === userPageId).length !== 0)
+    }
+    if(followList !== 0) {
+      setFollowing(userId !== userPageId && followList.filter(followUser => followUser.id === userPageId).length !== 0)
+    }
+    
+  },[userLoading, userError, userData, friendList, followList]);
 
   
   if(userLoading) return "Loading...";
@@ -443,7 +450,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	     <Notifications />
 	 </>
 	 : ""}
-	{userPageId === 0 || blocked
+	{userPageId === 0 || blocked 
 	 ? <h2>There are no friend yet</h2>
 	 : <RenderFriendship />}
 	{userPageId === 0 || blocked
