@@ -157,19 +157,14 @@ export const REMOVE_BLOCKED = gql`
 mutation removeBlocked($blockedId: ID!) { removeBlocked(blockedId: $blockedId) }`;
 
 
-export const SEND_FRIEND_REQUEST = gql`mutation sendFriendRequest ($pendingId: ID!) {
-sendFriendRequest(pendingId: $pendingId)
-}`;
+export const SEND_FRIEND_REQUEST = gql`
+mutation sendFriendRequest ($pendingId: ID!) { sendFriendRequest(pendingId: $pendingId) }`;
 
-export const DENY_FRIEND_REQUEST = gql`mutation denyFriendRequest ($pendingId: ID!) {
-  denyFriendRequest(pendingId: $pendingId)
-}`;
+export const DENY_FRIEND_REQUEST = gql`
+mutation denyFriendRequest ($pendingId: ID!) { denyFriendRequest(pendingId: $pendingId) }`;
 
-export const APPROVE_FRIEND_REQUEST = gql`mutation addFriend ($friendId: ID!) { 
-  addFriend(friendId: $friendId)
-}`;
+export const APPROVE_FRIEND_REQUEST = gql`
+mutation approveFriendRequest ($friendId: ID!) { approveFriendRequest (friendId: $friendId) }`;
 
 export const ACKNOWLEDGE_NOTIFICATION = gql`
-mutation acknowledgeNotification ($notificationId: ID!) {
-  acknowledgeNotification (notificationId: $notificationId)
-}`;
+mutation acknowledgeNotification ($notificationId: ID!) { acknowledgeNotification (notificationId: $notificationId) }`;

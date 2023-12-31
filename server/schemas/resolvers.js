@@ -720,11 +720,12 @@ const resolvers = {
 	  {
 	    where:
 	    {
+	      userId: context.user.id,
 	      pendingId: friendId
 	    }
 	  }
-	) > 0;
-	console.log(isValidRequest);
+	);
+	console.log("ISVALID:",isValidRequest);
 	if(isValidRequest) {
 	  await Pending.destroy(
 	    {

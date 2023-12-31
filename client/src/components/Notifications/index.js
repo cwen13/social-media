@@ -10,6 +10,7 @@ import {
 
 import {
   GET_MY_NOTIFICATIONS,
+  QUERY_USER_FRIENDS
 } from "./../../utils/queries";
 
 import { useUserContext } from "./../../utils/UserContext";
@@ -31,8 +32,14 @@ const Notifications = (props) => {
     {
       refetchQueries:
       [
+	[
 	GET_MY_NOTIFICATIONS,
-	"getMyNotifications"
+	  "getMyNotifications"
+	],
+	[
+	  QUERY_USER_FRIENDS,
+	  "getUserFriends"
+	]
       ]
     }
   );
@@ -79,14 +86,17 @@ const Notifications = (props) => {
   }
   
   const notifFindId = (props) => {
+    console.log("NOTIFPROPS:", props);
     if(Object.keys(notifications !== 0)) {
       console.log(notifications);
       let notifs = notifications.notifications;
       switch(props.__typename) {
       case "Following":
-	let notifFollowing =  notifs.filter((entry) =>
-	  (entry.fromUser === props.fromUser
-	   && entry.followed === true));
+	let notifFollowing =  notifs.filter((entry) => {
+	  console.log(entry, props);
+	    return (entry.fromUser === props.follower.id
+		    && entry.followed === true)});
+	console.log(notifFollowing)
 	if (notifFollowing.length > 0)  return notifFollowing[0].id;
 	break;
       case "Pending":
@@ -125,6 +135,7 @@ const Notifications = (props) => {
   const RenderFriendRequests = (props) => {
     console.log("PROPS:",props);
     const notifId = notifFindId(props)
+    
     const approve = async (event) => {
       event.preventDefault();
       const approveRequest = await approveFriend(
@@ -136,7 +147,6 @@ const Notifications = (props) => {
 	}
       );
     };
-    console.log(approveError);
     
     const disapprove = async (event) => {
       event.preventDefault();
