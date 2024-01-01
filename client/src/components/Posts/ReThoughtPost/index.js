@@ -37,17 +37,16 @@ const ReThoughtPost = (props) => {
       </div>
       <div className="originalThought">
 	<section className="authorInfo">
-	  <ul>
-	    <li>UserName: {originalThought.thoughtAuthoruserName}
-	      <Link to={`/user/${props.userId}`}>
+	  <p>
+	    <Link to={`/user/${props.userId}`}>
+	      UserName: {originalThought.thoughtAuthor.userName}
 	      </Link>
-	    </li>
-	    <li>Thought Id:
-	      <Link to={`/thought/${props.thoughtId}`}>
-		{ originalThought.id }
-	      </Link>
-	    </li>
-	  </ul>	
+	  </p>
+	  <p>
+	    <Link to={`/thought/${props.thoughtId}`}>
+	      Thought Id:{ originalThought.id }
+	    </Link>
+	  </p>
 	</section>
 	{originalThought.content}
       </div>

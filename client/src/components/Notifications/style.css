@@ -7,6 +7,15 @@
   display:flex;
   flex-direciton: row;
   justify-content: space-between;
+  border-style: dotted none none none;
+  border-color:  #fb0df1;
+  border-size: 5px;
+  &:last-child {
+    border-style:  dotted none dotted none;
+    border-color:  #fb0df1;
+    border-size: 5px;
+
+  }
 }
 
 .notifProfile {
@@ -14,12 +23,12 @@
   flex-direction: column;
   align-items: start;
   justify-content: center;
-}
-
-.notifProfile p {
+  &p {
   padding: 5px;
   margin: 5px;
+  }
 }
+
 
 .thoughtRef {
   border: solid red 1px;

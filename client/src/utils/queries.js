@@ -95,6 +95,7 @@ query getAllThoughts {
       id
       userName
       handle
+      profilePicture
     }
   }
 }`;

@@ -460,24 +460,25 @@ const ThoughtPost = (props) => {
       break;
     }
   }
-
+  
   
   const renderThought = () => {
     return(
       <li>
 	<section className="authorInfo">
-	  <ul>
-	    <li>UserName:
-	      <Link to={`/user/${props.userId}`}>
-		{ props.userName } (id: {props.userId})
-	      </Link>
-	    </li>
-	    <li>Thought Id:
-	      <Link to={`/thought/${props.thoughtId}`}>
-		{ props.thoughtId }
-	      </Link>
-	    </li>
-	  </ul>	
+	  <p>
+	    <Link to={`/user/${props.userId}`}>
+	      <div className="pfpCircle">
+		<img className="pfp" src={`/images/pfp/${props.profilePicture}`}/>
+	      </div>
+	      { props.userName } ({props.userId})
+	      <br/>
+	      {props.handle} 
+	    </Link>
+	    <Link to={`/thought/${props.thoughtId}`}>
+	      Thought: { props.thoughtId }
+	    </Link>
+	  </p>
 	</section>
 	{PostPicker()}
 	<section className="bottom-buttons">

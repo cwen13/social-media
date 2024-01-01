@@ -8,9 +8,17 @@
   justify-content: space-evenly;
   width: 100%;
   border-radius: 50px;
-  background-color: #a07e82;
-  shadow: 
+  background-color: #f89fbe;
+  border-style: inset;
+  border-color: #1eeede;
+  opacity: 75%;
+  & a:hover {
+    border: solid purple 2px;
+    border-radius: 50%;
+  }
+  
 }
+
 
 
 
