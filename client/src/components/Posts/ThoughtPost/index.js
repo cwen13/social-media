@@ -499,4 +499,3 @@ const ThoughtPost = (props) => {
 };
 
 export default ThoughtPost;
-

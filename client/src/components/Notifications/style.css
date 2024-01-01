@@ -2,3 +2,39 @@
   display: flex;
   flex-direction: column;
 }
+
+.notifications li {
+  display:flex;
+  flex-direciton: row;
+  justify-content: space-between;
+}
+
+.notifProfile {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
+}
+
+.notifProfile p {
+  padding: 5px;
+  margin: 5px;
+}
+
+.thoughtRef {
+  border: solid red 1px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  width: 80px;
+}
+
+.actions button {
+  height: 30px;
+  width: 75px;
+  
+}

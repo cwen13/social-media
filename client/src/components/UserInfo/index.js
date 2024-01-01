@@ -349,13 +349,13 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 
 
   //------------------------------------
-  //----check-if-User-have-them-blocked-
+  //---------------STATS----------------
   //------------------------------------
   const RenderStats = () => {
     return(
-      <>
+      <section className="userStats">
 	{userPageId === 0 ? <h2> No user Stats yet </h2>
-	 : <ul className="userStats">
+	 : <ul>
 	     <li>
 	       <Link to={`/user/${userPageId}/liked`}>
 		 Liked thoughts
@@ -412,56 +412,57 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	       </ul>
 	     </li>	
 	   </ul>}
-      </>
+      </section>
     );
   };
   
   return (
-    <>
-      <section className="userInfo" >
-	{userPageId === 0
-	 ?<h1>No one is logged in here</h1>
-	 :<>
-	    <h1>=^={user.userName}=^=</h1>
-	    <div className="pfp">
-	      {user.profilePicture
-	       ? <img src={`/images/pfp/${user.profilePicture}`}
-		      width="150"/>
-	       :
-	       <>
- 		 +==+<br/>
-		 |-----|<br/>
-		 +==+
-	       </>
-	      }
-	    </div>
-	    <div className="names">
-	      NAME: {user.handle}
-	    </div>
-	    {blocked ? "" :
-	    <div className="email">
-	      EMAIL: {user.email}
-	    </div>}
-	  </>}
-	{userPageId === userId && userPageId !== 0
-	 ? <>
-	     <ThoughtCreate userId={userPageId}
-			    page={page} />
-	     <Notifications />
+    <section className="userInfo" >
+      <section className="profile">
+      {userPageId === 0
+       ?<h1>No one is logged in here</h1>
+       :<>
+	  <h1>=^={user.userName}=^=</h1>
+	  <div className="pfp">
+	    {user.profilePicture
+	     ? <img src={`/images/pfp/${user.profilePicture}`}
+		    width="150"/>
+	     :
+	     <>
+ 	       +==+<br/>
+	       |-----|<br/>
+	       +==+
+	     </>
+	    }
+	  </div>
+	  <div className="names">
+	    NAME: {user.handle}
+	  </div>
+	  {blocked ? "" :
+	   <div className="email">
+	     EMAIL: {user.email}
+	   </div>}
+	</>}
+
+      {userPageId === userId && userPageId !== 0
+       ? <>
+	   <ThoughtCreate userId={userPageId}
+			  page={page} />
+	   <Notifications />
 	 </>
-	 : ""}
-	{userPageId === 0 || blocked 
-	 ? <h2>There are no friend yet</h2>
-	 : <RenderFriendship />}
-	{userPageId === 0 || blocked
-	 ? <h2>There are no followings yet</h2>
-	 : <RenderFollowing />}
-	{userPageId === 0
-	 ? <h2>There are no followings yet</h2>
-	 : <RenderBlocked />}
-	{blocked ? "" : <RenderStats />}
+       : ""}
+      {userPageId === 0 || blocked 
+       ? <h2>There are no friend yet</h2>
+       : <RenderFriendship />}
+      {userPageId === 0 || blocked
+       ? <h2>There are no followings yet</h2>
+       : <RenderFollowing />}
+      {userPageId === 0
+       ? <h2>There are no followings yet</h2>
+       : <RenderBlocked />}
       </section>
-    </>
+      {blocked ? "" : <RenderStats />}
+    </section>
   );
 };
 
