@@ -24,7 +24,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: left;
-  border: inset #a1fbb9  5px;
+  border: groove #a1fbb9  5px;
   background-color: #eef66c;
   border-radius: 5px
 }
@@ -60,8 +60,7 @@
 
 .post li {
   background-color: #7262d4;
-  border: inset #1eeede 5px;
-  opacity: 90%;
+  border: ridge #1eeede 5px;
 }
 
 .authorInfo p a, 
@@ -77,6 +76,7 @@
   clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
   width: 100px;
   height: 100px;
+  background-color: #d82d1b;
 }
 
 .pfpCircle {

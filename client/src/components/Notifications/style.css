@@ -5,7 +5,7 @@
 
 .notifications li {
   display:flex;
-  flex-direciton: row;
+  flex-direction: row;
   justify-content: space-between;
   border-style: dotted none none none;
   border-color:  #fb0df1;
@@ -23,9 +23,25 @@
   flex-direction: column;
   align-items: start;
   justify-content: center;
-  &p {
-  padding: 5px;
-  margin: 5px;
+
+  & p {
+    padding: 5px;
+    margin: 5px;
+
+    & .userTag {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      border: solid #7262d4 1px;
+      border-radius: 25px;
+    }
+    
+    & img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
   }
 }
 

@@ -24,3 +24,12 @@
 #userInfo {
   width: 20%;
 }
+
+.thought-and-replys {
+  display: flex;
+  flex-direciton: column;
+}
+
+#replys li {
+  background-color: #a0c0ec;
+}

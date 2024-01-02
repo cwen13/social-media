@@ -468,9 +468,9 @@ const ThoughtPost = (props) => {
 	<section className="authorInfo">
 	  <p>
 	    <Link to={`/user/${props.userId}`}>
-	      <div className="pfpCircle">
+	      <span className="pfpCircle">
 		<img className="pfp" src={`/images/pfp/${props.profilePicture}`}/>
-	      </div>
+	      </span>
 	      { props.userName } ({props.userId})
 	      <br/>
 	      {props.handle} 

@@ -117,6 +117,7 @@ query getThought($thoughtId: ID!) {
       id
       userName
       handle
+      profilePicture
     }
   }
 }`;
@@ -153,6 +154,7 @@ query getThoughtReplys ($thoughtId: ID!) {
   getThoughtReplys(thoughtId: $thoughtId) {
     id
     content
+    createdAt
     thoughtAuthor {
       id
       userName
@@ -329,6 +331,7 @@ query getMyNotifications {
         id
         userName
         handle
+        profilePicture
       }
     }
     followers {
@@ -338,6 +341,7 @@ query getMyNotifications {
         id
         userName
         handle
+        profilePicture
       }
     }
     likes {
@@ -347,6 +351,7 @@ query getMyNotifications {
         id
         userName
         handle
+        profilePicture
       }
       likedThought {
         id
@@ -363,6 +368,7 @@ query getMyNotifications {
           id
           userName
           handle
+          profilePicture
         }
       }
       originalReplyThought {
@@ -372,6 +378,7 @@ query getMyNotifications {
           id
           userName
           handle
+          profilePicture
         }
       }        
     }
@@ -385,6 +392,7 @@ query getMyNotifications {
           id
           userName
           handle
+          profilePicture
         }
       }
       originalReThoughtThought {
@@ -394,6 +402,7 @@ query getMyNotifications {
           id
           userName
           handle
+          profilePicture
         }
       }
     }
