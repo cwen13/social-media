@@ -118,8 +118,8 @@ const ThoughtPost = (props) => {
 	  "getAllReplyIds"
 	],
 	[
-	  QUERY_ALL_RETHOUGHT_IDS,
-	  "getAllReThoughtIds"
+	  QUERY_THOUGHT,
+	  "getThoughtReplys"
 	]
       ]
     }
@@ -475,7 +475,7 @@ const ThoughtPost = (props) => {
 	      <br/>
 	      {props.handle} 
 	    </Link>
-	    <Link to={`/thought/${props.thoughtId}`}>
+	    <Link to={`/thought/${props.thoughtId}/thought`}>
 	      Thought: { props.thoughtId }
 	    </Link>
 	  </p>

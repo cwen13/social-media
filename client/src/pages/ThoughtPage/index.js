@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { useUserContext } from "./../../utils/UserContext";
 import { useQuery } from "@apollo/client";
 import {
@@ -14,8 +14,10 @@ import "./../MainStyles/style.css";
 
 const ThoughtPage = () => {
   const page = "ThoughtPage";
-  const { postId } = useParams();
+  const { postId, postType } = useParams();
   const { userId, loginUSer, logoutUser } = useUserContext();
+
+  console.log("POST:",postType);
   
   const { loading: thoughtLoading, error: thoughtError, data: thoughtData } = useQuery(
     QUERY_THOUGHT,
@@ -40,8 +42,6 @@ const ThoughtPage = () => {
   if(thoughtLoading) return <p> Loading </p>;
   if(thoughtError) return console.log(thoughtError);
   if(replysLoading)return <p> loading</p>;
-
-  console.log("REPLYS:", replysData.getThoughtReplys);
   
   return(
     <section id="feedContainer">
@@ -50,7 +50,7 @@ const ThoughtPage = () => {
       />
       <div className="thoughts">
       <div id="mainThought">
-      {thoughtLoading && Object.keys(thoughtData).length !== 0 ? "LOADING" :
+      {thoughtLoading && Object.keys(thoughtData).length !== 0 && thoughtData.getThought !== null ? "LOADING" :
 	  <ThoughtPost userName={thoughtData.getThought.thoughtAuthor.userName}
 		       userId={thoughtData.getThought.thoughtAuthor.id}
 		       thought={thoughtData.getThought.content}
@@ -60,14 +60,16 @@ const ThoughtPage = () => {
 	  />}
       </div>
       <div id="replys">
-      {replysLoading && Object.keys(replysData).length !== 0 ? "LOADING" :
-       replysData.getThoughtReplys.map((reply) => <ThoughtPost userName={reply.thoughtAuthor.userName}
-							      userId={reply.thoughtAuthor.id}
-							      thought={reply.content}
-							      thoughtId={reply.id}
-							      key={reply.id}
-							      page={page}
-						  />)}
+	{replysLoading && Object.keys(replysData).length !== 0
+	 ? (!replysError && Object.keys(replysData) === 0 ? "NO REPLYS" :  "LOADING")
+	 : replysData.getThoughtReplys.map((reply) =>
+	   <ThoughtPost userName={reply.thoughtAuthor.userName}
+			userId={reply.thoughtAuthor.id}
+			thought={reply.content}
+			thoughtId={reply.id}
+			key={reply.id}
+			page={page}
+	   />)}
 	</div>
 </div>
     </section>);
