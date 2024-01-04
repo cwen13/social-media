@@ -96,7 +96,7 @@
 }
 
 .authorInfoReThought {
-  height: 1rem;
+  height: 2.5rem;
   display:flex;
   flex-direction: row;
   justify-content: space-between;
@@ -121,8 +121,7 @@
 
 .originalThought {
   margin: 0.4rem;
-  padding: 0.2rem;
-  border: solid red 0.125px;
+  padding: 0.2rem 0.2rem 0rem 0.2rem;;
   width: 80%;	  
   visibility: collapse;
   opacity: 0;
@@ -147,5 +146,6 @@
 }
 
 .replyThought {
-  z-index: 5;
+  width: 100%;
+  justify-items: start;
 }

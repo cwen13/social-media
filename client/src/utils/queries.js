@@ -131,6 +131,7 @@ query getThoughtLikes ($thoughtId: ID!) {
       id
       userName
       handle
+      profilePicture
     }
   }
 }`;
@@ -145,6 +146,7 @@ query getUserThoughts ($userId: ID!) {
       id
       userName
       handle
+      profilePicture
     }
   }
 }`;
@@ -159,6 +161,7 @@ query getThoughtReplys ($thoughtId: ID!) {
       id
       userName
       handle
+      profilePicture
     }
   }
 }`;
@@ -222,6 +225,7 @@ query getUserReThoughts ($userId: ID!)  {
       id
       userName
       handle
+      profilePicture
     }
   }
 }`;

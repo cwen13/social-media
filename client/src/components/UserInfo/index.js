@@ -348,7 +348,6 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
     );
   };
 
-
   //------------------------------------
   //---------------STATS----------------
   //------------------------------------
@@ -397,9 +396,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	       </ul>
 	     </li>
 	     <li>
-	       <Link to={`/user/${userPageId}/blocked`}>
 		 Blocked
-	       </Link>
 	       <ul id="blockedList">
 		 {blockedList.length > 0
 		  ? blockedList.map(block =>

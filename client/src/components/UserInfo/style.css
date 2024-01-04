@@ -32,3 +32,19 @@
   border: dotted #fb0df1 5px;
   border-radius: 15px;
 }
+
+#friendsList {
+  width: 8rem;
+  height: 3.5rem;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  padding: 5rem 1rem 0rem 0rem;
+}
+
+#followingList{
+  width: 8rem;
+  height: 6rem;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  padding: 2.5rem 1rem 0rem 0rem;
+}

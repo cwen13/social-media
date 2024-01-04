@@ -51,13 +51,14 @@ const ThoughtPage = () => {
       <div className="thoughts">
       <div id="mainThought">
       {thoughtLoading && Object.keys(thoughtData).length !== 0 && thoughtData.getThought !== null ? "LOADING" :
-	  <ThoughtPost userName={thoughtData.getThought.thoughtAuthor.userName}
-		       userId={thoughtData.getThought.thoughtAuthor.id}
-		       thought={thoughtData.getThought.content}
-		       thoughtId={thoughtData.getThought.id}
-		       key={thoughtData.getThought.id}
-		       page={page}
-	  />}
+       <ThoughtPost key={thoughtData.getThought.id}
+		    userName={thoughtData.getThought.thoughtAuthor.userName}	    
+		    userId={thoughtData.getThought.thoughtAuthor.id}
+		    thought={thoughtData.getThought.content}
+		    thoughtId={thoughtData.getThought.id}
+		    profilePicture={thoughtData.getThought.thoughtAuthor.profilePicture}
+		    page={page}
+       />}
       </div>
       <div id="replys">
 	{replysLoading && Object.keys(replysData).length !== 0
@@ -65,6 +66,7 @@ const ThoughtPage = () => {
 	 : replysData.getThoughtReplys.map((reply) =>
 	   <ThoughtPost userName={reply.thoughtAuthor.userName}
 			userId={reply.thoughtAuthor.id}
+			profilePicture={reply.thoughtAuthor.profilePicture}
 			thought={reply.content}
 			thoughtId={reply.id}
 			key={reply.id}

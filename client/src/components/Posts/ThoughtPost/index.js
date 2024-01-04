@@ -475,7 +475,7 @@ const ThoughtPost = (props) => {
 	      <br/>
 	      {props.handle} 
 	    </Link>
-	    <Link to={`/thought/${props.thoughtId}/thought`}>
+	    <Link to={`/thought/${props.thoughtId}/${thoughtType}`}>
 	      Thought: { props.thoughtId }
 	    </Link>
 	  </p>

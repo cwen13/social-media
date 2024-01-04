@@ -41,10 +41,8 @@ const ReplyPost = (props) => {
 	  <br/>
 	</div>
       </section>
-      <section className="replyThhought thought">
-	<div >
+      <section className="replyThought">
 	  {props.reply}
-	</div>
       </section>
     </section>
   );
