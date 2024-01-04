@@ -30,7 +30,7 @@ const ReplyPost = (props) => {
 	  <Link  to={`/user/${originalThought.thoughtAuthor.id}`}>
 	    {originalThought.thoughtAuthor.userName}
 	  </Link>
-	  <Link to={`/thought/:props.thoughtId/reply`}>
+	  <Link to={`/thought/${props.thoughtId}/reply`}>
 	    Thought: {originalThought.id}
 	  </Link>
 	</section>
