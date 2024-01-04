@@ -414,6 +414,10 @@ query getMyPendingRequests {
   getMyPendingRequests {
     userId
     pendingId
+    requestingFriend {
+      id
+      userName
+    }
   }
 }`;
 

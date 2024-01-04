@@ -667,6 +667,11 @@ const resolvers = {
 	  where:
 	  {
 	    userId: context.user.id
+	  },
+	  include:
+	  {
+	    model: User,
+	    as: "requestingFriend"
 	  }
 	}
       );

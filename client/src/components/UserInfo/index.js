@@ -27,8 +27,6 @@ import AuthService from "./../../utils/auth";
 import "./style.css";
 
 const UserInfo = ({ page, blocked, setBlocked }) => {
-  const [ user, setUser] = useState({}); 
-  const [ pending, setPending ] = useState(false);
   
   const { userId,
 	  loginUser,
@@ -43,17 +41,18 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	  setFriendList,
 	  followList,
 	  setFollowList,
+	  pendList,
+	  setPendList,
 	} = useUserContext();
 
   let userPageId = useParams().userId;
   userPageId = (userPageId !== undefined) ? userPageId : userId;
 
+  const [ user, setUser] = useState({}); 
   const [ friendship, setFriendship ] = useState(userId !== userPageId && friendList.filter(friendUser => friendUser.id === userPageId).length !== 0);
   const [ following, setFollowing ] = useState(userId !== userPageId && followList.filter(followUser => followUser.id === userPageId).length !== 0);
+  const [ pending, setPending ] = useState(userId !== userPageId && pendList.filter(pendUser => pendUser.pendingId === userPageId).length !== 0);
 
-  const { loading: pendingLoading, error: pendingError, data: pendingData } = useQuery(
-    QUERY_MY_PENDING_REQUESTS
-  );
   
   const {lodaing: userLoading, error: userError, data: userData} = useQuery(
     QUERY_USER,
@@ -136,15 +135,18 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
     if(followList !== 0) {
       setFollowing(userId !== userPageId && followList.filter(followUser => followUser.id === userPageId).length !== 0)
     }
-    
-  },[userLoading, userError, userData, friendList, followList]);
+    if(pendList !== 0) {
+      setPending(userId !== userPageId && pendList.filter(pendUser => pendUser.id === userPageId).length !== 0)
+    }
+
+      
+  },[userLoading, userError, userData, friendList, followList, pendList]);
 
   
   if(userLoading) return "Loading...";
   if(userError) return `Error UsEr ${userError.message}`;
   if(loadingFriends) return "Loading Friends";
   if(followingLoading) return "Loading Following";
-  if(pendingLoading) return "Loading Pending";
   
   //-------------------------
   //-------FRIENDSHIP-BUTTON-
@@ -181,17 +183,16 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   };
   
   const RenderFriendship = () => {
-    if(Object.keys(pendingData).length > 0
-       && pendingData.getMyPendingRequests
-       .filter((entry) =>  entry.pendingId == userPageId).length > 0) setPending(true);
+    if(Object.keys(pendList).length > 0
+       && pendList.filter((entry) =>  entry.pendingId == userPageId).length > 0) setPending(true);
     
     return (
       <div className="friendship">
 	{(userId === userPageId)
 	 ? "Are you your friend?"
-	 : (friendship ?
+	 : (friendship || pending ?
 	    <h4>
-	      This one of your friends
+	      This one of your (potential) friends
 	    </h4>
 	    : (pending ? <h4>
 			   Waiting on thier approval
