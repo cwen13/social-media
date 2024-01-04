@@ -6,7 +6,8 @@ import {
   QUERY_MY_BLOCKED_USERS,
   QUERY_MY_LIKED,
   QUERY_MY_FRIENDS,
-  QUERY_MY_FOLLOWING
+  QUERY_MY_FOLLOWING,
+  QUERY_MY_PENDING_REQUESTS
 } from "./queries";
 import Auth from "./auth";
 
@@ -30,6 +31,7 @@ export const UserContextProvider = ({children}) => {
   const [ likedList, setLikedList ] = useState([]);
   const [ friendList, setFriendList ] = useState([]);
   const [ followList, setFollowList ] = useState([]);
+  const [ pendList, setPendList ] = useState([]);
   
   const { loading: loadingBlockedList, error: errorBlockedList, data: dataBlockedList } = useQuery(
     QUERY_MY_BLOCKED_USERS
@@ -45,6 +47,10 @@ export const UserContextProvider = ({children}) => {
   
   const { loading: loadingFollowList, error: errorFollowList, data: dataFollowList } = useQuery(
       QUERY_MY_FOLLOWING
+  );
+
+    const { loading: loadingPendList, error: errorPendList, data: dataPendList } = useQuery(
+      QUERY_MY_PENDING_REQUESTS
   );
 
   
@@ -94,6 +100,15 @@ export const UserContextProvider = ({children}) => {
       );
     }
 
+    if (!loadingPendList && !errorPendList && dataPendList !== null) {
+      setPendList(
+	[
+	  ...pendList,
+	  ...dataPendList.getMyPendingRequests.map(user => {return {id: user.requestingFriend.id, userName: user.requestingFriend.userName}})
+	]
+      );
+    }
+
 
     try {
       if(!loadingUser && !errorUser && dataUser !== undefined && dataUser.getUser !== null) {
@@ -109,7 +124,9 @@ export const UserContextProvider = ({children}) => {
       loadingLiked, errorLiked, dataLiked,
       loadingBlockedList, errorBlockedList, dataBlockedList,
       loadingFollowList, errorFollowList, dataFollowList,
-      loadingFriendList, errorFriendList, dataFriendList]);
+      loadingFriendList, errorFriendList, dataFriendList,
+       loadingPendList, errorPendList, dataPendList,
+     ]);
 
   const loginUser = (newUserId) => {
     setUserId(newUserId);
@@ -142,6 +159,8 @@ export const UserContextProvider = ({children}) => {
 				  setFriendList,
 				  followList,
 				  setFollowList,
+				  pendList,
+				  setPendList
 				 }}>
       {children}
     </UserContext.Provider>

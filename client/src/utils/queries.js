@@ -95,6 +95,7 @@ query getAllThoughts {
       id
       userName
       handle
+      profilePicture
     }
   }
 }`;
@@ -116,6 +117,7 @@ query getThought($thoughtId: ID!) {
       id
       userName
       handle
+      profilePicture
     }
   }
 }`;
@@ -129,6 +131,7 @@ query getThoughtLikes ($thoughtId: ID!) {
       id
       userName
       handle
+      profilePicture
     }
   }
 }`;
@@ -143,6 +146,7 @@ query getUserThoughts ($userId: ID!) {
       id
       userName
       handle
+      profilePicture
     }
   }
 }`;
@@ -152,10 +156,12 @@ query getThoughtReplys ($thoughtId: ID!) {
   getThoughtReplys(thoughtId: $thoughtId) {
     id
     content
+    createdAt
     thoughtAuthor {
       id
       userName
       handle
+      profilePicture
     }
   }
 }`;
@@ -219,6 +225,7 @@ query getUserReThoughts ($userId: ID!)  {
       id
       userName
       handle
+      profilePicture
     }
   }
 }`;
@@ -328,6 +335,7 @@ query getMyNotifications {
         id
         userName
         handle
+        profilePicture
       }
     }
     followers {
@@ -337,6 +345,7 @@ query getMyNotifications {
         id
         userName
         handle
+        profilePicture
       }
     }
     likes {
@@ -346,6 +355,7 @@ query getMyNotifications {
         id
         userName
         handle
+        profilePicture
       }
       likedThought {
         id
@@ -362,6 +372,7 @@ query getMyNotifications {
           id
           userName
           handle
+          profilePicture
         }
       }
       originalReplyThought {
@@ -371,6 +382,7 @@ query getMyNotifications {
           id
           userName
           handle
+          profilePicture
         }
       }        
     }
@@ -384,6 +396,7 @@ query getMyNotifications {
           id
           userName
           handle
+          profilePicture
         }
       }
       originalReThoughtThought {
@@ -393,6 +406,7 @@ query getMyNotifications {
           id
           userName
           handle
+          profilePicture
         }
       }
     }
@@ -404,6 +418,10 @@ query getMyPendingRequests {
   getMyPendingRequests {
     userId
     pendingId
+    requestingFriend {
+      id
+      userName
+    }
   }
 }`;
 

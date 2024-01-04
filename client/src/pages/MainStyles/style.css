@@ -7,7 +7,7 @@
 }
 
 #feedContainer {
-  width: 1000px;
+  width: 666px;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
@@ -22,5 +22,14 @@
 }
 
 #userInfo {
-  width: 25%;
+  width: 20%;
+}
+
+.thought-and-replys {
+  display: flex;
+  flex-direciton: column;
+}
+
+#replys li {
+  background-color: #a0c0ec;
 }

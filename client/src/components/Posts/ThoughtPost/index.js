@@ -118,8 +118,8 @@ const ThoughtPost = (props) => {
 	  "getAllReplyIds"
 	],
 	[
-	  QUERY_ALL_RETHOUGHT_IDS,
-	  "getAllReThoughtIds"
+	  QUERY_THOUGHT,
+	  "getThoughtReplys"
 	]
       ]
     }
@@ -460,24 +460,25 @@ const ThoughtPost = (props) => {
       break;
     }
   }
-
+  
   
   const renderThought = () => {
     return(
-      <li>
+      <>
 	<section className="authorInfo">
-	  <ul>
-	    <li>UserName:
-	      <Link to={`/user/${props.userId}`}>
-		{ props.userName } (id: {props.userId})
-	      </Link>
-	    </li>
-	    <li>Thought Id:
-	      <Link to={`/thought/${props.thoughtId}`}>
-		{ props.thoughtId }
-	      </Link>
-	    </li>
-	  </ul>	
+	  <p>
+	    <Link to={`/user/${props.userId}`}>
+	      <span className="pfpCircle">
+		<img className="pfp" src={`/images/pfp/${props.profilePicture}`}/>
+	      </span>
+	      { props.userName } ({props.userId})
+	      <br/>
+	      {props.handle} 
+	    </Link>
+	    <Link to={`/thought/${props.thoughtId}/${thoughtType}`}>
+	      Thought: { props.thoughtId }
+	    </Link>
+	  </p>
 	</section>
 	{PostPicker()}
 	<section className="bottom-buttons">
@@ -487,16 +488,15 @@ const ThoughtPost = (props) => {
 	  <EditBtn />
 	  <RemoveBtn />
 	</section>
-      </li>
+      </>
     );
   };
   
   return (
-    <section className="post" key={props.thoughtId}>
+    <li className="post" key={props.thoughtId} data-key={props.thoughtId}>
       {renderThought()}
-    </section>
+    </li>
   );
 };
 
 export default ThoughtPost;
-

@@ -149,13 +149,13 @@ Thought.belongsToMany(Thought, {
 Pending.belongsTo(User, {
   foreignKey: "userId",
   otherKey: "pendingId",
-  as: "requestingFriend"
+  as: "requestedFriend"
 });
 
 Pending.belongsTo(User, {
   foreignKey: "pendingId",
   otherKey: "userId",
-  as: "requestedFriend"
+  as: "requestingFriend"
 });
 
 Following.belongsTo(User, {

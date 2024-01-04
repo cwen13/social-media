@@ -1,11 +1,10 @@
-import React from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useLocation } from "react-router-dom";
 import { useUserContext } from "./../../utils/UserContext";
 import { useQuery } from "@apollo/client";
 import {
   QUERY_THOUGHT,
-  QUERY_MY_LIKED,
-  QUERY_REPLYS
+  QUERY_REPLYS,
 } from "./../../utils/queries";
 import UserInfo from "./../../components/UserInfo";
 import ThoughtPost from "./../../components/Posts/ThoughtPost";
@@ -15,36 +14,66 @@ import "./../MainStyles/style.css";
 
 const ThoughtPage = () => {
   const page = "ThoughtPage";
-  const { postId } = useParams();
+  const { postId, postType } = useParams();
   const { userId, loginUSer, logoutUser } = useUserContext();
 
-  const { loading: thoughtLoading, error: thoughtError, data: thoughtData } =
-	useQuery(
-	  QUERY_THOUGHT,
-	  { variables: { thoughtId: postId } }
-	);
-
+  console.log("POST:",postType);
   
-  const { loading: likedLoading, error: likedError, data: likedData } = useQuery(QUERY_MY_LIKED);
-  const likedThoughts = (likedData) ? likedData.getAllMyLiked.map(result => result.thoughtId) : [0];
-  const isLiked = (thoughtId) => likedThoughts.includes(thoughtId);
-  if (likedLoading) return <p> Loading </p>;
-  if (thoughtLoading) return <p> Loading </p>;
+  const { loading: thoughtLoading, error: thoughtError, data: thoughtData } = useQuery(
+    QUERY_THOUGHT,
+    {
+      variables:
+      {
+	thoughtId: postId
+      }
+    }
+  );
 
-  const thought = thoughtData.getThought;
+  const {loading: replysLoading, error: replysError, data: replysData } = useQuery(
+    QUERY_REPLYS,
+    {
+      variables:
+      {
+	thoughtId: postId
+      }
+    }
+  );
+ 
+  if(thoughtLoading) return <p> Loading </p>;
+  if(thoughtError) return console.log(thoughtError);
+  if(replysLoading)return <p> loading</p>;
   
   return(
     <section id="feedContainer">
-	  <UserInfo id="userInfo"  page={page}/>
-	  <ThoughtPost userName={thought.user.userName}
-		       userId={thought.user.id}
-		       thought={thought.content}
-		       thoughtId={thought.id}
-		       thoughtReplyOfId={thought.thoughtReplyOfId}
-		       key={thought.id}
-		       page={page}
-		       liked={isLiked(thought.id)}
-	  />
+      <UserInfo id="userInfo"
+		page={page}
+      />
+      <div className="thoughts">
+      <div id="mainThought">
+      {thoughtLoading && Object.keys(thoughtData).length !== 0 && thoughtData.getThought !== null ? "LOADING" :
+       <ThoughtPost key={thoughtData.getThought.id}
+		    userName={thoughtData.getThought.thoughtAuthor.userName}	    
+		    userId={thoughtData.getThought.thoughtAuthor.id}
+		    thought={thoughtData.getThought.content}
+		    thoughtId={thoughtData.getThought.id}
+		    profilePicture={thoughtData.getThought.thoughtAuthor.profilePicture}
+		    page={page}
+       />}
+      </div>
+      <div id="replys">
+	{replysLoading && Object.keys(replysData).length !== 0
+	 ? (!replysError && Object.keys(replysData) === 0 ? "NO REPLYS" :  "LOADING")
+	 : replysData.getThoughtReplys.map((reply) =>
+	   <ThoughtPost userName={reply.thoughtAuthor.userName}
+			userId={reply.thoughtAuthor.id}
+			profilePicture={reply.thoughtAuthor.profilePicture}
+			thought={reply.content}
+			thoughtId={reply.id}
+			key={reply.id}
+			page={page}
+	   />)}
+	</div>
+</div>
     </section>);
 };
 

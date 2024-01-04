@@ -4,10 +4,11 @@
   flex-direction: row;
 }
 
-.userStats {
+.userStats ul {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  border-radius: 10px;
 }
 
 .userInfo {
@@ -15,9 +16,35 @@
   flex-direction: column;
   align-items: center;
   flex-shrink: 0;
-  background-color: grey;
+  background-color: #1eeede;
+  border-radius: 25px;
+  border: solid #7262d4 3px;
 }
 
 .userInfo h1 {
   text-decoration: underline;
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: dotted #fb0df1 5px;
+  border-radius: 15px;
+}
+
+#friendsList {
+  width: 8rem;
+  height: 3.5rem;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  padding: 5rem 1rem 0rem 0rem;
+}
+
+#followingList{
+  width: 8rem;
+  height: 6rem;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  padding: 2.5rem 1rem 0rem 0rem;
 }

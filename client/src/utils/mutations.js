@@ -143,9 +143,7 @@ mutation addReThought ($originalThoughtId: ID!,
 }`;
 
 export const ADD_FOLLOW = gql`
-mutation addFollow($followingId: ID!) {
-  addFollow(followingId: $followingId) 
-}`;
+mutation addFollow($followingId: ID!) { addFollow(followingId: $followingId) }`;
 
 export const REMOVE_FOLLOW = gql`
 mutation removeFollow($followingId: ID!) { removeFollow(id: $followingId) }`;

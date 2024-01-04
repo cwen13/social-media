@@ -124,6 +124,8 @@ const Feed = (props) => {
 			isReply={isReply(thought.id)}
 			userId={thought.thoughtAuthor.id}
 			userName={thought.thoughtAuthor.userName}
+			handle={thought.thoughtAuthor.handle}
+			profilePicture={thought.thoughtAuthor.profilePicture}
 	   />))}
       </ul>
     </div>

@@ -208,12 +208,18 @@ const resolvers = {
     
     //STATUS: WORKING
     getThought: async(parent, { thoughtId }, context) => {
-      return await Thought.findByPk(
+      const thought = await Thought.findByPk(
 	thoughtId,
 	{
-	  include: User
+	  include:
+	  {  
+  	    model: User,
+	    as: "thoughtAuthor"
+	  }
 	}
       );
+
+      return thought;
     },
 
     //STATUS: WORKING
@@ -257,13 +263,21 @@ const resolvers = {
 	    through:"reply",
 	    include:
 	    {
-		model: User,
-		as: "thoughtAuthor"
-	      }
-	  }
+	      model: User,
+	      as: "thoughtAuthor",
+	    }
+	  },
+	  order:
+	  [
+	    [
+	      "id",
+	      "DESC"
+	    ]
+	  ]
+
 	}
       );
-      return replys.replyThought;
+      return replys.replyThoughts;
     },
 
     getReplyOriginalThought: async (parent, { replyId } , context) => {
@@ -653,6 +667,11 @@ const resolvers = {
 	  where:
 	  {
 	    userId: context.user.id
+	  },
+	  include:
+	  {
+	    model: User,
+	    as: "requestingFriend"
 	  }
 	}
       );

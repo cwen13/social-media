@@ -109,7 +109,7 @@ const App = () => {
 		element={<EditProfile />}
 	      />
 	      <Route
-		path="/thought/:postId"
+		path="/thought/:postId/:postType"
 		element={<ThoughtPage />}
 	      />
 	      <Route
