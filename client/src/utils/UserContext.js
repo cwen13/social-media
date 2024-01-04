@@ -98,7 +98,6 @@ export const UserContextProvider = ({children}) => {
 	  ...dataFollowList.getMyFollowing.map(user => {return {id: user.id, userName: user.userName}})
 	]
       );
-          console.log(dataFollowList);
     }
 
     if (!loadingPendList && !errorPendList && dataPendList !== null) {
@@ -108,7 +107,6 @@ export const UserContextProvider = ({children}) => {
 	  ...dataPendList.getMyPendingRequests.map(user => {return {id: user.requestingFriend.id, userName: user.requestingFriend.userName}})
 	]
       );
-    console.log(dataPendList);
     }
 
 

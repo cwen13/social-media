@@ -464,7 +464,7 @@ const ThoughtPost = (props) => {
   
   const renderThought = () => {
     return(
-      <li>
+      <>
 	<section className="authorInfo">
 	  <p>
 	    <Link to={`/user/${props.userId}`}>
@@ -488,14 +488,14 @@ const ThoughtPost = (props) => {
 	  <EditBtn />
 	  <RemoveBtn />
 	</section>
-      </li>
+      </>
     );
   };
   
   return (
-    <section className="post" key={props.thoughtId}>
+    <li className="post" key={props.thoughtId} data-key={props.thoughtId}>
       {renderThought()}
-    </section>
+    </li>
   );
 };
 

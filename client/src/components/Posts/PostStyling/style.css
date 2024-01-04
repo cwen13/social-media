@@ -18,11 +18,11 @@
 }
 
 .thought {
-  padding: 20px 40px 20px 40px;
-  margin: 25px 25px;
+  padding: 1rem 1.5rem 1rem 1.5rem;
+  margin: 1.5rem 1.5rem;
   border: groove #a1fbb9  5px;
   background-color: #eef66c;
-  border-radius: 5px;
+  border-radius: 0.4rem;
   width: 80%;
 }
 
@@ -33,6 +33,16 @@
   width: 100%;
 }
 
+.bottom-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  background-color: #1eeede;
+  width: 100%;
+  margin: 0rem 0rem -0.4rem 0rem;
+}
+
+
 .liked-thought {
   background-color: purple ;
 }
@@ -41,20 +51,19 @@
   align-self: center;
 }
 
-
-.bottom-buttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  background-color: #1e98b5; 
-}
-
-.post li {
+.post {
   background-color: #7262d4;
   border: ridge #1eeede 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: start;
+  margin: 0.25rem;
+}
+
+.authorInfo {
+  padding: 0rem 0rem 0rem 0rem;;
+  height: 8rem;	 
 }
 
 .authorInfo p a,
@@ -62,8 +71,8 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
-  width: 500px;
+
+  width: 30rem;
 }
 
 .authorInfo p a:last-child {
@@ -73,17 +82,31 @@
 
 .authorInfo img {
   clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-  width: 100px;
-  height: 100px;
+  padding: 0rem;
+  width: 6.25rem;
+  height: 6.25rem;
   background-color: #d82d1b;
 }
 
 .pfpCircle {
   background-color: #fb0df1;
-  border: solid #fbfc0b 1px;
+  border: solid #fbfc0b 0.1rem;
   border-radius: 50%;
-  margin: 0px 5px 0px 0px;
+  margin: 0rem 0.4rem 0rem 0rem;
 }
+
+.authorInfoReThought {
+  height: 1rem;
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-content: center;
+}
+.originalReThought {
+  border: solid red 0.1254rem;
+  border-radius: 1rem;
+}
+
 
 .divider {
   border-style: none none none double;
@@ -97,14 +120,13 @@
 
 
 .originalThought {
-  margin: 5px;
-  padding: 10px;
-  border: solid red 1px;
+  margin: 0.4rem;
+  padding: 0.2rem;
+  border: solid red 0.125px;
   width: 80%;	  
   visibility: collapse;
   opacity: 0;
   position: relative;
-  top: 60px;
   transition: visibility 0s linear 0.5s, opacity 2s ease-in-out, position 0s static linear;
   z-index: 3;
 }
