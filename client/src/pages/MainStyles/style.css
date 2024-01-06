@@ -33,3 +33,21 @@
 #replys li {
   background-color: #a0c0ec;
 }
+
+#friendLists {
+  display: flex;
+  flex-direction: column;
+  width: 50rem;
+  border: groove #a1fbb9  5px;
+  background-color: #eef66c;
+  border-radius: 0.4rem;
+  margin: 0.5rem;
+}
+
+#pendingFriends,
+#currentFriends {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

@@ -146,14 +146,13 @@ export const ADD_FOLLOW = gql`
 mutation addFollow($followingId: ID!) { addFollow(followingId: $followingId) }`;
 
 export const REMOVE_FOLLOW = gql`
-mutation removeFollow($followingId: ID!) { removeFollow(id: $followingId) }`;
+mutation removeFollow($followingId: ID!) { removeFollow(followingId: $followingId) }`;
 
 export const ADD_BLOCKED = gql`
 mutation addBlocked($blockedId: ID!) { addBlocked(blockedId: $blockedId) }`;
 
 export const REMOVE_BLOCKED = gql`
 mutation removeBlocked($blockedId: ID!) { removeBlocked(blockedId: $blockedId) }`;
-
 
 export const SEND_FRIEND_REQUEST = gql`
 mutation sendFriendRequest ($pendingId: ID!) { sendFriendRequest(pendingId: $pendingId) }`;

@@ -302,6 +302,8 @@ query getUserBlocked ($userId: ID!) {
   getUserBlocked(userId: $userId) {
     id
     userName
+    handle
+    profilePicture
   }
 }`;
 
@@ -310,6 +312,8 @@ query getMyBlockedUsers {
   getMyBlockedUsers {
     id
     userName
+    handle
+    profilePicture
   }
 }`;
 
@@ -421,6 +425,8 @@ query getMyPendingRequests {
     requestingFriend {
       id
       userName
+      handle
+      profilePicture
     }
   }
 }`;

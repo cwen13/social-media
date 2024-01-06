@@ -832,7 +832,7 @@ const resolvers = {
 	    [Op.and]:
 	    [
 	      { userId: context.user.id },
-	      {pendingId: pendingId }
+	      { pendingId: pendingId }
 	    ]
 	  }
 	}

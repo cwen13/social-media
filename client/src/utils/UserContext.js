@@ -86,7 +86,7 @@ export const UserContextProvider = ({children}) => {
       setFriendList(
 	[
 	  ...friendList,
-	  ...dataFriendList.getMyFriends.map(user => {return {id: user.id, userName: user.userName}})
+	  ...dataFriendList.getMyFriends
 	]
       );
     }
@@ -95,7 +95,7 @@ export const UserContextProvider = ({children}) => {
       setFollowList(
 	[
 	  ...followList,
-	  ...dataFollowList.getMyFollowing.map(user => {return {id: user.id, userName: user.userName}})
+	  ...dataFollowList.getMyFollowing
 	]
       );
     }
@@ -104,11 +104,10 @@ export const UserContextProvider = ({children}) => {
       setPendList(
 	[
 	  ...pendList,
-	  ...dataPendList.getMyPendingRequests.map(user => {return {id: user.requestingFriend.id, userName: user.requestingFriend.userName}})
+	  ...dataPendList.getMyPendingRequests
 	]
       );
     }
-
 
     try {
       if(!loadingUser && !errorUser && dataUser !== undefined && dataUser.getUser !== null) {

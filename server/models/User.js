@@ -74,6 +74,7 @@ User.init(
     profilePicture: {
       type: DataTypes.STRING,
       allowNull: true,
+      defaultValue: "default.jpg"
     },
   },
   {

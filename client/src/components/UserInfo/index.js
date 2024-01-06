@@ -367,7 +367,10 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	       </Link>
 	     </li>
 	     
-	     <li>Friends 
+	     <li>
+	       <Link to={`/myFriends`}>
+		 Friends
+	       </Link>
 	       {/*This will be a mini scroll box likely a iframe*/}
 	       <ul id="friendsList">
 		 {friendsData.getUserFriends !== undefined ? friendsData.getUserFriends.map(friend =>
