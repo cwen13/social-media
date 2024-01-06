@@ -6,7 +6,7 @@
   margin: 0rem 0.125rem 0rem 0.125rem;
 }
 
-.friendInfo {
+.friendInfo a {
   display: flex;
   flex-direction: column;
   justify-content: center;

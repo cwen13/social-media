@@ -6,14 +6,18 @@ import {
 
 import UserInfo from "./../../components/UserInfo";
 import FriendListEntry from "./../../components/FriendListEntry";
+import FollowingUserEntry from "./../../components/FollowingUserEntry";
 import { useUserContext } from "./../../utils/UserContext";
 
 import "./../MainStyles/style.css";
 
-const FriendsList = () => {
-  const page = "FriendList";
+const FriendsAndFollowingList = () => {
+  const page = "FriendAndFollowList";
   
-  const { friendList } = useUserContext();
+  const { friendList,
+	  setFriendList,
+	  followList,
+	  setFollowList } = useUserContext();
   const [ pendingRequests, setPendingRequests ] = useState([]);
   
   const { loading: pendingRequestsLoading, error: pendingRequestsError, data: pendingRequestsData } = useQuery(
@@ -37,6 +41,13 @@ const FriendsList = () => {
 	]
       );
     };
+    if(followList !== undefined) {
+      setFollowList(
+	[
+	  ...followList
+	]
+      );
+    }; 
   }, [pendingRequestsLoading, pendingRequestsError, pendingRequestsData]);
   
   if(pendingRequestsLoading) return "Loading Pending Friends";
@@ -44,8 +55,7 @@ const FriendsList = () => {
   
   return(
     <section id="feedContainer">
-      <UserInfo page={page} />
-      
+      <UserInfo page={page} />      
       <section id="friendLists">
 	<h3>PENDING FRIEND REQUESTS</h3>
 	<ul id="pendingFriends">
@@ -68,8 +78,21 @@ const FriendsList = () => {
 	    />)}
 	</ul>
       </section>
+      <section id="followingList">
+	<h3>Following</h3>
+	<ul id="following">
+	  {followList.map((follow) =>
+	    <FollowingUserEntry followingId={follow.id}
+				followingName={follow.userName}
+				followHandle={follow.handle}
+				followProfilePicture={follow.profilePicture}
+				typeOfFriend="Following"
+	      />
+	  )}
+	  </ul>
+      </section>
     </section>
   );
 }
 
-export default FriendsList;
+export default FriendsAndFollowingList;

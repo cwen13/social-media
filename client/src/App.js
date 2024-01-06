@@ -24,8 +24,7 @@ import LikedThoughts from "./pages/LikedThoughts";
 import EditProfile from "./pages/EditProfile";
 import Landing from "./pages/Landing";
 import ReThoughts from "./pages/ReThoughts/";
-import FriendsList from "./pages/FriendsList/";
-
+import FriendsAndFollowingList from "./pages/FriendsAndFollowingList";
 import Navbar from "./components/Navbar/";
 import NotFound from "./components/NotFound/";
 import Following from "./components/Following/";
@@ -118,8 +117,8 @@ const App = () => {
 		element={<Search />}
 	      />
 	      <Route
-		path="/myFriends"
-		element={<FriendsList />}
+		path="/FriendsAndFollowing"
+		element={<FriendsAndFollowingList />}
 	      />
 	      <Route 
 		path='*' 

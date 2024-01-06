@@ -235,7 +235,7 @@ const FriendsListEntry = (props) => {
     );
   };
   
-  const disapproveFriend = async (event) => {
+  const denyFriend = async (event) => {
     event.preventDefault();
     const denyRequest = await denyFriendRequest(
       {
@@ -255,8 +255,8 @@ const FriendsListEntry = (props) => {
 	  Approve
 	</button>
 	<button id="disapproveFR"
-		onClick={disapproveFriend}>
-	  Disapprove
+		onClick={denyFriend}>
+	  Deny
 	</button>
       </div>
     )
@@ -270,8 +270,7 @@ const FriendsListEntry = (props) => {
 	{isFriend() && RenderFriend()}
 	<RenderBlocked />
     </section>
-    );
-    
+    );    
   };
   
   const RenderFriend = () => {

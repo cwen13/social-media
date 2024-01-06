@@ -1,0 +1,6 @@
+.followingInfo {
+  display: flex;
+  flex-direciton: column;
+  justifty-content: center;
+  align-items: center;
+}

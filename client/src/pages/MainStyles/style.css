@@ -12,6 +12,10 @@
   flex-direction: row;
   justify-content: space-evenly;
   flex-shrink: 0;
+
+  & #friendLists {
+    width: 33%
+  }
 }
 
 #mainFeed .mainPage {
@@ -34,10 +38,11 @@
   background-color: #a0c0ec;
 }
 
-#friendLists {
+#friendLists,
+#followingList{
   display: flex;
   flex-direction: column;
-  width: 50rem;
+  width: 33%;
   border: groove #a1fbb9  5px;
   background-color: #eef66c;
   border-radius: 0.4rem;
@@ -45,7 +50,8 @@
 }
 
 #pendingFriends,
-#currentFriends {
+#currentFriends,
+#followingList{
   display: flex;
   flex-direction: column;
   justify-content: center;
