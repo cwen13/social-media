@@ -7,15 +7,12 @@
 }
 
 #feedContainer {
-  width: 666px;
+  width: 55rem;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
   flex-shrink: 0;
 
-  & #friendLists {
-    width: 33%
-  }
 }
 
 #mainFeed .mainPage {
@@ -25,9 +22,6 @@
   flex-shrink: 0;
 }
 
-#userInfo {
-  width: 20%;
-}
 
 .thought-and-replys {
   display: flex;
@@ -39,10 +33,10 @@
 }
 
 #friendLists,
-#followingList{
+#followList{
   display: flex;
   flex-direction: column;
-  width: 33%;
+  width: 15rem;
   border: groove #a1fbb9  5px;
   background-color: #eef66c;
   border-radius: 0.4rem;
@@ -51,7 +45,7 @@
 
 #pendingFriends,
 #currentFriends,
-#followingList{
+#following{
   display: flex;
   flex-direction: column;
   justify-content: center;

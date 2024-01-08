@@ -129,14 +129,20 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	}
       );
     }
+    
     if(friendList !== 0) {
-      setFriendship(userId !== userPageId && friendList.filter(friendUser => friendUser.id === userPageId).length !== 0)
+      setFriendship(userId !== userPageId
+		    && friendList.filter(friendUser => friendUser.id === userPageId).length !== 0)
     }
+    
     if(followList !== 0) {
-      setFollowing(userId !== userPageId && followList.filter(followUser => followUser.id === userPageId).length !== 0)
+      setFollowing(userId !== userPageId
+		   && followList.filter(followUser => followUser.id === userPageId).length !== 0)
     }
+    
     if(pendList !== 0) {
-      setPending(userId !== userPageId && pendList.filter(pendUser => pendUser.id === userPageId).length !== 0)
+      setPending(userId !== userPageId
+		 && pendList.filter(pendUser => pendUser.id === userPageId).length !== 0)
     }
 
       
@@ -368,7 +374,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	     </li>
 	     
 	     <li>
-	       <Link to={`/myFriends`}>
+	       <Link to={`/friendsAndFollowing`}>
 		 Friends
 	       </Link>
 	       {/*This will be a mini scroll box likely a iframe*/}
@@ -385,8 +391,9 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	     </li>
 	     
 	     <li>
-	       {/*This will be a mini scroll box likely a iframe*/}
-	       Following
+	       <Link to={`/friendsAndFollowing`}>
+		 Following
+		 </Link>
 	       <ul id="followingList">
 		 {dataFollowing.getUserFollowing !== undefined ? dataFollowing.getUserFollowing.map(follow =>
 		   <UserList userId={follow.id}
@@ -418,7 +425,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   };
   
   return (
-    <section className="userInfo" >
+    <section id="userInfo" >
       <section className="profile">
       {userPageId === 0
        ?<h1>No one is logged in here</h1>

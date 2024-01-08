@@ -55,7 +55,8 @@ const FriendsAndFollowingList = () => {
   
   return(
     <section id="feedContainer">
-      <UserInfo page={page} />      
+      <UserInfo id="userInfo" page={page} />      
+
       <section id="friendLists">
 	<h3>PENDING FRIEND REQUESTS</h3>
 	<ul id="pendingFriends">
@@ -78,7 +79,8 @@ const FriendsAndFollowingList = () => {
 	    />)}
 	</ul>
       </section>
-      <section id="followingList">
+      
+      <section id="followList">
 	<h3>Following</h3>
 	<ul id="following">
 	  {followList.map((follow) =>

@@ -174,6 +174,7 @@ query getThoughtReThoughts ($originalThoughtId: ID!) {
       id
       userName
       handle
+      profilePicture
     }
   }
 }`;
@@ -188,6 +189,7 @@ query getMyReThoughts {
       id
       userName
       handle
+      profilePicture
     }
   }
 }`;
@@ -210,6 +212,7 @@ query getUserLiked ($userId: ID!) {
       id
       userName
       handle
+      profilePicture
     }
   }
 }`;
@@ -280,6 +283,7 @@ query getReThoughtOriginalThought ($reThoughtId: ID!) {
       id
       userName
       handle
+      profilePicture
     }
   }
 }`;
@@ -293,6 +297,7 @@ query getReplyOriginalThought ($replyId: ID!) {
       id
       userName
       handle
+      profilePicture
     }
   }
 }`;

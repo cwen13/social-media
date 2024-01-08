@@ -22,7 +22,6 @@ import MyPage from "./pages/MyPage";
 import ThoughtPage from "./pages/ThoughtPage";
 import LikedThoughts from "./pages/LikedThoughts";
 import EditProfile from "./pages/EditProfile";
-import Landing from "./pages/Landing";
 import ReThoughts from "./pages/ReThoughts/";
 import FriendsAndFollowingList from "./pages/FriendsAndFollowingList";
 import Navbar from "./components/Navbar/";

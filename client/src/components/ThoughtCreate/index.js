@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useMutation } from "@apollo/client";
 
 import { ADD_THOUGHT } from "./../../utils/mutations";
@@ -23,21 +23,38 @@ const ThoughtCreate = ({ userId, page }) => {
       thought: value,
     });
   };
+
+  const checkLength = (entry) => {
+    if (entry.length < 249)
+    {
+      return entry
+    } else {
+      let redString = entry.splice(249);
+      
+      return `${entry.slice(0,249)} <span id="extraText">${redString}</span>`;
+    }
+  }
+  
   
   const postThought = async (event) => {
     event.preventDefault();
     try {
       console.log("thought:", thought.thought);
-      const mutationResponse = await newThought({
-	variables: {
-	  userId: userId,
-	  content: thought.thought,
+      const mutationResponse = await newThought(
+	{
+	  variables:
+	  {
+	    userId: userId,
+	    content: thought.thought,
+	  }
 	}
-      });
-      setThought({
-	...thought,
-	thought: ""
-      });
+      );
+      setThought(
+	{
+	  ...thought,
+	  thought: ""
+	}
+      );
       document.querySelector("#thoughtBox").value="";
     } catch (e) {
       console.log("New thought was not commited to memory")
