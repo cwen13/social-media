@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useUserContext } from "./../../utils/UserContext";
+import { useUserContext } from "./../../../utils/UserContext";
 import { useQuery, useMutation } from "@apollo/client";
 import {
   QUERY_MY_FRIENDS,
   QUERY_MY_PENDING_REQUESTS,
   GET_MY_NOTIFICATIONS,
-} from "./../../utils/queries";
+} from "./../../../utils/queries";
 
 import {
   REMOVE_FRIEND,
@@ -17,12 +17,10 @@ import {
   APPROVE_FRIEND_REQUEST,
   ADD_BLOCKED,
   REMOVE_BLOCKED,
-} from "./../../utils/mutations";
-import "./style.css";
+} from "./../../../utils/mutations";
+import "./../userListStyles.css";
 
-const FriendsListEntry = (props) => {
-  const page = "FriendList";
-  
+const FriendsList = (props) => {
   const { userId,
 	  followList,
 	  setFollowList,
@@ -39,11 +37,6 @@ const FriendsListEntry = (props) => {
   const [ following, setFollowing ] = useState(isFollowing(props.friendId));
   const [ blocked, setBlocked ] = useState(isBlocked(props.friendId));
 
-  useEffect(() => {
-    setFriendship(isFriend(props.friendId))
-    setFollowing(isFollowing(props.friendId))
-    setBlocked(isBlocked(props.friendId))     	  
-  }, [])
   
   const [ approveFriendRequest, { error: approveError }] = useMutation(
     APPROVE_FRIEND_REQUEST,
@@ -89,13 +82,18 @@ const FriendsListEntry = (props) => {
     REMOVE_BLOCKED
   );
   
+  useEffect(() => {
+    setFriendship(isFriend(props.friendId))
+    setFollowing(isFollowing(props.friendId))
+    setBlocked(isBlocked(props.friendId))     	  
+  }, [])
   
   //-------------------
   //-----FOLLOW-BUTTON-
   //------------------- 
   const handleFollowing = async (event) => {
     event.preventDefault();
-    if(isFollowing(props.friendId)) {
+    if(following) {
       await followRemove(
 	{
 	  variables:
@@ -137,18 +135,18 @@ const FriendsListEntry = (props) => {
   const RenderFollowing = () => {
     return(
       <div className="followingship">
-	{isFollowing(props.friendId)
-	 ? <button id="followButton"
-		   onClick={handleFollowing}>
-	     UnFollow
-	     </button>
-	    : <button id="followButton"
-		      onClick={handleFollowing}>
- 		Follow
-	      </button>
-	   
+	{following
+	 ?
+	 <button id="followButton"
+		 onClick={handleFollowing}>
+	   UnFollow
+	 </button>
+	 :
+	 <button id="followButton"
+		 onClick={handleFollowing}>
+ 	   Follow
+	 </button>
 	}
-	
       </div>
     );
   };
@@ -158,7 +156,7 @@ const FriendsListEntry = (props) => {
   //----------------------
   const handleBlocked = async (event) => {
     event.preventDefault();
-    if (isBlocked(props.friendId)) {
+    if (blocked) {
       await blockRemove(
 	{
 	  variables:
@@ -203,16 +201,17 @@ const FriendsListEntry = (props) => {
   const RenderBlocked = () => {
     return(
       <div className="blocked">
-	{isBlocked(props.friendId) ?
-	  <button id="friendshipButton"
-		  onClick={handleBlocked}>
- 	    Unblock?
-	  </button>
-	  :
-	  <button id="friendshipButton"
-		  onClick={handleBlocked}>
- 	    blocking?
-	  </button>
+	{blocked
+	 ?
+	 <button id="friendshipButton"
+		 onClick={handleBlocked}>
+ 	   Unblock?
+	 </button>
+	 :
+	 <button id="friendshipButton"
+		 onClick={handleBlocked}>
+ 	   blocking?
+	 </button>
 	}
       </div>
     );
@@ -259,26 +258,23 @@ const FriendsListEntry = (props) => {
 	  Disapprove
 	</button>
       </div>
-    )
-  };
-  
-  const RenderButtons = (typeOfFriend) => {
-    return(    
-      <section className="friendActions">
-	{typeOfFriend === "Request" && RenderFriendRequestButtons()}
-	{RenderFollowing()}
-	{isFriend() && RenderFriend()}
-	<RenderBlocked />
-    </section>
     );
-    
   };
   
-  const RenderFriend = () => {
+  const RenderButtons = () => {
     return(
-      <li className="friendEntry" key={props.friendId} data-key={props.friendId}>
-	<section className="friendInfo">
-	  <Link to={`/user/${props.friendId}`}>
+      <section className="friendActions">
+	{props.typeOfRelation === "Request" && <RenderFriendRequestButtons />}
+	<RenderFollowing />
+	<RenderBlocked />
+      </section>
+    );
+  }
+  
+  return(
+    <li className="friendEntry" key={props.friendId} data-key={props.friendId}>
+      <section className="friendInfo">
+	<Link to={`/user/${props.friendId}`}>
 	  <img src={`/images/pfp/${props.friendProfilePicture}`} width="150"/>
 	  <div className="userId">
 	    <span className="username">
@@ -288,19 +284,11 @@ const FriendsListEntry = (props) => {
 	      {props.friendHandle}
 	    </span>
 	  </div>
-	  </Link>
-	</section>
-	{RenderButtons(props.typeOfFriend)}      
-      </li>
-    )
-  };
-  
-  
-  return(
-    <>
-      {RenderFriend()}
-    </>
+	</Link>
+      </section>
+      {RenderButtons()}
+    </li> 
   );
-}
+};
 
-export default FriendsListEntry;
+export default FriendsList;

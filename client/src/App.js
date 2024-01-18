@@ -24,12 +24,12 @@ import LikedThoughts from "./pages/LikedThoughts";
 import EditProfile from "./pages/EditProfile";
 import Landing from "./pages/Landing";
 import ReThoughts from "./pages/ReThoughts/";
-import FriendsList from "./pages/FriendsList/";
+import UserRelations from "./pages/UserRelations/";
 
 import Navbar from "./components/Navbar/";
 import NotFound from "./components/NotFound/";
-import Following from "./components/Following/";
-import Blocked from "./components/Blocked/";
+import Following from "./components/UserLists/Following/";
+import Blocked from "./components/UserLists/Blocked/";
 import { UserContextProvider } from "./utils/UserContext";
 import Auth from "./utils/auth";
 
@@ -118,8 +118,8 @@ const App = () => {
 		element={<Search />}
 	      />
 	      <Route
-		path="/myFriends"
-		element={<FriendsList />}
+		path="/UserRelations"
+		element={<UserRelations />}
 	      />
 	      <Route 
 		path='*' 
