@@ -10,29 +10,29 @@ const {
   Reply,
   ReThought,
   Notification
-      } = require("./../models");
+} = require("./../models");
 const { signToken } = require('../utils/auth');
 const { Op } = require("sequelize");
 
 const resolvers = {
   Query: {
-   
+    
     //STATUS: WORKING
     getMe: async (parent, args, context ) => {
       return await User.findByPk((context.user) ? context.user.id : 1);
     },
-
+    
     //STATUS: WORKING
     getAllUsers: async (parent, args, context) => {
       return await User.findAll();
     },
-
+    
     //STATUS: WORKING
     getUser: async (parent, { userId }, context) => {
       return await User.findByPk((!!userId) ? userId : 1);
-
+      
     },
-
+    
     //STATUS: WORKING
     getMyFriends: async (parent, args, context) => {
       let userFriends = await User.findByPk(
@@ -58,7 +58,7 @@ const resolvers = {
 	}})
       return userFriends.friendshipUser;
     },
-
+    
     //STATUS: 
     getMyFollowing: async (parent, args, context) => {
       return(
@@ -91,7 +91,7 @@ const resolvers = {
 	)
       ).followingUsers;
     },
-
+    
     getUserBlocked: async (parent, { userId }, context) => {
       return (
 	await User.findByPk(
@@ -107,7 +107,7 @@ const resolvers = {
 	)
       ).blockedUser;
     },
-
+    
     getMyBlockedUsers: async (parent, args, context) => {
       let blocked = await User.findByPk(
 	context.user.id,
@@ -122,7 +122,7 @@ const resolvers = {
       );
       return blocked.blockedUser;
     },
-
+    
     
     //STATUS: WORKING
     getMyThoughts: async (parent, args, context) => {
@@ -148,35 +148,76 @@ const resolvers = {
 	}
       );
     },
-
+    
     //STATUS: WORKING
-    getAllThoughts: async (parent, { blockedList }, context) => {
-      const thoughts = await Thought.findAll(
-	{
-	  include:
+    getAllThoughts: async (parent, args, context) => {
+      if (context.user) {
+	const blocking = (await Blocked.findAll(
 	  {
-	    model: User,
-	    as: "thoughtAuthor"
-	  },
-	  order:
-	  [
+	    where:
+	    {
+	      userId: context.user.id
+	    }
+	  }
+	)
+      ).map((entry) => entry.blockedId);
+	const blockedBy = (await Blocked.findAll(
+	  {
+	    where:
+	    {
+	      blockedId: context.user.id
+	    }
+	  }
+	)
+      ).map((entry) => entry.blockedId);
+	return Thought.findAll(
+	  {
+	    where:
+	    {
+	      id:
+	      {
+		[Op.ne]: [...blocking, ...blockedBy]
+	      }
+	    },
+	    include:
+	    {
+	      model: User,
+	      as: "thoughtAuthor"
+	    },
+	    order:
 	    [
-	      "id",
-	      "DESC"
+	      [
+		"id",
+		"DESC"
+	      ]
 	    ]
-	  ]
-	}
-      );
-
-//      console.log(thoughts);
-      return thoughts;
+	  }
+	);
+      } else {
+	return await Thought.findAll(
+	  {
+	    include:
+	    {
+	      model: User,
+	      as: "thoughtAuthor"
+	    },
+	    order:
+	    [
+	      [
+		"id",
+		"DESC"
+	      ]
+	    ]
+	  }
+	)
+      }
     },
-
+    
     //STATUS: WORKING
     getAllLiked: async (parent, args, context) => {
       return await Liked.findAll();				  
     },
-
+    
     //STATUS: WORKING
     getAllMyLiked: async (parent, args, context) => {
       return(
@@ -190,7 +231,7 @@ const resolvers = {
 	)
       );
     },    
-
+    
     //STATUS: WORKING
     getUserLiked: async (parent, { userId }, context) => {
       const liked =  await User.findByPk(userId, {
@@ -343,7 +384,7 @@ const resolvers = {
     //STATUS: WORKING
     getUserReThoughts: async (parent, { userId }, context) => {
       const allReThoughts = await ReThought.findAll();
-      const allReThoughtsData = allReThoughts.map(entry => entry.get({ plain: true }));
+      const allReThoughtsData = allReThoughts;
       
       const allUserThoughts = await Thought.findAll(
 	{
@@ -361,8 +402,7 @@ const resolvers = {
 	}
       );					  
       
-      const allUserThoughtsData = allUserThoughts.map(entry => entry.get({ plain: true }))
-	    .map(id => id.id);    
+      const allUserThoughtsData = allUserThoughts.map(id => id.id);    
       const userReThoughtIds = allReThoughtsData.filter(
 	thought => allUserThoughtsData.includes(thought.reThoughtThoughtId)
       );
