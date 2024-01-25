@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import MyProfile from "./../../components/MyProfile";
+import UserInfo from "./../../components/UserInfo";
 import Feed from "./../../components/Feed";
 import "./../MainStyles/style.css";
 
@@ -10,7 +10,7 @@ function MyPage() {
   
   return(
     <section id="feedContainer">      
-      <MyProfile id="userInfo" page={page}/>
+      <UserInfo id="userInfo" page={page}/>
       <Feed id="feed" page={page}/>      
     </section>
   );

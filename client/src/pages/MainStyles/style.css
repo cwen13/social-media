@@ -51,3 +51,27 @@
   justify-content: center;
   align-items: center;
 }
+
+.attribute {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;    
+}
+
+#pfp {
+    display:flex;
+    flex-directon: column;
+    justify-content: center;
+
+}
+
+#editProfile {
+    background-color: #03c3c6;
+    border-radius: 5px;
+    border: solid #342987 2px;
+    width: 15rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2.5rem;
+}

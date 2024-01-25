@@ -32,6 +32,8 @@ query getUser ($userId: ID) {
     handle
     email
     profilePicture
+    firstName
+    lastName
   }
 }`;
 

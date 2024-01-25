@@ -73,54 +73,67 @@ const App = () => {
 		path="/" 
 		element={<MainFeed />} 
               />
+	      
 	      <Route 
 		path="/login" 
 		element={<Login />}
               />
-              <Route 
+
+	      <Route 
 		path="/signup" 
 		element={<SignUp />} 
               />
+
 	      <Route
 		path="/user/MyPage"
 		element={<MyPage />}
 	      />
+
+	      <Route
+		path="/user/MyPage/EditProfile"
+		element={<EditProfile />}
+	      />
+
 	      <Route
 		path="/user/:userId"
 		element={<UserPage />}
 	      />
+
 	      <Route
 		path="/user/:userId/following"
 		element={<Following />}
 	      />
+
 	      <Route
 		path="/user/:userId/blocked"
 		element={<Blocked />}
 	      />
+
 	      <Route
 		path="/user/:userId/liked"
 		element={<LikedThoughts />}
 	      />
+
 	      <Route
 		path="/user/:userId/ReThoughts"
 		element={<ReThoughts />}
 	      />
-	      <Route
-		path="/user/:userId/edit"
-		element={<EditProfile />}
-	      />
+
 	      <Route
 		path="/thought/:postId/:postType"
 		element={<ThoughtPage />}
 	      />
+
 	      <Route
 		path="/search/*"
 		element={<Search />}
 	      />
+
 	      <Route
 		path="/UserRelations"
 		element={<UserRelations />}
 	      />
+
 	      <Route 
 		path='*' 
 		element={<NotFound />}

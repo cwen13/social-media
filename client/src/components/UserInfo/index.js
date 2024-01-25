@@ -19,6 +19,7 @@ import {
   APPROVE_FRIEND_REQUEST,
 } from "./../../utils/mutations";
 import UserList from "./../UserList";
+import EditProfile from "./../../pages/EditProfile";
 import ThoughtCreate from "./../ThoughtCreate"
 import Notifications from "./../Notifications";
 import { useUserContext } from "./../../utils/UserContext";
@@ -28,23 +29,24 @@ import "./style.css";
 
 const UserInfo = ({ page, blocked, setBlocked }) => {
   
-  const { userId,
-	  loginUser,
-	  logoutUser,
-	  userName,
-	  handle,
-	  profilePicture,
-	  email,
-	  blockedList,
-	  setBlockedList,
-	  friendList,
-	  setFriendList,
-	  followList,
-	  setFollowList,
-	  pendList,
-	  setPendList,
-	} = useUserContext();
-
+  const {
+    userId,
+    loginUser,
+    logoutUser,
+    userName,
+    handle,
+    profilePicture,
+    email,
+    blockedList,
+    setBlockedList,
+    friendList,
+    setFriendList,
+    followList,
+    setFollowList,
+    pendList,
+    setPendList,
+  } = useUserContext();
+  
   let userPageId = useParams().userId;
   userPageId = (userPageId !== undefined) ? userPageId : userId;
 
@@ -52,7 +54,6 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   const [ friendship, setFriendship ] = useState(userId !== userPageId && friendList.filter(friendUser => friendUser.id === userPageId).length !== 0);
   const [ following, setFollowing ] = useState(userId !== userPageId && followList.filter(followUser => followUser.id === userPageId).length !== 0);
   const [ pending, setPending ] = useState(userId !== userPageId && pendList.filter(pendUser => pendUser.pendingId === userPageId).length !== 0);
-
   
   const {lodaing: userLoading, error: userError, data: userData} = useQuery(
     QUERY_USER,
@@ -139,10 +140,8 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
       setPending(userId !== userPageId && pendList.filter(pendUser => pendUser.id === userPageId).length !== 0)
     }
 
-      
   },[userLoading, userError, userData, friendList, followList, pendList]);
 
-  
   if(userLoading) return "Loading...";
   if(userError) return `Error UsEr ${userError.message}`;
   if(loadingFriends) return "Loading Friends";
@@ -449,6 +448,10 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
        ? <>
 	   <ThoughtCreate userId={userPageId}
 			  page={page} />
+	   {page=="MyPage" &&
+	    <Link to="/user/MyPage/EditProfile">
+	      Edit My Profile
+	    </Link>}	   
 	   <Notifications />
 	 </>
        : ""}

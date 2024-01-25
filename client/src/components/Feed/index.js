@@ -42,10 +42,11 @@ const Feed = (props) => {
   };
 
   const { loading: replyIdsLoading, error: replyIdsError, data: replyIdsData } = useQuery(
-    QUERY_ALL_REPLY_IDS
+      QUERY_ALL_REPLY_IDS,
   );
   const { loading: reThoughtIdsLoading, error: reThoughtIdsError, data: reThoughtIdsData } = useQuery(
-    QUERY_ALL_RETHOUGHT_IDS
+      QUERY_ALL_RETHOUGHT_IDS,
+
   );
   
   const queryString = (props.page === "MainFeed" && userPageId === undefined || userPageId === 0)
@@ -53,14 +54,13 @@ const Feed = (props) => {
   
   const { loading: queryLoading, error: queryError, data: queryData } = useQuery(
     queryOptions[props.page],
-    queryString    
+      queryString,
   );
 
   if (queryLoading) return "Loading Query";
   if (queryError) return `Q Error ${queryError.message}`;
   if (reThoughtIdsLoading) return "Loading rethought ids";
   if (replyIdsLoading) return "Loading reply ids";
-
   
   const reThoughtIds = new Set(reThoughtIdsData.getAllReThoughtIds.map(entry => entry.reThoughtThoughtId));
   const isReThought = (thoughtId) => reThoughtIds.has(thoughtId);
@@ -107,30 +107,34 @@ const Feed = (props) => {
       </li>
     );
   };
+
+  const ThoughtPicker = () => {
+    
+  }
   
   return (
     <div className="feed">
       <ul className="feedPosts">
-	{(props.blocked || (queryData[thoughts[props.page]].length === 0)) ? <RenderBlockedThought /> :
-	(noData === null) ? noData :
-	 queryData[thoughts[props.page]].map(thought =>
-	   (blockedUser(thought.thoughtAuthor.id) ? "" :
-	   <ThoughtPost key={thought.id}
-			page={props.page}
-			thoughtId={thought.id}
-			thought={thought.content}
-			liked={isLiked(thought.id)}
-			isReThought={isReThought(thought.id)}
-			isReply={isReply(thought.id)}
-			userId={thought.thoughtAuthor.id}
-			userName={thought.thoughtAuthor.userName}
-			handle={thought.thoughtAuthor.handle}
-			profilePicture={thought.thoughtAuthor.profilePicture}
-	   />))}
+	{queryData[thoughts[props.page]].map(thought =>
+	    <li key={thought.id} className="post" data-key={thought.id} >
+	      <ThoughtPost key={thought.id}
+			   page={props.page}
+			   thoughtId={thought.id}
+			   thought={thought.content}
+			   liked={isLiked(thought.id)}
+			   isReThought={isReThought(thought.id)}
+			   isReply={isReply(thought.id)}
+			   userId={thought.thoughtAuthor.id}
+			   userName={thought.thoughtAuthor.userName}
+			   handle={thought.thoughtAuthor.handle}
+			   profilePicture={thought.thoughtAuthor.profilePicture}
+	      />
+	    </li>
+	)}
       </ul>
     </div>
   );
 };
-	  
+
 export default Feed;
 

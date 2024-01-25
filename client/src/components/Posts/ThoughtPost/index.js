@@ -462,7 +462,6 @@ const ThoughtPost = (props) => {
   }
   
   
-  const renderThought = () => {
     return(
       <>
 	<section className="authorInfo">
@@ -471,12 +470,12 @@ const ThoughtPost = (props) => {
 	      <span className="pfpCircle">
 		<img className="pfp" src={`/images/pfp/${props.profilePicture}`}/>
 	      </span>
-	      { props.userName } ({props.userId})
+	      {props.userName} ({props.userId})
 	      <br/>
 	      {props.handle} 
 	    </Link>
 	    <Link to={`/thought/${props.thoughtId}/${thoughtType}`}>
-	      Thought: { props.thoughtId }
+	      Thought: {props.thoughtId}
 	    </Link>
 	  </p>
 	</section>
@@ -490,13 +489,6 @@ const ThoughtPost = (props) => {
 	</section>
       </>
     );
-  };
-  
-  return (
-    <li className="post" key={props.thoughtId} data-key={props.thoughtId}>
-      {renderThought()}
-    </li>
-  );
 };
 
 export default ThoughtPost;

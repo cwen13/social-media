@@ -27,6 +27,8 @@ export const UserContextProvider = ({children}) => {
   const [ profilePicture , setProfilePicture ] = useState(null);
   const [ handle, setHandle ] = useState(null);
   const [ email, setEmail ] = useState(null);
+  const [ firstName, setFirstName ] = useState(null);
+  const [ lastName, setLastName ] = useState(null);
   const [ blockedList, setBlockedList ] = useState([]);
   const [ likedList, setLikedList ] = useState([]);
   const [ friendList, setFriendList ] = useState([]);
@@ -115,18 +117,25 @@ export const UserContextProvider = ({children}) => {
 	setProfilePicture(dataUser.getUser.profilePicture);
 	setHandle(dataUser.getUser.handle);
 	setEmail(dataUser.getUser.email);
+	setFirstName(dataUser.getUser.firstName);
+	setLastName(dataUser.getUser.lastName);
       }
     } catch (err) {
       console.error("Did not set dataUser becasue:", err);
     }
-  }, [loadingUser, errorUser, dataUser,
-      loadingLiked, errorLiked, dataLiked,
-      loadingBlockedList, errorBlockedList, dataBlockedList,
-      loadingFollowList, errorFollowList, dataFollowList,
-      loadingFriendList, errorFriendList, dataFriendList,
-       loadingPendList, errorPendList, dataPendList,
-     ]);
+  },
+	    [
+		loadingUser, errorUser, dataUser,
+		loadingLiked, errorLiked, dataLiked,
+		loadingBlockedList, errorBlockedList, dataBlockedList,
+		loadingFollowList, errorFollowList, dataFollowList,
+		loadingFriendList, errorFriendList, dataFriendList,
+		loadingPendList, errorPendList, dataPendList,
+	    ]
+	   );
 
+  
+  
   const loginUser = (newUserId) => {
     setUserId(newUserId);
     return newUserId;
@@ -159,7 +168,11 @@ export const UserContextProvider = ({children}) => {
 				  followList,
 				  setFollowList,
 				  pendList,
-				  setPendList
+				  setPendList,
+				  firstName,
+				  setFirstName,
+				  lastName,
+				  setLastName,
 				 }}>
       {children}
     </UserContext.Provider>
