@@ -108,10 +108,6 @@
 }
 
 
-.divider {
-  border-style: none none none double;
-}
-
 .originalAuthor {
   display: flex;
   flex-direciton: row;
@@ -126,13 +122,13 @@
   visibility: collapse;
   opacity: 0;
   position: relative;
-  transition: visibility 0s linear 0.5s, opacity 2s ease-in-out, position 0s static linear;
+  transition: visibility 0s ease-in-out 0.5s, opacity 1.5s ease-in-out, position 0s static ease-in-out;
   z-index: 3;
 }
 
 
 .replyBox:hover .originalThought {
-  transition: visibility 0s linear 0.5s, opacity 2s ease-in-out, position 0.5s linear;
+  transition: visibility 0s linear 0.5s, opacity 1.5s ease-in-out, position 0.5s linear;
   visibility: visible;
   opacity: 1;
   position: static;
@@ -148,4 +144,5 @@
 .replyThought {
   width: 100%;
   justify-items: start;
+    border-style: none none none double;
 }

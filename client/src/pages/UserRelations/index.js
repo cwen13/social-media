@@ -8,9 +8,9 @@ import {
 } from "./../../utils/queries";
 
 import UserInfo from "./../../components/UserInfo";
-import FriendList from "./../../components/UserLists/Friends";
-import FollowingList from "./../../components/UserLists/Following";
-import BlockedList from "./../../components/UserLists/Blocked";
+import FriendList from "./../UserLists/Friends";
+import FollowingList from "./../UserLists/Following";
+import BlockedList from "./../UserLists/Blocked";
 import { useUserContext } from "./../../utils/UserContext";
 
 import "./../MainStyles/style.css";
@@ -41,6 +41,11 @@ const UserRelations = () => {
   const { loading: friendsLoading, error: friendsError, data: friendsData } = useQuery(
     QUERY_MY_FRIENDS,
   );
+
+  if(pendingLoading) return "Loading"
+  if(followingLoading) return "Loading"
+  if(friendsLoading) return "Loading"
+  if(blockedLoading) return "Loading"
   
   return(
     <section id="feedContainer">
@@ -50,7 +55,7 @@ const UserRelations = () => {
 	<section id="friends">
 	<h3>PENDING FRIEND REQUESTS</h3>
 	<ul id="pendingFriends">
-	  {pendingData.map((friend) =>
+	  {pendingData?.getMyPendingRequests.map((friend) =>
 	    <FriendList friendId={friend.requestingFriend.id}
 			     friendName={friend.requestingFriend.userName}
 			     friendHandle={friend.requestingFriend.handle}
@@ -60,7 +65,7 @@ const UserRelations = () => {
 	</ul>
 	<h3>FRIENDS</h3>
 	<ul id="currentFriends">
-	  {friendsData.map((friend) =>
+	  {friendsData?.getMyFriends.map((friend) =>
 	    <FriendList friendId={friend.id}
 			     friendName={friend.userName}
 			     friendHandle={friend.handle}
@@ -73,11 +78,11 @@ const UserRelations = () => {
 	<section id="following">
 	  <h3>FOLLOWING</h3>
 	  <ul id="pendingFriends">
-	    {followingData.map((following) =>
-	      <FollowingList followingId={following.requestingFollowing.id}
-			     followingName={following.requestingFollowing.userName}
-			     followingHandle={following.requestingFollowing.handle}
-			     followingProfilePicture={following.requestingFollowing.profilePicture}
+	    {followingData?.getMyFollowing.map((following) =>
+	      <FollowingList followingId={following.id}
+			     followingName={following.userName}
+			     followingHandle={following.handle}
+			     followingProfilePicture={following.profilePicture}
 			     typeOfRelation="Following"
 	      />)}
 	  </ul>
@@ -86,7 +91,7 @@ const UserRelations = () => {
 	<section id="blocked">
 	  <h3>BLOCKED USERS</h3>
 	  <ul id="pendingFriends">
-	    {blockedData.map((blocked) =>
+	    {blockedData?.getMyBlockedUsers.map((blocked) =>
 	      <BlockedList blockedId={blocked.requestingBlocked.id}
 			   blockedName={blocked.requestingBlocked.userName}
 			   blockedHandle={blocked.requestingBlocked.handle}

@@ -54,7 +54,6 @@ export const UserContextProvider = ({children}) => {
     const { loading: loadingPendList, error: errorPendList, data: dataPendList } = useQuery(
       QUERY_MY_PENDING_REQUESTS
   );
-
   
   const { loading: loadingUser, error: errorUser, data: dataUser } = useQuery(
     QUERY_USER,
@@ -67,74 +66,71 @@ export const UserContextProvider = ({children}) => {
   );
   
   useEffect(() => {
+
     if (!loadingBlockedList && !errorBlockedList && dataBlockedList !== null) {
       setBlockedList(
-	[
-	  ...blockedList,
-	  ...dataBlockedList.getMyBlockedUsers.map(user => {return {id: user.id, userName: user.userName}})
-	]
+	  [
+	      ...blockedList,
+	      ...dataBlockedList.getMyBlockedUsers.map(user => {return {id: user.id, userName: user.userName}})
+	  ]
       );
     }
+  }, [loadingBlockedList, errorBlockedList, dataBlockedList,]);
+  
+  useEffect(() => {
     if (!loadingLiked && !errorLiked) {
       setLikedList(
-	[
-	  ...likedList,
-	  ...dataLiked.getAllMyLiked.map(liked => liked.thoughtId)
-	]
+	  [
+	      ...likedList,
+	      ...dataLiked.getAllMyLiked.map(liked => liked.thoughtId)
+	  ]
       );
     }
-
+  }, [loadingLiked, errorLiked, dataLiked,]);
+  
+  useEffect(() => {
     if (!loadingFriendList && !errorFriendList && dataFriendList !== null) {
       setFriendList(
-	[
-	  ...friendList,
-	  ...dataFriendList.getMyFriends
-	]
+	  [
+	      ...friendList,
+	      ...dataFriendList.getMyFriends
+	  ]
       );
     }
-
+  }, [loadingFriendList, errorFriendList, dataFriendList,]);
+  
+  useEffect(() => {
     if (!loadingFollowList && !errorFollowList && dataFollowList !== null) {
       setFollowList(
-	[
-	  ...followList,
-	  ...dataFollowList.getMyFollowing
-	]
+	  [
+	      ...followList,
+	      ...dataFollowList.getMyFollowing
+	  ]
       );
     }
-
+  }, [loadingFollowList, errorFollowList, dataFollowList,]);
+  
+  useEffect(() => {
     if (!loadingPendList && !errorPendList && dataPendList !== null) {
       setPendList(
-	[
-	  ...pendList,
-	  ...dataPendList.getMyPendingRequests
-	]
+	  [
+	      ...pendList,
+	      ...dataPendList.getMyPendingRequests
+	  ]
       );
     }
-
-    try {
-      if(!loadingUser && !errorUser && dataUser !== undefined && dataUser.getUser !== null) {
-	setUserName(dataUser.getUser.userName);
-	setProfilePicture(dataUser.getUser.profilePicture);
-	setHandle(dataUser.getUser.handle);
-	setEmail(dataUser.getUser.email);
-	setFirstName(dataUser.getUser.firstName);
-	setLastName(dataUser.getUser.lastName);
-      }
-    } catch (err) {
-      console.error("Did not set dataUser becasue:", err);
-    }
-  },
-	    [
-		loadingUser, errorUser, dataUser,
-		loadingLiked, errorLiked, dataLiked,
-		loadingBlockedList, errorBlockedList, dataBlockedList,
-		loadingFollowList, errorFollowList, dataFollowList,
-		loadingFriendList, errorFriendList, dataFriendList,
-		loadingPendList, errorPendList, dataPendList,
-	    ]
-	   );
-
+  }, [loadingPendList, errorPendList, dataPendList,]);
   
+  useEffect(() => {
+    if(!loadingUser && !errorUser && dataUser !== undefined && dataUser.getUser !== null) {
+      setUserName(dataUser.getUser.userName);
+      setProfilePicture(dataUser.getUser.profilePicture);
+      setHandle(dataUser.getUser.handle);
+      setEmail(dataUser.getUser.email);
+      setFirstName(dataUser.getUser.firstName);
+      setLastName(dataUser.getUser.lastName);
+    }
+  }, [loadingUser, errorUser, dataUser,]);
   
   const loginUser = (newUserId) => {
     setUserId(newUserId);

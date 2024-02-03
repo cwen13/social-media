@@ -750,13 +750,12 @@ const resolvers = {
 	{
 	  where:
 	  {
-	    id: args.userId
+	    id: context.user.id
 	  }
 	}
       );
-      const user = await User.findByPk(args.userId);
-      const token = signToken(user);
-      return { token, user };				
+      console.log("USERUPADTE:", userUpdate);
+      return userUpdate[0] === 1;
     },
 
     //STATUS: WORKING

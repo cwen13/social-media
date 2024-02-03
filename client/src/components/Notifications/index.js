@@ -18,10 +18,10 @@ import "./style.css";
 
 const Notifications = (props) => {
 
+  const { userId } = useUserContext();
+
   const [ acknowledged,  setAcknowledged ] = useState(false);
   const [ notifications, setNotifications ] = useState({});
-
-  const { userId } = useUserContext();
   
   const { loading: notificationsLoading , error: notificationsError, data: notificationsData } = useQuery(
     GET_MY_NOTIFICATIONS
@@ -91,10 +91,8 @@ const Notifications = (props) => {
       switch(props.__typename) {
       case "Following":
 	let notifFollowing =  notifs.filter((entry) => {
-//	  console.log(entry, props);
 	    return (entry.fromUser === props.follower.id
 		    && entry.followed === true)});
-//	console.log(notifFollowing)
 	if (notifFollowing.length > 0)  return notifFollowing[0].id;
 	break;
       case "Pending":
@@ -126,12 +124,10 @@ const Notifications = (props) => {
       default:
 	return 0;
       }
-    }
-    
+    }    
   };
   
   const RenderFriendRequests = (props) => {
-//    console.log("PROPS:",props);
     const notifId = notifFindId(props)
     
     const approve = async (event) => {
@@ -193,7 +189,6 @@ const Notifications = (props) => {
   const AcknowledgeButton = ({ id }) => {
     const ackPress = async (event) => {
       event.preventDefault();
-      console.log(id);
       const acknowledgeEvent = await ackNotif(
 	{
 	  variables:

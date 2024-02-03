@@ -36,7 +36,14 @@ const ThoughtPost = (props) => {
     thoughtType = "Thought";
   }
   
-  const { userId, loginUser, logoutUser, likedList, setLikedList } = useUserContext();
+  const {
+    userId,
+    loginUser,
+    logoutUser,
+    likedList,
+    setLikedList
+  } = useUserContext();
+  
   const replyAreaRef = useRef(null);
   const thoughtAreaRef = useRef(null);
   const reThoughtAreaRef = useRef(null);
@@ -463,7 +470,7 @@ const ThoughtPost = (props) => {
   
   
     return(
-      <>
+      <div className="post">
 	<section className="authorInfo">
 	  <p>
 	    <Link to={`/user/${props.userId}`}>
@@ -487,7 +494,7 @@ const ThoughtPost = (props) => {
 	  <EditBtn />
 	  <RemoveBtn />
 	</section>
-      </>
+      </div>
     );
 };
 

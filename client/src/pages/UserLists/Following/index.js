@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from "react-router-dom";
 import { useUserContext } from "./../../../utils/UserContext";
 import { useQuery, useMutation } from "@apollo/client";
@@ -17,51 +17,26 @@ import {
   APPROVE_FRIEND_REQUEST,
   ADD_BLOCKED,
   REMOVE_BLOCKED,
+  SEND_FRIEND_REQUEST
 } from "./../../../utils/mutations";
 import "./../userListStyles.css";
 
-const FriendsList = (props) => {
+const Following = (props) => {
   const { userId,
 	  followList,
 	  setFollowList,
 	  friendList,
 	  setFriendList,
 	  blockedList,
-	  setBlockedList } = useUserContext();
-  
-  const isFriend = (friendId) => friendList.filter((user) => user.id === friendId).length === 1;
-  const isFollowing = (followId) => followList.filter((user) => user.id === followId).length === 1;
-  const isBlocked = (blockedId) => blockedList.filter((user) => user.id === blockedId).length === 1;
-  
-  const [ friendship, setFriendship ] = useState(isFriend(props.friendId));
-  const [ following, setFollowing ] = useState(isFollowing(props.friendId));
-  const [ blocked, setBlocked ] = useState(isBlocked(props.friendId));
+	  setBlockedList,
+	  pendList,
+	  setPendList
+	} = useUserContext();
 
-  
-  const [ approveFriendRequest, { error: approveError }] = useMutation(
-    APPROVE_FRIEND_REQUEST,
-    {
-      refetchQueries:
-      [
-	[
-	  GET_MY_NOTIFICATIONS,
-	  "getMyNotifications"
-	],
-      ]
-    }
+  const [ friendshipRequest, { error: friendAddError } ] = useMutation(
+    SEND_FRIEND_REQUEST,
   );
-  
-  const [ denyFriendRequest, { error: denyError }] = useMutation(
-    DENY_FRIEND_REQUEST,
-    {
-      refetchQueries:
-      [
-	GET_MY_NOTIFICATIONS,
-	"getMyNotifications"
-      ]
-    }
-  );
-  
+
   const [ friendRemove, { error: friendRemoveError } ] = useMutation(
     REMOVE_FRIEND,
   );
@@ -82,10 +57,22 @@ const FriendsList = (props) => {
     REMOVE_BLOCKED
   );
   
+  const isFriend = (friendId) => friendList.filter((user) => user.id === friendId).length === 1;
+  const isFollowing = (followId) => followList.filter((user) => user.id === followId).length === 1;
+  const isBlocked = (blockedId) => blockedList.filter((user) => user.id === blockedId).length === 1;
+  const isPending = (pendingId) => pendList.filter((user) => user.id === pendingId).length === 1;
+  
+  const [ friendship, setFriendship ] = useState(isFriend(props.followingId));
+  const [ following, setFollowing ] = useState(isFollowing(props.followingId));
+  const [ blocked, setBlocked ] = useState(isBlocked(props.followingId));
+  const [ pending, setPending ] = useState(isPending(props.followingId));
+  
   useEffect(() => {
-    setFriendship(isFriend(props.friendId))
-    setFollowing(isFollowing(props.friendId))
-    setBlocked(isBlocked(props.friendId))     	  
+    setFriendship(isFriend(props.followingId))
+    setFollowing(isFollowing(props.followingId))
+    setBlocked(isBlocked(props.followingId))
+    setPending(isPending(props.followingId))
+    
   }, [])
   
   //-------------------
@@ -98,14 +85,14 @@ const FriendsList = (props) => {
 	{
 	  variables:
 	  {
-	    followingId: props.friendId
+	    followingId: props.followingId
 	  }
 	}
       );
       setFollowing(false);
       setFollowList(
 	[
-	  ...followList.filter(follow => follow.id !== props.friendId)
+	  ...followList.filter(follow => follow.id !== props.followingId)
 	]
       );
     } else {
@@ -113,7 +100,7 @@ const FriendsList = (props) => {
 	{
 	  variables:
 	  {
-	    followingId: props.friendId
+	    followingId: props.followingId
 	  }
 	}
       );
@@ -122,10 +109,10 @@ const FriendsList = (props) => {
 	[
 	  ...followList,
 	  {
-	    id: props.friendId,
-	    userName: props.friendName,
-	    handle: props.friendHandle,
-	    profilePicture: props.friendProfilePicture
+	    id: props.followingId,
+	    userName: props.followingName,
+	    handle: props.followingHandle,
+	    profilePicture: props.followingProfilePicture
 	  }
 	]
       );
@@ -145,7 +132,7 @@ const FriendsList = (props) => {
 	 <button id="followButton"
 		 onClick={handleFollowing}>
  	   Follow
-	 </button>
+	 </button>	   
 	}
       </div>
     );
@@ -161,14 +148,14 @@ const FriendsList = (props) => {
 	{
 	  variables:
 	  {
-	    blockedId: props.friendId
+	    blockedId: props.followingId
 	  }
 	}
       );
       setBlocked(false);
       setBlockedList(
 	[
-	  ...blockedList.filter(block => block.id !== props.friendId)
+	  ...blockedList.filter(block => block.id !== props.followingId)
 	]
       );
     } else {
@@ -176,7 +163,7 @@ const FriendsList = (props) => {
 	{
 	  variables:
 	  {
-	    blockedId: props.friendId
+	    blockedId: props.followingId
 	  }
 	}
       );
@@ -185,15 +172,13 @@ const FriendsList = (props) => {
 	[
 	  ...blockedList,
 	  {
-	    id: props.friendId,
-	    userName: props.friendName,
-	    handle: props.friendHandle,
-	    profilePicture: props.friendProfilePicture
-
+	    id: props.followingId,
+	    userName: props.followingName,
+	    handle: props.followingHandle,
+	    profilePicture: props.followingProfilePicture
 	  }
 	]
       );
-      
     }
   };
   
@@ -218,45 +203,29 @@ const FriendsList = (props) => {
   };
   
   
-  //------------------------------
-  //-------FRIEND-REQUEST-BUTTONS-
-  //------------------------------
+  //-------------------------
+  //---FRIEND-REQUEST-BUTTON-
+  //-------------------------
   
-  const approveFriend = async (event) => {
+  const FRhandler = async (event) => {
     event.preventDefault();
-    const approveRequest = await approveFriendRequest(
-      {
-	variables:
+    await friendshipRequest(
 	{
-	  friendId: props.friendId
+	  variables:
+	  {
+	    pendingId: props.followingId
+	  }
 	}
-      }
     );
   };
   
-  const disapproveFriend = async (event) => {
-    event.preventDefault();
-    const denyRequest = await denyFriendRequest(
-      {
-	variables:
-	{
-	  pendingId: props.friendId
-	}
-      }
-    );
-  };
-  
-  const RenderFriendRequestButtons = () => {
+  const RenderFriendRequestButton = (event) => {
+    
     return (
-      <div  className="actions">
-	<button id="approveFR"
-		onClick={approveFriend}>
-	  Approve
-	</button>
-	<button id="disapproveFR"
-		onClick={disapproveFriend}>
-	  Disapprove
-	</button>
+      <div className="friendRequetBtn">
+	<button onClick={FRhandler} >
+	  Request<br/> Friendship?
+	  </button>
       </div>
     );
   };
@@ -264,31 +233,32 @@ const FriendsList = (props) => {
   const RenderButtons = () => {
     return(
       <section className="friendActions">
-	{props.typeOfRelation === "Request" && <RenderFriendRequestButtons />}
+	{(!friendship && !pending) && <RenderFriendRequestButton />}
 	<RenderFollowing />
 	<RenderBlocked />
-      </section>
+    </section>
     );
-  }
+  };
   
   return(
-    <li className="friendEntry" key={props.friendId} data-key={props.friendId}>
-      <section className="friendInfo">
-	<Link to={`/user/${props.friendId}`}>
-	  <img src={`/images/pfp/${props.friendProfilePicture}`} width="150"/>
+    <li className="followingEntry" key={props.followingId} data-key={props.followingId}>
+      <section className="followingInfo">
+	<Link to={`/user/${props.followingId}`}>
+	  <img src={`/images/pfp/${props.followingProfilePicture}`} width="150"/>
 	  <div className="userId">
 	    <span className="username">
-	      {props.friendName}({props.friendId})
+	      {props.followingName}({props.followingId})
 	    </span>
 	    <span className="handle">
-	      {props.friendHandle}
+	      {props.followingHandle}
 	    </span>
 	  </div>
 	</Link>
       </section>
-      {RenderButtons()}
-    </li> 
+      {RenderButtons(props.typeOfFollowing)}      
+    </li>
   );
 };
 
-export default FriendsList;
+export default Following
+      

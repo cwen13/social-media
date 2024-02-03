@@ -18,7 +18,6 @@ import {
   DENY_FRIEND_REQUEST,
   APPROVE_FRIEND_REQUEST,
 } from "./../../utils/mutations";
-import UserList from "./../UserList";
 import EditProfile from "./../../pages/EditProfile";
 import ThoughtCreate from "./../ThoughtCreate"
 import Notifications from "./../Notifications";
@@ -152,6 +151,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   //-------------------------
   const handleFriendship = async (event) => {
     event.preventDefault();
+    if(userId===userPageId) return 0;
     if(friendship) {
       await friendRemove(
 	{
@@ -347,6 +347,16 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
     );
   };
 
+  const UserList = (user) => {
+    return(
+	<li className={user.listOf}>
+	  <Link to={`/user/${user.userId}`}>
+	    {user.userName}
+	  </Link>
+	</li>
+    );
+  };
+  
   //------------------------------------
   //---------------STATS----------------
   //------------------------------------
@@ -367,7 +377,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	     </li>
 	     
 	     <li>
-	       <Link to={`/myFriends`}>
+	       <Link to={`/user/${userId}/Friends`}>
 		 Friends
 	       </Link>
 	       {/*This will be a mini scroll box likely a iframe*/}
@@ -384,8 +394,9 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	     </li>
 	     
 	     <li>
-	       {/*This will be a mini scroll box likely a iframe*/}
-	       Following
+	       <Link to={`/user/${userId}/Following`}>
+		 Following
+		 </Link>
 	       <ul id="followingList">
 		 {dataFollowing.getUserFollowing !== undefined ? dataFollowing.getUserFollowing.map(follow =>
 		   <UserList userId={follow.id}
@@ -398,7 +409,9 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	       </ul>
 	     </li>
 	     <li>
-		 Blocked
+	       <Link to={`/user/${userId}/Blocked`}>
+		  Blocked
+		</Link>
 	       <ul id="blockedList">
 		 {blockedList.length > 0
 		  ? blockedList.map(block =>

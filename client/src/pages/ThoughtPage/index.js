@@ -14,10 +14,19 @@ import "./../MainStyles/style.css";
 
 const ThoughtPage = () => {
   const page = "ThoughtPage";
-  const { postId, postType } = useParams();
-  const { userId, loginUSer, logoutUser } = useUserContext();
 
-  console.log("POST:",postType);
+  const {
+    postId,
+    postType
+  } = useParams();
+  
+  const {
+    userId,
+    loginUSer,
+    logoutUser,
+    likedList
+  } = useUserContext();
+
   
   const { loading: thoughtLoading, error: thoughtError, data: thoughtData } = useQuery(
     QUERY_THOUGHT,
@@ -41,7 +50,9 @@ const ThoughtPage = () => {
  
   if(thoughtLoading) return <p> Loading </p>;
   if(thoughtError) return console.log(thoughtError);
-  if(replysLoading)return <p> loading</p>;
+  if(replysLoading)return <p> loading</p>
+;
+  const isLiked = (thoughtId) => likedList.includes(thoughtId);
   
   return(
     <section id="feedContainer">
@@ -56,6 +67,7 @@ const ThoughtPage = () => {
 		    userId={thoughtData.getThought.thoughtAuthor.id}
 		    thought={thoughtData.getThought.content}
 		    thoughtId={thoughtData.getThought.id}
+		    liked={isLiked(thoughtData.getThought.id)}
 		    profilePicture={thoughtData.getThought.thoughtAuthor.profilePicture}
 		    page={page}
        />}

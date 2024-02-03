@@ -189,7 +189,6 @@ const Blocked = (props) => {
     }
   };
   
-  
   const RenderBlocked = () => {
     return(
       <div className="blocked">
@@ -209,45 +208,46 @@ const Blocked = (props) => {
     );
   };
   
-  
   //-------------------------
   //---FRIEND-REQUEST-BUTTON-
   //-------------------------
-  const RenderFriendRequestButton = (event) => {
+  
+  const FRhandler = async (event) => {
     event.preventDefault();
-    const FRhandler = async (userId) => {
-      await blockRemove(
+    await blockRemove(
 	{
 	  variables:
 	  {
 	    blockedId: props.blockedId
 	  }
 	}
-      );
-      setBlocked(false);
-      setBlockedList(
+    );
+    setBlocked(false);
+    setBlockedList(
 	[
 	    ...blockedList.filter((entry) => entry.id !== props.blockedId)	  
 	]
-      );
-      await friendshipRequest(
+    );
+    await friendshipRequest(
 	{
 	  variables:
 	  {
 	    pendingId: userId
 	  }
 	}
-      );
-      setPending(true);
-      setPendList(
+    );
+    setPending(true);
+    setPendList(
 	[
-	  ...pendList.filter((entry) => entry.id !== props.blockedId)	  
+	    ...pendList.filter((entry) => entry.id !== props.blockedId)	  
 	]
-      ); 
-    };
+    ); 
+  };
+  
+  const RenderFriendRequestButton = (event) => {
     return (
       <div className="friendRequetBtn">
-	<button onClick={FRhandler(props.followinngId)} >
+	<button onClick={FRhandler}>
 	  Request<br/> Friendship?
 	  </button>
       </div>

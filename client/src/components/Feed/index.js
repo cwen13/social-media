@@ -22,7 +22,13 @@ const Feed = (props) => {
 
   const [ recentThought, setRecentThought ] = useState({});
   
-  const { userId, likedList, setLikedList, blockedList } = useUserContext();
+  const {
+    userId,
+    likedList,
+    setLikedList,
+    blockedList
+  } = useUserContext();
+
   userPageId = (userPageId !== undefined) ? userPageId : userId;
   
   const queryOptions = {
@@ -46,7 +52,6 @@ const Feed = (props) => {
   );
   const { loading: reThoughtIdsLoading, error: reThoughtIdsError, data: reThoughtIdsData } = useQuery(
       QUERY_ALL_RETHOUGHT_IDS,
-
   );
   
   const queryString = (props.page === "MainFeed" && userPageId === undefined || userPageId === 0)
@@ -116,7 +121,7 @@ const Feed = (props) => {
     <div className="feed">
       <ul className="feedPosts">
 	{queryData[thoughts[props.page]].map(thought =>
-	    <li key={thought.id} className="post" data-key={thought.id} >
+	    <li key={thought.id} data-key={thought.id} >
 	      <ThoughtPost key={thought.id}
 			   page={props.page}
 			   thoughtId={thought.id}

@@ -162,13 +162,13 @@ type Mutation {
           password: String!
           profilePicture: String): Auth!
   updateUser(userId: ID!,
+             profilePicture: String
              userName: String,
              handle: String,
              firstName: String,
              lastName: String,
              email: String,
-             password: String
-             profilePicture: String): Auth!
+             password: String): Boolean!
   deleteUser(userId: ID!): Boolean!
 
   addBlocked(blockedId: ID!): Boolean!

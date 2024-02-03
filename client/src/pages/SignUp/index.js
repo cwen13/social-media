@@ -38,14 +38,19 @@ function Signup(props) {
     });
   };
 
-  return (
-    <div className="container my-1">
-      <Link to="/login">← Go to Login</Link>
 
+  const sendToLogin = (event) => {
+    event.preventDefault();
+    window.location.assign("/login");
+  }
+
+  
+  return (
+    <div className="" id="signUp">
       <h2>Signup</h2>
       <form onSubmit={handleFormSubmit}>
 
-	<div className="flex-row space-between my-2">
+	<div className="attribute">
           <label htmlFor="userName">User Name:</label>
           <input
             placeholder="User name"
@@ -56,7 +61,7 @@ function Signup(props) {
           />
         </div>
 
-	<div className="flex-row space-between my-2">
+	<div className="attribute">
           <label htmlFor="handle">Handle:</label>
           <input
             placeholder="handle"
@@ -67,7 +72,7 @@ function Signup(props) {
           />
         </div>
 
-        <div className="flex-row space-between my-2">
+        <div className="attribute">
           <label htmlFor="firstName">First Name:</label>
           <input
             placeholder="First name"
@@ -78,7 +83,7 @@ function Signup(props) {
           />
         </div>
 	
-        <div className="flex-row space-between my-2">
+        <div className="attribute">
           <label htmlFor="lastName">Last Name:</label>
           <input
             placeholder="Last name"
@@ -89,7 +94,7 @@ function Signup(props) {
           />
         </div>
 
-	<div className="flex-row space-between my-2">
+	<div className="attribute">
           <label htmlFor="email">Email:</label>
           <input
             placeholder="youremail@test.com"
@@ -100,7 +105,7 @@ function Signup(props) {
           />
         </div>
 
-	<div className="flex-row space-between my-2">
+	<div className="attribute">
           <label htmlFor="pwd">Password:</label>
           <input
             placeholder="******"
@@ -111,8 +116,9 @@ function Signup(props) {
           />
         </div>
 
-	<div className="flex-row flex-end">
+	<div className="attribute">
           <button type="submit">Submit</button>
+	  <button type="button" onClick={sendToLogin}>Login</button>
         </div>
       </form>
     </div>

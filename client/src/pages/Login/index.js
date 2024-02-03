@@ -40,13 +40,17 @@ const Login = (props) => {
     });
   };
 
-  return (
-    <div className="container my-1">
-      <Link to="/signup">← Go to Signup</Link>
+  const sendToSignUp = (event) => {
+    event.preventDefault();
+    window.location.assign("/signup");
+  }
+    
 
+  return (
+    <div className="loginPage" id="loginEntry">
       <h2>Login</h2>
       <form onSubmit={handleFormSubmit}>
-        <div className="flex-row space-between my-2">
+        <div className="attribute">
           <label htmlFor="email">Email address:</label>
           <input
             placeholder="youremail@test.com"
@@ -56,7 +60,7 @@ const Login = (props) => {
             onChange={handleChange}
           />
         </div>
-        <div className="flex-row space-between my-2">
+        <div className="attribute">
           <label htmlFor="pwd">Password:</label>
           <input
             placeholder="******"
@@ -71,8 +75,9 @@ const Login = (props) => {
             <p className="error-text">The provided credentials are incorrect</p>
           </div>
         ) : null}
-        <div className="flex-row flex-end">
+        <div className="attribute">
           <button type="submit">Submit</button>
+	  <button type="button" onClick={sendToSignUp}>Signup</button>
         </div>
       </form>
     </div>
