@@ -276,7 +276,8 @@ const FriendsList = (props) => {
   return(
     <li className="friendEntry" key={props.friendId} data-key={props.friendId}>
       <section className="friendInfo">
-	<Link to={`/user/${props.friendId}`}>
+	<Link to={`/user/${props.friendId}`}
+	      className="friendInfo">
 	  <img src={`/images/pfp/${props.friendProfilePicture}`} width="150"/>
 	  <div className="userId">
 	    <span className="username">

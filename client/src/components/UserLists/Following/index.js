@@ -243,7 +243,8 @@ const Following = (props) => {
   return(
     <li className="followingEntry" key={props.followingId} data-key={props.followingId}>
       <section className="followingInfo">
-	<Link to={`/user/${props.followingId}`}>
+	<Link to={`/user/${props.followingId}`}
+	      className="followingInfo">
 	  <img src={`/images/pfp/${props.followingProfilePicture}`} width="150"/>
 	  <div className="userId">
 	    <span className="username">

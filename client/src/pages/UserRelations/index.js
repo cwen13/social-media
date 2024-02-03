@@ -8,9 +8,9 @@ import {
 } from "./../../utils/queries";
 
 import UserInfo from "./../../components/UserInfo";
-import FriendList from "./../UserLists/Friends";
-import FollowingList from "./../UserLists/Following";
-import BlockedList from "./../UserLists/Blocked";
+import FriendList from "./../../components/UserLists/Friends";
+import FollowingList from "./../../components/UserLists/Following";
+import BlockedList from "./../../components/UserLists/Blocked";
 import { useUserContext } from "./../../utils/UserContext";
 
 import "./../MainStyles/style.css";
@@ -27,6 +27,10 @@ const UserRelations = () => {
     setFollowList,
     blockedList,
     setBlockedList,
+    profilePicture,
+    userId,
+    userName,
+    handle
   } = useUserContext();
 
   const { loading: pendingLoading, error: pendingError, data: pendingData } = useQuery(
@@ -46,13 +50,35 @@ const UserRelations = () => {
   if(followingLoading) return "Loading"
   if(friendsLoading) return "Loading"
   if(blockedLoading) return "Loading"
-  
+
   return(
-    <section id="feedContainer">
-      <UserInfo page={page} />
+    <section id="relationships">
+
+      <section id="userHeader">	
+	<div id="profile">
+	  <img src={`/images/pfp/${profilePicture}`}
+	       width="150"/>
+	  <span>
+	    {`User: ${userName}`}
+	    <br/>
+	    {`Handle: ${handle}`}
+	  </span>
+	</div>
+	<ul id="profileInfo">
+	  <li id="friendInfo">
+	    Number of Friends: {friendList.length}
+	    </li>
+	  <li id="followingInfo">
+	    Number of accounts following: {followList.length}
+	    </li>
+	  <li id="blockedInfo">
+	    Nunmber of accounts blocked: {blockedList.length}
+	    </li>
+	</ul>
+      </section>
       
-      <section id="UserLists">
-	<section id="friends">
+      <section id="userLists">
+	<section id="friends" className="relations">
 	<h3>PENDING FRIEND REQUESTS</h3>
 	<ul id="pendingFriends">
 	  {pendingData?.getMyPendingRequests.map((friend) =>
@@ -75,9 +101,9 @@ const UserRelations = () => {
 	</ul>
 	</section>
 
-	<section id="following">
+	<section id="following" className="relations">
 	  <h3>FOLLOWING</h3>
-	  <ul id="pendingFriends">
+	  <ul id="usersFollowing">
 	    {followingData?.getMyFollowing.map((following) =>
 	      <FollowingList followingId={following.id}
 			     followingName={following.userName}
@@ -88,14 +114,14 @@ const UserRelations = () => {
 	  </ul>
 	</section>
 	
-	<section id="blocked">
+	<section id="blocked" className="relations">
 	  <h3>BLOCKED USERS</h3>
-	  <ul id="pendingFriends">
+	  <ul id="blockedUsers">
 	    {blockedData?.getMyBlockedUsers.map((blocked) =>
-	      <BlockedList blockedId={blocked.requestingBlocked.id}
-			   blockedName={blocked.requestingBlocked.userName}
-			   blockedHandle={blocked.requestingBlocked.handle}
-			   blockedProfilePicture={blocked.requestingBlocked.profilePicture}
+	      <BlockedList blockedId={blocked.id}
+			   blockedName={blocked.userName}
+			   blockedHandle={blocked.handle}
+			   blockedProfilePicture={blocked.profilePicture}
 			   typeOfRelation="Blocked"
 	      />)}
 	  </ul>

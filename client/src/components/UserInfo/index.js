@@ -375,55 +375,12 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 		 Link to reThoughts
 	       </Link>
 	     </li>
-	     
 	     <li>
-	       <Link to={`/user/${userId}/Friends`}>
-		 Friends
+	       <Link to={`/userRelations`}>
+		 Friends, following, and blocked!
 	       </Link>
-	       {/*This will be a mini scroll box likely a iframe*/}
-	       <ul id="friendsList">
-		 {friendsData.getUserFriends !== undefined ? friendsData.getUserFriends.map(friend =>
-		   <UserList userId={friend.id}
-			     key={friend.id}
-			     userName={friend.userName}
-			     page={page}
-			     listOf="friendList"
-		   />)
-		     : "There are no friends yet"}
-	       </ul>
-	     </li>
-	     
-	     <li>
-	       <Link to={`/user/${userId}/Following`}>
-		 Following
-		 </Link>
-	       <ul id="followingList">
-		 {dataFollowing.getUserFollowing !== undefined ? dataFollowing.getUserFollowing.map(follow =>
-		   <UserList userId={follow.id}
-			     key={follow.id}
-			     userName={follow.userName}
-			     page={page}
-			     listOf="followingList"
-		   />)
-		     : "There are no follows yet"}
-	       </ul>
-	     </li>
-	     <li>
-	       <Link to={`/user/${userId}/Blocked`}>
-		  Blocked
-		</Link>
-	       <ul id="blockedList">
-		 {blockedList.length > 0
-		  ? blockedList.map(block =>
-		    <UserList userId={block.id}
-			      key={block.id}
-			      userName={block.userName}
-			      page={page}
-			      listOf="blockedList"
-		    />)
-		  : "There are no blocks yet"}
-	       </ul>
-	     </li>	
+	       </li>
+	    
 	   </ul>}
       </section>
     );

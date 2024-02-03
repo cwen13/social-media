@@ -45,7 +45,9 @@
 }
 
 #pendingFriends,
-#currentFriends {
+#currentFriends,
+#usersFollowing,
+#blockedUsers{
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -68,7 +70,10 @@
 
 #editProfile,
 #loginEntry,
-#signUp {
+#signUp,
+#friends,
+#following,
+#blocked{
     background-color: #03c3c6;
     border-radius: 5px;
     border: solid #342987 2px;
@@ -85,3 +90,26 @@
     align-items: center;
 }
 
+#userLists {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.relations {
+    margin: 1rem 0.5rem 0rem 0.5rem;
+}
+
+#relationships {
+    display: flex;
+    flex-direction: column;
+}
+
+#userHeader {
+    display: flex;
+    flex-direciton: row;
+    background-color: #03c3c6;
+    border-radius: 5px;
+    border: solid #342987 2px;
+     
+}
