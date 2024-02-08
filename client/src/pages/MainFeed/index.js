@@ -1,6 +1,5 @@
 import React from "react";
 import Feed from "./../../components/Feed/"
-import RecentThoughts from "./../../components/RecentThoughts/"
 import UserInfo from "./../../components/UserInfo";
 import "./../MainStyles/style.css";
 import { useUserContext } from "./../../utils/UserContext";

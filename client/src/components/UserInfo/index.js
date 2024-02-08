@@ -55,91 +55,111 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   const [ pending, setPending ] = useState(userId !== userPageId && pendList.filter(pendUser => pendUser.pendingId === userPageId).length !== 0);
   
   const {lodaing: userLoading, error: userError, data: userData} = useQuery(
-    QUERY_USER,
-    {
-      variables :
+      QUERY_USER,
       {
-	userId: userPageId
+		variables :
+		{
+		  userId: userPageId
+		}
       }
-    }
   );
 
   const { loading:loadingFriends , error: friendsError, data: friendsData } = useQuery(
-    QUERY_USER_FRIENDS,
-    {
-     variables:
+      QUERY_USER_FRIENDS,
       {
-	userId: userPageId
+		variables:
+		{
+		  userId: userPageId
+		}
       }
-    }
   );
 
   const { loading:followingLoading , error: errorFollowing, data: dataFollowing } = useQuery(
-    QUERY_USER_FOLLOWING,
-    {
-      variables:
+      QUERY_USER_FOLLOWING,
       {
-	userId: userPageId
+		variables:
+		{
+		  userId: userPageId
+		}
       }
-    }
   );
   
   const [ friendshipRequest, { error: friendAddError } ] = useMutation(
-    SEND_FRIEND_REQUEST,
+      SEND_FRIEND_REQUEST,
   );
   
   const [ approveFriendshipRequest, { error: appriveFriendRequestError } ] = useMutation(
-    APPROVE_FRIEND_REQUEST,
+      APPROVE_FRIEND_REQUEST,
   );
   
   const [ denyFriendshipRequest, { error: denyFriendRequestError } ] = useMutation(
-    DENY_FRIEND_REQUEST,
+      DENY_FRIEND_REQUEST,
   );
   
   const [ friendRemove, { error: friendRemoveError } ] = useMutation(
-    REMOVE_FRIEND,
+      REMOVE_FRIEND,
   );
   
   const [ followAdd, { error: followAddError } ] = useMutation(
-    ADD_FOLLOW,
+      ADD_FOLLOW,
   );
 
   const [ followRemove, { error: followRemoveError } ] = useMutation(
-    REMOVE_FOLLOW,
+      REMOVE_FOLLOW,
   );
-        
+  
   const [ blockAdd, { error: blockAddError } ] = useMutation(
-    ADD_BLOCKED,
+      ADD_BLOCKED,
   );
 
   const [ blockRemove, { error: blockRemoveError } ] = useMutation(
-    REMOVE_BLOCKED
+      REMOVE_BLOCKED
   );
   
   useEffect(() => {
     if (!userLoading && !userError && userData !== undefined && userPageId !== 0) {
       setUser(
-	{
-	  ...user,
-	  id: userData.getUser.id,
-	  userName: userData.getUser.userName,
-	  handle: userData.getUser.handle,
-	  email: userData.getUser.email,
-	  profilePicture: userData.getUser.profilePicture
-	}
+		  {
+			...user,
+			id: userData.getUser.id,
+			userName: userData.getUser.userName,
+			handle: userData.getUser.handle,
+			email: userData.getUser.email,
+			profilePicture: userData.getUser.profilePicture
+		  }
       );
     }
+  }, [userLoading, userError])
+
+  useEffect(() => {
     if(friendList !== 0) {
       setFriendship(userId !== userPageId && friendList.filter(friendUser => friendUser.id === userPageId).length !== 0)
     }
+	if(blocked) {
+	  setFriendship(false);
+	}
+  }, [friendList]);
+  
+  useEffect(() => {
     if(followList !== 0) {
       setFollowing(userId !== userPageId && followList.filter(followUser => followUser.id === userPageId).length !== 0)
     }
+		if(blocked) {
+	  setFollowing(false);
+	}
+
+  }, [followList]);
+
+  useEffect(() => {
     if(pendList !== 0) {
       setPending(userId !== userPageId && pendList.filter(pendUser => pendUser.id === userPageId).length !== 0)
     }
+	if(blocked) {
+	  setPending(false);
+	}
 
-  },[userLoading, userError, userData, friendList, followList, pendList]);
+  }, [pendList]);
+
 
   if(userLoading) return "Loading...";
   if(userError) return `Error UsEr ${userError.message}`;
@@ -154,28 +174,28 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
     if(userId===userPageId) return 0;
     if(friendship) {
       await friendRemove(
-	{
-	  variables:
-	  {
-	    friendingId: userPageId
-	  }
-	}
+		  {
+			variables:
+			{
+			  friendingId: userPageId
+			}
+		  }
       );
       setFriendship(false);
       setFriendList(
-	[
-	  ...friendList.filter(friend => friend.id !== userPageId)
-	]
+		  [
+			  ...friendList.filter(friend => friend.id !== userPageId)
+		  ]
       );
 
     } else {
       await friendshipRequest(
-	{
-	  variables:
-	  {
-	    pendingId: userPageId
-	  }
-	}
+		  {
+			variables:
+			{
+			  pendingId: userPageId
+			}
+		  }
       );
       setPending(true);
     };
@@ -186,27 +206,27 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
        && pendList.filter((entry) =>  entry.pendingId == userPageId).length > 0) setPending(true);
     
     return (
-      <div className="friendship">
-	{(userId === userPageId)
-	 ? "Are you your friend?"
-	 : (friendship || pending ?
-	    <h4>
-	      This one of your (potential) friends
-	    </h4>
-	    : (pending ? <h4>
-			   Waiting on thier approval
-			 </h4>
-	       :
-	    <div> This could be the start of a very nice <br />
-	      <button id="friendshipButton"
-		      onClick={handleFriendship}>
- 		  Friendship?
-	      </button>
-	    </div>
-	      )
-	   )
-	}
-      </ div>
+		<div className="friendship">
+		  {(userId === userPageId)
+		   ? "Are you your friend?"
+		   : (friendship || pending ?
+			  <h4>
+				This one of your (potential) friends
+			  </h4>
+			  : (pending ? <h4>
+							 Waiting on thier approval
+						   </h4>
+				 :
+				 <div> This could be the start of a very nice <br />
+				   <button id="friendshipButton"
+						   onClick={handleFriendship}>
+ 					 Friendship?
+				   </button>
+				 </div>
+				)
+			 )
+		  }
+		</ div>
     );
   };
 
@@ -217,61 +237,61 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
     event.preventDefault();
     if(following) {
       await followRemove(
-	{
-	  variables:
-	  {
-	    followingId: userPageId
-	  }
-	}
+		  {
+			variables:
+			{
+			  followingId: userPageId
+			}
+		  }
       );
       setFollowing(false);
       setFollowList(
-	[
-	  ...followList.filter(follow => follow.id !== userPageId)
-	]
+		  [
+			  ...followList.filter(follow => follow.id !== userPageId)
+		  ]
       );
     } else {
       await followAdd(
-	{
-	  variables:
-	  {
-	    followingId: userPageId
-	  }
-	}
+		  {
+			variables:
+			{
+			  followingId: userPageId
+			}
+		  }
       );
       setFollowing(true);
       setFollowList(
-	[
-	  ...followList,
-	  {
-	    id: userPageId,
-	    userName: userName
-	  }
-	]
+		  [
+			  ...followList,
+			  {
+				id: userPageId,
+				userName: userName
+			  }
+		  ]
       );
     };
   };
   
   const RenderFollowing = () => {
     return(
-      <div className="followingship">
-	{(userId === userPageId)
-	 ? "Who are you following?"
-	 : (following ?
-	    <h4>
-	      This one of your followed accounts
-	    </h4>
-	    :
-	    <div> This could be the start of a very nice <br />
-	      <button id="friendshipButton"
-		      onClick={handleFollowing}>
- 		  followship?
-	      </button>
-	    </div>
-	   )
-	}
-	
-      </div>
+		<div className="followingship">
+		  {(userId === userPageId)
+		   ? "Who are you following?"
+		   : (following ?
+			  <h4>
+				This one of your followed accounts
+			  </h4>
+			  :
+			  <div> This could be the start of a very nice <br />
+				<button id="friendshipButton"
+						onClick={handleFollowing}>
+ 				  followship?
+				</button>
+			  </div>
+			 )
+		  }
+		  
+		</div>
     );
   };
   
@@ -283,37 +303,42 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
     event.preventDefault();
     if (blocked) {
       await blockRemove(
-	{
-	  variables:
-	  {
-	    blockedId: userPageId
-	  }
-	}
+		  {
+			variables:
+			{
+			  blockedId: userPageId
+			}
+		  }
       );
       setBlocked(false);
       setBlockedList(
-	[
-	  ...blockedList.filter(block => block.id !== userPageId)
-	]
+		  [
+			  ...blockedList.filter(block => block.id !== userPageId)
+		  ]
       );
     } else {
       await blockAdd(
-	{
-	  variables:
-	  {
-	    blockedId: userPageId
-	  }
-	}
+		  {
+			variables:
+			{
+			  blockedId: userPageId
+			}
+		  }
       );
       setBlocked(true);
+	  // WASHING OUT OTHER STATES
+	  
+	  setPending(false);
+	  setFollowing(false);
+	  setFriendship(false);
       setBlockedList(
-	[
-	  ...blockedList,
-	  {
-	    id: userPageId,
-	    userName: userName
-	  }
-	]
+		  [
+			  ...blockedList,
+			  {
+				id: userPageId,
+				userName: userName
+			  }
+		  ]
       );
       
     }
@@ -321,39 +346,39 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 
   const RenderBlocked = () => {
     return(
-      <div className="blocked">
-	{(userId === userPageId)
-	 ? "Who are you blocked?"
-	 : (blocked ?
-	    <>
-	    <h4>
-	      This one of your blocked users
-	    </h4>
-	    <button id="friendshipButton"
-		    onClick={handleBlocked}>
- 	      Unblock?
-	    </button>
-	    </>
-	    :
-	    <div> This could be the start of a very nice <br />
-	      <button id="friendshipButton"
-		      onClick={handleBlocked}>
- 		blocking?
-	      </button>
-	    </div>
-	   )
-	}
-      </div>
+		<div className="blocked">
+		  {(userId === userPageId)
+		   ? "Who are you blocked?"
+		   : (blocked ?
+			  <>
+				<h4>
+				  This one of your blocked users
+				</h4>
+				<button id="friendshipButton"
+						onClick={handleBlocked}>
+ 				  Unblock?
+				</button>
+			  </>
+			  :
+			  <div> This could be the start of a very nice <br />
+				<button id="friendshipButton"
+						onClick={handleBlocked}>
+ 				  blocking?
+				</button>
+			  </div>
+			 )
+		  }
+		</div>
     );
   };
 
   const UserList = (user) => {
     return(
-	<li className={user.listOf}>
-	  <Link to={`/user/${user.userId}`}>
-	    {user.userName}
-	  </Link>
-	</li>
+		<li className={user.listOf}>
+		  <Link to={`/user/${user.userId}`}>
+			{user.userName}
+		  </Link>
+		</li>
     );
   };
   
@@ -362,81 +387,81 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   //------------------------------------
   const RenderStats = () => {
     return(
-      <section className="userStats">
-	{userPageId === 0 ? <h2> No user Stats yet </h2>
-	 : <ul>
-	     <li>
-	       <Link to={`/user/${userPageId}/liked`}>
-		 Liked thoughts
-	       </Link>
-	     </li>
-	     <li>
-	       <Link to={`/user/${userPageId}/reThoughts`}>
-		 Link to reThoughts
-	       </Link>
-	     </li>
-	     <li>
-	       <Link to={`/userRelations`}>
-		 Friends, following, and blocked!
-	       </Link>
-	       </li>
-	    
-	   </ul>}
-      </section>
+		<section className="userStats">
+		  {userPageId === 0 ? <h2> No user Stats yet </h2>
+		   : <ul>
+			   <li>
+				 <Link to={`/user/${userPageId}/liked`}>
+				   Liked thoughts
+				 </Link>
+			   </li>
+			   <li>
+				 <Link to={`/user/${userPageId}/reThoughts`}>
+				   Link to reThoughts
+				 </Link>
+			   </li>
+			   <li>
+				 <Link to={`/userRelations`}>
+				   Friends, following, and blocked!
+				 </Link>
+			   </li>
+			   
+			 </ul>}
+		</section>
     );
   };
   
   return (
-    <section className="userInfo" >
-      <section className="profile">
-      {userPageId === 0
-       ?<h1>No one is logged in here</h1>
-       :<>
-	  <h1>=^={user.userName}=^=</h1>
-	  <div className="pfp">
-	    {user.profilePicture
-	     ? <img src={`/images/pfp/${user.profilePicture}`}
-		    width="150"/>
-	     :
-	     <>
- 	       +==+<br/>
-	       |-----|<br/>
-	       +==+
-	     </>
-	    }
-	  </div>
-	  <div className="names">
-	    NAME: {user.handle}
-	  </div>
-	  {blocked ? "" :
-	   <div className="email">
-	     EMAIL: {user.email}
-	   </div>}
-	</>}
+      <section className="userInfo" >
+		<section className="profile">
+		  {userPageId === 0
+		   ?<h1>No one is logged in here</h1>
+		   :<>
+			  <h1>=^={user.userName}=^=</h1>
+			  <div className="pfp">
+				{user.profilePicture
+				 ? <img src={`/images/pfp/${user.profilePicture}`}
+						width="150"/>
+				 :
+				 <>
+ 				   +==+<br/>
+				   |-----|<br/>
+				   +==+
+				 </>
+				}
+			  </div>
+			  <div className="names">
+				NAME: {user.handle}
+			  </div>
+			  {blocked ? "" :
+			   <div className="email">
+				 EMAIL: {user.email}
+			   </div>}
+			</>}
 
-      {userPageId === userId && userPageId !== 0
-       ? <>
-	   <ThoughtCreate userId={userPageId}
-			  page={page} />
-	   {page=="MyPage" &&
-	    <Link to="/user/MyPage/EditProfile">
-	      Edit My Profile
-	    </Link>}	   
-	   <Notifications />
-	 </>
-       : ""}
-      {userPageId === 0 || blocked 
-       ? <h2>There are no friend yet</h2>
-       : <RenderFriendship />}
-      {userPageId === 0 || blocked
-       ? <h2>There are no followings yet</h2>
-       : <RenderFollowing />}
-      {userPageId === 0
-       ? <h2>There are no followings yet</h2>
-       : <RenderBlocked />}
+		  {userPageId === userId && userPageId !== 0
+		   ? <>
+			   <ThoughtCreate userId={userPageId}
+							  page={page} />
+			   {page=="MyPage" &&
+				<Link to="/user/MyPage/EditProfile">
+				  Edit My Profile
+				</Link>}	   
+			   <Notifications />
+			 </>
+		   : ""}
+		  {userPageId === 0 || blocked 
+		   ? <h2>There are no friend yet</h2>
+		   : <RenderFriendship />}
+		  {userPageId === 0 || blocked
+		   ? <h2>There are no followings yet</h2>
+		   : <RenderFollowing />}
+		  {userPageId === 0
+		   ? <h2>There are no followings yet</h2>
+		   : <RenderBlocked />}
+		</section>
+		{blocked ? "" : <RenderStats />}
       </section>
-      {blocked ? "" : <RenderStats />}
-    </section>
   );
 };
 
