@@ -421,4 +421,17 @@ query getMyPendingRequests {
   }
 }`;
 
+export const GET_NOTIFICATION_ID = gql`
+query getNotificationId {
+  getNotificationId {
+    userId
+    pendingId
+    requestingFriend {
+      id
+      userName
+      handle
+      profilePicture
+    }
+  }
+}`;
 

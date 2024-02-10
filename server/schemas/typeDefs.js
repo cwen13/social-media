@@ -127,41 +127,50 @@ type Query {
 
   getAllLiked: [Thought]
   getAllMyLiked: [Liked]
-  getUserLikedIds(userId: ID!): [Liked]
-  getThoughtLikes(thoughtId: ID!): [User]
-  getUserLiked(userId: ID!): [Thought]
-  getUserBlocked(userId: ID!): [User]
+  getUserLikedIds( userId: ID! ): [Liked]
+  getThoughtLikes( thoughtId: ID! ): [User]
+  getUserLiked( userId: ID! ): [Thought]
+  getUserBlocked( userId: ID! ): [User]
   getMyBlockedUsers: [User]
 
-  getThoughtReplys(thoughtId: ID!): [Thought]
-  getThoughtReThoughts(thoughtId: ID!): [Thought]
+  getThoughtReplys( thoughtId: ID! ): [Thought]
+  getThoughtReThoughts( thoughtId: ID! ): [Thought]
   getMyReThoughts: [Thought]
-  getUserReThoughts(userId: ID!): [Thought]
+  getUserReThoughts( userId: ID! ): [Thought]
   getAllReThoughtIds: [ReThought]
   getAllReplyIds: [Reply]
-  getUserReplys(userId: ID!): [Thought]
-  getReThoughtIdPairs(originalId: ID!): ReThought
-  getReplyIdPairs(originalId: ID!): Reply
-  getReThoughtOriginalThought(reThoughtId: ID!): Thought
-  getReplyOriginalThought(replyId: ID!): Thought
+  getUserReplys( userId: ID! ): [Thought]
+  getReThoughtIdPairs( originalId: ID! ): ReThought
+  getReplyIdPairs( originalId: ID! ): Reply
+  getReThoughtOriginalThought( reThoughtId: ID! ): Thought
+  getReplyOriginalThought( replyId: ID! ): Thought
 
   getMyNotifications: NotificationList
   getMyNotificationIds: [Notification]
 
-  getLikedNotification(likedId: ID!, fromUser: ID!): Notification
+  getLikedNotification( likedId: ID!, fromUser: ID! ): Notification
+  getNotificaitonId( fromUser: ID,
+                     toUser: ID,
+                     friendRequest: Boolean,
+                     followed: Boolean,
+                     likedThoughtId: ID,
+                     replyToId: ID,
+                     reThoughtOfId: ID
+                     ): ID
 }
 
 type Mutation {
-  login(email: String!,
+  login( email: String!,
         password: String!): Auth!
-  addUser(userName: String!,
+  addUser( userName: String!,
           handle: String!,
           firstName: String!,
           lastName: String!,
           email: String!,
           password: String!
-          profilePicture: String): Auth!
-  updateUser(userId: ID!,
+          profilePicture: String
+         ): Auth!
+  updateUser( userId: ID!,
              profilePicture: String
              userName: String,
              handle: String,
@@ -169,36 +178,40 @@ type Mutation {
              lastName: String,
              email: String,
              password: String): Boolean!
-  deleteUser(userId: ID!): Boolean!
+  deleteUser( userId: ID! ): Boolean!
 
-  addBlocked(blockedId: ID!): Boolean!
-  removeBlocked(blockedId: ID!): Boolean!
+  addBlocked( blockedId: ID! ): Boolean!
+  removeBlocked( blockedId: ID! ): Boolean!
 
-  addFollow(followingId: ID!): Boolean!
-  removeFollow(followingId: ID!): Boolean!
+  addFollow( followingId: ID! ): Boolean!
+  removeFollow( followingId: ID! ): Boolean!
 
-  addLiked(thoughtId: ID!,
-           thoughtUserId: ID!): Boolean!
-  removeLiked(thoughtId: ID!): Boolean!
+  addLiked( thoughtId: ID!,
+            thoughtUserId: ID!
+          ): Boolean!
+  removeLiked( thoughtId: ID! ): Boolean!
 
-  sendFriendRequest(pendingId: ID!): Boolean!
-  denyFriendRequest(pendingId: ID!): Boolean!
-  approveFriendRequest(friendId: ID!): Boolean!
-  removeFriend(friendId: ID!): Boolean!
+  sendFriendRequest( pendingId: ID! ): Boolean!
+  denyFriendRequest( pendingId: ID! ): Boolean!
+  approveFriendRequest( friendId: ID! ): Boolean!
+  removeFriend( friendId: ID! ): Boolean!
 
-  addThought(content: String!): Thought!
-  updateThought(thoughtId: ID!,
-                content: String!): Thought!
-  removeThought(thoughtId: ID!): Boolean!
+  addThought( content: String! ): Thought!
+  updateThought( thoughtId: ID!,
+                 content: String!
+               ): Thought!
+  removeThought( thoughtId: ID! ): Boolean!
 
 
-  replyToThought(content: String!
-                 thoughtId: ID!
-                 thoughtUserId: ID!): Reply!
-  addReThought(originalThoughtId: ID!,
-               additionalThought: String,
-               originalThoughtUserId: ID!): ReThought!
-  acknowledgeNotification(notificationId: ID!): Boolean!
+  replyToThought( content: String!
+                  thoughtId: ID!
+                  thoughtUserId: ID!
+                ): Reply!
+  addReThought( originalThoughtId: ID!,
+                additionalThought: String,
+                originalThoughtUserId: ID!
+              ): ReThought!
+  acknowledgeNotification( notificationId: ID! ): Boolean!
 }`;
 
 
