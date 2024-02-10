@@ -16,7 +16,7 @@ import {
 import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
-const Notifications = (props) => {
+const Notifications = () => {
 
   const { userId } = useUserContext();
 
@@ -24,11 +24,11 @@ const Notifications = (props) => {
   const [ notifications, setNotifications ] = useState({});
   
   const { loading: notificationsLoading , error: notificationsError, data: notificationsData } = useQuery(
-    GET_MY_NOTIFICATIONS
+      GET_MY_NOTIFICATIONS
   );
   
   const [ approveFriend, { error: approveError }] = useMutation(
-    APPROVE_FRIEND_REQUEST,
+      APPROVE_FRIEND_REQUEST,
       {
 		refetchQueries:
 		[
@@ -45,7 +45,7 @@ const Notifications = (props) => {
   );
 
   const [ denyFriend, { error: denyError }] = useMutation(
-    DENY_FRIEND_REQUEST,
+      DENY_FRIEND_REQUEST,
       {
 		refetchQueries:
 		[
@@ -59,7 +59,7 @@ const Notifications = (props) => {
       ACKNOWLEDGE_NOTIFICATION,
       {
 		refetchQueries:
-		[
+notifuttons		[
 			GET_MY_NOTIFICATIONS,
 			"getMyNotifications"
 		]
@@ -74,89 +74,67 @@ const Notifications = (props) => {
 			...(notificationsData.getMyNotifications)
 		  }
       )
+	  console.log("NOTIFS:",notificationsData.getMyNotifications);
     }
   },[notificationsLoading, notificationsError, notificationsData]);
 
   if(notificationsLoading) return "Loading notifications";
   if(notificationsError) return "Error Loading notifs";
 
-  const createdNearBy = (entryTime, propTime) => {
-    let delta = (Math.abs(parseInt(entryTime) - parseInt(propTime)) < 1000);
-    return delta;
-  }
+  const RenderUserCard = (user) => {
+	return(
+		<section className="userCar">
+		  <section className="userNames">
+			<Link to={`/user/${user.id}`}>
+			  <span className="userTag">
+				<img src={`/images/pfp/${user.profilePicture}`}/>
+				{user.userName}
+			  </span>
+			</Link>
+			<span className="thoughtRef">
+			  {user.handle}
+			</span>
+		  </section>
+		  <section  className="actions">
+			{friendRequest
+			 ?(<button id="approveFR"
+					   onClick={approve}>
+				 Approve
+			   </button>
+			   <button id="disapproveFR"
+					   onClick={disapprove}>
+				 Disapprove
+			   </button>)
+			 :(<AcknowledgeButton id={notifId} />)
+			}
+		  </section>
+		</section>
+	}
   
-  const notifFindId = (props) => {
-    if(Object.keys(notifications !== 0)) {
-      let notifs = notifications.notifications;
-      switch(props.__typename) {
-
-		case "Following":
-		  let notifFollowing =  notifs.filter((entry) => {
-			return (entry.fromUser === props.follower.id
-					&& entry.followed === true)});
-		  if (notifFollowing.length > 0)  return notifFollowing[0].id; 
-		  break;
-
-		case "Pending":
-		  let notifPending =  notifs.filter((entry) =>
-			  (entry.fromUser === props.fromUser
-			   && entry.friendRequest === true));
-		  if (notifPending.length > 0)  return notifPending[0].id;
-		  break;
-
-		case "Liked":
-		  let notifLiked = notifs.filter((entry) =>
-			  (entry.fromUser === props.thoughtLiker.id
-			   && entry.likedThoughtId === props.likedThought.id))
-		  if(notifLiked.length > 0) return notifLiked[0].id;
-		  break;
-
-		case "ReThought":
-		  let notifReThought = notifs.filter((entry) =>
-			  (entry.fromUser === props.reThoughtThought.thoughtAuthor.id
-			   && entry.reThoughtOfId === props.originalReThoughtThought.id
-			   && createdNearBy(entry.createdAt, props.createdAt)));
-		  if(notifReThought.length > 0) return notifReThought[0].id;
-		  break;
-
-		case "Reply":
-		  let notifReply = notifs.filter((entry) =>
-			  (entry.fromUser === props.replyThought.thoughtAuthor.id
-			   && entry.replyToId === props.originalReplyThought.id
-			   && createdNearBy(entry.createdAt, props.createdAt)));
-		  if(notifReply.length > 0) return notifReply[0].id;
-		  break;
-
-		default:
-		  return 0;
-      }
-    }    
-  };
-  
-  const RenderFriendRequests = (props) => {
-    const notifId = notifFindId(props)
+  const RenderFriendRequests = () => {
+    const notifId = notifFindId()
     
     const approve = async (event) => {
       event.preventDefault();
       const approveRequest = await approveFriend(
-	{
-	  variables:
-	  {
-	    friendId: props.requestingFriend.id
-	  }
-	}
+		  {
+			variables:
+			{
+			  friendId: .requestingFriend.id
+			}
+		  }
       );
     };
     
     const disapprove = async (event) => {
       event.preventDefault();
       const denyRequest = await denyFriend(
-	{
-	  variables:
-	  {
-	    pendingId: props.requestingFriend.id
-	  }
-	}
+		  {
+			variables:
+			{
+			  pendingId: .requestingFriend.id
+			}
+		  }
       );
     };
     
@@ -164,15 +142,15 @@ const Notifications = (props) => {
 		<li data-key={notifId} key={notifId}>
 		  <section className="notifProfile">
 			<section className="userNames">
-			  <Link to={`/user/${props.requestingFriend.id}`}>
+			  <Link to={`/user/${.requestingFriend.id}`}>
 				New friend request: <br/>
 				<span className="userTag">
-				  <img src={`/images/pfp/${props.requestingFriend.profilePicture}`}/>
-				  {props.requestingFriend.userName}
+				  <img src={`/images/pfp/${.requestingFriend.profilePicture}`}/>
+				  {.requestingFriend.userName}
 				</span>
 			  </Link>
 			  <span className="thoughtRef">
-				{props.requestingFriend.handle}
+				{.requestingFriend.handle}
 			  </span>
 			</section>
 		  </section>
@@ -209,23 +187,23 @@ const Notifications = (props) => {
     );
   };
   
-  const RenderFollower = (props) => {
-    const notifId = notifFindId(props)
+  const RenderFollower = () => {
+    const notifId = notifFindId()
     return(
 		<li data-key={notifId} key={notifId}>
 		  <section className="notifProfile">
 			<section className="userNames">
 			  <p>
-				<Link to={`/user/${props.follower.id}`}>
+				<Link to={`/user/${.follower.id}`}>
 				  New follower:<br/>
 				  <span className="userTag">
-					<img src={`/images/pfp/${props.follower.profilePicture}`}/>
-					{props.follower.userName}
+					<img src={`/images/pfp/${.follower.profilePicture}`}/>
+					{.follower.userName}
 				  </span>
 				</Link>
 			  </p>
 			  <div>
-				{props.follower.handle}
+				{.follower.handle}
 			  </div>
 			</section>
 		  </section>
@@ -236,24 +214,24 @@ const Notifications = (props) => {
     );
   };
   
-  const RenderLiked = (props) => {
-    const notifId = notifFindId(props)
+  const RenderLiked = () => {
+    const notifId = notifFindId()
     return(
 		<li data-key={notifId} key={notifId}>
 		  <section className="notifProfile">
 			<p>
-			  <Link to={`/thought/${props.likedThought.id}`}>
+			  <Link to={`/thought/${.likedThought.id}`}>
 				Liked by:<br/>
 			  </Link>
 			  <span className="userTag">
-				<img src={`/images/pfp/${props.thoughtLiker.profilePicture}`}/>
-				<Link to={`/user/${props.thoughtLiker.id}`}>
-				  {props.thoughtLiker.userName}
+				<img src={`/images/pfp/${.thoughtLiker.profilePicture}`}/>
+				<Link to={`/user/${.thoughtLiker.id}`}>
+				  {.thoughtLiker.userName}
 				</Link>
 			  </span>
 			</p>
 			<div className="thoughtRef">
-			  {props.likedThought.content}
+			  {.likedThought.content}
 			</div>
 		  </section>
 		  <section  className="actions">
@@ -263,24 +241,24 @@ const Notifications = (props) => {
     );
   };
   
-  const RenderReply = (props) => {
-    const notifId = notifFindId(props)
+  const RenderReply = () => {
+    const notifId = notifFindId()
     return(
 		<li data-key={notifId} key={notifId}>
 		  <section className="notifProfile">
 			<p>
-			  <Link to={`/thought/${props.replyThought.id}`}>
+			  <Link to={`/thought/${.replyThought.id}`}>
 				Reply:<br/>
 			  </Link>
 			  <span className="userTag">
-				<img src={`/images/pfp/${props.replyThought.thoughtAuthor.profilePicture}`}/>
-				<Link to={`/user/${props.replyThought.thoughtAuthor.id}`}>
-				  {props.replyThought.thoughtAuthor.userName}
+				<img src={`/images/pfp/${.replyThought.thoughtAuthor.profilePicture}`}/>
+				<Link to={`/user/${.replyThought.thoughtAuthor.id}`}>
+				  {.replyThought.thoughtAuthor.userName}
 				</Link>
 			  </span>
 			</p>
 			<div className="reThought">
-			  {props.replyThought.content}
+			  {.replyThought.content}
 			</div>
 		  </section>
 		  <section  className="actions">
@@ -290,26 +268,26 @@ const Notifications = (props) => {
     );
   };
   
-  const RenderReThought = (props) => {
-    const notifId = notifFindId(props)
+  const RenderReThought = () => {
+    const notifId = notifFindId()
     return(
 		<li data-key={notifId} key={notifId}>
 		  <section className="notifProfile">
 			<p>
-			  <Link to={`/thought/${props.reThoughtThought.id}`}>
+			  <Link to={`/thought/${.reThoughtThought.id}`}>
 				ReThought:
 			  </Link>
 			  <span className="userTag">
-				<img src={`/images/pfp/${props.reThoughtThought.thoughtAuthor.profilePicture}`}/>
-				<Link to={`/user/${props.reThoughtThought.thoughtAuthor.id}`}>
+				<img src={`/images/pfp/${.reThoughtThought.thoughtAuthor.profilePicture}`}/>
+				<Link to={`/user/${.reThoughtThought.thoughtAuthor.id}`}>
 				  <span>
-					{props.reThoughtThought.thoughtAuthor.userName}
+					{.reThoughtThought.thoughtAuthor.userName}
 				  </span>
 				</Link>
 			  </span>
 			</p>
 			<div className="reThoughtThought">
-			  {props.reThoughtThought.content}
+			  {.reThoughtThought.content}
 			</div>
 		  </section>
 		  <section  className="actions">
@@ -322,11 +300,7 @@ const Notifications = (props) => {
   
   return(
       <ul className="notifications">
-		{Object.keys(notifications).length !== 0 ? notifications.friendRequests.map((entry) => RenderFriendRequests(entry)) : "LOADING"}
-		{Object.keys(notifications).length !== 0 ? notifications.followers.map((entry) => RenderFollower(entry)) : "LOADING"}
-		{Object.keys(notifications).length !== 0 ? notifications.likes.map((entry) => RenderLiked(entry)) : "LOADING"}
-		{Object.keys(notifications).length !== 0 ? notifications.replys.map((entry) => RenderReply(entry)) : "LOADING"}
-		{Object.keys(notifications).length !== 0 ? notifications.reThoughts.map((entry) => RenderReThought(entry)) : "LOADING"}
+		{/* new map functoin with new format */}
       </ul>
   );
 }

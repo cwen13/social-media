@@ -705,9 +705,9 @@ const resolvers = {
 	  ];
 
 	  let sortedNotif  = Object.entries(notifTogether)
-		  .sort((a,b) => b.createdAt - a.createdAt);
+		  .sort((a,b) => a[1].createdAt - b[1].createdAt);
 
-	  console.log("SORTED NBOTIFS:",sortedNotif);
+	  //console.log("SORTED NBOTIFS:",sortedNotif.map(notif => notif[1])[0]);
 	  
 	  
       const NotificationList =
@@ -719,9 +719,8 @@ const resolvers = {
 			  replys,
 			  reThoughts
 			}
-	  //      console.log(NotificationList);
-      
-      return NotificationList;
+	        console.log(NotificationList);
+       return NotificationList;
     },
     
     getMyPendingRequests: async (parent, args, context) => {

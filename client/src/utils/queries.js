@@ -322,18 +322,6 @@ query getMyBlockedUsers {
 export const GET_MY_NOTIFICATIONS = gql`
 query getMyNotifications {
   getMyNotifications {
-    notifications {
-      id
-      fromUser
-      toUser
-      friendRequest
-      followed
-      likedThoughtId
-      replyToId
-      reThoughtOfId
-      acknowledge
-      createdAt
-    }
     friendRequests {
       id
       createdAt
