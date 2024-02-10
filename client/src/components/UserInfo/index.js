@@ -160,6 +160,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 
   }, [pendList]);
 
+  
 
   if(userLoading) return "Loading...";
   if(userError) return `Error UsEr ${userError.message}`;
@@ -417,10 +418,10 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 		  {userPageId === 0
 		   ?<h1>No one is logged in here</h1>
 		   :<>
-			  <h1>=^={user.userName}=^=</h1>
+			  <h1>=^={userName}=^=</h1>
 			  <div className="pfp">
-				{user.profilePicture
-				 ? <img src={`/images/pfp/${user.profilePicture}`}
+				{profilePicture
+				 ? <img src={`/images/pfp/${profilePicture}`}
 						width="150"/>
 				 :
 				 <>
@@ -431,11 +432,11 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 				}
 			  </div>
 			  <div className="names">
-				NAME: {user.handle}
+				NAME: {handle}
 			  </div>
 			  {blocked ? "" :
 			   <div className="email">
-				 EMAIL: {user.email}
+				 EMAIL: {email}
 			   </div>}
 			</>}
 

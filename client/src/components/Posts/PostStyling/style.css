@@ -1,4 +1,4 @@
-
+g
 .entry {
   border: 0.125rem dotted purple;
   margin: 0.125rem;
@@ -121,14 +121,13 @@
   width: 80%;	  
   visibility: collapse;
   opacity: 0;
-  position: relative;
-  transition: visibility 0s ease-in-out 0.5s, opacity 1.5s ease-in-out, position 0s static ease-in-out;
+  position: absolute;
+  transition: visibility 0.5s ease-in-out, opacity 1.5s ease-in-out, position 0s static ease-in-out;
   z-index: 3;
 }
 
-
 .replyBox:hover .originalThought {
-  transition: visibility 0s linear 0.5s, opacity 1.5s ease-in-out, position 0.5s linear;
+ transition: visibility 0.5s linear, opacity 1.5s ease-in-out, position 0.5s linear;
   visibility: visible;
   opacity: 1;
   position: static;
