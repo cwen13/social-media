@@ -204,6 +204,40 @@ ReThought.belongsTo(Thought, {
   as: "reThoughtThought"
 });
 
+// Setting up relationships to return post info
+// when quering the notifcaiton table directl
+Notification.belongsTo(User, {
+  foreignKey: "fromUser",
+  otherKey: "toUser",
+  as: "interactor"
+});
+
+Notification.belongsTo(User, {
+  foreignKey: "toUser",
+  otherKey: "fromUser",
+  as: "postSource"
+});
+
+Notification.belongsTo(Liked, {
+  through: Liked,
+  foreignKey: "likedThoughtId"
+});
+
+Notification.belongsTo(Reply, {
+  through: Reply,
+  foreignKey: "replyToId"
+});
+
+Notification.belongsTo(ReThought, {
+  through: ReThought,
+  foreignKey: "reThoughtOfId"
+});
+
+//Notificaiton.belongsTo(ReThought, {
+//  through: Pending,
+//  foreignKey: "friendRequest"
+//});
+
 
 
 

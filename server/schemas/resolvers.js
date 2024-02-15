@@ -532,16 +532,25 @@ const resolvers = {
 			  toUser: context.user.id,
 			  acknowledge: false
 			},
+			include:
+			[
+				{
+				  model: Liked
+				},
+				{
+				  model: Reply
+				}
+			],
 			order:
 			[
 				[
 					"createdAt", "ASC"
 				]
 			]
-				
+			
 		  }
       );
-	  //      console.log("NOTIFS:",notifications)
+	  console.log("NOTIFS:",notifications[4]);
 	  
       // Get friend requessts
       const frs = notifications
