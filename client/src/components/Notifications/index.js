@@ -9,27 +9,22 @@ import {
 } from "./../../utils/mutations";
 
 import {
-  GET_MY_NOTIFICATIONS,
   QUERY_USER_FRIENDS,
-  GET_NOTIFICATION_ID
+  GET_MY_NOTIFICATIONS
 } from "./../../utils/queries";
 
 import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
-const Notifications = () => {
+const Notifications = (notifData) => {
 
   const { userId } = useUserContext();
 
   const [ acknowledged,  setAcknowledged ] = useState(false);
-  const [ notifications, setNotifications ] = useState({});
-  
+  const [ notifications, setNotifications ] = useState([]);
+
   const { loading: notificationsLoading , error: notificationsError, data: notificationsData } = useQuery(
       GET_MY_NOTIFICATIONS
-  );
-
-  const { loading: notificationIdLoading , error: notificationIdError, data: notificationsIdData } = useQuery(
-	  GET_NOTIFICATION_ID
   );
   
   const [ approveFriend, { error: approveError }] = useMutation(
@@ -73,19 +68,11 @@ const Notifications = () => {
   
   useEffect(() =>{
     if(!notificationsLoading && !notificationsError && notificationsData !== undefined){
-
-	  let sortedNotif  = (a,b) => a.createdAt - b.createdAt
-	  let notifTypes = Object.keys(notificationsData)
-	  let notifList = notifTypes
-		  .map(key => [...notificationsData[key]])
-		  .flat()
-		  .sort(sortedNotif);
-	  
       setNotifications(
-		  {
+		  [
 			...notifications,
-			...notifList
-		  }
+			...notificationsData.getMyNotifications.notifications
+		  ]
       )
     }
   },[notificationsLoading, notificationsError, notificationsData]);
@@ -93,30 +80,29 @@ const Notifications = () => {
   if(notificationsLoading) return "Loading notifications";
   if(notificationsError) return "Error Loading notifs";
 
-  
   const approveFR = async (event, requestingUser) => {
-      event.preventDefault();
-      const approveRequest = await approveFriend(
+    event.preventDefault();
+    const approveRequest = await approveFriend(
+		{
+		  variables:
 		  {
-			variables:
-			{
-			  friendId: requestingUser.id
-			}
+			friendId: requestingUser.id
 		  }
-      );
-    };
-    
+		}
+    );
+  };
+  
   const disapproveFR = async (event,  requestingUser) => {
-      event.preventDefault();
-      const denyRequest = await denyFriend(
+    event.preventDefault();
+    const denyRequest = await denyFriend(
+		{
+		  variables:
 		  {
-			variables:
-			{
-			  pendingId: requestingUser.id
-			}
+			pendingId: requestingUser.id
 		  }
-      );
-    };
+		}
+    );
+  };
 
   const AcknowledgeButton = ({ id }) => {
     const ackPress = async (event) => {
@@ -131,27 +117,17 @@ const Notifications = () => {
       );
     };
     return(
-		<button onClick={ackPress}>
+		<button onClick={() => ackPress(id)}>
 		  ACK
 		</button>
     );
   };
   
-  const RenderUserCard = ({ user, friendRequest }) => {
+  const RenderUserCard = ({ notificationId, user, friendRequest, type }) => {
 	return(
-		<section className="userCar">
-		  <section className="userNames">
-			<Link to={`/user/${user.id}`}>
-			  <span className="userTag">
-				<img src={`/images/pfp/${user.profilePicture}`}/>
-				{user.userName}
-			  </span>
-			</Link>
-			<span className="thoughtRef">
-			  {user.handle}
-			</span>
-		  </section>
-		  <section  className="actions">
+		<section className="userCard">
+		  <section className="actions">
+			<span>{type}</span>
 			{friendRequest
 			 ?(<>
 				 <button id="approveFR"
@@ -163,95 +139,132 @@ const Notifications = () => {
 				   Disapprove
 				 </button>
 			   </>)
-			 :(<AcknowledgeButton  />)
+			 :(<AcknowledgeButton id={notificationId} />)
 			}
+		  </section>
+		  <section>
+			<section className="userNames notifProfile">
+			  <Link to={`/user/${user.id}`}>
+				<span className="userTag">
+				  <img src={`/images/pfp/${user.profilePicture}`}
+					   width="150"/>
+				  {user.handle}
+				</span>
+			  </Link>
+			</section>
 		  </section>
 		</section>
 	);
   }
   
-  const RenderFriendRequests = ({ user, content ,createdAt }) => {    
+  const RenderFriendRequests = ({ notification, entry, createdAt }) => {    
 	return (
-		<li data-key={1} key={1}>
+		<li data-key={notification.id} key={notification.id}>    
 		  {RenderUserCard(
 			  {
-				user: user,
+				user: entry.user,
 				friendRequest: true,
-				createdAt: createdAt
+				type: "Friend Request"
 			  }
-		  )
-		  }
+		  )}
+		  <section className="content">
+			<Link to={`/users/${entry.requestingFriend.id}`}>
+			  <img src={`/images/pfp/${entry.requestingFriend.profilePicture}`} />
+			  User: {entry.requestingFriend.userName}
+			</Link>
+			</section>
 		</li>
     );
   };
   
-  
-  const RenderFollower = ({ user, friendRequest, createdAt}) => {
+  const RenderFollower = ({ notification, entry, createdAt }) => {
     return(
-		<li data-key={1} key={1}>
+		<li data-key={notification.id} key={notification.id}>  
 		  {RenderUserCard(
 			  {
-				user: user,
-				friendRequest: true,
-				createdAt: createdAt
+				notificationId: notification.id,
+				user: entry.user,
+				friendRequest: false,
+				type: "New Follower"
 			  }
-		  )
-		  }
+		  )}
+		  <section className="content">
+			<Link to={`/users/${entry.follower.id}`}>
+			<img src={`/images/pfp/${entry.follower.profilePicture}`} />
+			  {entry.follower.userName}
+			  </Link>
+			</section>
 		</li>
     );
   };
   
-  const RenderLiked = ({ user, friendRequest, createdAt}) => {
-    
+  const RenderLiked = ({ notification, entry, createdAt }) => {
     return(
-		<li data-key={1} key={1}>
+		<li data-key={notification.id} key={notification.id}>  
 		  {RenderUserCard(
 			  {
-				user: user,
-				friendRequest: true,
-				createdAt: createdAt
+				notificationId: notification.id,
+				user: entry.thoughtLiker,
+				friendRequest: false,
+				type: "New Like"
 			  }
-		  )
-		  }
+		  )}
+ 		  <section className="content">
+			<Link to={`/users/${entry.thoughtLiker.id}`}>
+			  {entry.likedThought.content}
+			</Link>
+		  </section>
 		</li>
     );
   };
   
-  const RenderReply = ({ user, friendRequest, createdAt}) => {
+  const RenderReply = ({ notification, entry, createdAt }) => {
     return(
-		<li data-key={1} key={1}>
+		<li data-key={notification.id} key={notification.id}>  
 		  {RenderUserCard(
 			  {
-				user: user,
-				friendRequest: true,
-				createdAt: createdAt
+				notificationId: notification.id,
+				user: entry.replyThought.thoughtAuthor,
+				friendRequest: false,
+				type: "New Reply"
 			  }
-		  )
-		  }
+		  )}
+		  <section className="content">
+			<Link to={`/thought/${entry.replyThought.id}/reply`}>
+			  {entry.replyThought.content}
+			</Link>
+		  </section>
 		</li>
     );
   };
   
-  const RenderReThought = ({ user, friendRequest, createdAt}) => {
+  const RenderReThought = ({ notification, entry, createdAt }) => {
+	//console.log("ENTRY:", entry);
     return(
-		<li data-key={1} key={1}>
+		<li data-key={notification.id} key={notification.id}>  
 		  {RenderUserCard(
 			  {
-				user: user,
-				friendRequest: true,
-				createdAt: createdAt
+				notificationId: notification.id,
+				user: entry.reThoughtThought.thoughtAuthor,
+				friendRequest: false,
+				type: "New ReThought"
 			  }
-		  )
-		  }
+		  )}
+		  <section className="content">
+			<Link to={`/thought/${entry.reThoughtThought.id}/ReThought`}>
+			  {entry.reThoughtThought.content}
+			</Link>
+		  </section>
 		</li>
     );
   };
-
-    const notificationType = (notif) => {
+  
+  const notificationType = (notif) => {
+	//console.log("NOTIF:", notif);	
 	if (notif.hasOwnProperty("requestingFriend")) {
 	  let user = notif.requestingFriend;
 	  let content = {};
-	  let createdAt = notif.createdAt;
+	  let createdAt = notif.createdAt;	  
 	  return RenderFriendRequests(
 		  {
 			user,
@@ -305,6 +318,7 @@ const Notifications = () => {
 	  );
 	  
 	} else if(notif.hasOwnProperty("reThoughtThought")) {
+
 	  let user = notif.reThoughtThought.thoughtAuthor;
 	  let content =
 		  {
@@ -322,14 +336,122 @@ const Notifications = () => {
 	}
   }
 
-  
+  const RenderNotifications = () => {
+	let notificationArray = [];
+
+	for(const notification of notifications) {
+
+	  for(const type in notificationsData.getMyNotifications) {
+
+		let createdAt = notification.createdAt;
+
+		for(const entry in notificationsData.getMyNotifications[type]) {
+
+		  let closeEntry = null;
+		  switch(type) {
+			case "notifications":
+			case "__typename":
+			  break;
+			case "friendRequests":
+			  if(notificationsData.getMyNotifications[type].length === 0) break;
+			  closeEntry = notificationsData.getMyNotifications[type]
+				.filter((entry) => (entry.createdAt - createdAt) < 500);
+			  notificationArray
+				.push(RenderFriendRequests(
+					{
+					  notification,
+					  entry: closeEntry[0]
+					}
+				));
+			  closeEntry  = null;
+			  break;
+			  
+			case "followers":
+			  if(notificationsData.getMyNotifications[type].length === 0) break;
+			  closeEntry = notificationsData.getMyNotifications[type]
+				.filter((entry) => (entry.createdAt - createdAt) < 500);
+			  notificationArray
+				.push(RenderFollower(
+					{
+					  notification,
+					  entry: closeEntry[0]
+					}
+				));
+			  closeEntry  = null;
+			  break;
+			  
+			case "likes":
+			  if(notificationsData.getMyNotifications[type].length === 0) break;
+			  closeEntry = notificationsData.getMyNotifications[type]
+				.filter((entry) => (entry.createdAt - createdAt) < 500);
+			  notificationArray
+				.push(RenderLiked(
+					{
+					  notification,
+					  entry: closeEntry[0]
+					}
+				));
+			  closeEntry  = null;
+			  break;
+
+			case "reThoughts":
+			  if(notificationsData.getMyNotifications[type].length === 0) break;
+			  closeEntry = notificationsData.getMyNotifications[type]
+				.filter((entry) => (entry.createdAt - createdAt) < 500);
+			  notificationArray
+				.push(RenderReThought(
+					{
+					  notification,
+					  entry: closeEntry[0]
+					}
+				));
+			  closeEntry  = null;
+			  break;
+
+			case "reply":
+			  if(notificationsData.getMyNotifications[type].length === 0) break;
+			  closeEntry = notificationsData.getMyNotifications[type]
+				.filter((entry) => (entry.createdAt - createdAt) < 500);
+			  notificationArray
+				.push(RenderReply(
+					{
+					  notification,
+					  entry: closeEntry[0]
+					}
+				));
+			  closeEntry  = null;
+			  break;
+		  }
+		}
+	  }
+	}
+	console.log("NITIFARRAY:",notificationArray);
+
+	let deleteEle = [];
+	for(let i = 0; i < notificationArray.length; i++){
+	  for(let j = 0; j < notificationArray.length; j++){
+		if(i===j || i > j) continue;
+		if(deleteEle.find((element) => element === i) !== undefined) continue;
+		console.log(`NOTIF [${i}]`, notificationArray[i]);
+		console.log(`Notif [${j}]`, notificationArray[j]);
+		if (notificationArray[i].key == notificationArray[j].key){
+		  console.log("MATACH");
+		  deleteEle.push(j);
+		}
+	  }
+	}
+	deleteEle.reverse();
+	console.log("DELETEARRAY:", deleteEle);
+	deleteEle.forEach((dup) => notificationArray.splice(dup,1));
+	return notificationArray;
+  }
+
+  let notifiArray = RenderNotifications();
   return(
       <ul className="notifications">
-		{/* new map functoin with new format */}
+		{notifiArray.map((item) => item)}
       </ul>
   );
 }
 
 export default Notifications;
-
-// 	{Object.keys(notifications).length !== 0 ? NotifPicker() : "LOADING"}

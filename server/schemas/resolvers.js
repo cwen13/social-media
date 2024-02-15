@@ -531,7 +531,14 @@ const resolvers = {
 			{
 			  toUser: context.user.id,
 			  acknowledge: false
-			},			
+			},
+			order:
+			[
+				[
+					"createdAt", "ASC"
+				]
+			]
+				
 		  }
       );
 	  //      console.log("NOTIFS:",notifications)
@@ -688,7 +695,7 @@ const resolvers = {
 
 
 	  let notifTogether = [
-//		  ...notifications, 
+		  ...notifications, 
 		  ...friendRequests,
 		  ...followers,
 		  ...likes,
@@ -703,7 +710,7 @@ const resolvers = {
 	  
       const NotificationList =
 			{
-			 // notifications, 
+			  notifications, 
 			  friendRequests,
 			  followers,
 			  likes,
@@ -716,44 +723,12 @@ const resolvers = {
 	  let notifList = notifKeys.map(key => [...NotificationList[key]]).flat().sort(sortedNotif);
 	  //console.log("sorted", notifList.flat().sort(sortedNotif));
 	  //console.log("sorted", Object.keys(notifList[0]));
-	  
+	  //console.log("NOTIFS:", NotificationList);
       return NotificationList;
     },
 
 	getNotificaitonId: async (parent, args, context) => {
-	//  let presentKeys = [];
-//	  let presentCriteria = Object.keys(args)
-//		  .forEach((type) =>
-//			  {
-//				console.log("TYPE:",type);
-//				console.log("ARGS[TYPE]:", args[type]);
-//				if(args.hasOwnProperty("fromUser")) {
-//				  presentKeys.push({ "fromUser" : args[type] });
-//				} else if(args.hasOwnProperty("toUser")) {
-//				  presentKeys.push({ "toUser" : args[type] });
-//				} else if(args.hasOwnProperty("friendRequest")) {
-//				  presentKeys.push({ "friendRequest" : args[type] });
-//				}else if(args.hasOwnProperty("followed")) {
-//				  presentKeys.push({ "followed" : args[type] });
-//				} else if(args.hasOwnProperty("likedThgought")) {
-//				  presentKeys.push({ "likedThought" : args[type] });
-//				} else if(args.hasOwnProperty("replyToId")) {
-//				  presentKeys.push({ "replyToId" : args[type] });
-//				} else if(args.hasOwnProperty("reThoughtOfId")) {
-//				  presentKeys.push({ "reThoughtOfId" : args[type] });
-//				} else if(args.hasOwnProperty("likedThgought")) {
-//				  presentKeys.push({ "likedThought" : args[type] });
-//				}
-//			  }
-//		  );
-//  console.log("PRESNT STUFF:", presentCriteria);
-	  let variables = { where: args };
-	  console.log("QUERY VAR:", variables);
-
-	  let notificationId = await Notification.findOne(variables);
-	  console.log("NOTIF ID:", notificationId.dataValues.id);
-	  return notificationId.dataValues.id;
-	  
+	  return (await Notification.findOne({where: args})).dataValues.id;
 	},
     
     getMyPendingRequests: async (parent, args, context) => {

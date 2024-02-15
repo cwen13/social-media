@@ -5,6 +5,7 @@ import { useQuery } from "@apollo/client";
 import {
   QUERY_THOUGHT,
   QUERY_REPLYS,
+  QUERY_RETHOUGHT
 } from "./../../utils/queries";
 import UserInfo from "./../../components/UserInfo";
 import ThoughtPost from "./../../components/Posts/ThoughtPost";
@@ -29,24 +30,36 @@ const ThoughtPage = () => {
 
   
   const { loading: thoughtLoading, error: thoughtError, data: thoughtData } = useQuery(
-    QUERY_THOUGHT,
-    {
-      variables:
+      QUERY_THOUGHT,
       {
-	thoughtId: postId
+		variables:
+		{
+		  thoughtId: postId
+		}
       }
-    }
   );
 
   const {loading: replysLoading, error: replysError, data: replysData } = useQuery(
-    QUERY_REPLYS,
-    {
-      variables:
+      QUERY_REPLYS,
       {
-	thoughtId: postId
+		variables:
+		{
+		  thoughtId: postId
+		}
       }
-    }
   );
+
+//  const { loading: thoughtLoading, error: thoughtError, data: thoughtData } = useQuery(
+//      QUERY_RETHOUGHT,
+//      {
+//		variables:
+//		{
+//		  originalThoughtId: 
+//		}
+//      }
+//  );
+//
+  
  
   if(thoughtLoading) return <p> Loading </p>;
   if(thoughtError) return console.log(thoughtError);

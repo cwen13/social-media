@@ -6,7 +6,7 @@ import {
   QUERY_USER_FRIENDS,
   QUERY_USER_FOLLOWING,
   QUERY_USER_BLOCKED,
-  QUERY_MY_PENDING_REQUESTS
+  QUERY_MY_PENDING_REQUESTS,
 } from "./../../utils/queries";
 import {
   ADD_FOLLOW,
@@ -15,8 +15,6 @@ import {
   REMOVE_FOLLOW,
   REMOVE_FRIEND,
   SEND_FRIEND_REQUEST,
-  DENY_FRIEND_REQUEST,
-  APPROVE_FRIEND_REQUEST,
 } from "./../../utils/mutations";
 import EditProfile from "./../../pages/EditProfile";
 import ThoughtCreate from "./../ThoughtCreate"
@@ -88,14 +86,6 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
       SEND_FRIEND_REQUEST,
   );
   
-  const [ approveFriendshipRequest, { error: appriveFriendRequestError } ] = useMutation(
-      APPROVE_FRIEND_REQUEST,
-  );
-  
-  const [ denyFriendshipRequest, { error: denyFriendRequestError } ] = useMutation(
-      DENY_FRIEND_REQUEST,
-  );
-  
   const [ friendRemove, { error: friendRemoveError } ] = useMutation(
       REMOVE_FRIEND,
   );
@@ -157,16 +147,13 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	if(blocked) {
 	  setPending(false);
 	}
-
   }, [pendList]);
-
   
-
   if(userLoading) return "Loading...";
   if(userError) return `Error UsEr ${userError.message}`;
   if(loadingFriends) return "Loading Friends";
   if(followingLoading) return "Loading Following";
-  
+	  
   //-------------------------
   //-------FRIENDSHIP-BUTTON-
   //-------------------------
@@ -204,7 +191,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   
   const RenderFriendship = () => {
     if(Object.keys(pendList).length > 0
-       && pendList.filter((entry) =>  entry.pendingId == userPageId).length > 0) setPending(true);
+       && pendList.filter((entry) =>  entry.pendingId === userPageId).length > 0) setPending(true);
     
     return (
 		<div className="friendship">
@@ -444,11 +431,11 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 		   ? <>
 			   <ThoughtCreate userId={userPageId}
 							  page={page} />
-			   {page=="MyPage" &&
+			   {page === "MyPage" &&
 				<Link to="/user/MyPage/EditProfile">
 				  Edit My Profile
 				</Link>}	   
-			   <Notifications />
+
 			 </>
 		   : ""}
 		  {userPageId === 0 || blocked 
@@ -462,12 +449,11 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 		   : <RenderBlocked />}
 		</section>
 		{blocked ? "" : <RenderStats />}
+		<Notifications />
       </section>
   );
 };
 
 
 export default UserInfo;
-
-
 

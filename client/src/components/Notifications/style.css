@@ -5,17 +5,28 @@
 
 .notifications li {
   display:flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   border-style: dotted none none none;
   border-color:  #fb0df1;
   border-size: 5px;
+
   &:last-child {
     border-style:  dotted none dotted none;
     border-color:  #fb0df1;
     border-size: 5px;
 
   }
+}
+
+.userCard {
+	display: flex;
+	flex-direction: row;
+}
+
+.intro {
+	display: flex;
+	flex-direction: column;
 }
 
 .notifProfile {
@@ -26,7 +37,8 @@
   
   & .userTag {
       display: flex;
-      flex-direction: row;
+	  padding: 0.75rem;
+      flex-direction:column;
       align-items: center;
       justify-content: center;
       border: solid #7262d4 1px;
@@ -50,12 +62,15 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
   width: 80px;
+  & button {
+	  height: 30px;
+	  width: 75px;
+  }
+
+  & span {
+	  text-align : center;
+  }
 }
 
-.actions button {
-  height: 30px;
-  width: 75px;
-  
-}
