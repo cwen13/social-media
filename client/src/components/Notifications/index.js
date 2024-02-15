@@ -70,8 +70,8 @@ const Notifications = (notifData) => {
     if(!notificationsLoading && !notificationsError && notificationsData !== undefined){
       setNotifications(
 		  [
-			...notifications,
-			...notificationsData.getMyNotifications.notifications
+			  ...notifications,
+			  ...notificationsData.getMyNotifications.notifications
 		  ]
       )
     }
@@ -117,7 +117,6 @@ const Notifications = (notifData) => {
   };
   
   const RenderUserCard = ({ notificationId, user, friendRequest, type }) => {
-	console.log(notificationId);
 	return( 
 		<section className="userCard">
 		  <section className="actions">
@@ -169,7 +168,7 @@ const Notifications = (notifData) => {
 			  <img src={`/images/pfp/${entry.requestingFriend.profilePicture}`} />
 			  User: {entry.requestingFriend.userName}
 			</Link>
-			</section>
+		  </section>
 		</li>
     );
   };
@@ -187,16 +186,15 @@ const Notifications = (notifData) => {
 		  )}
 		  <section className="content">
 			<Link to={`/users/${entry.follower.id}`}>
-			<img src={`/images/pfp/${entry.follower.profilePicture}`} />
+			  <img src={`/images/pfp/${entry.follower.profilePicture}`} />
 			  {entry.follower.userName}
-			  </Link>
-			</section>
+			</Link>
+		  </section>
 		</li>
     );
   };
   
   const RenderLiked = ({ notification, entry, createdAt }) => {	
-	console.log("RENDER ENTRY:", entry);
     return(
 		<li data-key={notification.id} key={notification.id}>  
 		  {RenderUserCard(
@@ -257,7 +255,6 @@ const Notifications = (notifData) => {
   };
   
   const notificationType = (notif) => {
-	//console.log("NOTIF:", notif);	
 	if (notif.hasOwnProperty("requestingFriend")) {
 	  let user = notif.requestingFriend;
 	  let content = {};
@@ -340,92 +337,90 @@ const Notifications = (notifData) => {
 
 	  for(const type in notificationsData.getMyNotifications) {
 		let createdAt = parseInt(notification.createdAt);
-		  let closeEntry = null;
-		  
-		  switch(type) {
-			case "notifications":
-			case "__typename":
-			  continue;
-			  break;
-			case "friendRequests":
-			  if(notificationsData.getMyNotifications[type].length === 0) continue;
-			  closeEntry = notificationsData.getMyNotifications[type]
-				.filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
-			  if(closeEntry.length === 0) continue;
-			  notificationArray
-				.push(RenderFriendRequests(
-					{
-					  notification,
-					  entry: closeEntry[0]
-					}
-				));
-			  closeEntry  = null;
-			  break;
-			  
-			case "followers":
-			  if(notificationsData.getMyNotifications[type].length === 0) continue;
-			  closeEntry = notificationsData.getMyNotifications[type]
-				.filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
-			  if(closeEntry.length === 0) continue;
-			  notificationArray
-				.push(RenderFollower(
-					{
-					  notification,
-					  entry: closeEntry[0]
-					}
-				));
-			  closeEntry  = null;
-			  break;
-			  
-			case "likes":
-			  if(notificationsData.getMyNotifications[type].length === 0) continue;
-			  closeEntry = notificationsData.getMyNotifications[type]
-				.filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
-			  if(closeEntry.length === 0) continue;
-			  notificationArray
-				.push(RenderLiked(
-					{
-					  notification,
-					  entry: closeEntry[0]
-					}
-				));
-			  closeEntry  = null;
-			  break;
+		let closeEntry = null;
+		
+		switch(type) {
+		  case "notifications":
+		  case "__typename":
+			continue;
+			break;
+		  case "friendRequests":
+			if(notificationsData.getMyNotifications[type].length === 0) continue;
+			closeEntry = notificationsData.getMyNotifications[type]
+			  .filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
+			if(closeEntry.length === 0) continue;
+			notificationArray
+			  .push(RenderFriendRequests(
+				  {
+					notification,
+					entry: closeEntry[0]
+				  }
+			  ));
+			closeEntry  = null;
+			break;
+			
+		  case "followers":
+			if(notificationsData.getMyNotifications[type].length === 0) continue;
+			closeEntry = notificationsData.getMyNotifications[type]
+			  .filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
+			if(closeEntry.length === 0) continue;
+			notificationArray
+			  .push(RenderFollower(
+				  {
+					notification,
+					entry: closeEntry[0]
+				  }
+			  ));
+			closeEntry  = null;
+			break;
+			
+		  case "likes":
+			if(notificationsData.getMyNotifications[type].length === 0) continue;
+			closeEntry = notificationsData.getMyNotifications[type]
+			  .filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
+			if(closeEntry.length === 0) continue;
+			notificationArray
+			  .push(RenderLiked(
+				  {
+					notification,
+					entry: closeEntry[0]
+				  }
+			  ));
+			closeEntry  = null;
+			break;
 
-			case "reThoughts":
-			  if(notificationsData.getMyNotifications[type].length === 0) continue;
-			  closeEntry = notificationsData.getMyNotifications[type]
-				.filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
-			  if(closeEntry.length === 0) continue;
-			  notificationArray
-				.push(RenderReThought(
-					{
-					  notification,
-					  entry: closeEntry[0]
-					}
-				));
-			  closeEntry  = null;
-			  break;
+		  case "reThoughts":
+			if(notificationsData.getMyNotifications[type].length === 0) continue;
+			closeEntry = notificationsData.getMyNotifications[type]
+			  .filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
+			if(closeEntry.length === 0) continue;
+			notificationArray
+			  .push(RenderReThought(
+				  {
+					notification,
+					entry: closeEntry[0]
+				  }
+			  ));
+			closeEntry  = null;
+			break;
 
-			case "reply":
-			  if(notificationsData.getMyNotifications[type].length === 0) continue;
-			  closeEntry = notificationsData.getMyNotifications[type]
-				.filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
-			  if(closeEntry.length === 0) continue;
-			  notificationArray
-				.push(RenderReply(
-					{
-					  notification,
-					  entry: closeEntry[0]
-					}
-				));
-			  closeEntry  = null;
-			  break;
-		  }
+		  case "reply":
+			if(notificationsData.getMyNotifications[type].length === 0) continue;
+			closeEntry = notificationsData.getMyNotifications[type]
+			  .filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
+			if(closeEntry.length === 0) continue;
+			notificationArray
+			  .push(RenderReply(
+				  {
+					notification,
+					entry: closeEntry[0]
+				  }
+			  ));
+			closeEntry  = null;
+			break;
 		}
 	  }
-	//}
-	//console.log("NITIFARRAY:",notificationArray);
+	}
 
 	let deleteEle = [];
 	for(let i = 0; i < notificationArray.length; i++){
