@@ -92,7 +92,7 @@ const Notifications = (notifData) => {
     );
   };
   
-  const disapproveFR = async (event,  requestingUser) => {
+  const disapproveFR = async (event, requestingUser) => {
     event.preventDefault();
     const denyRequest = await denyFriend(
 		{
@@ -104,27 +104,21 @@ const Notifications = (notifData) => {
     );
   };
 
-  const AcknowledgeButton = ({ id }) => {
-    const ackPress = async (event) => {
-      event.preventDefault();
-      const acknowledgeEvent = await ackNotif(
+  const ackPress = async (event, notificationId) => {
+	event.preventDefault();
+    const acknowledgeEvent = await ackNotif(
+		{
+		  variables:
 		  {
-			variables:
-			{
-			  notificationId: parseInt(id)
-			}
+			notificationId: notificationId
 		  }
-      );
-    };
-    return(
-		<button onClick={() => ackPress(id)}>
-		  ACK
-		</button>
+		}
     );
   };
   
   const RenderUserCard = ({ notificationId, user, friendRequest, type }) => {
-	return(
+	console.log(notificationId);
+	return( 
 		<section className="userCard">
 		  <section className="actions">
 			<span>{type}</span>
@@ -139,7 +133,9 @@ const Notifications = (notifData) => {
 				   Disapprove
 				 </button>
 			   </>)
-			 :(<AcknowledgeButton id={notificationId} />)
+			 :(<button onClick={(e) => ackPress(e, notificationId)}>
+				 ACK
+			   </button>)
 			}
 		  </section>
 		  <section>
@@ -162,6 +158,7 @@ const Notifications = (notifData) => {
 		<li data-key={notification.id} key={notification.id}>    
 		  {RenderUserCard(
 			  {
+				notificationId: notification.id,
 				user: entry.user,
 				friendRequest: true,
 				type: "Friend Request"
@@ -198,7 +195,8 @@ const Notifications = (notifData) => {
     );
   };
   
-  const RenderLiked = ({ notification, entry, createdAt }) => {
+  const RenderLiked = ({ notification, entry, createdAt }) => {	
+	console.log("RENDER ENTRY:", entry);
     return(
 		<li data-key={notification.id} key={notification.id}>  
 		  {RenderUserCard(
@@ -239,7 +237,6 @@ const Notifications = (notifData) => {
   };
   
   const RenderReThought = ({ notification, entry, createdAt }) => {
-	//console.log("ENTRY:", entry);
     return(
 		<li data-key={notification.id} key={notification.id}>  
 		  {RenderUserCard(
@@ -342,20 +339,19 @@ const Notifications = (notifData) => {
 	for(const notification of notifications) {
 
 	  for(const type in notificationsData.getMyNotifications) {
-
-		let createdAt = notification.createdAt;
-
-		for(const entry in notificationsData.getMyNotifications[type]) {
-
+		let createdAt = parseInt(notification.createdAt);
 		  let closeEntry = null;
+		  
 		  switch(type) {
 			case "notifications":
 			case "__typename":
+			  continue;
 			  break;
 			case "friendRequests":
-			  if(notificationsData.getMyNotifications[type].length === 0) break;
+			  if(notificationsData.getMyNotifications[type].length === 0) continue;
 			  closeEntry = notificationsData.getMyNotifications[type]
-				.filter((entry) => (entry.createdAt - createdAt) < 500);
+				.filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
+			  if(closeEntry.length === 0) continue;
 			  notificationArray
 				.push(RenderFriendRequests(
 					{
@@ -367,9 +363,10 @@ const Notifications = (notifData) => {
 			  break;
 			  
 			case "followers":
-			  if(notificationsData.getMyNotifications[type].length === 0) break;
+			  if(notificationsData.getMyNotifications[type].length === 0) continue;
 			  closeEntry = notificationsData.getMyNotifications[type]
-				.filter((entry) => (entry.createdAt - createdAt) < 500);
+				.filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
+			  if(closeEntry.length === 0) continue;
 			  notificationArray
 				.push(RenderFollower(
 					{
@@ -381,9 +378,10 @@ const Notifications = (notifData) => {
 			  break;
 			  
 			case "likes":
-			  if(notificationsData.getMyNotifications[type].length === 0) break;
+			  if(notificationsData.getMyNotifications[type].length === 0) continue;
 			  closeEntry = notificationsData.getMyNotifications[type]
-				.filter((entry) => (entry.createdAt - createdAt) < 500);
+				.filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
+			  if(closeEntry.length === 0) continue;
 			  notificationArray
 				.push(RenderLiked(
 					{
@@ -395,9 +393,10 @@ const Notifications = (notifData) => {
 			  break;
 
 			case "reThoughts":
-			  if(notificationsData.getMyNotifications[type].length === 0) break;
+			  if(notificationsData.getMyNotifications[type].length === 0) continue;
 			  closeEntry = notificationsData.getMyNotifications[type]
-				.filter((entry) => (entry.createdAt - createdAt) < 500);
+				.filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
+			  if(closeEntry.length === 0) continue;
 			  notificationArray
 				.push(RenderReThought(
 					{
@@ -409,9 +408,10 @@ const Notifications = (notifData) => {
 			  break;
 
 			case "reply":
-			  if(notificationsData.getMyNotifications[type].length === 0) break;
+			  if(notificationsData.getMyNotifications[type].length === 0) continue;
 			  closeEntry = notificationsData.getMyNotifications[type]
-				.filter((entry) => (entry.createdAt - createdAt) < 500);
+				.filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
+			  if(closeEntry.length === 0) continue;
 			  notificationArray
 				.push(RenderReply(
 					{
@@ -424,24 +424,20 @@ const Notifications = (notifData) => {
 		  }
 		}
 	  }
-	}
-	console.log("NITIFARRAY:",notificationArray);
+	//}
+	//console.log("NITIFARRAY:",notificationArray);
 
 	let deleteEle = [];
 	for(let i = 0; i < notificationArray.length; i++){
 	  for(let j = 0; j < notificationArray.length; j++){
 		if(i===j || i > j) continue;
 		if(deleteEle.find((element) => element === i) !== undefined) continue;
-		console.log(`NOTIF [${i}]`, notificationArray[i]);
-		console.log(`Notif [${j}]`, notificationArray[j]);
 		if (notificationArray[i].key == notificationArray[j].key){
-		  console.log("MATACH");
 		  deleteEle.push(j);
 		}
 	  }
 	}
 	deleteEle.reverse();
-	console.log("DELETEARRAY:", deleteEle);
 	deleteEle.forEach((dup) => notificationArray.splice(dup,1));
 	return notificationArray;
   }
