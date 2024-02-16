@@ -20,13 +20,13 @@ Notification.init(
       allowNull: true,
       defaultValue: 0
     },
-    friendRequest: {
-      type: DataTypes.BOOLEAN,
+    friendRequestEntryId: {
+      type: DataTypes.INTEGER,
       allowNull: true,
       unique: true
     },
-    followed: {
-      type: DataTypes.BOOLEAN,
+    followedByEntryId: {
+      type: DataTypes.INTEGER,
       allowNulll: true,
       unique: false
     },
@@ -35,12 +35,12 @@ Notification.init(
       allowNulll: true,
       unique: false
     },
-    replyToId: {
+    replyToEntryId: {
       type: DataTypes.INTEGER,
       allowNulll: true,
       unique: false
     },
-    reThoughtOfId: {
+    reThoughtOfEntryId: {
       type: DataTypes.INTEGER,
       allowNulll: true,
       unique: false

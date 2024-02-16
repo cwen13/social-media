@@ -133,13 +133,13 @@ Thought.belongsToMany(Liked, {
 
 Thought.belongsToMany(Thought, {
   through: "notification",
-  foreignKey: "replyToId",
+  foreignKey: "replyToEntryId",
   as: "newReply"
 });
 
 Thought.belongsToMany(Thought, {
   through: "notification",
-  foreignKey: "reThoughtToId",
+  foreignKey: "reThoughtOfEntryId",
   as: "newReThought"
 });
 
@@ -149,13 +149,13 @@ Thought.belongsToMany(Thought, {
 Pending.belongsTo(User, {
   foreignKey: "userId",
   otherKey: "pendingId",
-  as: "requestedFriend"
+  as: "requestingFriend"
 });
 
 Pending.belongsTo(User, {
   foreignKey: "pendingId",
   otherKey: "userId",
-  as: "requestingFriend"
+  as: "requestedFriend"
 });
 
 Following.belongsTo(User, {
@@ -215,31 +215,28 @@ Notification.belongsTo(User, {
 Notification.belongsTo(User, {
   foreignKey: "toUser",
   otherKey: "fromUser",
-  as: "postSource"
+  as: "poster"
+});
+
+Notification.belongsTo(Pending, {
+  foreignKey: "friendRequestEntryId"
+});
+
+Notification.belongsTo(Following, {
+  foreignKey: "followedByEntryId"
 });
 
 Notification.belongsTo(Liked, {
-  through: Liked,
   foreignKey: "likedThoughtId"
 });
 
 Notification.belongsTo(Reply, {
-  through: Reply,
-  foreignKey: "replyToId"
+  foreignKey: "replyToEntryId"
 });
 
 Notification.belongsTo(ReThought, {
-  through: ReThought,
-  foreignKey: "reThoughtOfId"
+  foreignKey: "reThoughtOfEntryId"
 });
-
-//Notificaiton.belongsTo(ReThought, {
-//  through: Pending,
-//  foreignKey: "friendRequest"
-//});
-
-
-
 
 module.exports = {
   Friend,

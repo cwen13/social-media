@@ -117,6 +117,8 @@ const Notifications = (notifData) => {
   };
   
   const RenderUserCard = ({ notificationId, user, friendRequest, type }) => {
+	console.log(user);
+	if (user === undefined) return "OPPS";
 	return( 
 		<section className="userCard">
 		  <section className="actions">
@@ -186,7 +188,8 @@ const Notifications = (notifData) => {
 		  )}
 		  <section className="content">
 			<Link to={`/users/${entry.follower.id}`}>
-			  <img src={`/images/pfp/${entry.follower.profilePicture}`} />
+			  <img src={`/images/pfp/${entry.follower.profilePicture}`}
+				   width="150"/>
 			  {entry.follower.userName}
 			</Link>
 		  </section>
