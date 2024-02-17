@@ -16,11 +16,10 @@ import {
 import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
-const Notifications = (notifData) => {
+const Notifications = () => {
 
   const { userId } = useUserContext();
 
-  const [ acknowledged,  setAcknowledged ] = useState(false);
   const [ notifications, setNotifications ] = useState([]);
 
   const { loading: notificationsLoading , error: notificationsError, data: notificationsData } = useQuery(
@@ -59,10 +58,10 @@ const Notifications = (notifData) => {
       ACKNOWLEDGE_NOTIFICATION,
       {
 		refetchQueries:
-		[
-			GET_MY_NOTIFICATIONS,
-			"getMyNotifications"
-		]
+ 		[
+ 			GET_MY_NOTIFICATIONS,
+ 			"getMyNotifications"
+ 		]
       }
   );
   
@@ -71,7 +70,7 @@ const Notifications = (notifData) => {
       setNotifications(
 		  [
 			  ...notifications,
-			  ...notificationsData.getMyNotifications.notifications
+			  ...notificationsData.getMyNotifications
 		  ]
       )
     }
@@ -116,13 +115,12 @@ const Notifications = (notifData) => {
     );
   };
   
-  const RenderUserCard = ({ notificationId, user, friendRequest, type }) => {
-	console.log(user);
-	if (user === undefined) return "OPPS";
+  const RenderUserCard = (notificationId, user, friendRequest, type) => {
+	console.log("USER:",user);
 	return( 
 		<section className="userCard">
 		  <section className="actions">
-			<span>{type}</span>
+			<span>New {type}</span>
 			{friendRequest
 			 ?(<>
 				 <button id="approveFR"
@@ -154,38 +152,19 @@ const Notifications = (notifData) => {
 	);
   }
   
-  const RenderFriendRequests = ({ notification, entry, createdAt }) => {    
+  const RenderFriendRequest = (entry) => {
 	return (
-		<li data-key={notification.id} key={notification.id}>    
-		  {RenderUserCard(
-			  {
-				notificationId: notification.id,
-				user: entry.user,
-				friendRequest: true,
-				type: "Friend Request"
-			  }
-		  )}
 		  <section className="content">
 			<Link to={`/users/${entry.requestingFriend.id}`}>
 			  <img src={`/images/pfp/${entry.requestingFriend.profilePicture}`} />
 			  User: {entry.requestingFriend.userName}
 			</Link>
 		  </section>
-		</li>
     );
   };
   
-  const RenderFollower = ({ notification, entry, createdAt }) => {
+  const RenderFollower = (entry) => {
     return(
-		<li data-key={notification.id} key={notification.id}>  
-		  {RenderUserCard(
-			  {
-				notificationId: notification.id,
-				user: entry.user,
-				friendRequest: false,
-				type: "New Follower"
-			  }
-		  )}
 		  <section className="content">
 			<Link to={`/users/${entry.follower.id}`}>
 			  <img src={`/images/pfp/${entry.follower.profilePicture}`}
@@ -193,257 +172,87 @@ const Notifications = (notifData) => {
 			  {entry.follower.userName}
 			</Link>
 		  </section>
-		</li>
     );
   };
   
-  const RenderLiked = ({ notification, entry, createdAt }) => {	
+  const RenderLiked = (entry) => {	
     return(
-		<li data-key={notification.id} key={notification.id}>  
-		  {RenderUserCard(
-			  {
-				notificationId: notification.id,
-				user: entry.thoughtLiker,
-				friendRequest: false,
-				type: "New Like"
-			  }
-		  )}
  		  <section className="content">
 			<Link to={`/users/${entry.thoughtLiker.id}`}>
 			  {entry.likedThought.content}
 			</Link>
 		  </section>
-		</li>
     );
   };
   
-  const RenderReply = ({ notification, entry, createdAt }) => {
+  const RenderReply = (entry) => {
     return(
-		<li data-key={notification.id} key={notification.id}>  
-		  {RenderUserCard(
-			  {
-				notificationId: notification.id,
-				user: entry.replyThought.thoughtAuthor,
-				friendRequest: false,
-				type: "New Reply"
-			  }
-		  )}
 		  <section className="content">
 			<Link to={`/thought/${entry.replyThought.id}/reply`}>
 			  {entry.replyThought.content}
 			</Link>
 		  </section>
-		</li>
     );
   };
   
-  const RenderReThought = ({ notification, entry, createdAt }) => {
+  const RenderReThought = (entry) => {
     return(
-		<li data-key={notification.id} key={notification.id}>  
-		  {RenderUserCard(
-			  {
-				notificationId: notification.id,
-				user: entry.reThoughtThought.thoughtAuthor,
-				friendRequest: false,
-				type: "New ReThought"
-			  }
-		  )}
 		  <section className="content">
 			<Link to={`/thought/${entry.reThoughtThought.id}/ReThought`}>
 			  {entry.reThoughtThought.content}
 			</Link>
 		  </section>
-		</li>
     );
   };
   
-  const notificationType = (notif) => {
-	if (notif.hasOwnProperty("requestingFriend")) {
-	  let user = notif.requestingFriend;
-	  let content = {};
-	  let createdAt = notif.createdAt;	  
-	  return RenderFriendRequests(
-		  {
-			user,
-			content,
-			createdAt
-		  }
-	  );
-	  
-	} else if(notif.hasOwnProperty("follower")) {
-	  let user = notif.follwer;
-	  let content = {};
-	  let createdAt = notif.createdAt;
-	  return RenderFollower(
-		  {
-			user,
-			content,
-			createdAt
-		  }
-	  );
-	  
-	} else if(notif.hasOwnProperty("likedThought")) {
-	  let user = notif.thoughtLiker;
-	  let content =
-		  {
-			id: notif.likedThought.id,
-			content: notif.likedThought.content
-		  };
-	  let createdAt = notif.createdAt;
-	  return RenderLiked(
-		  {
-			user,
-			content,
-			createdAt
-		  }
-	  );
-	  
-	} else if(notif.hasOwnProperty("replyThought")) {
-	  let user = notif.replyThgought.thoughtAuthor;
-	  let content =
-		  {
-			id: notif.replyThought.id,
-			content: notif.replyThought.content
-		  };
-	  let createdAt = notif.createdAt;
-	  return RenderReply(
-		  {
-			user,
-			content,
-			createdAt
-		  }
-	  );
-	  
-	} else if(notif.hasOwnProperty("reThoughtThought")) {
+  const RenderNotification = (notif) => {
+	let user = {};
+	let friendRequest = false;
+	let type = "";
+	let Render = "";
 
-	  let user = notif.reThoughtThought.thoughtAuthor;
-	  let content =
-		  {
-			id: notif.reThoughtThought.id,
-			content: notif.reThoughtThought.content
-		  };
-	  let createdAt = notif.createdAt;
-	  return RenderReThought(
-		  {
-			user,
-			content,
-			createdAt
-		  }
-	  );
-	}
+	console.log(notif);
+	
+	if(notif.pending !== null) {
+	  friendRequest = true;
+	  user = notif.pending.requestingFriend;
+	  type = "Friend Request";
+	  Render = RenderFriendRequest(notif.pending);
+
+	} else if(notif.following !== null) {
+	  user = notif.following.follower;
+	  type = "Follwer";
+	  Render = RenderFollower(notif.following);
+	  
+	} else if(notif.liked !== null) {
+	  user = notif.liked.thoughtLiker;
+	  type = "Liked";
+	  Render = RenderLiked(notif.liked);
+	  
+	} else if(notif.reply !== null) {
+	  console.log("REPLY:",notif.reply.replyThought.thoughtAuthor);
+	  user = notif.reply.replyThought.thoughtAuthor;
+	  type = "Reply";
+	  Render = RenderReply(notif.reply);
+
+	} else if(notif.reThought !== null) {
+	  user = notif.reThought.reThoughtThought.thoughtAuthor;
+	  type = "ReThought";
+	  Render = RenderReThought(notif.reThought);
+	} 
+
+	console.log("USER SWITCH:", user);
+	return(
+		<li data-key={notif.id} key={notif.id}>
+		  {RenderUserCard(notif.id, user, friendRequest, type)}
+		  {Render}
+		</li>
+	);
   }
 
-  const RenderNotifications = () => {
-	let notificationArray = [];
-
-	for(const notification of notifications) {
-
-	  for(const type in notificationsData.getMyNotifications) {
-		let createdAt = parseInt(notification.createdAt);
-		let closeEntry = null;
-		
-		switch(type) {
-		  case "notifications":
-		  case "__typename":
-			continue;
-			break;
-		  case "friendRequests":
-			if(notificationsData.getMyNotifications[type].length === 0) continue;
-			closeEntry = notificationsData.getMyNotifications[type]
-			  .filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
-			if(closeEntry.length === 0) continue;
-			notificationArray
-			  .push(RenderFriendRequests(
-				  {
-					notification,
-					entry: closeEntry[0]
-				  }
-			  ));
-			closeEntry  = null;
-			break;
-			
-		  case "followers":
-			if(notificationsData.getMyNotifications[type].length === 0) continue;
-			closeEntry = notificationsData.getMyNotifications[type]
-			  .filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
-			if(closeEntry.length === 0) continue;
-			notificationArray
-			  .push(RenderFollower(
-				  {
-					notification,
-					entry: closeEntry[0]
-				  }
-			  ));
-			closeEntry  = null;
-			break;
-			
-		  case "likes":
-			if(notificationsData.getMyNotifications[type].length === 0) continue;
-			closeEntry = notificationsData.getMyNotifications[type]
-			  .filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
-			if(closeEntry.length === 0) continue;
-			notificationArray
-			  .push(RenderLiked(
-				  {
-					notification,
-					entry: closeEntry[0]
-				  }
-			  ));
-			closeEntry  = null;
-			break;
-
-		  case "reThoughts":
-			if(notificationsData.getMyNotifications[type].length === 0) continue;
-			closeEntry = notificationsData.getMyNotifications[type]
-			  .filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
-			if(closeEntry.length === 0) continue;
-			notificationArray
-			  .push(RenderReThought(
-				  {
-					notification,
-					entry: closeEntry[0]
-				  }
-			  ));
-			closeEntry  = null;
-			break;
-
-		  case "reply":
-			if(notificationsData.getMyNotifications[type].length === 0) continue;
-			closeEntry = notificationsData.getMyNotifications[type]
-			  .filter((entry) => (createdAt - parseInt(entry.createdAt)) <= 2000);
-			if(closeEntry.length === 0) continue;
-			notificationArray
-			  .push(RenderReply(
-				  {
-					notification,
-					entry: closeEntry[0]
-				  }
-			  ));
-			closeEntry  = null;
-			break;
-		}
-	  }
-	}
-
-	let deleteEle = [];
-	for(let i = 0; i < notificationArray.length; i++){
-	  for(let j = 0; j < notificationArray.length; j++){
-		if(i===j || i > j) continue;
-		if(deleteEle.find((element) => element === i) !== undefined) continue;
-		if (notificationArray[i].key == notificationArray[j].key){
-		  deleteEle.push(j);
-		}
-	  }
-	}
-	deleteEle.reverse();
-	deleteEle.forEach((dup) => notificationArray.splice(dup,1));
-	return notificationArray;
-  }
-
-  let notifiArray = RenderNotifications();
   return(
       <ul className="notifications">
-		{notifiArray.map((item) => item)}
+		{notifications.map((notif) => RenderNotification(notif))}
       </ul>
   );
 }

@@ -319,99 +319,6 @@ query getMyBlockedUsers {
   }
 }`;
 
-export const GET_MY_NOTIFICATIONS = gql`
-query getMyNotifications {
-  getMyNotifications {
-    notifications {
-      id
-      createdAt
-      acknowledge
-    }
-    friendRequests {
-      id
-      createdAt
-      requestingFriend {
-        id
-        userName
-        handle
-        profilePicture
-      }
-    }
-    followers {
-      id
-      createdAt
-      follower {
-        id
-        userName
-        handle
-        profilePicture
-      }
-    }
-    likes {
-      id
-      createdAt
-      thoughtLiker {
-        id
-        userName
-        handle
-        profilePicture
-      }
-      likedThought {
-        id
-        content
-      }
-    }
-    replys {
-      id
-      createdAt
-      replyThought {
-        id
-        content
-        thoughtAuthor {
-          id
-          userName
-          handle
-          profilePicture
-        }
-      }
-      originalReplyThought {
-        id
-        content
-        thoughtAuthor {
-          id
-          userName
-          handle
-          profilePicture
-        }
-      }        
-    }
-    reThoughts {
-      id
-      createdAt
-      reThoughtThought {
-        id
-        content
-        thoughtAuthor {
-          id
-          userName
-          handle
-          profilePicture
-        }
-      }
-      originalReThoughtThought {
-        id
-        content
-        thoughtAuthor {
-          id
-          userName
-          handle
-          profilePicture
-        }
-      }
-    }
-  }
-}`;
-
 export const QUERY_MY_PENDING_REQUESTS = gql`
 query getMyPendingRequests {
   getMyPendingRequests {
@@ -440,3 +347,84 @@ query getNotificationId {
   }
 }`;
 
+
+export const GET_MY_NOTIFICATIONS = gql`
+query getMyNotifications {
+  getMyNotifications {
+    id
+    fromUser
+    toUser
+    friendRequestEntryId
+    followedByEntryId
+    likedThoughtId
+    replyToEntryId
+    reThoughtOfEntryId
+    acknowledge
+    pending {
+      requestingFriend {
+        handle
+        userName
+        profilePicture
+      }
+    }
+    following {
+      follower {
+        id
+        handle
+        userName
+        profilePicture
+      }
+    }
+    liked {
+      likedThought {
+        content
+      }
+      thoughtLiker {
+        id
+        handle
+        userName
+        profilePicture
+      }
+    }
+    reply {
+      originalReplyThought {
+        content
+        thoughtAuthor {
+          id
+          handle
+          userName
+          profilePicture
+        }
+      }
+      replyThought {
+        content
+        thoughtAuthor {
+          id
+          handle
+          userName
+          profilePicture
+        }
+      }
+    }
+    reThought {
+      reThoughtThought {
+        content
+        thoughtAuthor {
+          id
+          handle
+          userName
+          profilePicture
+        }
+      }
+      originalReThoughtThought {
+        content
+        thoughtAuthor {
+          id
+          handle
+          userName
+          profilePicture
+        }
+      }
+    }
+  }
+}`;

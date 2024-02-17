@@ -1,5 +1,4 @@
 const { gql } = require('apollo-server-express');
-
 const typeDefs = gql`
 type User {
   id: ID!
@@ -14,29 +13,23 @@ type User {
   friendOfFriend: [User]
 }
 
-
 type Notification {
   id: ID!
   createdAt: String!
   fromUser: ID!
   toUser: ID
-  friendRequest: Boolean
-  followed: Boolean
+  friendRequestEntryId: ID
+  followedByEntryId: ID
   likedThoughtId: ID
-  replyToId: ID
-  reThoughtOfId: ID
+  replyToEntryId: ID
+  reThoughtOfEntryId: ID
   acknowledge: Boolean!
+  pending: Pending
+  following: Following
+  liked: Liked
+  reply: Reply
+  reThought: ReThought
 }
-
-type NotificationList {
-  notifications: [Notification]
-  friendRequests: [Pending]
-  followers: [Following]
-  likes: [Liked]
-  replys: [Reply]
-  reThoughts: [ReThought]  
-}
-
 
 type Thought {
   id: ID!
@@ -112,19 +105,15 @@ type Query {
   getMe: User!
   getAllUsers: [User!]!
   getUser(userId: ID): User
-
   getMyFriends: [User]
   getUserFriends(userId: ID!): [User]
   getMyPendingRequests: [Pending]
-
   getMyFollowing: [User]
   getUserFollowing(userId: ID!): [User]
-
   getMyThoughts: [Thought]
   getAllThoughts: [Thought!]!
   getThought(thoughtId: ID!): Thought
   getUserThoughts(userId: ID!): [Thought]!
-
   getAllLiked: [Thought]
   getAllMyLiked: [Liked]
   getUserLikedIds( userId: ID! ): [Liked]
@@ -132,7 +121,6 @@ type Query {
   getUserLiked( userId: ID! ): [Thought]
   getUserBlocked( userId: ID! ): [User]
   getMyBlockedUsers: [User]
-
   getThoughtReplys( thoughtId: ID! ): [Thought]
   getThoughtReThoughts( thoughtId: ID! ): [Thought]
   getMyReThoughts: [Thought]
@@ -144,21 +132,17 @@ type Query {
   getReplyIdPairs( originalId: ID! ): Reply
   getReThoughtOriginalThought( reThoughtId: ID! ): Thought
   getReplyOriginalThought( replyId: ID! ): Thought
-
-  getMyNotifications: NotificationList
-  getMyNotificationIds: [Notification]
-
+  getMyNotifications: [Notification]
   getLikedNotification( likedId: ID!, fromUser: ID! ): Notification
   getNotificaitonId( fromUser: ID,
                      toUser: ID,
-                     friendRequest: Boolean,
-                     followed: Boolean,
+                     friendRequestEntryId: ID,
+                     followedByhEntryId: ID,
                      likedThoughtId: ID,
-                     replyToId: ID,
-                     reThoughtOfId: ID
+                     replyToEntryId: ID,
+                     reThoughtOfEntryId: ID
                      ): ID
 }
-
 type Mutation {
   login( email: String!,
         password: String!): Auth!
@@ -179,29 +163,23 @@ type Mutation {
              email: String,
              password: String): Boolean!
   deleteUser( userId: ID! ): Boolean!
-
   addBlocked( blockedId: ID! ): Boolean!
   removeBlocked( blockedId: ID! ): Boolean!
-
   addFollow( followingId: ID! ): Boolean!
   removeFollow( followingId: ID! ): Boolean!
-
   addLiked( thoughtId: ID!,
             thoughtUserId: ID!
           ): Boolean!
   removeLiked( thoughtId: ID! ): Boolean!
-
   sendFriendRequest( pendingId: ID! ): Boolean!
   denyFriendRequest( pendingId: ID! ): Boolean!
   approveFriendRequest( friendId: ID! ): Boolean!
   removeFriend( friendId: ID! ): Boolean!
-
   addThought( content: String! ): Thought!
   updateThought( thoughtId: ID!,
                  content: String!
                ): Thought!
   removeThought( thoughtId: ID! ): Boolean!
-
 
   replyToThought( content: String!
                   thoughtId: ID!
@@ -214,8 +192,6 @@ type Mutation {
   acknowledgeNotification( notificationId: ID! ): Boolean!
 }`;
 
-
 module.exports = typeDefs;
  
-
 
