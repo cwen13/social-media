@@ -154,34 +154,32 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   }, [userLoading, userError, userData])
 
   useEffect(() => {
-    if(friendList !== 0) {
-      setFriendship(userId !== userPageId
-					&& friendList.filter(friendUser => friendUser.id === userPageId).length !== 0)
-    }
-	if(blocked) {
+	if(friendship) {
+	  setPending(false);
+	} else if (pending) {
 	  setFriendship(false);
+	} else if(pending === false && friendship === false){
+	  setPending(false);
+	  setFriendship(false);
+	} else {
+	  setPending(true);
 	}
-  }, [blocked, friendList, friendship]);
+  }, [blocked, pending, friendship]);
   
   useEffect(() => {
-    if(followList !== 0) {
+    if(followList.length !== 0) {
       setFollowing(userId !== userPageId
 				   && followList.filter(followUser => followUser.id === userPageId).length !== 0)
-    }
+    } else {
+	  setFollowing(false);
+	}
 	if(blocked) {
 	  setFollowing(false);
 	}
-  }, [blocked, followList, following]);
+  }, [blocked, following]);
 
-  useEffect(() => {
-    if(pendList !== 0) {
-      setPending(userId !== userPageId
-				 && pendList.filter(pendUser => pendUser.id === userPageId).length !== 0)
-    }
-	if(blocked) {
-	  setPending(false);
-	}
-  }, [blocked, pendList, pending]);
+
+
   
   if(userLoading) return "Loading...";
   if(userError) return `Error UsEr ${userError.message}`;
@@ -204,6 +202,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 		  }
       );
       setFriendship(false);
+	  setPending(false);
       setFriendList(
 		  [
 			  ...friendList.filter(friend => friend.id !== userPageId)
@@ -226,28 +225,29 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   const RenderFriendship = () => {
     if(Object.keys(pendList).length > 0
        && pendList.filter((entry) =>  entry.pendingId === userPageId).length !== 0) setPending(true);
-    
+
+	const friendOrPending = () => {
+	  if(friendship) {
+		return( <h4> This is one of your friends </h4>);
+	  } else if(pending) {
+		return( <h4> This is a possible friend </h4>);
+	  } else {
+		return(
+			<div> This could be the start of a very nice <br />
+			  <button id="friendshipButton"
+					  onClick={handleFriendship}>
+ 				Friendship?
+			  </button>
+			</div>
+		);
+	  }
+	};
+	
     return (
 		<div className="friendship">
 		  {(userId === userPageId)
 		   ? "Are you your friend?"
-		   : (friendship || pending ?
-			  <h4>
-				This one of your (potential) friends
-			  </h4>
-			  : (pending ? <h4>
-							 Waiting on thier approval
-						   </h4>
-				 :
-				 <div> This could be the start of a very nice <br />
-				   <button id="friendshipButton"
-						   onClick={handleFriendship}>
- 					 Friendship?
-				   </button>
-				 </div>
-				)
-			 )
-		  }
+		   : friendOrPending()}
 		</ div>
     );
   };
