@@ -111,7 +111,7 @@ export const ADD_FRIEND = gql`
 mutation approveFriendRequest( $friendId: ID! ) { approveFriendRequest(friendId: $friendId) }`;
 
 export const REMOVE_FRIEND = gql`
-mutation removeFriend($friendshipId: ID!) { removeFriend(id: $friendshipId) }`;
+mutation removeFriend($friendId: ID!) { removeFriend(id: $friendId) }`;
 
 export const ADD_LIKED = gql`
 mutation addLiked($thoughtId: ID!, $thoughtUserId: ID!) {

@@ -743,12 +743,8 @@ const resolvers = {
 			  }
 		  );
 		  
-		  let FRIEND_CREATE_1 = await Friend.create({userId: context.user.id, friendId});
-		  let FRIEND_CREATE_2 = await Friend.create({userId: friendId, friendId: context.user.id});
-		  
-		  console.log("FC_1:", FRIEND_CREATE_1);
-		  console.log("FC_2:", FRIEND_CREATE_2);
-		  return (FRIEND_CREATE_1 !== null && FRIEND_CREATE_2 !== null);;
+		  return ((await Friend.create({userId: context.user.id, friendId}) !== null) &&
+				  (await Friend.create({userId: friendId, friendId: context.user.id}) !== null));
 		} else {
 		  return false;
 		}
@@ -833,98 +829,47 @@ const resolvers = {
 	  // check if the bloked ID is in following/friendship/pending
 	  // if found delete those entries
 
-	  // Getting pending cleared
-	  let pendingId = await Pending.findOne(
+	  await Notification.destroy(
 		  {
 			where:
 			{
-			  pendingId: blockedId			  
-			}
-		  }
-	  );
-	  let pendingUserId = await Pending.findOne(
-		  {
-			where:
-			{
-			  userId: blockedId
+			  toUser: context.user.id,
+			  fromUser: blockedId
 			}
 		  }
 	  );
 
-	  if(pendingId.length !== 0) {
-		await Pending.destroy(
-			{
-			  where:
-			  {
-				pendingId: blockedId
-			  }
-			}
-		);
-	  }
-	  if(pendingUserId.length !== 0){
-		await Pending.destroy(
-			{
-			  where:
-			  {
-				userId: blockedId
-			  }
-			}
-		);
-	  }
-			  
-	  // Getting following cleared
-	  let followingId = await Following.findOne(
+	  await Notification.destroy(
 		  {
 			where:
 			{
-			  userId: context.user.id,
-			  followingId: blockedId			  
+			  toUser: blockedId,
+			  fromUser: context.user.id,
 			}
 		  }
 	  );
-	  let followingUserId = await Following.findOne(
-		  {
-			where:
-			{
-			  followingId: context.user.id,
-			  userId: blockedId			  
-			}
-		  }
-	  );
-	  
-	  if(following.length !== 0) {
-		await Following.destroy(
-			{
-			  where:
-			  {
-				userId: context.user.id,
-				followingId: blockedId				
-			  }
-			}
-		);
-	  };
-	  if(followingUserId.length !== 0) {
-		await Following.destroy(
-			{
-			  where:
-			  {
-				followingId: context.user.id,
-				userId: blockedId				
-			  }
-			}
-		);
-	  }
 
-	  let friendToUser = await Friend.findOne(
+	  await Following.destroy(
+		  {
+			where:
+			{
+			  userId: blockedId,
+			  followingId: context.user.id
+			}
+		  }
+	  );
+
+	  await Following.destroy(
 		  {
 			where:
 			{
 			  userId: context.user.id,
-			  friendId: blockedId
+			  followingId: blockedId,
 			}
 		  }
 	  );
-	  let userToFriend = await Friend.findOne(
+
+	  await Friend.destroy(
 		  {
 			where:
 			{
@@ -934,27 +879,36 @@ const resolvers = {
 		  }
 	  );
 
-	  if(friendToUser.length !== 0 && friendToUser.length !==0) {
-	  	await Friend.destroy(
+	  await Friend.destroy(
+		  {
+			where:
 			{
-			  where:
-			  {
-				userId: context.user.id,
-				friendId: blockedId
-			  }
+			  userId: context.user.id,
+			  friendId: blockedId,
 			}
-		);
-		await Friend.destroy(
+		  }
+	  );
+
+	  await Pending.destroy(
+		  {
+			where:
 			{
-			  where:
-			  {
-				userId: blockedId,
-				friendId: context.user.id
-			  }
+			  userId: blockedId,
+			  pendingId: context.user.id
 			}
-		);
-	  }
-	  	  
+		  }
+	  );
+
+	  await Pending.destroy(
+		  {
+			where:
+			{
+			  userId: context.user.id,
+			  pendingId: blockedId,
+			}
+		  }
+	  );
+	  
       return (await Blocked.create(
 		  {
 			userId: context.user.id,
@@ -976,11 +930,26 @@ const resolvers = {
     
     //STATUS: WORKING
     removeFriend: async (parent, { friendId }, context) => {
-      return ((await Friend.destroy({where: { userId: context.user.id,
-											  friendId }})
+      return ((await Friend.destroy(
+		  {
+			where:
+			{
+			  userId: context.user.id,
+			  friendId: friendId
+			}
+		  }
+	  )
 			   &&
-			   await Friend.destroy({where: { userId: friendId,
-											  friendId: context.user.id }})) === 1);
+			   await Friend.destroy(
+				   {
+					 where:
+					 {
+					   userId: friendId,
+					   friendId: context.user.id
+					 }
+				   }
+			   )
+			  ) === 1);
 	  
     },
 

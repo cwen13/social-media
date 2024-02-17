@@ -7,6 +7,8 @@ import {
   QUERY_USER_FOLLOWING,
   QUERY_USER_BLOCKED,
   QUERY_MY_PENDING_REQUESTS,
+  QUERY_USER_THOUGHTS,
+  GET_MY_NOTIFICATIONS
 } from "./../../utils/queries";
 import {
   ADD_FOLLOW,
@@ -15,6 +17,7 @@ import {
   REMOVE_FOLLOW,
   REMOVE_FRIEND,
   SEND_FRIEND_REQUEST,
+  DENY_FRIEND_REQUEST,  
 } from "./../../utils/mutations";
 import EditProfile from "./../../pages/EditProfile";
 import ThoughtCreate from "./../ThoughtCreate"
@@ -43,14 +46,17 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
     pendList,
     setPendList,
   } = useUserContext();
-  
+
   let userPageId = useParams().userId;
   userPageId = (userPageId !== undefined) ? userPageId : userId;
 
   const [ user, setUser] = useState({}); 
-  const [ friendship, setFriendship ] = useState(userId !== userPageId && friendList.filter(friendUser => friendUser.id === userPageId).length !== 0);
-  const [ following, setFollowing ] = useState(userId !== userPageId && followList.filter(followUser => followUser.id === userPageId).length !== 0);
-  const [ pending, setPending ] = useState(userId !== userPageId && pendList.filter(pendUser => pendUser.pendingId === userPageId).length !== 0);
+  const [ friendship, setFriendship ] = useState(userId !== userPageId
+												 && friendList.filter(friendUser => friendUser.id === userPageId).length !== 0);
+  const [ following, setFollowing ] = useState(userId !== userPageId
+											   && followList.filter(followUser => followUser.id === userPageId).length !== 0);
+  const [ pending, setPending ] = useState(userId !== userPageId
+										   && pendList.filter(pendUser => pendUser.pendingId === userPageId).length !== 0);
   
   const {lodaing: userLoading, error: userError, data: userData} = useQuery(
       QUERY_USER,
@@ -89,6 +95,10 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   const [ friendRemove, { error: friendRemoveError } ] = useMutation(
       REMOVE_FRIEND,
   );
+
+  const [ pendingRemove, {  error: pendingRemoveError } ] = useMutation(
+	  DENY_FRIEND_REQUEST
+  );
   
   const [ followAdd, { error: followAddError } ] = useMutation(
       ADD_FOLLOW,
@@ -101,9 +111,31 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   const [ blockAdd, { error: blockAddError } ] = useMutation(
       ADD_BLOCKED,
   );
+//	  {
+//		refetchQueries:
+//		[
+//			{
+//				QUERY_USER_THOUGHTS,
+//				"getUserThoughts"
+//			},
+//			{
+//				GET_MY_NOTIFICATIONS,
+//				"getMyNotifications"
+//			}
+//		]
+//	  }
+//  );
 
   const [ blockRemove, { error: blockRemoveError } ] = useMutation(
-      REMOVE_BLOCKED
+      REMOVE_BLOCKED,
+	  {
+		refetchQueries:
+		[
+			QUERY_USER_THOUGHTS,
+			"getUserThoughts"
+		]
+	  }
+
   );
   
   useEffect(() => {
@@ -119,35 +151,37 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 		  }
       );
     }
-  }, [userLoading, userError])
+  }, [userLoading, userError, userData])
 
   useEffect(() => {
     if(friendList !== 0) {
-      setFriendship(userId !== userPageId && friendList.filter(friendUser => friendUser.id === userPageId).length !== 0)
+      setFriendship(userId !== userPageId
+					&& friendList.filter(friendUser => friendUser.id === userPageId).length !== 0)
     }
 	if(blocked) {
 	  setFriendship(false);
 	}
-  }, [friendList]);
+  }, [blocked, friendList, friendship]);
   
   useEffect(() => {
     if(followList !== 0) {
-      setFollowing(userId !== userPageId && followList.filter(followUser => followUser.id === userPageId).length !== 0)
+      setFollowing(userId !== userPageId
+				   && followList.filter(followUser => followUser.id === userPageId).length !== 0)
     }
-		if(blocked) {
+	if(blocked) {
 	  setFollowing(false);
 	}
-
-  }, [followList]);
+  }, [blocked, followList, following]);
 
   useEffect(() => {
     if(pendList !== 0) {
-      setPending(userId !== userPageId && pendList.filter(pendUser => pendUser.id === userPageId).length !== 0)
+      setPending(userId !== userPageId
+				 && pendList.filter(pendUser => pendUser.id === userPageId).length !== 0)
     }
 	if(blocked) {
 	  setPending(false);
 	}
-  }, [pendList]);
+  }, [blocked, pendList, pending]);
   
   if(userLoading) return "Loading...";
   if(userError) return `Error UsEr ${userError.message}`;
@@ -191,7 +225,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   
   const RenderFriendship = () => {
     if(Object.keys(pendList).length > 0
-       && pendList.filter((entry) =>  entry.pendingId === userPageId).length > 0) setPending(true);
+       && pendList.filter((entry) =>  entry.pendingId === userPageId).length !== 0) setPending(true);
     
     return (
 		<div className="friendship">
@@ -305,20 +339,16 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 		  ]
       );
     } else {
-      await blockAdd(
+	  await blockAdd(
 		  {
 			variables:
 			{
 			  blockedId: userPageId
 			}
 		  }
-      );
-      setBlocked(true);
-	  // WASHING OUT OTHER STATES
+	  );
+	  setBlocked(true);
 	  
-	  setPending(false);
-	  setFollowing(false);
-	  setFriendship(false);
       setBlockedList(
 		  [
 			  ...blockedList,
@@ -328,6 +358,10 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 			  }
 		  ]
       );
+
+		setFriendship(false);
+		setPending(false);
+		setFollowing(false);
       
     }
   };

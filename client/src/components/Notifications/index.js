@@ -34,10 +34,6 @@ const Notifications = () => {
 			[
 				GET_MY_NOTIFICATIONS,
 				"getMyNotifications"
-			],
-			[
-				QUERY_USER_FRIENDS,
-				"getUserFriends"
 			]
 		]
       }

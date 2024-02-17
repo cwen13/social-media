@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import UserInfo from "./../../components/UserInfo";
@@ -12,8 +12,14 @@ function UserPage() {
   const page = "UserPage"
   const { userId, blockedList } = useUserContext();
 
+  
   const userPageId = useParams().userId
-  const [ blocked, setBlocked ] = useState(userId !== userPageId && blockedList.filter(blockedUser => blockedUser.id === userPageId).length !== 0);
+  const [ blocked, setBlocked ] = useState(false);
+
+  useEffect(() => {
+	console.log("BLOCKED LIST:",blockedList)
+	setBlocked(blockedList.filter(blockedUser => blockedUser.id === userPageId).length !== 0);
+  }, [blockedList]);
 
   return(
     <section id="feedContainer">      
