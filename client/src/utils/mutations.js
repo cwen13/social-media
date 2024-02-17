@@ -105,12 +105,10 @@ mutation updateThought($thoughtId: ID! $content: String!) {
 }`;
 
 export const REMOVE_THOUGHT = gql`
-mutation removeThought($thoughtId: ID!) { removeThought(thoughtId: $thoughtId) }`;
+mutation removeThought( $thoughtId: ID! ) { removeThought(thoughtId: $thoughtId) }`;
 
 export const ADD_FRIEND = gql`
-mutation addFriend($friendId: ID!) {
-  addFriend(friendId: $friendId) 
-}`;
+mutation approveFriendRequest( $friendId: ID! ) { approveFriendRequest(friendId: $friendId) }`;
 
 export const REMOVE_FRIEND = gql`
 mutation removeFriend($friendshipId: ID!) { removeFriend(id: $friendshipId) }`;

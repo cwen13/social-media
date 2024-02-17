@@ -79,25 +79,25 @@ const Notifications = () => {
   if(notificationsLoading) return "Loading notifications";
   if(notificationsError) return "Error Loading notifs";
 
-  const approveFR = async (event, requestingUser) => {
+  const approveFR = async (event, userId) => {
     event.preventDefault();
     const approveRequest = await approveFriend(
 		{
 		  variables:
 		  {
-			friendId: requestingUser.id
+			friendId: userId
 		  }
 		}
     );
   };
   
-  const disapproveFR = async (event, requestingUser) => {
+  const disapproveFR = async (event, userId) => {
     event.preventDefault();
     const denyRequest = await denyFriend(
 		{
 		  variables:
 		  {
-			pendingId: requestingUser.id
+			pendingId: userId
 		  }
 		}
     );
@@ -116,7 +116,6 @@ const Notifications = () => {
   };
   
   const RenderUserCard = (notificationId, user, friendRequest, type) => {
-	console.log("USER:",user);
 	return( 
 		<section className="userCard">
 		  <section className="actions">
@@ -124,11 +123,11 @@ const Notifications = () => {
 			{friendRequest
 			 ?(<>
 				 <button id="approveFR"
-						 onClick={approveFR}>
+						 onClick={(e) => approveFR(e, user.id)}>
 				   Approve
 				 </button>
 				 <button id="disapproveFR"
-						 onClick={disapproveFR}>
+						 onClick={(e) => disapproveFR(e, userId)}>
 				   Disapprove
 				 </button>
 			   </>)
@@ -156,7 +155,6 @@ const Notifications = () => {
 	return (
 		  <section className="content">
 			<Link to={`/users/${entry.requestingFriend.id}`}>
-			  <img src={`/images/pfp/${entry.requestingFriend.profilePicture}`} />
 			  User: {entry.requestingFriend.userName}
 			</Link>
 		  </section>
@@ -167,9 +165,9 @@ const Notifications = () => {
     return(
 		  <section className="content">
 			<Link to={`/users/${entry.follower.id}`}>
-			  <img src={`/images/pfp/${entry.follower.profilePicture}`}
-				   width="150"/>
-			  {entry.follower.userName}
+			  UserName: {entry.follower.userName}
+			  <br/>
+			  Handle: {entry.follower.handle}
 			</Link>
 		  </section>
     );
@@ -211,13 +209,11 @@ const Notifications = () => {
 	let type = "";
 	let Render = "";
 
-	console.log(notif);
-	
 	if(notif.pending !== null) {
-	  friendRequest = true;
 	  user = notif.pending.requestingFriend;
 	  type = "Friend Request";
 	  Render = RenderFriendRequest(notif.pending);
+	  friendRequest = true;
 
 	} else if(notif.following !== null) {
 	  user = notif.following.follower;
@@ -230,7 +226,6 @@ const Notifications = () => {
 	  Render = RenderLiked(notif.liked);
 	  
 	} else if(notif.reply !== null) {
-	  console.log("REPLY:",notif.reply.replyThought.thoughtAuthor);
 	  user = notif.reply.replyThought.thoughtAuthor;
 	  type = "Reply";
 	  Render = RenderReply(notif.reply);
@@ -241,12 +236,13 @@ const Notifications = () => {
 	  Render = RenderReThought(notif.reThought);
 	} 
 
-	console.log("USER SWITCH:", user);
 	return(
+		<>
 		<li data-key={notif.id} key={notif.id}>
 		  {RenderUserCard(notif.id, user, friendRequest, type)}
 		  {Render}
 		</li>
+		</>
 	);
   }
 

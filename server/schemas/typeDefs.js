@@ -85,8 +85,8 @@ type Pending {
   id: ID!
   createdAt: String!
   userId: ID!
-  requestingFriend: User
   pendingId: ID!
+  requestingFriend: User
 }
 
 type Blocked {

@@ -709,13 +709,14 @@ const resolvers = {
 			{
 			  where:
 			  {
-				userId: context.user.id,
-				pendingId: friendId
+				userId: friendId,
+				pendingId: context.user.id
 			  }
 			}
 		);
+		console.log("REQUEST:", isValidRequest);
 
-		if(isValidRequest.length !== 0) {
+		if(isValidRequest !== null && isValidRequest.length !== 0) {
 		  await Pending.destroy(
 			  {
 				where:
@@ -737,14 +738,17 @@ const resolvers = {
 				{
 				  fromUser: friendId,
 				  toUser: context.user.id,
-				  friendRequestByEntry: isValidRequest.id
+				  friendRequestEntryId: isValidRequest.id
 				}
 			  }
 		  );
 		  
+		  let FRIEND_CREATE_1 = await Friend.create({userId: context.user.id, friendId});
+		  let FRIEND_CREATE_2 = await Friend.create({userId: friendId, friendId: context.user.id});
 		  
-		  return ((await Friend.create({userId: context.user.id, friendId}) &&
-				   await Friend.create({userId: friendId, friendId: context.user.id})) !== null)
+		  console.log("FC_1:", FRIEND_CREATE_1);
+		  console.log("FC_2:", FRIEND_CREATE_2);
+		  return (FRIEND_CREATE_1 !== null && FRIEND_CREATE_2 !== null);;
 		} else {
 		  return false;
 		}

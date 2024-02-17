@@ -362,6 +362,7 @@ query getMyNotifications {
     acknowledge
     pending {
       requestingFriend {
+        id
         handle
         userName
         profilePicture
@@ -377,6 +378,7 @@ query getMyNotifications {
     }
     liked {
       likedThought {
+        id
         content
       }
       thoughtLiker {
@@ -388,6 +390,7 @@ query getMyNotifications {
     }
     reply {
       originalReplyThought {
+        id
         content
         thoughtAuthor {
           id
@@ -397,6 +400,7 @@ query getMyNotifications {
         }
       }
       replyThought {
+        id
         content
         thoughtAuthor {
           id
@@ -408,6 +412,7 @@ query getMyNotifications {
     }
     reThought {
       reThoughtThought {
+        id
         content
         thoughtAuthor {
           id
@@ -417,6 +422,7 @@ query getMyNotifications {
         }
       }
       originalReThoughtThought {
+        id
         content
         thoughtAuthor {
           id
