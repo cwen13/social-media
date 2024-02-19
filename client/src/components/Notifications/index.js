@@ -65,7 +65,6 @@ const Notifications = () => {
     if(!notificationsLoading && !notificationsError && notificationsData !== undefined){
       setNotifications(
 		  [
-			  ...notifications,
 			  ...notificationsData.getMyNotifications
 		  ]
       )
@@ -233,12 +232,10 @@ const Notifications = () => {
 	} 
 
 	return(
-		<>
 		<li data-key={notif.id} key={notif.id}>
 		  {RenderUserCard(notif.id, user, friendRequest, type)}
 		  {Render}
 		</li>
-		</>
 	);
   }
 

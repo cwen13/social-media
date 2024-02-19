@@ -8,7 +8,7 @@ import {
   QUERY_USER_BLOCKED,
   QUERY_MY_PENDING_REQUESTS,
   QUERY_USER_THOUGHTS,
-  GET_MY_NOTIFICATIONS
+  GET_MY_NOTIFICATIONS,
 } from "./../../utils/queries";
 import {
   ADD_FOLLOW,
@@ -27,8 +27,8 @@ import AuthService from "./../../utils/auth";
 
 import "./style.css";
 
-const UserInfo = ({ page, blocked, setBlocked }) => {
-  
+const UserInfo = ({ page, blocked, setBlocked, userPageId }) => {
+
   const {
     userId,
     loginUser,
@@ -47,9 +47,6 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
     setPendList,
   } = useUserContext();
 
-  let userPageId = useParams().userId;
-  userPageId = (userPageId !== undefined) ? userPageId : userId;
-
   const [ user, setUser] = useState({}); 
   const [ friendship, setFriendship ] = useState(userId !== userPageId
 												 && friendList.filter(friendUser => friendUser.id === userPageId).length !== 0);
@@ -57,11 +54,12 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 											   && followList.filter(followUser => followUser.id === userPageId).length !== 0);
   const [ pending, setPending ] = useState(userId !== userPageId
 										   && pendList.filter(pendUser => pendUser.pendingId === userPageId).length !== 0);
+
   
-  const {lodaing: userLoading, error: userError, data: userData} = useQuery(
+  const {isLodaing: userLoading, error: userError, data: userData} = useQuery(
       QUERY_USER,
       {
-		variables :
+		variables:
 		{
 		  userId: userPageId
 		}
@@ -139,8 +137,19 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   );
   
   useEffect(() => {
-    if (!userLoading && !userError && userData !== undefined && userPageId !== 0) {
-      setUser(
+	if(page === "MyPage" || page === "MainFeed"){
+	  setUser(
+		  {
+			...user,
+			id: userId,
+			userName: userName,
+			handle: handle,
+			email: email,
+			profilePicture: profilePicture
+		  }
+	  );
+	} else if (!userError && !userLoading && userData !== undefined){
+	  setUser(
 		  {
 			...user,
 			id: userData.getUser.id,
@@ -149,10 +158,10 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 			email: userData.getUser.email,
 			profilePicture: userData.getUser.profilePicture
 		  }
-      );
+	  );
     }
   }, [userLoading, userError, userData])
-
+  
   useEffect(() => {
 	if(friendship) {
 	  setPending(false);
@@ -164,7 +173,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 	} else {
 	  setPending(true);
 	}
-  }, [blocked, pending, friendship]);
+  }, [pending, friendship]);
   
   useEffect(() => {
     if(followList.length !== 0) {
@@ -173,16 +182,18 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
     } else {
 	  setFollowing(false);
 	}
-	if(blocked) {
+	if(isBlocked(userPageId)) {
 	  setFollowing(false);
 	}
-  }, [blocked, following]);
+  }, [following]);
 
 
-
+  const isBlocked = (otherUserId) => {
+	return (blockedList.filter((blockedEntry) => otherUserId === blockedEntry.id ) > 0);
+  };
   
   if(userLoading) return "Loading...";
-  if(userError) return `Error UsEr ${userError.message}`;
+  if(userError) return `Error User ${userError.message}`;
   if(loadingFriends) return "Loading Friends";
   if(followingLoading) return "Loading Following";
 	  
@@ -323,7 +334,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
   
   const handleBlocked = async (event) => {
     event.preventDefault();
-    if (blocked) {
+    if (isBlocked(userPageId)) {
       await blockRemove(
 		  {
 			variables:
@@ -332,7 +343,6 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 			}
 		  }
       );
-      setBlocked(false);
       setBlockedList(
 		  [
 			  ...blockedList.filter(block => block.id !== userPageId)
@@ -346,9 +356,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 			  blockedId: userPageId
 			}
 		  }
-	  );
-	  setBlocked(true);
-	  
+	  );	  
       setBlockedList(
 		  [
 			  ...blockedList,
@@ -371,7 +379,7 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 		<div className="blocked">
 		  {(userId === userPageId)
 		   ? "Who are you blocked?"
-		   : (blocked ?
+		   : (isBlocked(userPageId) ?
 			  <>
 				<h4>
 				  This one of your blocked users
@@ -439,10 +447,10 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 		  {userPageId === 0
 		   ?<h1>No one is logged in here</h1>
 		   :<>
-			  <h1>=^={userName}=^=</h1>
+			  <h1>=^={user.userName}=^=</h1>
 			  <div className="pfp">
 				{profilePicture
-				 ? <img src={`/images/pfp/${profilePicture}`}
+				 ? <img src={`/images/pfp/${user.profilePicture}`}
 						width="150"/>
 				 :
 				 <>
@@ -453,17 +461,17 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 				}
 			  </div>
 			  <div className="names">
-				NAME: {handle}
+				NAME: {user.handle}
 			  </div>
-			  {blocked ? "" :
+			  {isBlocked(userPageId) ? "" :
 			   <div className="email">
-				 EMAIL: {email}
+				 EMAIL: {user.email}
 			   </div>}
 			</>}
 
 		  {userPageId === userId && userPageId !== 0
 		   ? <>
-			   <ThoughtCreate userId={userPageId}
+			   <ThoughtCreate userId={user.id}
 							  page={page} />
 			   {page === "MyPage" &&
 				<Link to="/user/MyPage/EditProfile">
@@ -472,10 +480,10 @@ const UserInfo = ({ page, blocked, setBlocked }) => {
 
 			 </>
 		   : ""}
-		  {userPageId === 0 || blocked 
+		  {userPageId === 0 || isBlocked(userPageId) 
 		   ? <h2>There are no friend yet</h2>
 		   : <RenderFriendship />}
-		  {userPageId === 0 || blocked
+		  {userPageId === 0 || isBlocked(userPageId)
 		   ? <h2>There are no followings yet</h2>
 		   : <RenderFollowing />}
 		  {userPageId === 0

@@ -25,15 +25,15 @@ query getAllUsers {
 }`;
 
 export const QUERY_USER = gql`
-query getUser ($userId: ID) {
-  getUser (userId: $userId) {
+query getUser($userId: ID!) {
+  getUser(userId: $userId) {
     id
+    lastName
+    firstName
+    email
     userName
     handle
-    email
     profilePicture
-    firstName
-    lastName
   }
 }`;
 

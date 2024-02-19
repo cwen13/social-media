@@ -104,7 +104,7 @@ type Auth {
 type Query {
   getMe: User!
   getAllUsers: [User!]!
-  getUser(userId: ID): User
+  getUser(userId: ID!): User!
   getMyFriends: [User]
   getUserFriends(userId: ID!): [User]
   getMyPendingRequests: [Pending]

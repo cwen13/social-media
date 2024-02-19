@@ -138,8 +138,8 @@ export const UserContextProvider = ({children}) => {
   };
 
   const logoutUser = () => {
-    localStorage.setItem("user_id",0);
-    setUserId(0);
+    localStorage.setItem("user_id","");
+    setUserId("");
   };
 
   
