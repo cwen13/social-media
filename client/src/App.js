@@ -8,7 +8,7 @@ import {
   useQuery,
   gql
 } from '@apollo/client';
- 
+
 import './App.css';
 import { setContext } from "@apollo/client/link/context";
 import { QUERY_ME } from "./utils/queries";
@@ -63,76 +63,76 @@ const App = () => {
   },[])
   
   return (
-    <ApolloProvider client={client}>
-      <Router>
-	<UserContextProvider>
-	  <section className="siteContainer">
-     	    <Navbar />
-	    <Routes>	    
-              <Route 
-		path="/" 
-		element={<MainFeed />} 
-              />
-	      
-	      <Route 
-		path="/login" 
-		element={<Login />}
-              />
+      <ApolloProvider client={client}>
+		<Router>
+		  <UserContextProvider>
+			<section className="siteContainer">
+     	      <Navbar />
+			  <Routes>	    
+				<Route 
+				  path="/" 
+				  element={<MainFeed />} 
+				/>
+				
+				<Route 
+				  path="/login" 
+				  element={<Login />}
+				/>
 
-	      <Route 
-		path="/signup" 
-		element={<SignUp />} 
-              />
+				<Route 
+				  path="/signup" 
+				  element={<SignUp />} 
+				/>
 
-	      <Route
-		path="/user/MyPage"
-		element={<MyPage />}
-	      />
+				<Route
+				  path="/user/MyPage"
+				  element={<MyPage />}
+				/>
 
-	      <Route
-		path="/user/MyPage/EditProfile"
-		element={<EditProfile />}
-	      />
+				<Route
+				  path="/user/MyPage/EditProfile"
+				  element={<EditProfile />}
+				/>
 
-	      <Route
-		path="/user/:userId"
-		element={<UserPage />}
-	      />
+				<Route
+				  path="/user/:userId"
+				  element={<UserPage />}
+				/>
 
-	      <Route
-		path="/user/:userId/liked"
-		element={<LikedThoughts />}
-	      />
+				<Route
+				  path="/user/:userId/liked"
+				  element={<LikedThoughts />}
+				/>
 
-	      <Route
-		path="/user/:userId/ReThoughts"
-		element={<ReThoughts />}
-	      />
+				<Route
+				  path="/user/:userId/ReThoughts"
+				  element={<ReThoughts />}
+				/>
 
-	      <Route
-		path="/thought/:postId/:postType"
-		element={<ThoughtPage />}
-	      />
+				<Route
+				  path="/thought/:postId/:postType"
+				  element={<ThoughtPage />}
+				/>
 
-	      <Route
-		path="/search/*"
-		element={<Search />}
-	      />
+				<Route
+				  path="/search/*"
+				  element={<Search />}
+				/>
 
-	      <Route
-		path="/UserRelations"
-		element={<UserRelations />}
-	      />
+				<Route
+				  path="/UserRelations"
+				  element={<UserRelations />}
+				/>
 
-	      <Route 
-		path='*' 
-		element={<NotFound />}
-	      />
-            </Routes>
-	  </section>
-	</UserContextProvider>
-      </Router>
-    </ApolloProvider>    
+				<Route 
+				  path='*' 
+				  element={<NotFound />}
+				/>
+              </Routes>
+			</section>
+		  </UserContextProvider>
+		</Router>
+      </ApolloProvider>    
   );
 }
 
