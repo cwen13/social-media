@@ -133,13 +133,13 @@ Thought.belongsToMany(Liked, {
 
 Thought.belongsToMany(Thought, {
   through: "notification",
-  foreignKey: "replyToId",
+  foreignKey: "replyToEntryId",
   as: "newReply"
 });
 
 Thought.belongsToMany(Thought, {
   through: "notification",
-  foreignKey: "reThoughtToId",
+  foreignKey: "reThoughtOfEntryId",
   as: "newReThought"
 });
 
@@ -149,13 +149,13 @@ Thought.belongsToMany(Thought, {
 Pending.belongsTo(User, {
   foreignKey: "userId",
   otherKey: "pendingId",
-  as: "requestedFriend"
+  as: "requestingFriend"
 });
 
 Pending.belongsTo(User, {
   foreignKey: "pendingId",
   otherKey: "userId",
-  as: "requestingFriend"
+  as: "requestedFriend"
 });
 
 Following.belongsTo(User, {
@@ -204,8 +204,39 @@ ReThought.belongsTo(Thought, {
   as: "reThoughtThought"
 });
 
+// Setting up relationships to return post info
+// when quering the notifcaiton table directl
+Notification.belongsTo(User, {
+  foreignKey: "fromUser",
+  otherKey: "toUser",
+  as: "interactor"
+});
 
+Notification.belongsTo(User, {
+  foreignKey: "toUser",
+  otherKey: "fromUser",
+  as: "poster"
+});
 
+Notification.belongsTo(Pending, {
+  foreignKey: "friendRequestEntryId"
+});
+
+Notification.belongsTo(Following, {
+  foreignKey: "followedByEntryId"
+});
+
+Notification.belongsTo(Liked, {
+  foreignKey: "likedThoughtId"
+});
+
+Notification.belongsTo(Reply, {
+  foreignKey: "replyToEntryId"
+});
+
+Notification.belongsTo(ReThought, {
+  foreignKey: "reThoughtOfEntryId"
+});
 
 module.exports = {
   Friend,

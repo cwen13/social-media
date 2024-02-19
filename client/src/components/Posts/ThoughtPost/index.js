@@ -209,7 +209,7 @@ const ThoughtPost = (props) => {
   const handleReThought = async (event) => {
     event.preventDefault();
     try {
-      const reply = await addReThought(
+	  const reply = await addReThought(
 	{
 	  variables:
 	  {

@@ -13,12 +13,12 @@ import Auth from "./auth";
 
 export const UserContext = createContext(null);
 
-export const UserContextProvider = ({children}) => {
+export const UserContextProvider = ({ children }) => {
 
   const [ userId, setUserId ] = useState(() => {
     if (Auth.getToken()){
       return Auth.isTokenExpired(Auth.getToken()) ? 0 :
-	localStorage.getItem("user_id") || 0;
+		localStorage.getItem("user_id") || 0;
     }
     return 0;
   });
@@ -36,43 +36,43 @@ export const UserContextProvider = ({children}) => {
   const [ pendList, setPendList ] = useState([]);
   
   const { loading: loadingBlockedList, error: errorBlockedList, data: dataBlockedList } = useQuery(
-    QUERY_MY_BLOCKED_USERS
+      QUERY_MY_BLOCKED_USERS
   );
 
   const { loading: loadingLiked, error: errorLiked, data: dataLiked } =  useQuery(
-    QUERY_MY_LIKED
+      QUERY_MY_LIKED
   );
   
   const { loading: loadingFriendList, error: errorFriendList, data: dataFriendList } = useQuery(
-    QUERY_MY_FRIENDS
+      QUERY_MY_FRIENDS
   );
   
   const { loading: loadingFollowList, error: errorFollowList, data: dataFollowList } = useQuery(
       QUERY_MY_FOLLOWING
   );
 
-    const { loading: loadingPendList, error: errorPendList, data: dataPendList } = useQuery(
+  const { loading: loadingPendList, error: errorPendList, data: dataPendList } = useQuery(
       QUERY_MY_PENDING_REQUESTS
   );
   
   const { loading: loadingUser, error: errorUser, data: dataUser } = useQuery(
-    QUERY_USER,
-    {
-      variables:
+      QUERY_USER,
       {
-	userId
+		variables:
+		{
+		  userId
+		}
       }
-    }
   );
   
   useEffect(() => {
 
     if (!loadingBlockedList && !errorBlockedList && dataBlockedList !== null) {
       setBlockedList(
-	  [
-	      ...blockedList,
-	      ...dataBlockedList.getMyBlockedUsers.map(user => {return {id: user.id, userName: user.userName}})
-	  ]
+		  [
+			  ...blockedList,
+			  ...dataBlockedList.getMyBlockedUsers.map(user => {return {id: user.id, userName: user.userName}})
+		  ]
       );
     }
   }, [loadingBlockedList, errorBlockedList, dataBlockedList,]);
@@ -80,10 +80,10 @@ export const UserContextProvider = ({children}) => {
   useEffect(() => {
     if (!loadingLiked && !errorLiked) {
       setLikedList(
-	  [
-	      ...likedList,
-	      ...dataLiked.getAllMyLiked.map(liked => liked.thoughtId)
-	  ]
+		  [
+			  ...likedList,
+			  ...dataLiked.getAllMyLiked.map(liked => liked.thoughtId)
+		  ]
       );
     }
   }, [loadingLiked, errorLiked, dataLiked,]);
@@ -91,10 +91,10 @@ export const UserContextProvider = ({children}) => {
   useEffect(() => {
     if (!loadingFriendList && !errorFriendList && dataFriendList !== null) {
       setFriendList(
-	  [
-	      ...friendList,
-	      ...dataFriendList.getMyFriends
-	  ]
+		  [
+			  ...friendList,
+			  ...dataFriendList.getMyFriends
+		  ]
       );
     }
   }, [loadingFriendList, errorFriendList, dataFriendList,]);
@@ -102,10 +102,10 @@ export const UserContextProvider = ({children}) => {
   useEffect(() => {
     if (!loadingFollowList && !errorFollowList && dataFollowList !== null) {
       setFollowList(
-	  [
-	      ...followList,
-	      ...dataFollowList.getMyFollowing
-	  ]
+		  [
+			  ...followList,
+			  ...dataFollowList.getMyFollowing
+		  ]
       );
     }
   }, [loadingFollowList, errorFollowList, dataFollowList,]);
@@ -113,10 +113,10 @@ export const UserContextProvider = ({children}) => {
   useEffect(() => {
     if (!loadingPendList && !errorPendList && dataPendList !== null) {
       setPendList(
-	  [
-	      ...pendList,
-	      ...dataPendList.getMyPendingRequests
-	  ]
+		  [
+			  ...pendList,
+			  ...dataPendList.getMyPendingRequests
+		  ]
       );
     }
   }, [loadingPendList, errorPendList, dataPendList,]);
@@ -138,40 +138,40 @@ export const UserContextProvider = ({children}) => {
   };
 
   const logoutUser = () => {
-    localStorage.setItem("user_id",0);
-    setUserId(0);
+    localStorage.setItem("user_id","");
+    setUserId("");
   };
 
   
   return (
-    <UserContext.Provider value={{userId,
-				  loginUser,
-				  logoutUser,
-				  userName,
-				  setUserName,
-				  profilePicture,
-				  setProfilePicture,
-				  handle,
-				  setHandle,
-				  email,
-				  setEmail,
-				  blockedList,
-				  setBlockedList,
-				  likedList,
-				  setLikedList,
-				  friendList,
-				  setFriendList,
-				  followList,
-				  setFollowList,
-				  pendList,
-				  setPendList,
-				  firstName,
-				  setFirstName,
-				  lastName,
-				  setLastName,
-				 }}>
-      {children}
-    </UserContext.Provider>
+      <UserContext.Provider value={{userId,
+									loginUser,
+									logoutUser,
+									userName,
+									setUserName,
+									profilePicture,
+									setProfilePicture,
+									handle,
+									setHandle,
+									email,
+									setEmail,
+									blockedList,
+									setBlockedList,
+									likedList,
+									setLikedList,
+									friendList,
+									setFriendList,
+									followList,
+									setFollowList,
+									pendList,
+									setPendList,
+									firstName,
+									setFirstName,
+									lastName,
+									setLastName,
+								   }}>
+		{children}
+      </UserContext.Provider>
   );
 };
 

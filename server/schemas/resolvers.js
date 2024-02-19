@@ -29,7 +29,8 @@ const resolvers = {
     
     //STATUS: WORKING
     getUser: async (parent, { userId }, context) => {
-      return await User.findByPk((!!userId) ? userId : 1);
+	  console.log("USERID:",userId);
+      return await User.findByPk(userId);
     },
     
     //STATUS: WORKING
@@ -525,212 +526,113 @@ const resolvers = {
     getMyNotifications: async (parent, args, context) => {
       // Get all notifications
 	  // WORK ON IMPLEMENTING MERGE SORT FOR A GROUPED OUTPUT NOT SPLIT UP
-      const notifications = await Notification.findAll(
+      var notifications = await Notification.findAll(
 		  {
 			where:
 			{
 			  toUser: context.user.id,
 			  acknowledge: false
 			},
+			include:
+			[
+				
+				{
+				  model: Pending,
+				  include:
+				  {
+					model: User,
+					as: "requestingFriend"
+				  }
+				},
+				
+				{
+				  model: Following,
+				  include:
+				  {
+					model: User,
+					as: "follower"
+				  }
+				},
+				
+				{
+				  model: Liked,
+				  include:
+				  [
+					  {
+						model: Thought,
+						as: "likedThought"
+					  },
+					  {
+						model: User,
+						as: "thoughtLiker"
+					  }
+				  ]
+				},
+				
+				{
+				  model: Reply,
+				  include:
+				  [
+					  {
+						model: Thought,
+						as: "replyThought",
+						include:
+						{
+						  model: User,
+						  as: "thoughtAuthor"
+						}
+					  },
+					  {
+						model: Thought,
+						as: "originalReplyThought",
+						include:
+						{
+						  model: User,
+						  as: "thoughtAuthor"
+						}
+					  }
+				  ]
+				},
+				
+				{
+				  model: ReThought,
+				  include:
+				  [
+					  {
+						model: Thought,
+						as: "reThoughtThought",
+						include:
+						{
+						  model: User,
+						  as: "thoughtAuthor"
+						}
+					  },
+					  {
+						model: Thought,
+						as: "originalReThoughtThought",
+						include:
+						{
+						  model: User,
+						  as: "thoughtAuthor"
+						}
+					  }
+				  ]
+				}				
+			],
 			order:
 			[
 				[
 					"createdAt", "ASC"
 				]
 			]
-				
+			
 		  }
-      );
-	  //      console.log("NOTIFS:",notifications)
-	  
-      // Get friend requessts
-      const frs = notifications
-			.filter(notif => notif.friendRequest)
-			.map(request => request.fromUser);
-      const friendRequests = await Pending.findAll(
-		  {
-			where:
-			{
-			  userId: frs
-			},
-			include:
-			{
-			  model: User,
-			  as: "requestingFriend"
-			}
-		  }
-      );
-	  //            console.log("FRIENDREQUEST:",friendRequests);
-	  
-      // Get followers
-      const fs = notifications
-			.filter(notif => notif.followed)
-			.map(request => request.fromUser);
-	  //      console.log("FS:",fs);
-      const followers = await Following.findAll(
-		  {
-			where:
-			{
-			  userId: fs
-			},
-			include:
-			{
-			  model: User,
-			  as: "follower"
-			}
-		  }
-      );
-	  //      console.log("FOLLOWS:",followers[0]);
+      )
+	  //console.log("NOTIFS:",notifications.map(entry => entry.get({plain:true})));
 
-      // Get likes
-      const liked = notifications
-			.filter(notif => notif.likedThoughtId)
-			.map(likes => {return {fromUser: likes.fromUser,
-								   likedThoughtId: likes.likedThoughtId}});
-      
-	  //      console.log("LIKES:",likes);
-      const likedList = await Promise.all(liked
-										  .map(async like =>
-											  await Liked.findAll(
-												  {
-													where:
-													{
-													  likedByUserId: like.fromUser,
-													  thoughtId: like.likedThoughtId
-													},
-													include:
-													[
-														{
-														  model: User,
-														  as: "thoughtLiker"
-														},
-														{
-														  model: Thought,
-														  as: "likedThought",
-														  include:
-														  {
-															model: User,
-															as:"thoughtAuthor"
-														  }
-														}
-													]
-												  }
-											  )
-										  )
-										 );
-      const likes = likedList.map(like => like[0]);
-	  //      console.log("LIKED NOTIFS:", likes);
-      
-      // Get replys
-      const replyed = notifications
-			.filter(notif => notif.replyToId)
-			.map(replys => replys.replyToId);
-      //      console.log("Replys:",replys);
-      const replys = await Reply.findAll(
-		  {
-			where:
-			{
-			  replyOfId: replyed	    
-			},
-			include:
-			[
-				{
-				  model: Thought,
-				  as: "replyThought",
-				  include:	    
-				  {
-					model: User,
-					as: "thoughtAuthor"
-				  }
-				},
-				{
-				  model: Thought,
-				  as: "originalReplyThought",
-				  include:	    
-				  {
-					model: User,
-					as: "thoughtAuthor"
-				  }
-				}
-			]
-		  }
-      );
-	  //      console.log("REPLYS:", replys);
-
-      // Get reThoughts
-      const reThoughted = notifications
-			.filter(notif => notif.reThoughtOfId)
-			.map(reThoughts => reThoughts.reThoughtOfId);
-	  //      console.log(reThoughted);
-      const reThoughts = await ReThought.findAll(
-		  {
-			where:
-			{
-			  reThoughtOfId: reThoughted
-			},
-			include:
-			[
-				{
-				  model: Thought,
-				  as: "reThoughtThought",
-				  include:	    
-				  {
-					model: User,
-					as: "thoughtAuthor"
-				  }
-				},
-				{
-				  model: Thought,
-				  as: "originalReThoughtThought",
-				  include:	    
-				  {
-					model: User,
-					as: "thoughtAuthor"
-				  }
-				}
-			]
-		  }
-      );
-	  //      console.log("RETHOUGHTS:",reThoughts);
-
-
-	  let notifTogether = [
-		  ...notifications, 
-		  ...friendRequests,
-		  ...followers,
-		  ...likes,
-		  ...replys,
-		  ...reThoughts
-	  ];
-
-	  let sortedNotif  = (a,b) => a.createdAt - b.createdAt;
-
-	  //console.log("SORTED NBOTIFS:",sortedNotif.map(entry => entry[1].dataValues));
-	  
-	  
-      const NotificationList =
-			{
-			  notifications, 
-			  friendRequests,
-			  followers,
-			  likes,
-			  replys,
-			  reThoughts
-			}
-	  
-	  let notifKeys = Object.keys(NotificationList)
-	  //console.log("NOTIF KEYS:", notifKeys)
-	  let notifList = notifKeys.map(key => [...NotificationList[key]]).flat().sort(sortedNotif);
-	  //console.log("sorted", notifList.flat().sort(sortedNotif));
-	  //console.log("sorted", Object.keys(notifList[0]));
-	  //console.log("NOTIFS:", NotificationList);
-      return NotificationList;
+	  return notifications
     },
 
-	getNotificaitonId: async (parent, args, context) => {
-	  return (await Notification.findOne({where: args})).dataValues.id;
-	},
-    
     getMyPendingRequests: async (parent, args, context) => {
       return await Pending.findAll(
 		  {
@@ -785,7 +687,6 @@ const resolvers = {
 			}
 		  }
       );
-//      console.log("USERUPADTE:", userUpdate);
       return userUpdate[0] === 1;
     },
 
@@ -804,17 +705,19 @@ const resolvers = {
       // making two entries so only one column needs to be quired
       // when collecting all of a user's friends
       try {
-		const isValidRequest = await Pending.findAll(
+		//update findAll ro findOne
+		const isValidRequest = await Pending.findOne(
 			{
 			  where:
 			  {
-				userId: context.user.id,
-				pendingId: friendId
+				userId: friendId,
+				pendingId: context.user.id
 			  }
 			}
 		);
+		console.log("REQUEST:", isValidRequest);
 
-		if(isValidRequest) {
+		if(isValidRequest !== null && isValidRequest.length !== 0) {
 		  await Pending.destroy(
 			  {
 				where:
@@ -836,14 +739,13 @@ const resolvers = {
 				{
 				  fromUser: friendId,
 				  toUser: context.user.id,
-				  friendRequest: true
+				  friendRequestEntryId: isValidRequest.id
 				}
 			  }
 		  );
 		  
-		  
-		  return ((await Friend.create({userId: context.user.id, friendId}) &&
-				   await Friend.create({userId: friendId, friendId: context.user.id})) !== null)
+		  return ((await Friend.create({userId: context.user.id, friendId}) !== null) &&
+				  (await Friend.create({userId: friendId, friendId: context.user.id}) !== null));
 		} else {
 		  return false;
 		}
@@ -864,7 +766,7 @@ const resolvers = {
 		  {
 			fromUser: context.user.id,
 			toUser: followingId,
-			followed: true
+			followedByEntryId: follow.id
 		  }
       )
       return (follow !== null && notification !== null);
@@ -883,7 +785,7 @@ const resolvers = {
 			{
 			  fromUser: context.user.id,
 			  toUser: pendingId,
-			  friendRequest: true
+			  friendRequestEntryId: pending.id
 			}
 		);
 		return (pending !== null && notification !== null);
@@ -916,17 +818,97 @@ const resolvers = {
 			{
 			  fromUser: pendingId,
 			  toUser: context.user.id,
-			  friendRequest: true
+			  friendRequestEntryId: pendingId
 			}
 		  }
       );
       return (deny !== null && acknowledge !== null);
-
     },
 
 	// IMPLEMENT WASHING OUT FRIEND REQUESTS(PENDING) AND FOLLOWING ENTRIES
     addBlocked: async (parent, { blockedId }, context) => {
+	  // check if the bloked ID is in following/friendship/pending
+	  // if found delete those entries
 
+	  await Notification.destroy(
+		  {
+			where:
+			{
+			  toUser: context.user.id,
+			  fromUser: blockedId
+			}
+		  }
+	  );
+
+	  await Notification.destroy(
+		  {
+			where:
+			{
+			  toUser: blockedId,
+			  fromUser: context.user.id,
+			}
+		  }
+	  );
+
+	  await Following.destroy(
+		  {
+			where:
+			{
+			  userId: blockedId,
+			  followingId: context.user.id
+			}
+		  }
+	  );
+
+	  await Following.destroy(
+		  {
+			where:
+			{
+			  userId: context.user.id,
+			  followingId: blockedId,
+			}
+		  }
+	  );
+
+	  await Friend.destroy(
+		  {
+			where:
+			{
+			  userId: blockedId,
+			  friendId: context.user.id
+			}
+		  }
+	  );
+
+	  await Friend.destroy(
+		  {
+			where:
+			{
+			  userId: context.user.id,
+			  friendId: blockedId,
+			}
+		  }
+	  );
+
+	  await Pending.destroy(
+		  {
+			where:
+			{
+			  userId: blockedId,
+			  pendingId: context.user.id
+			}
+		  }
+	  );
+
+	  await Pending.destroy(
+		  {
+			where:
+			{
+			  userId: context.user.id,
+			  pendingId: blockedId,
+			}
+		  }
+	  );
 	  
       return (await Blocked.create(
 		  {
@@ -949,11 +931,26 @@ const resolvers = {
     
     //STATUS: WORKING
     removeFriend: async (parent, { friendId }, context) => {
-      return ((await Friend.destroy({where: { userId: context.user.id,
-											  friendId }})
+      return ((await Friend.destroy(
+		  {
+			where:
+			{
+			  userId: context.user.id,
+			  friendId: friendId
+			}
+		  }
+	  )
 			   &&
-			   await Friend.destroy({where: { userId: friendId,
-											  friendId: context.user.id }})) === 1);
+			   await Friend.destroy(
+				   {
+					 where:
+					 {
+					   userId: friendId,
+					   friendId: context.user.id
+					 }
+				   }
+			   )
+			  ) === 1);
 	  
     },
 
@@ -961,7 +958,6 @@ const resolvers = {
     removeFollow: async (parent, { followingId }, context) => {
       return (await Following.destroy({where: { userId: context.user.id, followingId }}) === 1)
     },
-
     
     //STATUS: WORKING
     addThought: async (parent, { content }, context) =>{ 
@@ -993,9 +989,17 @@ const resolvers = {
     updateThought: async (parent, { thoughtId, content }, context) => {
       const thought = await Thought.findByPk(thoughtId);
       if (context.user.id === thought.userId) {
-		const [rowsEffected, updatedThought] = await Thought.update({ content },
-																	{where:
-																	 { id: thoughtId }});
+		const [rowsEffected, updatedThought] = await Thought.update(
+			{
+			  content
+			},
+			{
+			  where:
+			  {
+				id: thoughtId
+			  }
+			}
+		);
 		return await Thought.findByPk(thoughtId, { include: { model: User }});
       } else {
 		//Ned to replace with different error
@@ -1022,7 +1026,6 @@ const resolvers = {
 				likedByUserId: context.user.id
 			  }
 		  )
-
 		  const acknowledge = await Notification.create(
 			  {
 				fromUser: context.user.id,
@@ -1069,11 +1072,12 @@ const resolvers = {
 			
 		  }
       )
+
       const acknowledge = await Notification.create(
 		  {
 			fromUser: context.user.id,
 			toUser: thoughtUserId,
-			replyToId: thoughtId
+			replyToEntryId: reply.id
 		  }
       );
       return reply;
@@ -1088,29 +1092,28 @@ const resolvers = {
 			  content: additionalThought,
 			}
 		);
-		
+
 		const reThought = await ReThought.create(
 			{
 			  reThoughtOfId: originalThoughtId,
 			  reThoughtThoughtId: reThoughtThought.id
 			}
 		);
-		
+
 		const acknowledge = await Notification.create(
 			{
 			  fromUser: context.user.id,
 			  toUser: originalThoughtUserId,
-			  reThoughtOfId: originalThoughtId
+			  reThoughtOfEntryId: reThought.id
 			}
-		);
-		
+		);		
 		return reThought;
 
       } else {
 		throw new AuthenticationError("You can not reThought unless your logged in");
-      }
-      
+      }      
     },
+
     acknowledgeNotification: async (parent, { notificationId }, context) => {
       return (await Notification.update(
 		  {
