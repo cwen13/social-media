@@ -47,6 +47,7 @@ const UserInfo = ({ page, blocked, setBlocked, userPageId }) => {
     setPendList,
   } = useUserContext();
 
+  
   const [ user, setUser] = useState({}); 
   const [ friendship, setFriendship ] = useState(userId !== userPageId
 												 && friendList.filter(friendUser => friendUser.id === userPageId).length !== 0);
@@ -186,8 +187,7 @@ const UserInfo = ({ page, blocked, setBlocked, userPageId }) => {
 	  setFollowing(false);
 	}
   }, [following]);
-
-
+  
   const isBlocked = (otherUserId) => {
 	return (blockedList.filter((blockedEntry) => otherUserId === blockedEntry.id ) > 0);
   };
@@ -444,30 +444,28 @@ const UserInfo = ({ page, blocked, setBlocked, userPageId }) => {
   return (
       <section className="userInfo" >
 		<section className="profile">
-		  {userPageId === 0
-		   ?<h1>No one is logged in here</h1>
-		   :<>
-			  <h1>=^={user.userName}=^=</h1>
-			  <div className="pfp">
-				{profilePicture
-				 ? <img src={`/images/pfp/${user.profilePicture}`}
-						width="150"/>
-				 :
-				 <>
- 				   +==+<br/>
-				   |-----|<br/>
-				   +==+
-				 </>
-				}
-			  </div>
-			  <div className="names">
-				NAME: {user.handle}
-			  </div>
-			  {isBlocked(userPageId) ? "" :
-			   <div className="email">
-				 EMAIL: {user.email}
-			   </div>}
-			</>}
+		  
+		  <h1>=^={user.userName}=^=</h1>
+		  <div className="pfp">
+			{profilePicture
+			 ? <img src={`/images/pfp/${user.profilePicture}`}
+					width="150"/>
+			 :
+			 <>
+ 			   +==+<br/>
+			   |-----|<br/>
+			   +==+
+			 </>
+			}
+		  </div>
+		  <div className="names">
+			NAME: {user.handle}
+		  </div>
+		  
+		  {isBlocked(userPageId) ? "" :
+		   <div className="email">
+			 EMAIL: {user.email}
+		   </div>}
 
 		  {userPageId === userId && userPageId !== 0
 		   ? <>
@@ -495,7 +493,6 @@ const UserInfo = ({ page, blocked, setBlocked, userPageId }) => {
       </section>
   );
 };
-
 
 export default UserInfo;
 

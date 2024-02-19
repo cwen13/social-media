@@ -52,6 +52,8 @@ query getUserFriends($userId: ID!) {
   getUserFriends(userId: $userId) {
     id
     userName
+    handle
+    profilePicture
   }
 }`;
 
