@@ -9,7 +9,7 @@ import { UserContext, useUserContext, UserContextProvider } from "./../../utils/
 
 const Login = (props) => {
 
-//  const {userId, loginUser, logoutUser} = useUserContext(); 
+  //  const {userId, loginUser, logoutUser} = useUserContext(); 
   const [formState, setFormState] = useState({ email: '', password: '' });
   const [login, { error }] = useMutation(LOGIN_USER);
   
@@ -18,9 +18,9 @@ const Login = (props) => {
     try {
       const { data } = await login({
         variables: {
-	  email: formState.email,
-	  password: formState.password
-	}})
+		  email: formState.email,
+		  password: formState.password
+		}})
       Auth.login(data.login.token, data.login.user.id);
     } catch (e) {
       console.log(e);
@@ -44,43 +44,43 @@ const Login = (props) => {
     event.preventDefault();
     window.location.assign("/signup");
   }
-    
+  
 
   return (
-    <div className="loginPage" id="loginEntry">
-      <h2>Login</h2>
-      <form onSubmit={handleFormSubmit}>
-        <div className="attribute">
-          <label htmlFor="email">Email address:</label>
-          <input
-            placeholder="youremail@test.com"
-            name="email"
-            type="email"
-            id="email"
-            onChange={handleChange}
-          />
-        </div>
-        <div className="attribute">
-          <label htmlFor="pwd">Password:</label>
-          <input
-            placeholder="******"
-            name="password"
-            type="password"
-            id="pwd"
-            onChange={handleChange}
-          />
-        </div>
-        {error ? (
-          <div>
-            <p className="error-text">The provided credentials are incorrect</p>
+      <div className="loginPage" id="loginEntry">
+		<h2>Login</h2>
+		<form onSubmit={handleFormSubmit}>
+          <div className="attribute">
+			<label htmlFor="email">Email address:</label>
+			<input
+              placeholder="youremail@test.com"
+              name="email"
+              type="email"
+              id="email"
+              onChange={handleChange}
+			/>
           </div>
-        ) : null}
-        <div className="attribute">
-          <button type="submit">Submit</button>
-	  <button type="button" onClick={sendToSignUp}>Signup</button>
-        </div>
-      </form>
-    </div>
+          <div className="attribute">
+			<label htmlFor="pwd">Password:</label>
+			<input
+              placeholder="******"
+              name="password"
+              type="password"
+              id="pwd"
+              onChange={handleChange}
+			/>
+          </div>
+          {error ? (
+			  <div>
+				<p className="error-text">The provided credentials are incorrect</p>
+			  </div>
+          ) : null}
+          <div className="attribute">
+			<button type="submit">Submit</button>
+			<button type="button" onClick={sendToSignUp}>Signup</button>
+          </div>
+		</form>
+      </div>
   );
 }
 

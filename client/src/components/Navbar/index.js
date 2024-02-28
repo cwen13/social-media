@@ -7,7 +7,7 @@ import "./style.css";
 
 const Navbar = () => {
 
-  const { userId, loginUser, logoutUser } = useUserContext();
+  const  userId = localStorage.getItem("user_id");
   
   const showNav = () => {
     return (Auth.loggedIn() ? (
@@ -37,8 +37,10 @@ const Navbar = () => {
   return (
     <>
       <nav className="navbar-nav">
-	<Link  to="/"><h1>Social-Media site</h1></Link>	
-	{showNav()}
+		{!!userId
+		 ?<Link  to="/MainFeed"><h1>Social-Media site</h1></Link>
+		 :<Link  to={`/`}><h1>Social-Media site</h1></Link>}
+		{showNav()}
       </nav>      
     </>
   );

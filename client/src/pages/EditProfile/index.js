@@ -22,15 +22,9 @@ const EditProfile = () => {
     setFirstName,
     setLastName,    
   } = useUserContext();
+
   
-  
-  const [ userId, setUserId ] = useState(() => {
-    if (Auth.getToken()){
-      return Auth.isTokenExpired(Auth.getToken()) ? 0 :
-	localStorage.getItem("user_id") || 0;
-    }
-    return 0;
-  });
+  let userId = localStorage.getItem("user_id");  
   
   const [ userUpdate, setUserUpdate ] = useState(
       {

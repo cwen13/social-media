@@ -19,7 +19,7 @@ const resolvers = {
     
     //STATUS: WORKING
     getMe: async (parent, args, context ) => {
-      return await User.findByPk((context.user) ? context.user.id : 1);
+      return await User.findByPk(context.user.id);
     },
     
     //STATUS: WORKING
@@ -276,19 +276,25 @@ const resolvers = {
     //STATUS: WORKING
     getUserThoughts: async (parent, { userId }, context) => {
       const userThoughts = await Thought.findAll(
-		  {
-			where:
-			{
-			  userId: userId
-			},
-			include:
-			{
-			  model: User,
-			  as: "thoughtAuthor"
-			},
-		  }
+	{
+	  where:
+	  {
+	    userId: userId
+	  },
+	  include:
+	  {
+	    model: User,
+	    as: "thoughtAuthor"
+	  },
+	  order:
+	  [
+	    [
+	      "createdAt", "DESC"
+	    ]
+	  ]
+	}
       );
-	  //      console.log(userThoughts);
+      //      console.log(userThoughts);
       return userThoughts;
     },
 

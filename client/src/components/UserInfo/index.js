@@ -23,20 +23,20 @@ import EditProfile from "./../../pages/EditProfile";
 import ThoughtCreate from "./../ThoughtCreate"
 import Notifications from "./../Notifications";
 import { useUserContext } from "./../../utils/UserContext";
-import AuthService from "./../../utils/auth";
+import Auth from "./../../utils/auth";
 
 import "./style.css";
 
-const UserInfo = ({ page, blocked, setBlocked, userPageId }) => {
+const UserInfo = ({ page, userPageId }) => {
 
   const {
-    userId,
-    loginUser,
-    logoutUser,
-    userName,
-    handle,
-    profilePicture,
-    email,
+    //    userId,
+    //    loginUser,
+    //    logoutUser,
+    //    userName,
+    //    handle,
+    //    profilePicture,
+    //    email,
     blockedList,
     setBlockedList,
     friendList,
@@ -47,219 +47,207 @@ const UserInfo = ({ page, blocked, setBlocked, userPageId }) => {
     setPendList,
   } = useUserContext();
 
-  
-  const [ user, setUser] = useState({}); 
-  const [ friendship, setFriendship ] = useState(userId !== userPageId
-												 && friendList.filter(friendUser => friendUser.id === userPageId).length !== 0);
-  const [ following, setFollowing ] = useState(userId !== userPageId
-											   && followList.filter(followUser => followUser.id === userPageId).length !== 0);
-  const [ pending, setPending ] = useState(userId !== userPageId
-										   && pendList.filter(pendUser => pendUser.pendingId === userPageId).length !== 0);
+  let userId = localStorage.getItem("user_id");
 
+  const [ userPage, setUserPage] = useState({});   
+  const [ friendship, setFriendship ] = useState(userId !== userPageId
+						 && friendList.filter(friendUser => parseInt(friendUser.id) === userPageId).length !== 0);
+  const [ following, setFollowing ] = useState(userId !== userPageId
+					       && followList.filter(followUser => parseInt(followUser.id) === userPageId).length !== 0);
+  const [ pending, setPending ] = useState(userId !== userPageId
+					   && pendList.filter(pendUser => parseInt(pendUser.pendingId) === userPageId).length !== 0);
+  const [ blocked, setBlocked ] = useState(userId !== userPageId
+					   && blockedList.filter(blockedUser => parseInt(blockedUser.id) === userPageId).length !== 0);
   
-  const {isLodaing: userLoading, error: userError, data: userData} = useQuery(
-      QUERY_USER,
+  const {lodaing: userLoading, error: userError, data: userData} = useQuery(
+    QUERY_USER,
+    {
+      variables:
       {
-		variables:
-		{
-		  userId: userPageId
-		}
+	userId: userPageId
       }
+    }
   );
 
   const { loading:loadingFriends , error: friendsError, data: friendsData } = useQuery(
-      QUERY_USER_FRIENDS,
+    QUERY_USER_FRIENDS,
+    {
+      variables:
       {
-		variables:
-		{
-		  userId: userPageId
-		}
+	userId: userPageId
       }
+    }
   );
 
   const { loading:followingLoading , error: errorFollowing, data: dataFollowing } = useQuery(
-      QUERY_USER_FOLLOWING,
+    QUERY_USER_FOLLOWING,
+    {
+      variables:
       {
-		variables:
-		{
-		  userId: userPageId
-		}
+	userId: userPageId
       }
+    }
   );
-  
+
+  const { loading: blockedLoading , error: errorBlocked, data: dataBlocked } = useQuery(
+    QUERY_USER_BLOCKED,
+    {
+      variables:
+      {
+	userId: userPageId
+      }
+    }
+  );
+
   const [ friendshipRequest, { error: friendAddError } ] = useMutation(
-      SEND_FRIEND_REQUEST,
+    SEND_FRIEND_REQUEST,
   );
   
   const [ friendRemove, { error: friendRemoveError } ] = useMutation(
-      REMOVE_FRIEND,
+    REMOVE_FRIEND,
   );
 
   const [ pendingRemove, {  error: pendingRemoveError } ] = useMutation(
-	  DENY_FRIEND_REQUEST
+    DENY_FRIEND_REQUEST
   );
   
   const [ followAdd, { error: followAddError } ] = useMutation(
-      ADD_FOLLOW,
+    ADD_FOLLOW,
   );
 
   const [ followRemove, { error: followRemoveError } ] = useMutation(
-      REMOVE_FOLLOW,
+    REMOVE_FOLLOW,
   );
   
   const [ blockAdd, { error: blockAddError } ] = useMutation(
-      ADD_BLOCKED,
+    ADD_BLOCKED,
   );
-//	  {
-//		refetchQueries:
-//		[
-//			{
-//				QUERY_USER_THOUGHTS,
-//				"getUserThoughts"
-//			},
-//			{
-//				GET_MY_NOTIFICATIONS,
-//				"getMyNotifications"
-//			}
-//		]
-//	  }
-//  );
+  //	  {
+  //		refetchQueries:
+  //		[
+  //			{
+  //				QUERY_USER_THOUGHTS,
+  //				"getUserThoughts"
+  //			},
+  //			{
+  //				GET_MY_NOTIFICATIONS,
+  //				"getMyNotifications"
+  //			}
+  //		]
+  //	  }
+  //  );
 
   const [ blockRemove, { error: blockRemoveError } ] = useMutation(
-      REMOVE_BLOCKED,
-	  {
-		refetchQueries:
-		[
-			QUERY_USER_THOUGHTS,
-			"getUserThoughts"
-		]
-	  }
+    REMOVE_BLOCKED,
+    {
+      refetchQueries:
+      [
+	QUERY_USER_THOUGHTS,
+	"getUserThoughts"
+      ]
+    }
 
   );
-  
+
   useEffect(() => {
-	if(page === "MyPage" || page === "MainFeed"){
-	  setUser(
-		  {
-			...user,
-			id: userId,
-			userName: userName,
-			handle: handle,
-			email: email,
-			profilePicture: profilePicture
-		  }
-	  );
-	} else if (!userError && !userLoading && userData !== undefined){
-	  setUser(
-		  {
-			...user,
-			id: userData.getUser.id,
-			userName: userData.getUser.userName,
-			handle: userData.getUser.handle,
-			email: userData.getUser.email,
-			profilePicture: userData.getUser.profilePicture
-		  }
-	  );
-    }
+    if(userPageId !== undefined
+       && !userLoading
+       && !userError
+       && userData !== undefined){
+      setUserPage(
+	{
+	  ...userData.getUser
+	}
+      )
+    } 
   }, [userLoading, userError, userData])
   
   useEffect(() => {
-	if(friendship) {
-	  setPending(false);
-	} else if (pending) {
-	  setFriendship(false);
-	} else if(pending === false && friendship === false){
-	  setPending(false);
-	  setFriendship(false);
-	} else {
-	  setPending(true);
-	}
+    if(friendship) {
+      setPending(false);
+    } else if (pending) {
+      setFriendship(false);
+    } else if(pending === false && friendship === false){
+      setPending(false);
+      setFriendship(false);
+    } else {
+      setPending(true);
+    }
   }, [pending, friendship]);
   
   useEffect(() => {
-    if(followList.length !== 0) {
-      setFollowing(userId !== userPageId
-				   && followList.filter(followUser => followUser.id === userPageId).length !== 0)
-    } else {
-	  setFollowing(false);
-	}
-	if(isBlocked(userPageId)) {
-	  setFollowing(false);
-	}
-  }, [following]);
+    if(blockedList.filter(blockedUser => parseInt(blockedUser.id) === userPageId).length !== 0) setBlocked(true);
+  }, [blockedLoading, errorBlocked, dataBlocked ]);
   
-  const isBlocked = (otherUserId) => {
-	return (blockedList.filter((blockedEntry) => otherUserId === blockedEntry.id ) > 0);
-  };
-  
+  if(userPageId === undefined) return "";
   if(userLoading) return "Loading...";
   if(userError) return `Error User ${userError.message}`;
   if(loadingFriends) return "Loading Friends";
   if(followingLoading) return "Loading Following";
-	  
+  
   //-------------------------
   //-------FRIENDSHIP-BUTTON-
   //-------------------------
   const handleFriendship = async (event) => {
     event.preventDefault();
-    if(userId===userPageId) return 0;
+    if(userId === userPageId) return 0;
     if(friendship) {
       await friendRemove(
-		  {
-			variables:
-			{
-			  friendingId: userPageId
-			}
-		  }
+	{
+	  variables:
+	  {
+	    friendingId: userPageId
+	  }
+	}
       );
       setFriendship(false);
-	  setPending(false);
+      setPending(false);
       setFriendList(
-		  [
-			  ...friendList.filter(friend => friend.id !== userPageId)
-		  ]
+	[
+	  ...friendList.filter(friend => friend.id !== userPageId)
+	]
       );
 
     } else {
       await friendshipRequest(
-		  {
-			variables:
-			{
-			  pendingId: userPageId
-			}
-		  }
+	{
+	  variables:
+	  {
+	    pendingId: userPageId
+	  }
+	}
       );
       setPending(true);
     };
   };
   
   const RenderFriendship = () => {
-    if(Object.keys(pendList).length > 0
-       && pendList.filter((entry) =>  entry.pendingId === userPageId).length !== 0) setPending(true);
+    if(pendList.length > 0
+       && pendList.filter((entry) => parseInt(entry.pendingId) === userPageId).length !== 0) setPending(true);
 
-	const friendOrPending = () => {
-	  if(friendship) {
-		return( <h4> This is one of your friends </h4>);
-	  } else if(pending) {
-		return( <h4> This is a possible friend </h4>);
-	  } else {
-		return(
-			<div> This could be the start of a very nice <br />
-			  <button id="friendshipButton"
-					  onClick={handleFriendship}>
- 				Friendship?
-			  </button>
-			</div>
-		);
-	  }
-	};
-	
+    const friendOrPending = () => {
+      if(friendship) {
+	return( <h4> This is one of your friends </h4>);
+      } else if(pending) {
+	return( <h4> This is a possible friend </h4>);
+      } else {
+	return(
+	  <div> This could be the start of a very nice <br />
+	    <button id="friendshipButton"
+		    onClick={handleFriendship}>
+ 	      Friendship?
+	    </button>
+	  </div>
+	);
+      }
+    };
+    
     return (
-		<div className="friendship">
-		  {(userId === userPageId)
-		   ? "Are you your friend?"
-		   : friendOrPending()}
-		</ div>
+      <div className="friendship">
+	{(userId === userPageId)
+	 ? "Are you your friend?"
+	 : friendOrPending()}
+      </ div>
     );
   };
 
@@ -270,61 +258,61 @@ const UserInfo = ({ page, blocked, setBlocked, userPageId }) => {
     event.preventDefault();
     if(following) {
       await followRemove(
-		  {
-			variables:
-			{
-			  followingId: userPageId
-			}
-		  }
+	{
+	  variables:
+	  {
+	    followingId: userPageId
+	  }
+	}
       );
       setFollowing(false);
       setFollowList(
-		  [
-			  ...followList.filter(follow => follow.id !== userPageId)
-		  ]
+	[
+	  ...followList.filter(follow => parseInt(follow.id) !== userPageId)
+	]
       );
     } else {
       await followAdd(
-		  {
-			variables:
-			{
-			  followingId: userPageId
-			}
-		  }
+	{
+	  variables:
+	  {
+	    followingId: userPageId
+	  }
+	}
       );
       setFollowing(true);
       setFollowList(
-		  [
-			  ...followList,
-			  {
-				id: userPageId,
-				userName: userName
-			  }
-		  ]
+	[
+	  ...followList,
+	  {
+	    id: userPageId,
+	    userName: userData.getUser.userName
+	  }
+	]
       );
     };
   };
   
   const RenderFollowing = () => {
     return(
-		<div className="followingship">
-		  {(userId === userPageId)
-		   ? "Who are you following?"
-		   : (following ?
-			  <h4>
-				This one of your followed accounts
-			  </h4>
-			  :
-			  <div> This could be the start of a very nice <br />
-				<button id="friendshipButton"
-						onClick={handleFollowing}>
- 				  followship?
-				</button>
-			  </div>
-			 )
-		  }
-		  
-		</div>
+      <div className="followingship">
+	{(userId === userPageId)
+	 ? "Who are you following?"
+	 : (following ?
+	    <h4>
+	      This one of your followed accounts
+	    </h4>
+	    :
+	    <div> This could be the start of a very nice <br />
+	      <button id="friendshipButton"
+		      onClick={handleFollowing}>
+ 		followship?
+	      </button>
+	    </div>
+	   )
+	}
+	
+      </div>
     );
   };
   
@@ -334,81 +322,80 @@ const UserInfo = ({ page, blocked, setBlocked, userPageId }) => {
   
   const handleBlocked = async (event) => {
     event.preventDefault();
-    if (isBlocked(userPageId)) {
+    if (blocked) {
       await blockRemove(
-		  {
-			variables:
-			{
-			  blockedId: userPageId
-			}
-		  }
+	{
+	  variables:
+	  {
+	    blockedId: userPageId
+	  }
+	}
       );
       setBlockedList(
-		  [
-			  ...blockedList.filter(block => block.id !== userPageId)
-		  ]
+	[
+	  ...blockedList.filter(block => block.id !== userPageId)
+	]
       );
     } else {
-	  await blockAdd(
-		  {
-			variables:
-			{
-			  blockedId: userPageId
-			}
-		  }
-	  );	  
+      await blockAdd(
+	{
+	  variables:
+	  {
+	    blockedId: userPageId
+	  }
+	}
+      );	  
       setBlockedList(
-		  [
-			  ...blockedList,
-			  {
-				id: userPageId,
-				userName: userName
-			  }
-		  ]
+	[
+	  ...blockedList,
+	  {
+	    id: userPageId,
+	    userName: userData.userName
+	  }
+	]
       );
 
-		setFriendship(false);
-		setPending(false);
-		setFollowing(false);
-      
+      setFriendship(false);
+      setPending(false);
+      setFollowing(false);      
     }
   };
 
   const RenderBlocked = () => {
     return(
-		<div className="blocked">
-		  {(userId === userPageId)
-		   ? "Who are you blocked?"
-		   : (isBlocked(userPageId) ?
-			  <>
-				<h4>
-				  This one of your blocked users
-				</h4>
-				<button id="friendshipButton"
-						onClick={handleBlocked}>
- 				  Unblock?
-				</button>
-			  </>
-			  :
-			  <div> This could be the start of a very nice <br />
-				<button id="friendshipButton"
-						onClick={handleBlocked}>
- 				  blocking?
-				</button>
-			  </div>
-			 )
-		  }
-		</div>
+      <div className="blocked">
+	{(userId === userPageId)
+	 ? "Who are you blocked?"
+	 : (blocked ?
+	 <>
+	   <h4>
+	     This one of your blocked users
+	   </h4>
+	   <button id="friendshipButton"
+		   onClick={handleBlocked}>
+ 	     Unblock?
+	   </button>
+	 </>
+	 :
+	 <div> This could be the start of a very nice <br />
+	   <button id="friendshipButton"
+		   onClick={handleBlocked}>
+ 	     blocking?
+	   </button>
+	 </div>
+	   )
+	}
+      </div>
     );
   };
 
   const UserList = (user) => {
     return(
-		<li className={user.listOf}>
-		  <Link to={`/user/${user.userId}`}>
-			{user.userName}
-		  </Link>
-		</li>
+      <li className={user.listOf}>
+	<Link to={`/user/${user.userId}`}>
+	  {user.userName}
+	</Link>
+      </li>
     );
   };
   
@@ -417,80 +404,79 @@ const UserInfo = ({ page, blocked, setBlocked, userPageId }) => {
   //------------------------------------
   const RenderStats = () => {
     return(
-		<section className="userStats">
-		  {userPageId === 0 ? <h2> No user Stats yet </h2>
-		   : <ul>
-			   <li>
-				 <Link to={`/user/${userPageId}/liked`}>
-				   Liked thoughts
-				 </Link>
-			   </li>
-			   <li>
-				 <Link to={`/user/${userPageId}/reThoughts`}>
-				   Link to reThoughts
-				 </Link>
-			   </li>
-			   <li>
-				 <Link to={`/userRelations`}>
-				   Friends, following, and blocked!
-				 </Link>
-			   </li>
-			   
-			 </ul>}
-		</section>
+      <section className="userStats">
+	{userPageId === 0 ? <h2> No user Stats yet </h2>
+	 : <ul>
+	     <li>
+	       <Link to={`/user/${userPage.id}/liked`}>
+		 Liked thoughts
+	       </Link>
+	     </li>
+	     <li>
+	       <Link to={`/user/${userPage.id}/reThoughts`}>
+		 Link to reThoughts
+	       </Link>
+	     </li>
+	     <li>
+	       <Link to={`/userRelations`}>
+		 Friends, following, and blocked!
+	       </Link>
+	     </li>
+	     
+	   </ul>}
+      </section>
     );
   };
   
   return (
-      <section className="userInfo" >
-		<section className="profile">
-		  
-		  <h1>=^={user.userName}=^=</h1>
-		  <div className="pfp">
-			{profilePicture
-			 ? <img src={`/images/pfp/${user.profilePicture}`}
-					width="150"/>
-			 :
-			 <>
- 			   +==+<br/>
-			   |-----|<br/>
-			   +==+
-			 </>
-			}
-		  </div>
-		  <div className="names">
-			NAME: {user.handle}
-		  </div>
-		  
-		  {isBlocked(userPageId) ? "" :
-		   <div className="email">
-			 EMAIL: {user.email}
-		   </div>}
+    <section className="userInfo" >
+      <section className="profile">
+	
+	<h1>=^={userPage.userName}=^=</h1>
+	<div className="pfp">
+	  {userPage.profilePicture
+	   ? <img src={`/images/pfp/${userPage.profilePicture}`}
+		  width="150"/>
+	   :
+	   <>
+ 	     +==+<br/>
+	     |-----|<br/>
+	     +==+
+	   </>
+	  }
+	</div>
+	<div className="names">
+	  NAME: {userPage.handle}
+	</div>
+	
+	{blocked ? "" :
+	 <div className="email">
+	   EMAIL: {userPage.email}
+	 </div>}
 
-		  {userPageId === userId && userPageId !== 0
-		   ? <>
-			   <ThoughtCreate userId={user.id}
-							  page={page} />
-			   {page === "MyPage" &&
-				<Link to="/user/MyPage/EditProfile">
-				  Edit My Profile
-				</Link>}	   
-
-			 </>
-		   : ""}
-		  {userPageId === 0 || isBlocked(userPageId) 
-		   ? <h2>There are no friend yet</h2>
-		   : <RenderFriendship />}
-		  {userPageId === 0 || isBlocked(userPageId)
-		   ? <h2>There are no followings yet</h2>
-		   : <RenderFollowing />}
-		  {userPageId === 0
-		   ? <h2>There are no followings yet</h2>
-		   : <RenderBlocked />}
-		</section>
-		{blocked ? "" : <RenderStats />}
-		<Notifications />
+	{(userPage.id === userId || page === "MainFeed") && userPage.id !== 0
+	 ? <>
+	     <ThoughtCreate userId={userPage.id}
+			    page={page} />
+	     {page === "MyPage" &&
+	      <Link to="/user/MyPage/EditProfile">
+		Edit My Profile
+	      </Link>}	   
+	   </>
+	 : ""}
+	{blocked 
+	 ? <h2>There are no friend yet</h2>
+	 : <RenderFriendship />}
+	{blocked
+	 ? <h2>There are no followings yet</h2>
+	 : <RenderFollowing />}
+	{userPage.id === 0
+	 ? <h2>There are no followings yet</h2>
+	 : <RenderBlocked />}
       </section>
+      {blocked ? "" : <RenderStats />}
+      <Notifications />
+    </section>
   );
 };
 

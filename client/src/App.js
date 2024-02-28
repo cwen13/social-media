@@ -73,6 +73,10 @@ const App = () => {
 				  path="/" 
 				  element={<MainFeed />} 
 				/>
+				<Route 
+				  path="/MainFeed" 
+				  element={<MainFeed />} 
+				/>
 				
 				<Route 
 				  path="/login" 

@@ -6,7 +6,6 @@ query me {
     id
     userName
     handle
-    firstName
     email
     profilePicture
   }

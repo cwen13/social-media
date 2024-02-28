@@ -18,18 +18,16 @@ import "./style.css";
 
 const Feed = (props) => {
 
-  let userPageId = useParams().userId;
-
   const [ recentThought, setRecentThought ] = useState({});
   
   const {
-    userId,
     likedList,
     setLikedList,
-    blockedList
+    blockedList,
+    setBlockedList
   } = useUserContext();
 
-  userPageId = (userPageId !== undefined) ? userPageId : userId;
+  let userId = localStorage.getItem("user_id");
   
   const queryOptions = {
     MyPage : QUERY_USER_THOUGHTS,
@@ -54,9 +52,9 @@ const Feed = (props) => {
       QUERY_ALL_RETHOUGHT_IDS,
   );
   
-  const queryString = (props.page === "MainFeed" && userPageId === undefined || userPageId === 0)
-	? "" : { variables: { userId: userPageId }};
-  
+  const queryString = (props.page === "MainFeed" && props.userPageId === undefined || props.userPageId === 0)
+	? "" : { variables: { userId: props.userPageId }};
+
   const { loading: queryLoading, error: queryError, data: queryData } = useQuery(
     queryOptions[props.page],
       queryString,

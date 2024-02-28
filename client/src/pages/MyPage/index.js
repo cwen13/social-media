@@ -8,16 +8,17 @@ import { useUserContext } from "./../../utils/UserContext";
 function MyPage() {
   
   const page = "MyPage"
-  const { userId, blockedList } = useUserContext();
-  
-  const [ userPageId, setUserPageId ] = useState(userId);
   
   return(
     <section id="feedContainer">      
       <UserInfo id="userInfo"
-				userPageId={userPageId}
-				page={page}/>
-      <Feed id="feed" page={page}/>      
+		userPageId={localStorage.getItem("user_id")}
+		page={page}
+      />
+      <Feed id="feed"
+	    page={page}
+	    userPageId={localStorage.getItem("user_id")}
+      />
     </section>
   );
 };
