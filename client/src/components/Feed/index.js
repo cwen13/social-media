@@ -28,6 +28,8 @@ const Feed = (props) => {
   } = useUserContext();
 
   let userId = localStorage.getItem("user_id");
+
+  const [ blocked, setBlocked ] = useState(false)
   
   const queryOptions = {
     MyPage : QUERY_USER_THOUGHTS,
@@ -59,6 +61,10 @@ const Feed = (props) => {
     queryOptions[props.page],
       queryString,
   );
+
+  useEffect(() => {
+    if(blockedList.filter(blockedUser => parseInt(blockedUser.id) === props.userPageId).length !== 0) setBlocked(true);
+  }, [blockedList])
 
   if (queryLoading) return "Loading Query";
   if (queryError) return `Q Error ${queryError.message}`;
@@ -97,9 +103,6 @@ const Feed = (props) => {
     }
   }
 
-  const blockedUser = (postsUserId) => {
-    return userId !== postsUserId && blockedList.filter(blockedUser => blockedUser.id === postsUserId).length !== 0;
-  }
   
   const RenderBlockedThought = () => {
     return(
@@ -118,7 +121,7 @@ const Feed = (props) => {
   return (
     <div className="feed">
       <ul className="feedPosts">
-	{queryData[thoughts[props.page]].map(thought =>
+	{blocked ? "BLOCKED" :queryData[thoughts[props.page]].map(thought =>
 	    <li key={thought.id} data-key={thought.id} >
 	      <ThoughtPost key={thought.id}
 			   page={props.page}
