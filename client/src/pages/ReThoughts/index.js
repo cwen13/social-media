@@ -8,15 +8,19 @@ import UserInfo from "./../../components/UserInfo";
 import Feed from "./../../components/Feed";
 import "./../MainStyles/style.css";
 
-
 const ReThoughts = () => {
 
   const page = "UserReThoughts"
+  const userPageId = parseInt(useParams().userId)
   
   return(
     <section id="feedContainer">
-      <UserInfo id="userInfo" page={page}/>
-      <Feed id="feed" page={page}/>
+      <UserInfo id="userInfo"
+		userPageId={userPageId}
+		page={page}/>
+      <Feed id="feed"
+	    userPageId={userPageId}
+	    page={page}/>
     </section>
   );
 };

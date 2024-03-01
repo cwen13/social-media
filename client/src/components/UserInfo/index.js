@@ -30,13 +30,6 @@ import "./style.css";
 const UserInfo = ({ page, userPageId }) => {
 
   const {
-    //    userId,
-    //    loginUser,
-    //    logoutUser,
-    //    userName,
-    //    handle,
-    //    profilePicture,
-    //    email,
     blockedList,
     setBlockedList,
     friendList,
