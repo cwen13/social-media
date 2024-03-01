@@ -14,16 +14,6 @@ import { useUserContext } from "./../../utils/UserContext";
 
 const EditProfile = () => {
 
-  const {
-    setUserName,
-    setProfilePicture,
-    setHandle,
-    setEmail,
-    setFirstName,
-    setLastName,    
-  } = useUserContext();
-
-  
   let userId = localStorage.getItem("user_id");  
   
   const [ userUpdate, setUserUpdate ] = useState(
@@ -94,15 +84,7 @@ const EditProfile = () => {
 	    lastName: userUpdate.lastName
 	  }
 	}
-    );
-    
-    setProfilePicture(userUpdate.profilePicture);
-    setUserName(userUpdate.userName);
-    setHandle(userUpdate.handle);
-    setEmail(userUpdate.email);
-    setFirstName(userUpdate.firstName);
-    setLastName(userUpdate.lastName);
-    
+    );    
     window.location.assign("/user/MyPage");
   };
   

@@ -24,12 +24,12 @@ export const UserContextProvider = ({ children }) => {
   });
 
   const [ user, setUser ] = useState(null);
-
   const [ blockedList, setBlockedList ] = useState([]);
   const [ likedList, setLikedList ] = useState([]);
   const [ friendList, setFriendList ] = useState([]);
   const [ followList, setFollowList ] = useState([]);
   const [ pendList, setPendList ] = useState([]);
+  const [ profilePicture, setProfilePicture ] = useState([]);
   
   const { loading: loadingBlockedList, error: errorBlockedList, data: dataBlockedList } = useQuery(
     QUERY_MY_BLOCKED_USERS

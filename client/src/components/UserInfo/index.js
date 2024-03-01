@@ -17,7 +17,7 @@ import {
   REMOVE_FOLLOW,
   REMOVE_FRIEND,
   SEND_FRIEND_REQUEST,
-  DENY_FRIEND_REQUEST,  
+  DENY_FRIEND_REQUEST
 } from "./../../utils/mutations";
 import EditProfile from "./../../pages/EditProfile";
 import ThoughtCreate from "./../ThoughtCreate"
@@ -82,16 +82,6 @@ const UserInfo = ({ page, userPageId }) => {
     }
   );
 
-  const { loading: blockedLoading , error: errorBlocked, data: dataBlocked } = useQuery(
-    QUERY_USER_BLOCKED,
-    {
-      variables:
-      {
-	userId: userPageId
-      }
-    }
-  );
-
   const [ friendshipRequest, { error: friendAddError } ] = useMutation(
     SEND_FRIEND_REQUEST,
   );
@@ -114,32 +104,41 @@ const UserInfo = ({ page, userPageId }) => {
   
   const [ blockAdd, { error: blockAddError } ] = useMutation(
     ADD_BLOCKED,
+    {
+      refetchQueries:
+      [
+	[
+	  QUERY_USER_THOUGHTS,
+	  "getUserThoughts"
+	],
+	[
+	  GET_MY_NOTIFICATIONS,
+	  "getMyNotifications"
+	]
+      ]
+    }
   );
-  //	  {
-  //		refetchQueries:
-  //		[
-  //			{
-  //				QUERY_USER_THOUGHTS,
-  //				"getUserThoughts"
-  //			},
-  //			{
-  //				GET_MY_NOTIFICATIONS,
-  //				"getMyNotifications"
-  //			}
-  //		]
-  //	  }
-  //  );
 
   const [ blockRemove, { error: blockRemoveError } ] = useMutation(
     REMOVE_BLOCKED,
     {
       refetchQueries:
       [
-	QUERY_USER_THOUGHTS,
-	"getUserThoughts"
+	[
+	  QUERY_USER_THOUGHTS,
+	  "getUserThoughts"
+	],
+	[
+	  QUERY_USER_THOUGHTS,
+	  "getUserThoughts"
+	],
+	[
+	  GET_MY_NOTIFICATIONS,
+	  "getMyNotifications"
+	]
+	
       ]
     }
-
   );
 
   useEffect(() => {
@@ -169,8 +168,9 @@ const UserInfo = ({ page, userPageId }) => {
   }, [pending, friendship]);
   
   useEffect(() => {
+    console.log("BLOCKEDLIST:", blockedList);
     if(blockedList.filter(blockedUser => parseInt(blockedUser.id) === userPageId).length !== 0) setBlocked(true);
-  }, [blockedLoading, errorBlocked, dataBlocked ]);
+  }, [blockedList]);
   
   if(userPageId === undefined) return "";
   if(userLoading) return "Loading...";
@@ -360,22 +360,22 @@ const UserInfo = ({ page, userPageId }) => {
 	{(userId === userPageId)
 	 ? "Who are you blocked?"
 	 : (blocked ?
-	 <>
-	   <h4>
-	     This one of your blocked users
-	   </h4>
-	   <button id="friendshipButton"
-		   onClick={handleBlocked}>
- 	     Unblock?
-	   </button>
-	 </>
-	 :
-	 <div> This could be the start of a very nice <br />
-	   <button id="friendshipButton"
-		   onClick={handleBlocked}>
- 	     blocking?
-	   </button>
-	 </div>
+	    <>
+	      <h4>
+		This one of your blocked users
+	      </h4>
+	      <button id="friendshipButton"
+		      onClick={handleBlocked}>
+ 		Unblock?
+	      </button>
+	    </>
+	    :
+	    <div> This could be the start of a very nice <br />
+	      <button id="friendshipButton"
+		      onClick={handleBlocked}>
+ 		blocking?
+	      </button>
+	    </div>
 	   )
 	}
       </div>

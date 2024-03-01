@@ -238,6 +238,7 @@ Notification.belongsTo(ReThought, {
   foreignKey: "reThoughtOfEntryId"
 });
 
+	       
 module.exports = {
   Friend,
   User,
