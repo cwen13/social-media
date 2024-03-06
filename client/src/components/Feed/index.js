@@ -17,8 +17,6 @@ import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
 const Feed = (props) => {
-
-  const [ recentThought, setRecentThought ] = useState({});
   
   const {
     likedList,
@@ -29,8 +27,10 @@ const Feed = (props) => {
 
   let userId = localStorage.getItem("user_id");
 
-  const [ blocked, setBlocked ] = useState(false)
-  
+  const [ recentThought, setRecentThought ] = useState({});
+//  const [ blocked, setBlocked ] = useState(userId !== props.userPageId
+//					   && blockedList.filter(blockedUser => parseInt(blockedUser.id) === props.userPageId).length !== 0);
+//  
   const queryOptions = {
     MyPage : QUERY_USER_THOUGHTS,
     UserPage: QUERY_USER_THOUGHTS,
@@ -63,7 +63,9 @@ const Feed = (props) => {
   );
 
   useEffect(() => {
-    if(blockedList.filter(blockedUser => parseInt(blockedUser.id) === props.userPageId).length !== 0) setBlocked(true);
+    (blockedList.filter(blockedUser => parseInt(blockedUser.id) === props.auserPageId).length !== 0)
+      ? props.setBlocked(true)
+      : props.setBlocked(false);
   }, [blockedList])
 
   if (queryLoading) return "Loading Query";
@@ -102,7 +104,6 @@ const Feed = (props) => {
       break;
     }
   }
-
   
   const RenderBlockedThought = () => {
     return(
@@ -121,7 +122,9 @@ const Feed = (props) => {
   return (
     <div className="feed">
       <ul className="feedPosts">
-	{blocked ? "BLOCKED" :queryData[thoughts[props.page]].map(thought =>
+	{props.blocked
+	 ? "BLOCKED"
+	 : queryData[thoughts[props.page]].map(thought =>
 	    <li key={thought.id} data-key={thought.id} >
 	      <ThoughtPost key={thought.id}
 			   page={props.page}

@@ -27,9 +27,9 @@ import Auth from "./../../utils/auth";
 
 import "./style.css";
 
-const UserInfo = ({ page, userPageId }) => {
+const UserInfo = ({ page, userPageId, blocked, setBlocked }) => {
 
-  const {
+   const {
     blockedList,
     setBlockedList,
     friendList,
@@ -49,8 +49,8 @@ const UserInfo = ({ page, userPageId }) => {
 					       && followList.filter(followUser => parseInt(followUser.id) === userPageId).length !== 0);
   const [ pending, setPending ] = useState(userId !== userPageId
 					   && pendList.filter(pendUser => parseInt(pendUser.pendingId) === userPageId).length !== 0);
-  const [ blocked, setBlocked ] = useState(userId !== userPageId
-					   && blockedList.filter(blockedUser => parseInt(blockedUser.id) === userPageId).length !== 0);
+//  const [ blocked, setBlocked ] = useState(userId !== userPageId
+//					   && blockedList.filter(blockedUser => parseInt(blockedUser.id) === userPageId).length !== 0);
   
   const {lodaing: userLoading, error: userError, data: userData} = useQuery(
     QUERY_USER,
@@ -129,14 +129,9 @@ const UserInfo = ({ page, userPageId }) => {
 	  "getUserThoughts"
 	],
 	[
-	  QUERY_USER_THOUGHTS,
-	  "getUserThoughts"
-	],
-	[
 	  GET_MY_NOTIFICATIONS,
 	  "getMyNotifications"
-	]
-	
+	]	
       ]
     }
   );
@@ -168,8 +163,9 @@ const UserInfo = ({ page, userPageId }) => {
   }, [pending, friendship]);
   
   useEffect(() => {
-    console.log("BLOCKEDLIST:", blockedList);
-    if(blockedList.filter(blockedUser => parseInt(blockedUser.id) === userPageId).length !== 0) setBlocked(true);
+    (blockedList.filter(blockedUser => parseInt(blockedUser.id) === userPageId).length !== 0)
+      ? setBlocked(true)
+      : setBlocked(false);
   }, [blockedList]);
   
   if(userPageId === undefined) return "";
@@ -347,7 +343,7 @@ const UserInfo = ({ page, userPageId }) => {
 	  }
 	]
       );
-
+      
       setFriendship(false);
       setPending(false);
       setFollowing(false);      
@@ -420,6 +416,36 @@ const UserInfo = ({ page, userPageId }) => {
       </section>
     );
   };
+
+  const DisplayRelations = () => {
+
+    if(blocked) return(
+      <>
+	<h2>You can not be friends with a blocked user!</h2>
+	<h2>You can not follow a blocked user!</h2>
+	<h2>{<RenderBlocked/>}</h2>
+      </>
+    );
+    
+    return(
+      <> 
+      	{pending
+	 ? <h2>You have a request out?</h2>
+	 : (friendship
+	    ? <h2>Y'all are friendy friends</h2>
+	    : <RenderFriendship />)}
+	
+	{following
+	 ? <h2>You are follwing this user</h2>
+	 : <RenderFollowing />}
+	{userPage.id === 0
+	 ? <h2>There are no followings yet</h2>
+	 : <RenderBlocked />}
+      </>
+    );
+  }
+  
+  
   
   return (
     <section className="userInfo" >
@@ -457,16 +483,8 @@ const UserInfo = ({ page, userPageId }) => {
 	      </Link>}	   
 	   </>
 	 : ""}
-	{blocked 
-	 ? <h2>There are no friend yet</h2>
-	 : <RenderFriendship />}
-	{blocked
-	 ? <h2>There are no followings yet</h2>
-	 : <RenderFollowing />}
-	{userPage.id === 0
-	 ? <h2>There are no followings yet</h2>
-	 : <RenderBlocked />}
       </section>
+      {DisplayRelations()}
       {blocked ? "" : <RenderStats />}
       <Notifications />
     </section>
