@@ -55,7 +55,7 @@ const Feed = (props) => {
   );
   
   const queryString = (props.page === "MainFeed" && props.userPageId === undefined || props.userPageId === 0)
-	? "" : { variables: { userId: props.userPageId }};
+	? "" : { variables: { userId: (props.page === "MyPage" ? userId : props.userPageId) }};
 
   const { loading: queryLoading, error: queryError, data: queryData } = useQuery(
     queryOptions[props.page],
