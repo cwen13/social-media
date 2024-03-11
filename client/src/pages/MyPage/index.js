@@ -8,16 +8,46 @@ import { useUserContext } from "./../../utils/UserContext";
 function MyPage() {
   
   const page = "MyPage"
-  const { userId, blockedList } = useUserContext();
+
+
   
-  const [ userPageId, setUserPageId ] = useState(userId);
+  const {
+    blockedList,
+    setBlockedList,
+    friendList,
+    setFriendList,
+    followList,
+    setFollowList,
+    pendList,
+    setPendList,
+  } = useUserContext();
+
+  let userId = localStorage.getItem("user_id");  
+  const userPageId = parseInt(useParams().userId)
+  const [ blocked, setBlocked ] = useState(userId !== userPageId
+					   && blockedList.filter(blockedUser => parseInt(blockedUser.id) === userPageId).length !== 0);
+
+  useEffect(() => {
+    (blockedList.filter(blockedUser => parseInt(blockedUser.id) === userPageId).length !== 0)
+      ? setBlocked(true)
+      : setBlocked(false);
+  }, [blockedList])
+
   
   return(
     <section id="feedContainer">      
       <UserInfo id="userInfo"
-				userPageId={userPageId}
-				page={page}/>
-      <Feed id="feed" page={page}/>      
+		userPageId={localStorage.getItem("user_id")}
+		page={page}
+		blocked={blocked}
+		setBlocked={setBlocked}
+      />
+      <Feed id="feed"
+	    page={page}
+	    userPageId={userPageId}
+	    blocked={blocked}
+	    setBlocked={setBlocked}
+      />
     </section>
   );
 };

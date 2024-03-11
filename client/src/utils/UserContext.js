@@ -2,7 +2,7 @@ import React, { useContext, createContext, useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import {
   LOGIN_USER,
-  QUERY_USER,
+  QUERY_ME,
   QUERY_MY_BLOCKED_USERS,
   QUERY_MY_LIKED,
   QUERY_MY_FRIENDS,
@@ -18,61 +18,51 @@ export const UserContextProvider = ({ children }) => {
   const [ userId, setUserId ] = useState(() => {
     if (Auth.getToken()){
       return Auth.isTokenExpired(Auth.getToken()) ? 0 :
-		localStorage.getItem("user_id") || 0;
+	localStorage.getItem("user_id") || 0;
     }
     return 0;
   });
 
-  const [ userName, setUserName ] = useState(null);
-  const [ profilePicture , setProfilePicture ] = useState(null);
-  const [ handle, setHandle ] = useState(null);
-  const [ email, setEmail ] = useState(null);
-  const [ firstName, setFirstName ] = useState(null);
-  const [ lastName, setLastName ] = useState(null);
+  const [ user, setUser ] = useState(null);
   const [ blockedList, setBlockedList ] = useState([]);
   const [ likedList, setLikedList ] = useState([]);
   const [ friendList, setFriendList ] = useState([]);
   const [ followList, setFollowList ] = useState([]);
   const [ pendList, setPendList ] = useState([]);
+  const [ profilePicture, setProfilePicture ] = useState([]);
   
   const { loading: loadingBlockedList, error: errorBlockedList, data: dataBlockedList } = useQuery(
-      QUERY_MY_BLOCKED_USERS
+    QUERY_MY_BLOCKED_USERS
   );
 
   const { loading: loadingLiked, error: errorLiked, data: dataLiked } =  useQuery(
-      QUERY_MY_LIKED
+    QUERY_MY_LIKED
   );
   
   const { loading: loadingFriendList, error: errorFriendList, data: dataFriendList } = useQuery(
-      QUERY_MY_FRIENDS
+    QUERY_MY_FRIENDS
   );
   
   const { loading: loadingFollowList, error: errorFollowList, data: dataFollowList } = useQuery(
-      QUERY_MY_FOLLOWING
+    QUERY_MY_FOLLOWING
   );
 
   const { loading: loadingPendList, error: errorPendList, data: dataPendList } = useQuery(
-      QUERY_MY_PENDING_REQUESTS
+    QUERY_MY_PENDING_REQUESTS
   );
   
   const { loading: loadingUser, error: errorUser, data: dataUser } = useQuery(
-      QUERY_USER,
-      {
-		variables:
-		{
-		  userId
-		}
-      }
+    QUERY_ME,
   );
   
   useEffect(() => {
 
     if (!loadingBlockedList && !errorBlockedList && dataBlockedList !== null) {
       setBlockedList(
-		  [
-			  ...blockedList,
-			  ...dataBlockedList.getMyBlockedUsers.map(user => {return {id: user.id, userName: user.userName}})
-		  ]
+	[
+	  ...blockedList,
+	  ...dataBlockedList.getMyBlockedUsers.map(user => {return {id: user.id, userName: user.userName}})
+	]
       );
     }
   }, [loadingBlockedList, errorBlockedList, dataBlockedList,]);
@@ -80,10 +70,10 @@ export const UserContextProvider = ({ children }) => {
   useEffect(() => {
     if (!loadingLiked && !errorLiked) {
       setLikedList(
-		  [
-			  ...likedList,
-			  ...dataLiked.getAllMyLiked.map(liked => liked.thoughtId)
-		  ]
+	[
+	  ...likedList,
+	  ...dataLiked.getAllMyLiked.map(liked => liked.thoughtId)
+	]
       );
     }
   }, [loadingLiked, errorLiked, dataLiked,]);
@@ -91,10 +81,10 @@ export const UserContextProvider = ({ children }) => {
   useEffect(() => {
     if (!loadingFriendList && !errorFriendList && dataFriendList !== null) {
       setFriendList(
-		  [
-			  ...friendList,
-			  ...dataFriendList.getMyFriends
-		  ]
+	[
+	  ...friendList,
+	  ...dataFriendList.getMyFriends
+	]
       );
     }
   }, [loadingFriendList, errorFriendList, dataFriendList,]);
@@ -102,10 +92,10 @@ export const UserContextProvider = ({ children }) => {
   useEffect(() => {
     if (!loadingFollowList && !errorFollowList && dataFollowList !== null) {
       setFollowList(
-		  [
-			  ...followList,
-			  ...dataFollowList.getMyFollowing
-		  ]
+	[
+	  ...followList,
+	  ...dataFollowList.getMyFollowing
+	]
       );
     }
   }, [loadingFollowList, errorFollowList, dataFollowList,]);
@@ -113,22 +103,19 @@ export const UserContextProvider = ({ children }) => {
   useEffect(() => {
     if (!loadingPendList && !errorPendList && dataPendList !== null) {
       setPendList(
-		  [
-			  ...pendList,
-			  ...dataPendList.getMyPendingRequests
-		  ]
+	[
+	  ...pendList,
+	  ...dataPendList.getMyPendingRequests
+	]
       );
     }
   }, [loadingPendList, errorPendList, dataPendList,]);
   
   useEffect(() => {
-    if(!loadingUser && !errorUser && dataUser !== undefined && dataUser.getUser !== null) {
-      setUserName(dataUser.getUser.userName);
-      setProfilePicture(dataUser.getUser.profilePicture);
-      setHandle(dataUser.getUser.handle);
-      setEmail(dataUser.getUser.email);
-      setFirstName(dataUser.getUser.firstName);
-      setLastName(dataUser.getUser.lastName);
+    if(!loadingUser && !errorUser && dataUser !== undefined && dataUser.getMe !== null) {
+      setUser({
+	...dataUser.getMe
+      });
     }
   }, [loadingUser, errorUser, dataUser,]);
   
@@ -144,34 +131,23 @@ export const UserContextProvider = ({ children }) => {
 
   
   return (
-      <UserContext.Provider value={{userId,
-									loginUser,
-									logoutUser,
-									userName,
-									setUserName,
-									profilePicture,
-									setProfilePicture,
-									handle,
-									setHandle,
-									email,
-									setEmail,
-									blockedList,
-									setBlockedList,
-									likedList,
-									setLikedList,
-									friendList,
-									setFriendList,
-									followList,
-									setFollowList,
-									pendList,
-									setPendList,
-									firstName,
-									setFirstName,
-									lastName,
-									setLastName,
-								   }}>
-		{children}
-      </UserContext.Provider>
+    <UserContext.Provider value={{user,
+				  setUser,
+				  loginUser,
+				  logoutUser,
+				  blockedList,
+				  setBlockedList,
+				  likedList,
+				  setLikedList,
+				  friendList,
+				  setFriendList,
+				  followList,
+				  setFollowList,
+				  pendList,
+				  setPendList,
+				 }}>
+      {children}
+    </UserContext.Provider>
   );
 };
 

@@ -6,7 +6,6 @@ query me {
     id
     userName
     handle
-    firstName
     email
     profilePicture
   }
@@ -436,3 +435,6 @@ query getMyNotifications {
     }
   }
 }`;
+
+export const GET_BLOCKED_OR_BLOCKING = gql `
+query getIfBlockedOrBlockingUser ($userId: ID!) { getIfBlockedOrBlockingUser(userId: $userId) }`;

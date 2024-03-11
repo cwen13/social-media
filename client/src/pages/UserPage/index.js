@@ -12,64 +12,49 @@ import { useUserContext } from "./../../utils/UserContext";
 
 function UserPage() {
 
+  const {
+    blockedList,
+    setBlockedList,
+    friendList,
+    setFriendList,
+    followList,
+    setFollowList,
+    pendList,
+    setPendList,
+  } = useUserContext();
+
+  let userId = localStorage.getItem("user_id");
+  
   const page = "UserPage"
-  const { userId, blockedList } = useUserContext();
-  const [ userPageId, setUserPageId ] = useState(parseInt(useParams().userId));
-  const [ blocked, setBlocked ] = useState(false);
-  const [ user, setUser ] = useState({});
-  
-  const {lodaing: userLoading, error: userError, data: userData} = useQuery(
-      QUERY_USER,
-      {
-		variables :
-		{
-		  userId: userPageId
-		}
-      }
-  );
-  
+  const userPageId = parseInt(useParams().userId)
+  const [ blocked, setBlocked ] = useState(userId !== userPageId
+					   && blockedList.filter(blockedUser => parseInt(blockedUser.id) === userPageId).length !== 0);
+
   useEffect(() => {
-	if(!userLoading && !userError&& userData !== undefined) {
-	  setUser(
-		  {
-			...user,
-			id: userData.getUser.id,
-			userName: userData.getUser.userName,
-			handle: userData.getUser.handle,
-			email: userData.getUser.email,
-			profilePicture: userData.getUser.profilePicture
-		  }
-	  )
-	}
-  }, [userLoading, userError, userData]);
+    (blockedList.filter(blockedUser => parseInt(blockedUser.id) === userPageId).length !== 0)
+      ? setBlocked(true)
+      : setBlocked(false);
+  }, [blockedList])
+
   
-  if(userLoading) return "Loading...";
-  if(userData === undefined) return "loading...";
-
   return(
-      <section id="feedContainer">
-		<UserInfo id="userInfo"
-				  page={page}
-				  blocked={blocked}
-				  setBlocked={setBlocked}
-				  userPageId={userPageId}
-				  id={user.id}
-				  userName={user.userName}
-				  handle={user.handle}
-				  email={user.email}
-				  profilePicture={user.profilePicture}
-
-		/>
-		
-		<Feed id="feed"
-			  page={page}
-		/>
-      </section>
+    <section id="feedContainer">
+      <UserInfo id="userInfo"
+		page={page}
+		userPageId={userPageId}
+		blocked={blocked}
+		setBlocked={setBlocked}
+      />
+      <Feed id="feed"
+	    page={page}
+	    userPageId={userPageId}
+	    blocked={blocked}
+	    setBlocked={setBlocked}
+      />
+    </section>
   );
 };
 
 export default UserPage;
 
 
-
-	  

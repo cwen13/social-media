@@ -7,6 +7,7 @@ import {
   QUERY_REPLYS,
   QUERY_RETHOUGHT
 } from "./../../utils/queries";
+
 import UserInfo from "./../../components/UserInfo";
 import ThoughtPost from "./../../components/Posts/ThoughtPost";
 //import ThoughtReplys from "./../../components/ThoughtReplys";
@@ -20,6 +21,8 @@ const ThoughtPage = () => {
     postId,
     postType
   } = useParams();
+
+  const userPageId = parseInt(useParams().userId)
   
   const {
     userId,
@@ -30,75 +33,76 @@ const ThoughtPage = () => {
 
   
   const { loading: thoughtLoading, error: thoughtError, data: thoughtData } = useQuery(
-      QUERY_THOUGHT,
+    QUERY_THOUGHT,
+    {
+      variables:
       {
-		variables:
-		{
-		  thoughtId: postId
-		}
+	thoughtId: postId
       }
+    }
   );
 
   const {loading: replysLoading, error: replysError, data: replysData } = useQuery(
-      QUERY_REPLYS,
+    QUERY_REPLYS,
+    {
+      variables:
       {
-		variables:
-		{
-		  thoughtId: postId
-		}
+	thoughtId: postId
       }
+    }
   );
 
-//  const { loading: thoughtLoading, error: thoughtError, data: thoughtData } = useQuery(
-//      QUERY_RETHOUGHT,
-//      {
-//		variables:
-//		{
-//		  originalThoughtId: 
-//		}
-//      }
-//  );
-//
+  //  const { loading: thoughtLoading, error: thoughtError, data: thoughtData } = useQuery(
+  //      QUERY_RETHOUGHT,
+  //      {
+  //		variables:
+  //		{
+  //		  originalThoughtId: 
+  //		}
+  //      }
+  //  );
+  //
   
- 
+  
   if(thoughtLoading) return <p> Loading </p>;
   if(thoughtError) return console.log(thoughtError);
-  if(replysLoading)return <p> loading</p>
-;
+  if(replysLoading)return <p> loading</p>;
+  
   const isLiked = (thoughtId) => likedList.includes(thoughtId);
   
   return(
     <section id="feedContainer">
       <UserInfo id="userInfo"
+		userPageId={userPageId}
 		page={page}
       />
       <div className="thoughts">
-      <div id="mainThought">
-      {thoughtLoading && Object.keys(thoughtData).length !== 0 && thoughtData.getThought !== null ? "LOADING" :
-       <ThoughtPost key={thoughtData.getThought.id}
-		    userName={thoughtData.getThought.thoughtAuthor.userName}	    
-		    userId={thoughtData.getThought.thoughtAuthor.id}
-		    thought={thoughtData.getThought.content}
-		    thoughtId={thoughtData.getThought.id}
-		    liked={isLiked(thoughtData.getThought.id)}
-		    profilePicture={thoughtData.getThought.thoughtAuthor.profilePicture}
-		    page={page}
-       />}
-      </div>
-      <div id="replys">
-	{replysLoading && Object.keys(replysData).length !== 0
-	 ? (!replysError && Object.keys(replysData) === 0 ? "NO REPLYS" :  "LOADING")
-	 : replysData.getThoughtReplys.map((reply) =>
-	   <ThoughtPost userName={reply.thoughtAuthor.userName}
-			userId={reply.thoughtAuthor.id}
-			profilePicture={reply.thoughtAuthor.profilePicture}
-			thought={reply.content}
-			thoughtId={reply.id}
-			key={reply.id}
+	<div id="mainThought">
+	  {thoughtLoading && Object.keys(thoughtData).length !== 0 && thoughtData.getThought !== null ? "LOADING" :
+	   <ThoughtPost key={thoughtData.getThought.id}
+			userName={thoughtData.getThought.thoughtAuthor.userName}	    
+			userId={thoughtData.getThought.thoughtAuthor.id}
+			thought={thoughtData.getThought.content}
+			thoughtId={thoughtData.getThought.id}
+			liked={isLiked(thoughtData.getThought.id)}
+			profilePicture={thoughtData.getThought.thoughtAuthor.profilePicture}
 			page={page}
-	   />)}
+	   />}
 	</div>
-</div>
+	<div id="replys">
+	  {replysLoading && Object.keys(replysData).length !== 0
+	   ? (!replysError && Object.keys(replysData) === 0 ? "NO REPLYS" :  "LOADING")
+	   : replysData.getThoughtReplys.map((reply) =>
+	     <ThoughtPost userName={reply.thoughtAuthor.userName}
+			  userId={reply.thoughtAuthor.id}
+			  profilePicture={reply.thoughtAuthor.profilePicture}
+			  thought={reply.content}
+			  thoughtId={reply.id}
+			  key={reply.id}
+			  page={page}
+	     />)}
+	</div>
+      </div>
     </section>);
 };
 

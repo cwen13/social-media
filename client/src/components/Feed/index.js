@@ -17,20 +17,20 @@ import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
 const Feed = (props) => {
-
-  let userPageId = useParams().userId;
-
-  const [ recentThought, setRecentThought ] = useState({});
   
   const {
-    userId,
     likedList,
     setLikedList,
-    blockedList
+    blockedList,
+    setBlockedList
   } = useUserContext();
 
-  userPageId = (userPageId !== undefined) ? userPageId : userId;
-  
+  let userId = localStorage.getItem("user_id");
+
+  const [ recentThought, setRecentThought ] = useState({});
+//  const [ blocked, setBlocked ] = useState(userId !== props.userPageId
+//					   && blockedList.filter(blockedUser => parseInt(blockedUser.id) === props.userPageId).length !== 0);
+//  
   const queryOptions = {
     MyPage : QUERY_USER_THOUGHTS,
     UserPage: QUERY_USER_THOUGHTS,
@@ -54,13 +54,19 @@ const Feed = (props) => {
       QUERY_ALL_RETHOUGHT_IDS,
   );
   
-  const queryString = (props.page === "MainFeed" && userPageId === undefined || userPageId === 0)
-	? "" : { variables: { userId: userPageId }};
-  
+  const queryString = (props.page === "MainFeed" && props.userPageId === undefined || props.userPageId === 0)
+	? "" : { variables: { userId: (props.page === "MyPage" ? userId : props.userPageId) }};
+
   const { loading: queryLoading, error: queryError, data: queryData } = useQuery(
     queryOptions[props.page],
       queryString,
   );
+
+  useEffect(() => {
+    (blockedList.filter(blockedUser => parseInt(blockedUser.id) === props.auserPageId).length !== 0)
+      ? props.setBlocked(true)
+      : props.setBlocked(false);
+  }, [blockedList])
 
   if (queryLoading) return "Loading Query";
   if (queryError) return `Q Error ${queryError.message}`;
@@ -98,10 +104,6 @@ const Feed = (props) => {
       break;
     }
   }
-
-  const blockedUser = (postsUserId) => {
-    return userId !== postsUserId && blockedList.filter(blockedUser => blockedUser.id === postsUserId).length !== 0;
-  }
   
   const RenderBlockedThought = () => {
     return(
@@ -120,7 +122,9 @@ const Feed = (props) => {
   return (
     <div className="feed">
       <ul className="feedPosts">
-	{queryData[thoughts[props.page]].map(thought =>
+	{props.blocked
+	 ? "BLOCKED"
+	 : queryData[thoughts[props.page]].map(thought =>
 	    <li key={thought.id} data-key={thought.id} >
 	      <ThoughtPost key={thought.id}
 			   page={props.page}

@@ -52,7 +52,7 @@ const ThoughtCreate = ({ userId, page }) => {
 	<textarea placeholder="Put your thought into the database"
 		  rows="4"
 		  cols="33"
-		  id="thoughtBox"
+		  id="thoughtCreate"
 		  onChange={handleChange}>
 	</textarea>
 	<button id="postThought" onClick={postThought}>

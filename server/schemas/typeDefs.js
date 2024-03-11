@@ -15,7 +15,7 @@ type User {
 
 type Notification {
   id: ID!
-  createdAt: String!
+  createdAt: Int!
   fromUser: ID!
   toUser: ID
   friendRequestEntryId: ID
@@ -33,7 +33,7 @@ type Notification {
 
 type Thought {
   id: ID!
-  createdAt: String!
+  createdAt: Int!
   userId: ID!
   content: String!
   thoughtAuthor: User
@@ -41,7 +41,7 @@ type Thought {
 
 type Reply {
   id: ID!
-  createdAt: String!
+  createdAt: Int!
   replyOfId: ID!
   replyThoughtId: ID!
   replyThought: Thought
@@ -50,7 +50,7 @@ type Reply {
 
 type ReThought {
   id: ID!
-  createdAt: String!
+  createdAt: Int!
   reThoughtOfId: ID!
   reThoughtThoughtId: ID!
   reThoughtThought: Thought
@@ -59,7 +59,7 @@ type ReThought {
 
 type Liked {
   id: ID!
-  createdAt: String!
+  createdAt: Int!
   thoughtId: ID!
   likedByUserId: ID!
   thoughtLiker: User
@@ -68,7 +68,7 @@ type Liked {
 
 type Following {
   id: ID!
-  createdAt: String!
+  createdAt: Int!
   userId: ID!
   followingId: ID!
   follower: User
@@ -76,14 +76,14 @@ type Following {
 
 type Friend {
   id: ID!
-  createdAt: String!
+  createdAt: Int!
   userId: ID!
   friendId: ID!
 }
 
 type Pending {
   id: ID!
-  createdAt: String!
+  createdAt: Int!
   userId: ID!
   pendingId: ID!
   requestingFriend: User
