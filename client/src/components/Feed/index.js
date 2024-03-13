@@ -16,7 +16,34 @@ import {
 import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
+import { useApolloClient } from "@apollo/client";
+
 const Feed = (props) => {
+
+  let clientCache, prevData;
+  let client= useApolloClient();
+//  Object.keys(client)
+//  [
+//  "resetStoreCallbacks"
+//  "clearStoreCallbacks"
+//  "link"
+//  "cache"
+//  "disableNetworkFetches"
+//  "queryDeduplication"
+//  "defaultOptions"
+//  "typeDefs"
+//  "watchQuery"
+//  "query"
+//  "mutate"
+//  "resetStore"
+//  "reFetchObservableQueries"
+//  "version"
+//  "localState",
+//  "queryManager"
+//  ]
+
+  console.log("CCACHE:",client.cache);
+
   
   const {
     likedList,
@@ -25,12 +52,8 @@ const Feed = (props) => {
     setBlockedList
   } = useUserContext();
 
-  let userId = localStorage.getItem("user_id");
-
   const [ recentThought, setRecentThought ] = useState({});
-//  const [ blocked, setBlocked ] = useState(userId !== props.userPageId
-//					   && blockedList.filter(blockedUser => parseInt(blockedUser.id) === props.userPageId).length !== 0);
-//  
+
   const queryOptions = {
     MyPage : QUERY_USER_THOUGHTS,
     UserPage: QUERY_USER_THOUGHTS,
@@ -55,7 +78,7 @@ const Feed = (props) => {
   );
   
   const queryString = (props.page === "MainFeed" && props.userPageId === undefined || props.userPageId === 0)
-	? "" : { variables: { userId: (props.page === "MyPage" ? userId : props.userPageId) }};
+	? "" : { variables: { userId: (props.page === "MyPage" ? props.userId : props.userPageId) }};
 
   const { loading: queryLoading, error: queryError, data: queryData } = useQuery(
     queryOptions[props.page],
@@ -67,6 +90,16 @@ const Feed = (props) => {
       ? props.setBlocked(true)
       : props.setBlocked(false);
   }, [blockedList])
+
+//  useEffect(() => {
+//    if(queryData !== undefined) { //queryData !== prevData) console.log("DATA CHANGED");
+//      console.log(client.getMemoryInternals());
+//    }
+//  }, [queryData]);
+  
+//  useEffect(() => {
+//
+//  }, [clientCache]);
 
   if (queryLoading) return "Loading Query";
   if (queryError) return `Q Error ${queryError.message}`;
@@ -105,45 +138,30 @@ const Feed = (props) => {
     }
   }
   
-  const RenderBlockedThought = () => {
-    return(
-      <li className="authorInfo">
-	  <h2>
-	    You have blocked this user or there are no thoughts here
-	  </h2>
-      </li>
-    );
-  };
-
-  const ThoughtPicker = () => {
-    
-  }
-  
   return (
     <div className="feed">
       <ul className="feedPosts">
 	{props.blocked
 	 ? "BLOCKED"
 	 : queryData[thoughts[props.page]].map(thought =>
-	    <li key={thought.id} data-key={thought.id} >
-	      <ThoughtPost key={thought.id}
-			   page={props.page}
-			   thoughtId={thought.id}
-			   thought={thought.content}
-			   liked={isLiked(thought.id)}
-			   isReThought={isReThought(thought.id)}
-			   isReply={isReply(thought.id)}
-			   userId={thought.thoughtAuthor.id}
-			   userName={thought.thoughtAuthor.userName}
-			   handle={thought.thoughtAuthor.handle}
-			   profilePicture={thought.thoughtAuthor.profilePicture}
-	      />
-	    </li>
-	)}
+	   <li key={thought.id} data-key={thought.id} >
+	     <ThoughtPost key={thought.id}
+			  page={props.page}
+			  thoughtId={thought.id}
+			  thought={thought.content}
+			  liked={isLiked(thought.id)}
+			  isReThought={isReThought(thought.id)}
+			  isReply={isReply(thought.id)}
+			  userId={thought.thoughtAuthor.id}
+			  userName={thought.thoughtAuthor.userName}
+			  handle={thought.thoughtAuthor.handle}
+			  profilePicture={thought.thoughtAuthor.profilePicture}
+	     />
+	   </li>
+	 )}
       </ul>
     </div>
   );
 };
 
 export default Feed;
-

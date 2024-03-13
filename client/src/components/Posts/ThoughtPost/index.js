@@ -17,7 +17,9 @@ import {
   QUERY_THOUGHT,
   QUERY_ALL_THOUGHTS,
   QUERY_ALL_REPLY_IDS,
-  QUERY_ALL_RETHOUGHT_IDS
+  QUERY_ALL_RETHOUGHT_IDS,
+  QUERY_RETHOUGHT_ORIGINAL_THOUGHT,
+  QUERY_REPLY_ORIGINAL_THOUGHT
 } from "./../../../utils/queries";
 import ReplyPost from "./../ReplyPost";
 import ReThoughtPost from "./../ReThoughtPost";
@@ -64,29 +66,10 @@ const ThoughtPost = (props) => {
 
   const [ likedThought, { error: likedError }] = useMutation(
     ADD_LIKED,
-    {
-      refetchQueries:
-      [
-	[
-	  QUERY_ALL_THOUGHTS,
-	  "getAllThoughts"
-	],
-	[
-	  QUERY_MY_LIKED,
-	  "getAllMyLiked"
-	]
-      ]
-    }
   );
+  
   const [ removeLikedThought, { error: removeLikedError }] = useMutation(
     REMOVE_LIKED,
-    {
-      refetchQueries:
-      [
-	QUERY_ALL_THOUGHTS,
-	"getAllThoughts"
-      ]
-    }
   );
   
   const [ updateThought, { error: updateError }] =  useMutation(
@@ -107,7 +90,7 @@ const ThoughtPost = (props) => {
       [
 	QUERY_ALL_THOUGHTS,
 	"getAllThoughts"
-      ]
+      ],
     }
   );
 
@@ -121,12 +104,8 @@ const ThoughtPost = (props) => {
 	  "getAllThoughts"
 	],
 	[
-	  QUERY_ALL_REPLY_IDS,
-	  "getAllReplyIds"
-	],
-	[
-	  QUERY_THOUGHT,
-	  "getThoughtReplys"
+	  QUERY_REPLY_ORIGINAL_THOUGHT,
+	  "getReplyOriginalThought"  
 	]
       ]
     }
@@ -168,9 +147,6 @@ const ThoughtPost = (props) => {
       replyAreaRef.current.selectionStart = cursorPositionReply.start;
     }
   },[replyText]);
-
-
-  
   
   // updating the textareas
   const handleChangeReThought = (event) => {

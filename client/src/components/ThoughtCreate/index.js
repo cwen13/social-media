@@ -1,44 +1,79 @@
 import React, { useState, useCallback, useContext } from "react";
 import { useMutation } from "@apollo/client";
 
-import { ADD_THOUGHT } from "./../../utils/mutations";
-import { QUERY_ALL_THOUGHTS, QUERY_MY_THOUGHTS } from "./../../utils/queries";
+import {
+  ADD_THOUGHT
+} from "./../../utils/mutations";
+import {
+  QUERY_USER_THOUGHTS,
+  QUERY_MY_THOUGHTS,
+  QUERY_ALL_THOUGHTS,
+  QUERY_USER_LIKED,
+  QUERY_USER_RETHOUGHTS  
+} from "./../../utils/queries";
 
 import "./style.css";
 
 const ThoughtCreate = ({ userId, page }) => {
   
-  const refetchOptions = { MyPage : [ QUERY_MY_THOUGHTS, "getMyThoughts"],
-			   MainFeed: [ QUERY_ALL_THOUGHTS, "getAllThoughts"] }
-  
   const [ thought, setThought ] = useState("");
-  const [ newThought, { error } ] = useMutation(ADD_THOUGHT,{
-    refetchQueries: refetchOptions[page]
-  });
+
+    const queryOptions = {
+    MyPage : QUERY_USER_THOUGHTS,
+    UserPage: QUERY_USER_THOUGHTS,
+    MainFeed :  QUERY_ALL_THOUGHTS,
+    Liked: QUERY_USER_LIKED,
+    UserReThoughts: QUERY_USER_RETHOUGHTS
+  }
+
+  const thoughts = {
+    MyPage : "getUserThoughts",
+    UserPage: "getUserThoughts",
+    MainFeed :  "getAllThoughts",
+    Liked: "getUserLiked",
+    UserReThoughts: "getUserReThoughts"
+  };
+  
+  const [ newThought, { error } ] = useMutation(
+    ADD_THOUGHT,{
+      refetchQueries:
+      [
+	queryOptions[page],
+	thoughts[page]
+      ]
+    }
+  );
   
   const handleChange = (event) => {
     const value = event.currentTarget.value;
-    setThought({
-      ...thought,
-      thought: value,
-    });
+    setThought(
+      {
+	...thought,
+	thought: value,
+      }
+    );
   };
   
   const postThought = async (event) => {
     event.preventDefault();
     try {
       console.log("thought:", thought.thought);
-      const mutationResponse = await newThought({
-	variables: {
-	  userId: userId,
-	  content: thought.thought,
+      const mutationResponse = await newThought(
+	{
+	  variables: {
+	    userId: userId,
+	    content: thought.thought,
+	  }
 	}
-      });
-      setThought({
-	...thought,
-	thought: ""
-      });
-      document.querySelector("#thoughtBox").value="";
+      );
+      setThought(
+	{
+	  ...thought,
+	  thought: ""
+	}
+      );
+      console.log("Thougth set to nothing");
+      document.querySelector("#thoughtCreate").value="";
     } catch (e) {
       console.log("New thought was not commited to memory")
       console.log(e)
@@ -64,3 +99,4 @@ const ThoughtCreate = ({ userId, page }) => {
 };
 
 export default ThoughtCreate;
+
