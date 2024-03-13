@@ -49,8 +49,6 @@ const UserInfo = ({ page, userPageId, blocked, setBlocked }) => {
 					       && followList.filter(followUser => parseInt(followUser.id) === userPageId).length !== 0);
   const [ pending, setPending ] = useState(userId !== userPageId
 					   && pendList.filter(pendUser => parseInt(pendUser.pendingId) === userPageId).length !== 0);
-//  const [ blocked, setBlocked ] = useState(userId !== userPageId
-//					   && blockedList.filter(blockedUser => parseInt(blockedUser.id) === userPageId).length !== 0);
   
   const {lodaing: userLoading, error: userError, data: userData} = useQuery(
     QUERY_USER,

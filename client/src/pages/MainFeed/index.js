@@ -19,8 +19,7 @@ const MainFeed = () => {
     setPendList,
   } = useUserContext();
 
-  let userId = localStorage.getItem("user_id");
-  
+  const userId = localStorage.getItem("user_id");
   const page = "MainFeed"
 
   const userPageId = parseInt(useParams().userId)
@@ -49,10 +48,10 @@ const MainFeed = () => {
 	    userPageId={userPageId}
 	    blocked={blocked}
 	    setBlocked={setBlocked}
-      />
-      
+      />      
     </section>
   );
 };
 
 export default MainFeed;
+

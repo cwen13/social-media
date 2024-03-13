@@ -152,25 +152,29 @@ const resolvers = {
     //STATUS: WORKING
     getAllThoughts: async (parent, args, context) => {
       if (context.user) {
-	const blocking = (await Blocked.findAll(
-	  {
-	    where:
+	const blocking = (
+	  await Blocked.findAll(
 	    {
-	      userId: context.user.id
+	      where:
+	      {
+		userId: context.user.id
+	      }
 	    }
-	  }
-	)
-			 ).map((entry) => entry.blockedId);
-	const blockedBy = (await Blocked.findAll(
-	  {
-	    where:
+	  )
+	).map((entry) => entry.blockedId);
+	
+	const blockedBy = (
+	  await Blocked.findAll(
 	    {
-	      blockedId: context.user.id
+	      where:
+	      {
+		blockedId: context.user.id
+	      }
 	    }
-	  }
-	)
-			  ).map((entry) => entry.blockedId);
-	return Thought.findAll(
+	  )
+	).map((entry) => entry.blockedId);
+
+	return await Thought.findAll(
 	  {
 	    where:
 	    {
