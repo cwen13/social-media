@@ -99,15 +99,9 @@ const ThoughtPost = (props) => {
     {
       refetchQueries:
       [
-	[
-	  QUERY_ALL_THOUGHTS,
-	  "getAllThoughts"
-	],
-	[
-	  QUERY_REPLY_ORIGINAL_THOUGHT,
-	  "getReplyOriginalThought"  
-	]
-      ]
+	QUERY_ALL_THOUGHTS,
+	"getAllThoughts"
+      ],
     }
   );
 
