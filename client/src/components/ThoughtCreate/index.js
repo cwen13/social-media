@@ -14,18 +14,18 @@ import {
 
 import "./style.css";
 
-const ThoughtCreate = ({ userId, page }) => {
+const ThoughtCreate = ({ userId, page, recentThought, setRecentThought }) => {
   
   const [ thought, setThought ] = useState("");
-
-    const queryOptions = {
+  
+  const queryOptions = {
     MyPage : QUERY_USER_THOUGHTS,
     UserPage: QUERY_USER_THOUGHTS,
     MainFeed :  QUERY_ALL_THOUGHTS,
     Liked: QUERY_USER_LIKED,
     UserReThoughts: QUERY_USER_RETHOUGHTS
   }
-
+ 
   const thoughts = {
     MyPage : "getUserThoughts",
     UserPage: "getUserThoughts",
@@ -35,7 +35,8 @@ const ThoughtCreate = ({ userId, page }) => {
   };
   
   const [ newThought, { error } ] = useMutation(
-    ADD_THOUGHT,{
+    ADD_THOUGHT,
+    {
       refetchQueries:
       [
 	queryOptions[page],
@@ -43,7 +44,7 @@ const ThoughtCreate = ({ userId, page }) => {
       ]
     }
   );
-  
+
   const handleChange = (event) => {
     const value = event.currentTarget.value;
     setThought(
@@ -57,7 +58,6 @@ const ThoughtCreate = ({ userId, page }) => {
   const postThought = async (event) => {
     event.preventDefault();
     try {
-      console.log("thought:", thought.thought);
       const mutationResponse = await newThought(
 	{
 	  variables: {
@@ -66,13 +66,31 @@ const ThoughtCreate = ({ userId, page }) => {
 	  }
 	}
       );
+      console.log(Date.now());
+      console.log("Want to update with:",
+		  {
+		    thought: thought.thought,
+		    userId: userId,
+		    fromPage: page,
+		    createdAt: Date.now()
+		  }
+		 );
+
+      setRecentThought(
+	{
+	  ...recentThought,
+	  thought: thought.thought,
+	  userId: userId,
+	  fromPage: page,
+	  createdAt: Date.now()
+	}
+      );
       setThought(
 	{
 	  ...thought,
 	  thought: ""
 	}
       );
-      console.log("Thougth set to nothing");
       document.querySelector("#thoughtCreate").value="";
     } catch (e) {
       console.log("New thought was not commited to memory")

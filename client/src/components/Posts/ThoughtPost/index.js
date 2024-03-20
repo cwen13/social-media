@@ -83,28 +83,6 @@ const ThoughtPost = (props) => {
     }
   );
 
-  const [ addReThought, { error: rethoughtError }] = useMutation(
-    RETHOUGHT_THOUGHT,
-    {
-      refetchQueries:
-      [
-	QUERY_ALL_THOUGHTS,
-	"getAllThoughts"
-      ],
-    }
-  );
-
-  const [ replyToThought, { error: replyError }] = useMutation(
-    REPLY_TO_THOUGHT,
-    {
-      refetchQueries:
-      [
-	QUERY_ALL_THOUGHTS,
-	"getAllThoughts"
-      ],
-    }
-  );
-
   const [ removeThought, { error: removeError }] = useMutation(
     REMOVE_THOUGHT,
     {
@@ -115,10 +93,17 @@ const ThoughtPost = (props) => {
       ]
     }
   );
-
-
-  // Useeffect to make sure focus stays in text area
-    // for text to be focus during typingin thought
+  
+  const [ addReThought, { error: rethoughtError }] = useMutation(
+    RETHOUGHT_THOUGHT,
+  );
+  
+  const [ replyToThought, { error: replyError }] = useMutation(
+    REPLY_TO_THOUGHT,
+  );
+  
+  // useEffect to make sure focus stays in text area
+  // for text to be focus during typingin thought
   useEffect(() => {
     if(isEditing) {
       thoughtAreaRef.current.focus();
@@ -126,7 +111,7 @@ const ThoughtPost = (props) => {
     }
   },[thoughtText]);
 
-    // for text to be focus during typinginreTthought
+  // for text to be focus during typinginreTthought
   useEffect(() => {
     if(isReThought) {
       reThoughtAreaRef.current.focus();
@@ -179,7 +164,7 @@ const ThoughtPost = (props) => {
   const handleReThought = async (event) => {
     event.preventDefault();
     try {
-	  const reply = await addReThought(
+      const reply = await addReThought(
 	{
 	  variables:
 	  {
@@ -191,6 +176,14 @@ const ThoughtPost = (props) => {
       );
       setReThoughtText("");
       setIsReThought(false);
+      props.updateFeed(
+	{
+	  thought: reThoughtText,
+	  userId: userId,
+	  fromPage: props.page,
+	  createdAt: Date.now(),
+	  postType: "reThought"
+	});
     } catch (e) {
       throw new Error("You did not re the thought!");
       console.log(e);
@@ -279,7 +272,7 @@ const ThoughtPost = (props) => {
 
     try {
       if (!props.liked) {
-	 await likedThought(
+	await likedThought(
 	  {
 	    variables:
 	    {
@@ -293,7 +286,7 @@ const ThoughtPost = (props) => {
 	  [
 	    ...likedList,
 	    props.thoughtId
-	    ]
+	  ]
 	);
       } else {
 	await removeLikedThought(
@@ -372,6 +365,15 @@ const ThoughtPost = (props) => {
       );
       setReplyText("");
       setIsReplying(false);
+      props.updateFeed(
+      	{
+	  thought: reThoughtText,
+	  userId: userId,
+	  fromPage: props.page,
+	  createdAt: Date.now(),
+	  postType: "reply"
+	}
+      );
     } catch (e) {
       throw new Error("You did not reply to the thought!");
       console.log(e);
@@ -414,58 +416,64 @@ const ThoughtPost = (props) => {
 
   const PostPicker = () => {
     switch (thoughtType) {
-    case "Thought":
-      return <SingleThoughtPost/>;
-      break;
-    case "Reply":
-      return <ReplyPost page={props.page}
-			replyId={props.thoughtId}
-			reply={props.thought}
-			replyUserId={props.userId}
-			replyUserName={props.userName}
-			liked={props.liked}/>;
-      break;
-    case "ReThought":
-      return <ReThoughtPost page={props.page}
-			    reThoughtId={props.thoughtId}
-			    reThought={props.thought}
-			    reThoughtUserId={props.userId}
-			    reThoughtUserName={props.userName}
-			    liked={props.Liked}/>;
-      break;
-    default:
-      break;
+     case "Thought":
+       return <SingleThoughtPost/>;
+       break;
+     case "Reply":
+       return <ReplyPost page={props.page}
+			 replyId={props.thoughtId}
+			 reply={props.thought}
+			 replyUserId={props.userId}
+			 replyUserName={props.userName}
+			 liked={props.liked}
+			 recentThought={props.recentThought}
+			 setRecentThought={props.setRecentThought}
+	      />;
+       break;
+     case "ReThought":
+       return <ReThoughtPost page={props.page}
+			     reThoughtId={props.thoughtId}
+			     reThought={props.thought}
+			     reThoughtUserId={props.userId}
+			     reThoughtUserName={props.userName}
+			     liked={props.Liked}
+			     recentThought={props.recentThought}
+			     setRecentThought={props.setRecentThought}
+	      />;
+       break;
+     default:
+       break;
     }
   }
   
   
-    return(
-      <div className="post">
-	<section className="authorInfo">
-	  <p>
-	    <Link to={`/user/${props.userId}`}>
-	      <span className="pfpCircle">
-		<img className="pfp" src={`/images/pfp/${props.profilePicture}`}/>
-	      </span>
-	      {props.userName} ({props.userId})
-	      <br/>
-	      {props.handle} 
-	    </Link>
-	    <Link to={`/thought/${props.thoughtId}/${thoughtType}`}>
-	      Thought: {props.thoughtId}
-	    </Link>
-	  </p>
-	</section>
-	{PostPicker()}
-	<section className="bottom-buttons">
-	  <LikeBtn />
-	  <ReThoughtBtn />
-	  <ReplyBtn />
-	  <EditBtn />
-	  <RemoveBtn />
-	</section>
-      </div>
-    );
+  return(
+    <div className="post">
+      <section className="authorInfo">
+	<p>
+	  <Link to={`/user/${props.userId}`}>
+	    <span className="pfpCircle">
+	      <img className="pfp" src={`/images/pfp/${props.profilePicture}`}/>
+	    </span>
+	    {props.userName} ({props.userId})
+	    <br/>
+	    {props.handle} 
+	  </Link>
+	  <Link to={`/thought/${props.thoughtId}/${thoughtType}`}>
+	    Thought: {props.thoughtId}
+	  </Link>
+	</p>
+      </section>
+      {PostPicker()}
+      <section className="bottom-buttons">
+	<LikeBtn />
+	<ReThoughtBtn />
+	<ReplyBtn />
+	<EditBtn />
+	<RemoveBtn />
+      </section>
+    </div>
+  );
 };
 
 export default ThoughtPost;

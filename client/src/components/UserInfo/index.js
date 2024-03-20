@@ -27,7 +27,7 @@ import Auth from "./../../utils/auth";
 
 import "./style.css";
 
-const UserInfo = ({ page, userPageId, blocked, setBlocked }) => {
+const UserInfo = ({ page, userPageId, blocked, setBlocked, recentThought, setRecentThought }) => {
 
    const {
     blockedList,
@@ -443,8 +443,6 @@ const UserInfo = ({ page, userPageId, blocked, setBlocked }) => {
     );
   }
   
-  
-  
   return (
     <section className="userInfo" >
       <section className="profile">
@@ -474,7 +472,10 @@ const UserInfo = ({ page, userPageId, blocked, setBlocked }) => {
 	{(userPage.id === userId || page === "MainFeed") && userPage.id !== 0
 	 ? <>
 	     <ThoughtCreate userId={userPage.id}
-			    page={page} />
+			    page={page}
+ 			    recentThought={recentThought}
+			    setRecentThought={setRecentThought}
+	     />
 	     {page === "MyPage" &&
 	      <Link to="/user/MyPage/EditProfile">
 		Edit My Profile

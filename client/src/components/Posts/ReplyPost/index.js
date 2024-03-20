@@ -10,13 +10,13 @@ import "./../PostStyling/style.css";
 const ReplyPost = (props) => {
 
   const { loading: replyLoading, error: replyError, data: replyData } = useQuery(
-      QUERY_REPLY_ORIGINAL_THOUGHT,
+    QUERY_REPLY_ORIGINAL_THOUGHT,
+    {
+      variables:
       {
-		variables:
-		{
-		  replyId: props.replyId
-		}
+	replyId: props.replyId
       }
+    }
   );
 
   if(replyLoading) return "Loading reply";
@@ -24,26 +24,24 @@ const ReplyPost = (props) => {
   const originalThought = replyData.getReplyOriginalThought;
   
   return(
-      <section className="replyBox thought">
-
-		<section className="originalThought">
-		  <section className="originalAuthor">
-			<Link  to={`/user/${originalThought.thoughtAuthor.id}`}>
-			  {originalThought.thoughtAuthor.userName}
-			</Link>
-			<Link to={`/thought/${props.thoughtId}/reply`}>
-			  Thought: {originalThought.id}
-			</Link>
-		  </section>
-		  
-		  <div className="repliedToThought">
-			{originalThought.content}
-		  </div>
-		</section>
-		<section className="replyThought">
-		  {props.reply}
-		</section>
+    <section className="replyBox thought">
+      <section className="originalThought">
+	<section className="originalAuthor">
+	  <Link  to={`/user/${originalThought.thoughtAuthor.id}`}>
+	    {originalThought.thoughtAuthor.userName}
+	  </Link>
+	  <Link to={`/thought/${props.thoughtId}/reply`}>
+	    Thought: {originalThought.id}
+	  </Link>
+	</section>	
+	<div className="repliedToThought">
+	  {originalThought.content}
+	</div>
       </section>
+      <section className="replyThought">
+	{props.reply}
+      </section>
+    </section>
   );
 };
 
