@@ -1,14 +1,18 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery } from "@apollo/client"
 import {
-  QUERY_REPLY_ORIGINAL_THOUGHT
+  QUERY_REPLY_ORIGINAL_THOUGHT,
+  QUERY_ALL_RETHOUGHT_IDS,
+  QUERY_ALL_REPLY_IDS,
 } from "./../../../utils/queries";
 
 import "./../PostStyling/style.css";
 
 const ReplyPost = (props) => {
 
+  const [ thoughtType, setThoughtType ] = useState("");
+  
   const { loading: replyLoading, error: replyError, data: replyData } = useQuery(
     QUERY_REPLY_ORIGINAL_THOUGHT,
     {
@@ -19,6 +23,24 @@ const ReplyPost = (props) => {
     }
   );
 
+  useEffect(() => {
+    if(props.page === "MainFeed"
+       || props.page === "MyPage"
+       || props.page === "UserPage"){
+      if(!replyLoading && !replyError && replyData != undefined){
+	let id = replyData.getReplyOriginalThought.id;
+	if(props.isReThought(id)) {
+	  setThoughtType("ReThought");
+	} else if (props.isReply(id)) {
+	  setThoughtType("Reply");
+	} else {
+	  setThoughtType("Thought");
+	}
+      }
+    }
+
+  }, [replyLoading, replyError, replyData]);
+  
   if(replyLoading) return "Loading reply";
 
   const originalThought = replyData.getReplyOriginalThought;
@@ -30,7 +52,7 @@ const ReplyPost = (props) => {
 	  <Link  to={`/user/${originalThought.thoughtAuthor.id}`}>
 	    {originalThought.thoughtAuthor.userName}
 	  </Link>
-	  <Link to={`/thought/${props.thoughtId}/reply`}>
+	  <Link to={`/thought/${originalThought.id}/${thoughtType}`}>
 	    Thought: {originalThought.id}
 	  </Link>
 	</section>	

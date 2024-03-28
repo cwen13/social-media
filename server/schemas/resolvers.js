@@ -29,7 +29,6 @@ const resolvers = {
     
     //STATUS: WORKING
     getUser: async (parent, { userId }, context) => {
-      console.log("USERID:",userId);
       return await User.findByPk(userId);
     },
     
@@ -328,6 +327,7 @@ const resolvers = {
 
 	}
       );
+      console.log("REPLYS:", replys.replyThoughts);
       return replys.replyThoughts;
     },
 

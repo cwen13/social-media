@@ -29,13 +29,14 @@ import "./../PostStyling/style.css";
 
 const ThoughtPost = (props) => {
 
-  let thoughtType = "";  
-  if(props.isReThought) {
-    thoughtType = "ReThought";
-  } else if (props.isReply) {
-    thoughtType = "Reply";
-  } else {
-    thoughtType = "Thought";
+  let thoughtType = "";
+    if(props.?isReThought(props.thoughtId)) {
+      thoughtType = "ReThought";
+    } else if (props.isReply(props.thoughtId)) {
+      thoughtType = "Reply";
+    } else {
+      thoughtType = "Thought";
+    }
   }
   
   const {
@@ -426,8 +427,8 @@ const ThoughtPost = (props) => {
 			 replyUserId={props.userId}
 			 replyUserName={props.userName}
 			 liked={props.liked}
-			 recentThought={props.recentThought}
-			 setRecentThought={props.setRecentThought}
+			 isReThought={props.isReThought}
+			 isReply={props.isReply}		 
 	      />;
        break;
      case "ReThought":
@@ -437,8 +438,8 @@ const ThoughtPost = (props) => {
 			     reThoughtUserId={props.userId}
 			     reThoughtUserName={props.userName}
 			     liked={props.Liked}
-			     recentThought={props.recentThought}
-			     setRecentThought={props.setRecentThought}
+			     isReThought={props.isReThought}
+			     isReply={props.isReply}
 	      />;
        break;
      default:

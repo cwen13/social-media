@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-// Need to get teh liked list to reload when accessing the page a second time and on
 import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import ThoughtPost from "./../Posts/ThoughtPost"
@@ -15,8 +14,6 @@ import {
 } from "./../../utils/queries";
 import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
-
-import { useApolloClient } from "@apollo/client";
 
 const Feed = (props) => {
 
@@ -43,8 +40,6 @@ const Feed = (props) => {
     UserReThoughts: "getUserReThoughts"
   };
 
-  const [, updateState] = useState({});
-  
   const { loading: replyIdsLoading, error: replyIdsError, data: replyIdsData, refetch: replyIdsRefetch } = useQuery(
       QUERY_ALL_REPLY_IDS,
   );
@@ -70,13 +65,11 @@ const Feed = (props) => {
   const updateFeed = useCallback((recentThought) =>
     {
       console.log("UPDATE");
-      props.setRecentThought({ ...recentThought });
       refetchData();
       replyIdsRefetch();
       reThoughtIdsRefetch();
-      updateState({})
     },
-    [props.recentThought]
+    []
   );
   
   if (queryLoading) return "Loading Query";
@@ -119,7 +112,6 @@ const Feed = (props) => {
   return (
     <div className="feed">
       <ul className="feedPosts">
-	<li key="0" data-key="0" > {props.recentThought.thought} </li>
 	{props.blocked
 	 ? "BLOCKED"
 	 : queryData[thoughts[props.page]].map(thought =>
@@ -129,14 +121,12 @@ const Feed = (props) => {
 			  thoughtId={thought.id}
 			  thought={thought.content}
 			  liked={isLiked(thought.id)}
-			  isReThought={isReThought(thought.id)}
-			  isReply={isReply(thought.id)}
+			  isReThought={isReThought}
+			  isReply={isReply}
 			  userId={thought.thoughtAuthor.id}
 			  userName={thought.thoughtAuthor.userName}
 			  handle={thought.thoughtAuthor.handle}
 			  profilePicture={thought.thoughtAuthor.profilePicture}
-			  recentThought={props.recentThought}	    
-			  setRecentThought={props.setRecentThought}
 			  updateFeed={updateFeed}
 	     />
 	   </li>
@@ -147,3 +137,7 @@ const Feed = (props) => {
 };
 
 export default Feed;
+
+
+//			  isReThought={isReThought(thought.id)}
+//			  isReply={isReply(thought.id)}

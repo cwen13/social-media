@@ -7,6 +7,7 @@ import { useUserContext } from "./../../utils/UserContext";
 import Auth from "./../../utils/auth";
 
 const MainFeed = () => {  
+  const page = "MainFeed"
 
   const {
     blockedList,
@@ -20,18 +21,7 @@ const MainFeed = () => {
   } = useUserContext();
 
   const userId = localStorage.getItem("user_id");
-  const page = "MainFeed"
 
-  const [ recentThought, setRecentThought ] = useState(
-    {
-      thought:"THIS SESSION, STARTED!",
-      userId: userId,
-      fromPage: "This one",
-      createdAt: Date.now(),
-      postType: "thought"
-    }
-  );
-  
   const userPageId = parseInt(useParams().userId)
   const [ blocked, setBlocked ] = useState(userId !== userPageId
 					   && blockedList.filter(blockedUser => parseInt(blockedUser.id) === userPageId).length !== 0);
@@ -43,10 +33,6 @@ const MainFeed = () => {
     if(page !== "UserPage") setBlocked(false);
   }, [blockedList])
 
-  useEffect(() => {
-    console.log("RECENT THOUGHT:", recentThought.thought);
-  }, [recentThought]);
-  
   return(
     <section id="feedContainer">
       {Auth.loggedIn()
@@ -55,16 +41,12 @@ const MainFeed = () => {
 		 userPageId={localStorage.getItem("user_id")}
 		 block={blocked}
 		 setBlocked={setBlocked}
- 		 recentThought={recentThought}
-		 setRecentThought={setRecentThought}
        />}
       <Feed id="feed"
 	    page={page}
 	    userPageId={userPageId}
 	    blocked={blocked}
 	    setBlocked={setBlocked}
-	    recentThought={recentThought}	    
-	    setRecentThought={setRecentThought}
       />      
     </section>
   );

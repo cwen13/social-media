@@ -14,7 +14,7 @@ import {
 
 import "./style.css";
 
-const ThoughtCreate = ({ userId, page, recentThought, setRecentThought }) => {
+const ThoughtCreate = ({ userId, page }) => {
   
   const [ thought, setThought ] = useState("");
   
@@ -76,15 +76,6 @@ const ThoughtCreate = ({ userId, page, recentThought, setRecentThought }) => {
 		  }
 		 );
 
-      setRecentThought(
-	{
-	  ...recentThought,
-	  thought: thought.thought,
-	  userId: userId,
-	  fromPage: page,
-	  createdAt: Date.now()
-	}
-      );
       setThought(
 	{
 	  ...thought,
