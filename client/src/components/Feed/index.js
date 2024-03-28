@@ -1,5 +1,4 @@
-import React, { useState, useEffect  } from "react";
-// Need to get teh liked list to reload when accessing the page a second time and on
+import React, { useState, useEffect, useCallback } from "react";
 import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import ThoughtPost from "./../Posts/ThoughtPost"
@@ -16,43 +15,14 @@ import {
 import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
-import { useApolloClient } from "@apollo/client";
-
 const Feed = (props) => {
 
-  let clientCache, prevData;
-  let client= useApolloClient();
-//  Object.keys(client)
-//  [
-//  "resetStoreCallbacks"
-//  "clearStoreCallbacks"
-//  "link"
-//  "cache"
-//  "disableNetworkFetches"
-//  "queryDeduplication"
-//  "defaultOptions"
-//  "typeDefs"
-//  "watchQuery"
-//  "query"
-//  "mutate"
-//  "resetStore"
-//  "reFetchObservableQueries"
-//  "version"
-//  "localState",
-//  "queryManager"
-//  ]
-
-  console.log("CCACHE:",client.cache);
-
-  
   const {
     likedList,
     setLikedList,
     blockedList,
     setBlockedList
   } = useUserContext();
-
-  const [ recentThought, setRecentThought ] = useState({});
 
   const queryOptions = {
     MyPage : QUERY_USER_THOUGHTS,
@@ -70,17 +40,18 @@ const Feed = (props) => {
     UserReThoughts: "getUserReThoughts"
   };
 
-  const { loading: replyIdsLoading, error: replyIdsError, data: replyIdsData } = useQuery(
+  const { loading: replyIdsLoading, error: replyIdsError, data: replyIdsData, refetch: replyIdsRefetch } = useQuery(
       QUERY_ALL_REPLY_IDS,
   );
-  const { loading: reThoughtIdsLoading, error: reThoughtIdsError, data: reThoughtIdsData } = useQuery(
+
+  const { loading: reThoughtIdsLoading, error: reThoughtIdsError, data: reThoughtIdsData, refetch: reThoughtIdsRefetch } = useQuery(
       QUERY_ALL_RETHOUGHT_IDS,
   );
   
   const queryString = (props.page === "MainFeed" && props.userPageId === undefined || props.userPageId === 0)
 	? "" : { variables: { userId: (props.page === "MyPage" ? props.userId : props.userPageId) }};
 
-  const { loading: queryLoading, error: queryError, data: queryData } = useQuery(
+  const { loading: queryLoading, error: queryError, data: queryData, refetch: refetchData } = useQuery(
     queryOptions[props.page],
       queryString,
   );
@@ -89,18 +60,18 @@ const Feed = (props) => {
     (blockedList.filter(blockedUser => parseInt(blockedUser.id) === props.auserPageId).length !== 0)
       ? props.setBlocked(true)
       : props.setBlocked(false);
-  }, [blockedList])
-
-//  useEffect(() => {
-//    if(queryData !== undefined) { //queryData !== prevData) console.log("DATA CHANGED");
-//      console.log(client.getMemoryInternals());
-//    }
-//  }, [queryData]);
+  }, [blockedList]);
   
-//  useEffect(() => {
-//
-//  }, [clientCache]);
-
+  const updateFeed = useCallback((recentThought) =>
+    {
+      console.log("UPDATE");
+      refetchData();
+      replyIdsRefetch();
+      reThoughtIdsRefetch();
+    },
+    []
+  );
+  
   if (queryLoading) return "Loading Query";
   if (queryError) return `Q Error ${queryError.message}`;
   if (reThoughtIdsLoading) return "Loading rethought ids";
@@ -150,12 +121,13 @@ const Feed = (props) => {
 			  thoughtId={thought.id}
 			  thought={thought.content}
 			  liked={isLiked(thought.id)}
-			  isReThought={isReThought(thought.id)}
-			  isReply={isReply(thought.id)}
+			  isReThought={isReThought}
+			  isReply={isReply}
 			  userId={thought.thoughtAuthor.id}
 			  userName={thought.thoughtAuthor.userName}
 			  handle={thought.thoughtAuthor.handle}
 			  profilePicture={thought.thoughtAuthor.profilePicture}
+			  updateFeed={updateFeed}
 	     />
 	   </li>
 	 )}
@@ -165,3 +137,7 @@ const Feed = (props) => {
 };
 
 export default Feed;
+
+
+//			  isReThought={isReThought(thought.id)}
+//			  isReply={isReply(thought.id)}

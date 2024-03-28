@@ -22,7 +22,7 @@ const ThoughtPage = () => {
     postType
   } = useParams();
 
-  const userPageId = parseInt(useParams().userId)
+  const userPageId = localStorage.getItem("user_id");
   
   const {
     userId,
@@ -30,7 +30,6 @@ const ThoughtPage = () => {
     logoutUser,
     likedList
   } = useUserContext();
-
   
   const { loading: thoughtLoading, error: thoughtError, data: thoughtData } = useQuery(
     QUERY_THOUGHT,
@@ -52,24 +51,32 @@ const ThoughtPage = () => {
     }
   );
 
-  //  const { loading: thoughtLoading, error: thoughtError, data: thoughtData } = useQuery(
-  //      QUERY_RETHOUGHT,
-  //      {
-  //		variables:
-  //		{
-  //		  originalThoughtId: 
-  //		}
-  //      }
-  //  );
-  //
+//  const { loading: reThoughtLoading, error: reThoughtError, data: reThoughtData } = useQuery(
+//    QUERY_RETHOUGHT,
+//    {
+//      variables:
+//      {
+//	originalThoughtId: postId
+//      }
+//    }
+//  );
   
+  useEffect(() => {
+    console.log("REPLYS HIT");
+    console.log("REPLYDATA:", replysData);
+    console.log("REPLYLOADING:", replysLoading);
+    console.log("REPLYERROR:", replysError);
+    
+    if(replysData != undefined && Object.keys(replysData).length != 0)
+      console.log("REPLYS:", replysData);
+  }, [replysLoading, replysError, replysData]);  
   
-  if(thoughtLoading) return <p> Loading </p>;
+  if(thoughtLoading) return "Loading";
   if(thoughtError) return console.log(thoughtError);
-  if(replysLoading)return <p> loading</p>;
+  if(replysLoading)return "Loading"
   
   const isLiked = (thoughtId) => likedList.includes(thoughtId);
-  
+
   return(
     <section id="feedContainer">
       <UserInfo id="userInfo"
@@ -90,17 +97,7 @@ const ThoughtPage = () => {
 	   />}
 	</div>
 	<div id="replys">
-	  {replysLoading && Object.keys(replysData).length !== 0
-	   ? (!replysError && Object.keys(replysData) === 0 ? "NO REPLYS" :  "LOADING")
-	   : replysData.getThoughtReplys.map((reply) =>
-	     <ThoughtPost userName={reply.thoughtAuthor.userName}
-			  userId={reply.thoughtAuthor.id}
-			  profilePicture={reply.thoughtAuthor.profilePicture}
-			  thought={reply.content}
-			  thoughtId={reply.id}
-			  key={reply.id}
-			  page={page}
-	     />)}
+	  REPLYS WILL GO HERE
 	</div>
       </div>
     </section>);
@@ -108,3 +105,15 @@ const ThoughtPage = () => {
 
 
 export default ThoughtPage;
+
+//	  {replysLoading && Object.keys(replysData).length !== 0 && replysData.getThoughtReplys !== undefined
+//	   ? (!replysError && Object.keys(replysData) === 0 ? "NO REPLYS" :  "LOADING")
+//	   : replysData.getThoughtReplys.map((reply) =>
+//	     <ThoughtPost userName={reply.thoughtAuthor.userName}
+//			  userId={reply.thoughtAuthor.id}
+//			  profilePicture={reply.thoughtAuthor.profilePicture}
+//			  thought={reply.content}
+//			  thoughtId={reply.id}
+//			  key={reply.id}
+//			  page={page}
+//	     />)

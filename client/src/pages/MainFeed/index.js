@@ -7,6 +7,7 @@ import { useUserContext } from "./../../utils/UserContext";
 import Auth from "./../../utils/auth";
 
 const MainFeed = () => {  
+  const page = "MainFeed"
 
   const {
     blockedList,
@@ -20,7 +21,6 @@ const MainFeed = () => {
   } = useUserContext();
 
   const userId = localStorage.getItem("user_id");
-  const page = "MainFeed"
 
   const userPageId = parseInt(useParams().userId)
   const [ blocked, setBlocked ] = useState(userId !== userPageId
@@ -33,16 +33,15 @@ const MainFeed = () => {
     if(page !== "UserPage") setBlocked(false);
   }, [blockedList])
 
-  
   return(
     <section id="feedContainer">
       {Auth.loggedIn()
-       ? <UserInfo page={page}
-		   userPageId={localStorage.getItem("user_id")}
-		   block={blocked}
-		   setBlocked={setBlocked}
-	 />
-       : "" }
+       &&
+       <UserInfo page={page}
+		 userPageId={localStorage.getItem("user_id")}
+		 block={blocked}
+		 setBlocked={setBlocked}
+       />}
       <Feed id="feed"
 	    page={page}
 	    userPageId={userPageId}

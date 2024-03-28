@@ -42,7 +42,7 @@ const UserInfo = ({ page, userPageId, blocked, setBlocked }) => {
 
   let userId = localStorage.getItem("user_id");
 
-  const [ userPage, setUserPage] = useState({});   
+  const [ userPage, setUserPage] = useState();   
   const [ friendship, setFriendship ] = useState(userId !== userPageId
 						 && friendList.filter(friendUser => parseInt(friendUser.id) === userPageId).length !== 0);
   const [ following, setFollowing ] = useState(userId !== userPageId
@@ -143,10 +143,10 @@ const UserInfo = ({ page, userPageId, blocked, setBlocked }) => {
 	{
 	  ...userData.getUser
 	}
-      )
-    } 
+      );
+    }
   }, [userLoading, userError, userData])
-  
+
   useEffect(() => {
     if(friendship) {
       setPending(false);
@@ -161,9 +161,11 @@ const UserInfo = ({ page, userPageId, blocked, setBlocked }) => {
   }, [pending, friendship]);
   
   useEffect(() => {
-    (blockedList.filter(blockedUser => parseInt(blockedUser.id) === userPageId).length !== 0)
-      ? setBlocked(true)
-      : setBlocked(false);
+    if(page !== "ThoughtPage") {
+      (blockedList.filter(blockedUser => parseInt(blockedUser.id) === userPageId).length !== 0)
+	? setBlocked(true)
+	: setBlocked(false);
+    }
   }, [blockedList]);
   
   if(userPageId === undefined) return "";
@@ -395,12 +397,12 @@ const UserInfo = ({ page, userPageId, blocked, setBlocked }) => {
 	{userPageId === 0 ? <h2> No user Stats yet </h2>
 	 : <ul>
 	     <li>
-	       <Link to={`/user/${userPage.id}/liked`}>
+	       <Link to={`/user/${userPage?.id}/liked`}>
 		 Liked thoughts
 	       </Link>
 	     </li>
 	     <li>
-	       <Link to={`/user/${userPage.id}/reThoughts`}>
+	       <Link to={`/user/${userPage?.id}/reThoughts`}>
 		 Link to reThoughts
 	       </Link>
 	     </li>
@@ -436,23 +438,21 @@ const UserInfo = ({ page, userPageId, blocked, setBlocked }) => {
 	{following
 	 ? <h2>You are follwing this user</h2>
 	 : <RenderFollowing />}
-	{userPage.id === 0
+	{userPage?.id === 0
 	 ? <h2>There are no followings yet</h2>
 	 : <RenderBlocked />}
       </>
     );
   }
   
-  
-  
   return (
     <section className="userInfo" >
       <section className="profile">
 	
-	<h1>=^={userPage.userName}=^=</h1>
+	<h1>=^={userPage?.userName}=^=</h1>
 	<div className="pfp">
-	  {userPage.profilePicture
-	   ? <img src={`/images/pfp/${userPage.profilePicture}`}
+	  {userPage?.profilePicture
+	   ? <img src={`/images/pfp/${userPage?.profilePicture}`}
 		  width="150"/>
 	   :
 	   <>
@@ -463,18 +463,19 @@ const UserInfo = ({ page, userPageId, blocked, setBlocked }) => {
 	  }
 	</div>
 	<div className="names">
-	  NAME: {userPage.handle}
+	  NAME: {userPage?.handle}
 	</div>
 	
 	{blocked ? "" :
 	 <div className="email">
-	   EMAIL: {userPage.email}
+	   EMAIL: {userPage?.email}
 	 </div>}
 
-	{(userPage.id === userId || page === "MainFeed") && userPage.id !== 0
+	{(userPage?.id === userId || page === "MainFeed") && userPage?.id !== 0
 	 ? <>
-	     <ThoughtCreate userId={userPage.id}
-			    page={page} />
+	     <ThoughtCreate userId={userPage?.id}
+			    page={page}
+	     />
 	     {page === "MyPage" &&
 	      <Link to="/user/MyPage/EditProfile">
 		Edit My Profile
