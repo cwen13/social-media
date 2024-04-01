@@ -17,8 +17,6 @@ import "./../PostStyling/style.css";
 
 const ReThoughtPost = (props) => {
 
-  const [ thoughtType, setThoughtType ] = useState("");
-  
   const {loading: thoughtLoading, error: thoughtError, data: thoughtData } = useQuery(
     QUERY_RETHOUGHT_ORIGINAL_THOUGHT,
     {
@@ -28,19 +26,6 @@ const ReThoughtPost = (props) => {
       }
     }
   );
-
-  useEffect(() => {
-    if(!thoughtLoading && !thoughtError && thoughtData != undefined){
-      let id = thoughtData.getReThoughtOriginalThought.id;
-      if(props.isReThought(id)) {
-	setThoughtType("ReThought");
-      } else if (props.isReply(id)) {
-	setThoughtType("Reply");
-      } else {
-	setThoughtType("Thought");
-      }
-    }
-  }, [thoughtLoading, thoughtError, thoughtData]);
 
   
   if(thoughtLoading) return(<>Loading</>);
@@ -58,7 +43,7 @@ const ReThoughtPost = (props) => {
 	    <br/>
 	    {originalThought.thoughtAuthor.handle}
 	  </Link>
-	  <Link to={`/thought/${originalThought.id}/Thought`}>
+	  <Link to={`/thought/${originalThought.id}/{props.type}`}>
 	    { originalThought.id }
 	  </Link>
 	</div>

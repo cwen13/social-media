@@ -1,6 +1,8 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 
+
+
 class Thought extends Model{};
 
 Thought.init(
@@ -21,6 +23,16 @@ Thought.init(
       unique: false,
       defaultValue: ""
     },
+    type: {
+      type: DataTypes.ENUM({ values: ["thought", "rethought", "reply", "other"] }),
+      allowNull: false,
+      defaultValue: "thought"
+    },
+    liked: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    }
   },
   {
     sequelize,

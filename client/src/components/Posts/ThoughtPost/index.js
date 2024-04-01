@@ -29,16 +29,6 @@ import "./../PostStyling/style.css";
 
 const ThoughtPost = (props) => {
 
-  let thoughtType = "";
-    if(props.?isReThought(props.thoughtId)) {
-      thoughtType = "ReThought";
-    } else if (props.isReply(props.thoughtId)) {
-      thoughtType = "Reply";
-    } else {
-      thoughtType = "Thought";
-    }
-  }
-  
   const {
     userId,
     loginUser,
@@ -415,38 +405,42 @@ const ThoughtPost = (props) => {
     );
   };
 
-  const PostPicker = () => {
-    switch (thoughtType) {
-     case "Thought":
+  const PostPicker = (type) => {
+    switch (type) {
+     case "thought":
+       
        return <SingleThoughtPost/>;
        break;
-     case "Reply":
+     case "reply":
+
        return <ReplyPost page={props.page}
 			 replyId={props.thoughtId}
 			 reply={props.thought}
 			 replyUserId={props.userId}
 			 replyUserName={props.userName}
 			 liked={props.liked}
-			 isReThought={props.isReThought}
-			 isReply={props.isReply}		 
+			 isReThought={props?.isReThought}
+			 isReply={props?.isReply}
+			 type={props.type}
 	      />;
        break;
-     case "ReThought":
+     case "rethought":
+
        return <ReThoughtPost page={props.page}
 			     reThoughtId={props.thoughtId}
 			     reThought={props.thought}
 			     reThoughtUserId={props.userId}
 			     reThoughtUserName={props.userName}
 			     liked={props.Liked}
-			     isReThought={props.isReThought}
-			     isReply={props.isReply}
+			     isReThought={props?.isReThought}
+			     isReply={props?.isReply}
+			     type={props.type}
 	      />;
        break;
      default:
        break;
     }
   }
-  
   
   return(
     <div className="post">
@@ -460,12 +454,12 @@ const ThoughtPost = (props) => {
 	    <br/>
 	    {props.handle} 
 	  </Link>
-	  <Link to={`/thought/${props.thoughtId}/${thoughtType}`}>
+	  <Link to={`/thought/${props.thoughtId}/${props.type}`}>
 	    Thought: {props.thoughtId}
 	  </Link>
 	</p>
       </section>
-      {PostPicker()}
+      {PostPicker(props.type)}
       <section className="bottom-buttons">
 	<LikeBtn />
 	<ReThoughtBtn />

@@ -77,14 +77,6 @@ const Feed = (props) => {
   if (reThoughtIdsLoading) return "Loading rethought ids";
   if (replyIdsLoading) return "Loading reply ids";
   
-  const reThoughtIds = new Set(reThoughtIdsData.getAllReThoughtIds.map(entry => entry.reThoughtThoughtId));
-  const isReThought = (thoughtId) => reThoughtIds.has(thoughtId);
-
-  const replyIds = new Set(replyIdsData.getAllReplyIds.map(entry => entry.replyThoughtId));
-  const isReply = (thoughtId) => replyIds.has(thoughtId);
-
-  const isLiked = (thoughtId) => likedList.includes(thoughtId);
-
   let noData;
   if (queryData === null) {
     switch (props.page) {
@@ -120,14 +112,14 @@ const Feed = (props) => {
 			  page={props.page}
 			  thoughtId={thought.id}
 			  thought={thought.content}
-			  liked={isLiked(thought.id)}
-			  isReThought={isReThought}
-			  isReply={isReply}
 			  userId={thought.thoughtAuthor.id}
 			  userName={thought.thoughtAuthor.userName}
 			  handle={thought.thoughtAuthor.handle}
 			  profilePicture={thought.thoughtAuthor.profilePicture}
+			  type={thought.type}
+			  liked={thought.liked}
 			  updateFeed={updateFeed}
+			  
 	     />
 	   </li>
 	 )}

@@ -5,7 +5,9 @@ import { useQuery } from "@apollo/client";
 import {
   QUERY_THOUGHT,
   QUERY_REPLYS,
-  QUERY_RETHOUGHT
+  QUERY_RETHOUGHT,
+  QUERY_ALL_RETHOUGHT_IDS,
+  QUERY_ALL_REPLY_IDS,
 } from "./../../utils/queries";
 
 import UserInfo from "./../../components/UserInfo";
@@ -51,29 +53,41 @@ const ThoughtPage = () => {
     }
   );
 
-//  const { loading: reThoughtLoading, error: reThoughtError, data: reThoughtData } = useQuery(
-//    QUERY_RETHOUGHT,
-//    {
-//      variables:
-//      {
-//	originalThoughtId: postId
-//      }
-//    }
-//  );
+  const { loading: replyIdsLoading, error: replyIdsError, data: replyIdsData, refetch: replyIdsRefetch } = useQuery(
+    QUERY_ALL_REPLY_IDS,
+  );
+  
+  const { loading: reThoughtIdsLoading, error: reThoughtIdsError, data: reThoughtIdsData, refetch: reThoughtIdsRefetch } = useQuery(
+    QUERY_ALL_RETHOUGHT_IDS,
+  );
+
+  
+  //  const { loading: reThoughtLoading, error: reThoughtError, data: reThoughtData } = useQuery(
+  //    QUERY_RETHOUGHT,
+  //    {
+  //      variables:
+  //      {
+  //	originalThoughtId: postId
+  //      }
+  //    }
+  //  );
   
   useEffect(() => {
-    console.log("REPLYS HIT");
-    console.log("REPLYDATA:", replysData);
-    console.log("REPLYLOADING:", replysLoading);
-    console.log("REPLYERROR:", replysError);
-    
     if(replysData != undefined && Object.keys(replysData).length != 0)
       console.log("REPLYS:", replysData);
   }, [replysLoading, replysError, replysData]);  
+
   
   if(thoughtLoading) return "Loading";
   if(thoughtError) return console.log(thoughtError);
   if(replysLoading)return "Loading"
+
+  const reThoughtIds = new Set(reThoughtIdsData.getAllReThoughtIds.map(entry => entry.reThoughtThoughtId));
+  const isReThought = (thoughtId) => reThoughtIds.has(thoughtId);
+
+  const replyIds = new Set(replyIdsData.getAllReplyIds.map(entry => entry.replyThoughtId));
+  const isReply = (thoughtId) => replyIds.has(thoughtId);
+
   
   const isLiked = (thoughtId) => likedList.includes(thoughtId);
 

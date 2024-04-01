@@ -81,6 +81,8 @@ query getMyThoughts {
     id
     userId
     content
+    type
+    liked
     thoughtAuthor {
       id
       userName
@@ -94,6 +96,8 @@ query getAllThoughts {
     id
     userId
     content
+    type
+    liked
     thoughtAuthor {
       id
       userName
@@ -116,6 +120,8 @@ query getThought($thoughtId: ID!) {
   getThought(thoughtId: $thoughtId) {
     id
     content
+    type
+    liked
     thoughtAuthor {
       id
       userName
@@ -130,6 +136,8 @@ query getThoughtLikes ($thoughtId: ID!) {
   getThoughtLikes(thoughtId: $thoughtId) {
     id
     content
+    type
+    liked
     thoughtAuthor {
       id
       userName
@@ -145,6 +153,8 @@ query getUserThoughts ($userId: ID!) {
   getUserThoughts (userId: $userId) {
     id
     content
+    type
+    liked
     thoughtAuthor {
       id
       userName
@@ -160,6 +170,8 @@ query getThoughtReplys ($thoughtId: ID!) {
     id
     content
     createdAt
+    type
+    liked
     thoughtAuthor {
       id
       userName
@@ -172,7 +184,10 @@ query getThoughtReplys ($thoughtId: ID!) {
 export const QUERY_RETHOUGHT = gql`
 query getThoughtReThoughts ($originalThoughtId: ID!) {
   getThoughtReThoughts(originalThoughtId: $originalThoughtId) {
+    id
     content
+    type
+    liked
     thoughtAuthor {
       id
       userName
@@ -187,6 +202,8 @@ query getMyReThoughts {
     id
     userId
     content
+    type
+    liked
     thoughtAuthor {
       id
       userName
@@ -209,6 +226,8 @@ query getUserLiked ($userId: ID!) {
     id
     userId
     content
+    type
+    liked
     thoughtAuthor {
       id
       userName
@@ -224,6 +243,8 @@ query getUserReThoughts ($userId: ID!)  {
     id
     userId
     content
+    type
+    liked
     thoughtAuthor {
       id
       userName
@@ -279,6 +300,8 @@ query getReThoughtOriginalThought ($reThoughtId: ID!) {
   getReThoughtOriginalThought (reThoughtId: $reThoughtId) {
     id
     content
+    type
+    liked
     thoughtAuthor {
       id
       userName
@@ -292,6 +315,8 @@ query getReplyOriginalThought ($replyId: ID!) {
   getReplyOriginalThought (replyId: $replyId) {
     id
     content
+    type
+    liked
     thoughtAuthor {
       id
       userName
