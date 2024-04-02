@@ -100,7 +100,9 @@ const Feed = (props) => {
       break;
     }
   }
-  
+
+  const isLiked = (thoughtId) => likedList.includes(thoughtId);
+    
   return (
     <div className="feed">
       <ul className="feedPosts">
@@ -117,7 +119,7 @@ const Feed = (props) => {
 			  handle={thought.thoughtAuthor.handle}
 			  profilePicture={thought.thoughtAuthor.profilePicture}
 			  type={thought.type}
-			  liked={thought.liked}
+			  liked={isLiked(thought.id)}
 			  updateFeed={updateFeed}
 			  
 	     />

@@ -76,21 +76,13 @@ const ThoughtPage = () => {
     if(replysData != undefined && Object.keys(replysData).length != 0)
       console.log("REPLYS:", replysData);
   }, [replysLoading, replysError, replysData]);  
-
   
   if(thoughtLoading) return "Loading";
   if(thoughtError) return console.log(thoughtError);
   if(replysLoading)return "Loading"
 
-  const reThoughtIds = new Set(reThoughtIdsData.getAllReThoughtIds.map(entry => entry.reThoughtThoughtId));
-  const isReThought = (thoughtId) => reThoughtIds.has(thoughtId);
-
-  const replyIds = new Set(replyIdsData.getAllReplyIds.map(entry => entry.replyThoughtId));
-  const isReply = (thoughtId) => replyIds.has(thoughtId);
-
-  
   const isLiked = (thoughtId) => likedList.includes(thoughtId);
-
+  
   return(
     <section id="feedContainer">
       <UserInfo id="userInfo"
@@ -108,10 +100,24 @@ const ThoughtPage = () => {
 			liked={isLiked(thoughtData.getThought.id)}
 			profilePicture={thoughtData.getThought.thoughtAuthor.profilePicture}
 			page={page}
+			type={thoughtData.getThought.type}
 	   />}
 	</div>
 	<div id="replys">
-	  REPLYS WILL GO HERE
+	  <div id="replyHeadline"> REPLYS </div>
+	  {replysLoading && Object.keys(replysData).length !== 0 && replysData.getThoughtReplys !== undefined
+	   ? (!replysError && Object.keys(replysData) === 0 ? "NO REPLYS" :  "LOADING")
+	   : replysData.getThoughtReplys.map((reply) =>
+	     <ThoughtPost userName={reply.thoughtAuthor.userName}
+			  userId={reply.thoughtAuthor.id}
+			  profilePicture={reply.thoughtAuthor.profilePicture}
+	       		  thought={reply.content}
+			  thoughtId={reply.id}
+			  key={reply.id}
+			  page={page}
+			  type={reply.type}
+	     />)}
+
 	</div>
       </div>
     </section>);
@@ -120,14 +126,3 @@ const ThoughtPage = () => {
 
 export default ThoughtPage;
 
-//	  {replysLoading && Object.keys(replysData).length !== 0 && replysData.getThoughtReplys !== undefined
-//	   ? (!replysError && Object.keys(replysData) === 0 ? "NO REPLYS" :  "LOADING")
-//	   : replysData.getThoughtReplys.map((reply) =>
-//	     <ThoughtPost userName={reply.thoughtAuthor.userName}
-//			  userId={reply.thoughtAuthor.id}
-//			  profilePicture={reply.thoughtAuthor.profilePicture}
-//			  thought={reply.content}
-//			  thoughtId={reply.id}
-//			  key={reply.id}
-//			  page={page}
-//	     />)

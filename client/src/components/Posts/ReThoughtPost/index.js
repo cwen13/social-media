@@ -43,7 +43,7 @@ const ReThoughtPost = (props) => {
 	    <br/>
 	    {originalThought.thoughtAuthor.handle}
 	  </Link>
-	  <Link to={`/thought/${originalThought.id}/{props.type}`}>
+	  <Link to={`/thought/${originalThought.id}/${originalThought.type}`}>
 	    { originalThought.id }
 	  </Link>
 	</div>

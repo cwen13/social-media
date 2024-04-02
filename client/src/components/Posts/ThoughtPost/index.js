@@ -413,6 +413,8 @@ const ThoughtPost = (props) => {
        break;
      case "reply":
 
+       if(props.page === "ThoughtPage") return <SingleThoughtPost/>;
+       
        return <ReplyPost page={props.page}
 			 replyId={props.thoughtId}
 			 reply={props.thought}
@@ -431,7 +433,7 @@ const ThoughtPost = (props) => {
 			     reThought={props.thought}
 			     reThoughtUserId={props.userId}
 			     reThoughtUserName={props.userName}
-			     liked={props.Liked}
+			     liked={props.liked}
 			     isReThought={props?.isReThought}
 			     isReply={props?.isReply}
 			     type={props.type}
