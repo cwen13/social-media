@@ -372,16 +372,15 @@ const ThoughtPost = (props) => {
       setReplyText("");
       setIsReplying(false);
       let k;
-      (props.page === "ThoughtPage"
-       ? k=0//window.location.reload()
-       : props.updateFeed(
-      	{
-	  thought: reThoughtText,
-	  userId: userId,
-	  fromPage: props.page,
-	  createdAt: Date.now(),
-	  postType: "reply"
-	}
+      (props.page !== "ThoughtPage" &&
+       props.updateFeed(
+      	 {
+	   thought: reThoughtText,
+	   userId: userId,
+	   fromPage: props.page,
+	   createdAt: Date.now(),
+	   postType: "reply"
+	 }
        )
       );
     } catch (e) {
