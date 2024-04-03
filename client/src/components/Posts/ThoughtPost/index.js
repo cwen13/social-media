@@ -371,7 +371,6 @@ const ThoughtPost = (props) => {
       );
       setReplyText("");
       setIsReplying(false);
-      let k;
       (props.page !== "ThoughtPage" &&
        props.updateFeed(
       	 {
@@ -464,7 +463,7 @@ const ThoughtPost = (props) => {
   }
   
   return(
-    <div className="post">
+    <div className={`post ${props.page === "ThoughtPage" && "reverse"}`}>
       <section className="authorInfo">
 	<div>
 	  <Link to={`/user/${props.userId}`}>
@@ -481,7 +480,7 @@ const ThoughtPost = (props) => {
 	</div>
       </section>
       {PostPicker(props.type)}
-      <section className="bottom-buttons">
+      <section className={`bottom-buttons ${props.page === "ThoughtPage" && "reverse"}`}>
 	<LikeBtn />
 	<ReThoughtBtn />
 	<ReplyBtn />

@@ -1,4 +1,4 @@
-g
+
 .entry {
   border: 0.125rem dotted purple;
   margin: 0.125rem;
@@ -144,4 +144,17 @@ g
   width: 100%;
   justify-items: start;
     border-style: none none none double;
+}
+
+#replys div[class="post reverse"] {
+    background: #1eeede;
+    border: ridge #7262d4 5px;
+}
+#replys .post section[class="bottom-buttons reverse"] {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  background-color: #7262d4;
+  width: 100%;
+  margin: 0rem 0rem -0.4rem 0rem;
 }

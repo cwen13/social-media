@@ -24,6 +24,7 @@ import LikedThoughts from "./pages/LikedThoughts";
 import EditProfile from "./pages/EditProfile";
 import ReThoughts from "./pages/ReThoughts/";
 import UserRelations from "./pages/UserRelations/";
+import InProgress from "./pages/InProgress/";
 
 import Following from "./components/UserLists/Following/";
 import Blocked from "./components/UserLists/Blocked/";
@@ -120,7 +121,7 @@ const App = () => {
 
 	      <Route
 		path="/search/*"
-		element={<Search />}
+		element={<InProgress />}
 	      />
 
 	      <Route
