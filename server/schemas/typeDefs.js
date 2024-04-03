@@ -36,6 +36,8 @@ type Thought {
   createdAt: String!
   userId: ID!
   content: String!
+  type: String!
+  liked: Boolean!
   thoughtAuthor: User
 }
 

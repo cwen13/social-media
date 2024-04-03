@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { pluralize } from './../../../utils/helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import { idbPromise } from './../../../utils/helpers';
@@ -19,7 +19,8 @@ import {
   QUERY_ALL_REPLY_IDS,
   QUERY_ALL_RETHOUGHT_IDS,
   QUERY_RETHOUGHT_ORIGINAL_THOUGHT,
-  QUERY_REPLY_ORIGINAL_THOUGHT
+  QUERY_REPLY_ORIGINAL_THOUGHT,
+  QUERY_REPLYS
 } from "./../../../utils/queries";
 import ReplyPost from "./../ReplyPost";
 import ReThoughtPost from "./../ReThoughtPost";
@@ -29,15 +30,11 @@ import "./../PostStyling/style.css";
 
 const ThoughtPost = (props) => {
 
-  let thoughtType = "";
-    if(props.?isReThought(props.thoughtId)) {
-      thoughtType = "ReThought";
-    } else if (props.isReply(props.thoughtId)) {
-      thoughtType = "Reply";
-    } else {
-      thoughtType = "Thought";
-    }
-  }
+  const {
+    postId,
+    postType
+  } = useParams();
+
   
   const {
     userId,
@@ -101,6 +98,13 @@ const ThoughtPost = (props) => {
   
   const [ replyToThought, { error: replyError }] = useMutation(
     REPLY_TO_THOUGHT,
+    {
+      refetchQueries:
+      [
+	QUERY_REPLYS,
+	"getThoughtReplys"	
+      ]
+    }    
   );
   
   // useEffect to make sure focus stays in text area
@@ -360,20 +364,23 @@ const ThoughtPost = (props) => {
 	  {
 	    content: replyText,
 	    thoughtId: props.thoughtId,
-	    thoughtUserId: props.userId
+	    thoughtUserId: props.userId,
+	    type: "reply"
 	  }
 	}
       );
       setReplyText("");
       setIsReplying(false);
-      props.updateFeed(
-      	{
-	  thought: reThoughtText,
-	  userId: userId,
-	  fromPage: props.page,
-	  createdAt: Date.now(),
-	  postType: "reply"
-	}
+      (props.page !== "ThoughtPage" &&
+       props.updateFeed(
+      	 {
+	   thought: reThoughtText,
+	   userId: userId,
+	   fromPage: props.page,
+	   createdAt: Date.now(),
+	   postType: "reply"
+	 }
+       )
       );
     } catch (e) {
       throw new Error("You did not reply to the thought!");
@@ -415,31 +422,39 @@ const ThoughtPost = (props) => {
     );
   };
 
-  const PostPicker = () => {
-    switch (thoughtType) {
-     case "Thought":
+  const PostPicker = (type) => {
+    switch (type) {
+     case "thought":
+       
        return <SingleThoughtPost/>;
        break;
-     case "Reply":
+     case "reply":
+
+       if(props.page === "ThoughtPage"
+	 && props.thoughtId !== postId) return <SingleThoughtPost/>;
+       
        return <ReplyPost page={props.page}
 			 replyId={props.thoughtId}
 			 reply={props.thought}
 			 replyUserId={props.userId}
 			 replyUserName={props.userName}
 			 liked={props.liked}
-			 isReThought={props.isReThought}
-			 isReply={props.isReply}		 
+			 isReThought={props?.isReThought}
+			 isReply={props?.isReply}
+			 type={props.type}
 	      />;
        break;
-     case "ReThought":
+     case "rethought":
+
        return <ReThoughtPost page={props.page}
 			     reThoughtId={props.thoughtId}
 			     reThought={props.thought}
 			     reThoughtUserId={props.userId}
 			     reThoughtUserName={props.userName}
-			     liked={props.Liked}
-			     isReThought={props.isReThought}
-			     isReply={props.isReply}
+			     liked={props.liked}
+			     isReThought={props?.isReThought}
+			     isReply={props?.isReply}
+			     type={props.type}
 	      />;
        break;
      default:
@@ -447,11 +462,10 @@ const ThoughtPost = (props) => {
     }
   }
   
-  
   return(
-    <div className="post">
+    <div className={`post ${props.page === "ThoughtPage" && "reverse"}`}>
       <section className="authorInfo">
-	<p>
+	<div>
 	  <Link to={`/user/${props.userId}`}>
 	    <span className="pfpCircle">
 	      <img className="pfp" src={`/images/pfp/${props.profilePicture}`}/>
@@ -460,13 +474,13 @@ const ThoughtPost = (props) => {
 	    <br/>
 	    {props.handle} 
 	  </Link>
-	  <Link to={`/thought/${props.thoughtId}/${thoughtType}`}>
+	  <Link to={`/thought/${props.thoughtId}/${props.type}`}>
 	    Thought: {props.thoughtId}
 	  </Link>
-	</p>
+	</div>
       </section>
-      {PostPicker()}
-      <section className="bottom-buttons">
+      {PostPicker(props.type)}
+      <section className={`bottom-buttons ${props.page === "ThoughtPage" && "reverse"}`}>
 	<LikeBtn />
 	<ReThoughtBtn />
 	<ReplyBtn />

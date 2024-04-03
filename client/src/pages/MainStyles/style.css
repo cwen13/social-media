@@ -25,6 +25,23 @@
   width: 20%;
 }
 
+#replys {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #7262d4;
+    border: ridge #1eeede 5px;
+}
+
+#replyHeadline {
+    width: 90%;
+    background: #1eeede;
+    display: flex;
+    fled-direction: row;
+    justify-content: center;
+    border: ridge #7262d4 5px;
+}
+
 .thought-and-replys {
   display: flex;
   flex-direciton: column;
@@ -110,6 +127,5 @@
     flex-direciton: row;
     background-color: #03c3c6;
     border-radius: 5px;
-    border: solid #342987 2px;
-     
+    border: solid #342987 2px;     
 }

@@ -1037,6 +1037,18 @@ const resolvers = {
 	      likedByUserId: context.user.id
 	    }
 	  )
+	  const updateThought = await Thought.update(
+	    {
+	      liked: true
+	    },
+	    {
+	      where:
+	      {
+		id: thoughtId
+	      },
+	    }
+	  );
+	  
 	  const acknowledge = await Notification.create(
 	    {
 	      fromUser: context.user.id,
@@ -1073,6 +1085,7 @@ const resolvers = {
 	{
 	  userId: context.user.id,
 	  content: content,
+	  type: "reply"
 	}
       );
 
@@ -1101,6 +1114,7 @@ const resolvers = {
 	  {
 	    userId: context.user.id,
 	    content: additionalThought,
+	    type: "rethought"
 	  }
 	);
 
