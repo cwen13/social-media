@@ -66,8 +66,8 @@ g
   height: 8rem;	 
 }
 
-.authorInfo p a,
-.authorInfo p {
+.authorInfo div a,
+.authorInfo div {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -75,7 +75,7 @@ g
   width: 30rem;
 }
 
-.authorInfo p a:last-child {
+.authorInfo div a:last-child {
   display: flex;
   justify-content: flex-end;
 }

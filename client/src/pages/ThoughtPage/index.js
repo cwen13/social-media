@@ -61,17 +61,6 @@ const ThoughtPage = () => {
     QUERY_ALL_RETHOUGHT_IDS,
   );
 
-  
-  //  const { loading: reThoughtLoading, error: reThoughtError, data: reThoughtData } = useQuery(
-  //    QUERY_RETHOUGHT,
-  //    {
-  //      variables:
-  //      {
-  //	originalThoughtId: postId
-  //      }
-  //    }
-  //  );
-  
   useEffect(() => {
     if(replysData != undefined && Object.keys(replysData).length != 0)
       console.log("REPLYS:", replysData);
