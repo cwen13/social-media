@@ -61,15 +61,19 @@ const Feed = (props) => {
       ? props.setBlocked(true)
       : props.setBlocked(false);
   }, [blockedList]);
-  
-  const updateFeed = useCallback((recentThought) =>
+
+  useEffect(() =>
     {
-      console.log("UPDATE");
+      updateFeed();
+    },[]
+  );
+  
+  const updateFeed = useCallback(() =>
+    {
       refetchData();
       replyIdsRefetch();
       reThoughtIdsRefetch();
-    },
-    []
+    },[]
   );
   
   if (queryLoading) return "Loading Query";

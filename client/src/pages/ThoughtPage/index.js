@@ -60,11 +60,6 @@ const ThoughtPage = () => {
   const { loading: reThoughtIdsLoading, error: reThoughtIdsError, data: reThoughtIdsData, refetch: reThoughtIdsRefetch } = useQuery(
     QUERY_ALL_RETHOUGHT_IDS,
   );
-
-  useEffect(() => {
-    if(replysData != undefined && Object.keys(replysData).length != 0)
-      console.log("REPLYS:", replysData);
-  }, [replysLoading, replysError, replysData]);  
   
   if(thoughtLoading) return "Loading";
   if(thoughtError) return console.log(thoughtError);

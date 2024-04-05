@@ -181,14 +181,18 @@ const ThoughtPost = (props) => {
       );
       setReThoughtText("");
       setIsReThought(false);
-      props.updateFeed(
-	{
-	  thought: reThoughtText,
-	  userId: userId,
-	  fromPage: props.page,
-	  createdAt: Date.now(),
+      console.log("Trying to rethought");
+      (props.page !== "ThoughtPage" &&	     
+       props.updateFeed(
+	 {
+	   thought: reThoughtText,
+	   userId: userId,
+	   fromPage: props.page,
+	   createdAt: Date.now(),
 	  postType: "reThought"
-	});
+	 }
+       )
+      ); 
     } catch (e) {
       throw new Error("You did not re the thought!");
       console.log(e);

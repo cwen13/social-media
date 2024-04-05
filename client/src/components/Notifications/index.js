@@ -239,10 +239,44 @@ const Notifications = () => {
     );
   }
 
+  const NotificationsAndClear = (notifs) => {
+    console.log(notifs);
+    try{
+      const clearAll = async (event) => {
+	event.preventDefault();
+	notifs.map((notif) => {
+	  ackNotif(
+	  {
+	    variables:
+	    {
+	      notificationId: notif.id
+	    }
+	  }
+	);
+	});
+      }
+    return(
+      <button id="clearNotifs"
+	      type="button"
+	      name="clearNotifs"
+	      onClick={clearAll}>
+	<p>Clear your notifications</p>
+	<p>({notifs.length})</p>
+      </button>
+    );
+          } catch (err) {
+      console.log("ERROR when clearing:", Object.keys(err));
+    }
+
+  };
+  
   return(
-    <ul className="notifications">
-      {notifications.map((notif) => RenderNotification(notif))}
-    </ul>
+    <>
+      {NotificationsAndClear(notificationsData.getMyNotifications)}
+      <ul className="notifications">
+	{notifications.map((notif) => RenderNotification(notif))}
+      </ul>
+    </>
   );
 }
 
