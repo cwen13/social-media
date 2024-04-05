@@ -240,12 +240,10 @@ const Notifications = () => {
   }
 
   const NotificationsAndClear = (notifs) => {
-    console.log(notifs);
-    try{
-      const clearAll = async (event) => {
-	event.preventDefault();
-	notifs.map((notif) => {
-	  ackNotif(
+    const clearAll = async (event) => {
+      event.preventDefault();
+      notifs.map((notif) => {
+	ackNotif(
 	  {
 	    variables:
 	    {
@@ -253,8 +251,8 @@ const Notifications = () => {
 	    }
 	  }
 	);
-	});
-      }
+      });
+    }
     return(
       <button id="clearNotifs"
 	      type="button"
@@ -264,10 +262,6 @@ const Notifications = () => {
 	<p>({notifs.length})</p>
       </button>
     );
-          } catch (err) {
-      console.log("ERROR when clearing:", Object.keys(err));
-    }
-
   };
   
   return(

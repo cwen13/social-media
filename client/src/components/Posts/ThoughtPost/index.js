@@ -35,9 +35,9 @@ const ThoughtPost = (props) => {
     postType
   } = useParams();
 
+  const userId = localStorage.getItem("user_id")
   
   const {
-    userId,
     loginUser,
     logoutUser,
     likedList,
@@ -240,6 +240,15 @@ const ThoughtPost = (props) => {
 	    thoughtId: props.thoughtId,
 	    content: thoughtText
 	  }
+	}
+      );
+      props.updateFeed(
+	{
+	  thought: props.thought,
+	  userId: userId,
+	  fromPage: props.page,
+	  createdAt: Date.now(),
+	  postType: props.type
 	}
       );
     } catch (e) {
