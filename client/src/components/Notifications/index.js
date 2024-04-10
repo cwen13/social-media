@@ -1,13 +1,11 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { Link, useParams } from "react-router-dom";
-
 import {
   APPROVE_FRIEND_REQUEST,
   DENY_FRIEND_REQUEST,
   ACKNOWLEDGE_NOTIFICATION
 } from "./../../utils/mutations";
-
 import {
   QUERY_USER_FRIENDS,
   GET_MY_NOTIFICATIONS
@@ -18,8 +16,8 @@ import "./style.css";
 
 const Notifications = () => {
 
-  const { userId } = useUserContext();
-
+  const userId = localStorage.getItem("user_id")
+  
   const [ notifications, setNotifications ] = useState([]);
 
   const { loading: notificationsLoading , error: notificationsError, data: notificationsData } = useQuery(
@@ -63,6 +61,7 @@ const Notifications = () => {
   
   useEffect(() =>{
     if(!notificationsLoading && !notificationsError && notificationsData !== undefined){
+      console.log("NOTIF DATA:", notificationsData.getMyNotifications);
       setNotifications(
 	[
 	  ...notificationsData.getMyNotifications

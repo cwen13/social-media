@@ -20,7 +20,8 @@ import {
   QUERY_ALL_RETHOUGHT_IDS,
   QUERY_RETHOUGHT_ORIGINAL_THOUGHT,
   QUERY_REPLY_ORIGINAL_THOUGHT,
-  QUERY_REPLYS
+  QUERY_REPLYS,
+  GET_MY_NOTIFICATIONS
 } from "./../../../utils/queries";
 import ReplyPost from "./../ReplyPost";
 import ReThoughtPost from "./../ReThoughtPost";
@@ -94,6 +95,15 @@ const ThoughtPost = (props) => {
   
   const [ addReThought, { error: rethoughtError }] = useMutation(
     RETHOUGHT_THOUGHT,
+    {
+      refetchqueries:
+      [
+	[
+	  GET_MY_NOTIFICATIONS,
+	  "getMyNotifications"
+	]
+      ]
+    }
   );
   
   const [ replyToThought, { error: replyError }] = useMutation(
@@ -182,17 +192,10 @@ const ThoughtPost = (props) => {
       setReThoughtText("");
       setIsReThought(false);
       console.log("Trying to rethought");
-      (props.page !== "ThoughtPage" &&	     
-       props.updateFeed(
-	 {
-	   thought: reThoughtText,
-	   userId: userId,
-	   fromPage: props.page,
-	   createdAt: Date.now(),
-	  postType: "reThought"
-	 }
-       )
-      ); 
+      if(props.page !== "ThoughtPage") {
+	props.updateFeed();
+	props.updateNotifs();
+      }; 
     } catch (e) {
       throw new Error("You did not re the thought!");
       console.log(e);
@@ -242,15 +245,7 @@ const ThoughtPost = (props) => {
 	  }
 	}
       );
-      props.updateFeed(
-	{
-	  thought: props.thought,
-	  userId: userId,
-	  fromPage: props.page,
-	  createdAt: Date.now(),
-	  postType: props.type
-	}
-      );
+      props.updateFeed();
     } catch (e) {
       console.log("Thought update was not commited to memory")
       console.log(e)
@@ -384,17 +379,10 @@ const ThoughtPost = (props) => {
       );
       setReplyText("");
       setIsReplying(false);
-      (props.page !== "ThoughtPage" &&
-       props.updateFeed(
-      	 {
-	   thought: reThoughtText,
-	   userId: userId,
-	   fromPage: props.page,
-	   createdAt: Date.now(),
-	   postType: "reply"
-	 }
-       )
-      );
+      if(props.page !== "ThoughtPage") {
+	props.updateFeed();
+	props.updateNotifs();
+      }; 
     } catch (e) {
       throw new Error("You did not reply to the thought!");
       console.log(e);

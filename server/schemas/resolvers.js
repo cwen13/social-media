@@ -632,13 +632,12 @@ const resolvers = {
 	  order:
 	  [
 	    [
-	      "createdAt", "ASC"
+	      "createdAt", "DESC"
 	    ]
 	  ]
 	  
 	}
       )
-      //console.log("NOTIFS:",notifications.map(entry => entry.get({plain:true})));
 
       return notifications
     },

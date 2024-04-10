@@ -56,6 +56,14 @@ const Feed = (props) => {
       queryString,
   );
 
+  const updateFeed = useCallback(() =>
+    {
+      refetchData();
+      replyIdsRefetch();
+      reThoughtIdsRefetch();
+    },[]
+  );
+  
   useEffect(() => {
     (blockedList.filter(blockedUser => parseInt(blockedUser.id) === props.auserPageId).length !== 0)
       ? props.setBlocked(true)
@@ -67,15 +75,7 @@ const Feed = (props) => {
       updateFeed();
     },[]
   );
-  
-  const updateFeed = useCallback(() =>
-    {
-      refetchData();
-      replyIdsRefetch();
-      reThoughtIdsRefetch();
-    },[]
-  );
-  
+    
   if (queryLoading) return "Loading Query";
   if (queryError) return `Q Error ${queryError.message}`;
   if (reThoughtIdsLoading) return "Loading rethought ids";
@@ -125,7 +125,7 @@ const Feed = (props) => {
 			  type={thought.type}
 			  liked={isLiked(thought.id)}
 			  updateFeed={updateFeed}
-			  
+			  updateNotifs={props.updateNotifs}
 	     />
 	   </li>
 	 )}
