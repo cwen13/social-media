@@ -2,10 +2,11 @@ import React, { useState } from "react";
 
 import { useUserContext } from "./../../utils/UserContext";
 import UserInfo from "./../../components/UserInfo";
-
+import Auth from "./../../utils/auth";
 import "./../MainStyles/style.css";
 
 function Search() {
+    if(!Auth.loggedIn()) window.location.assign("/Mainfeed");
   const { userId, setUserId } = useUserContext;
 
   const [searchKey, setSearchKey ] = useState("");

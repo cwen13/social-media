@@ -4,6 +4,7 @@ import { pluralize } from './../../../utils/helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import { idbPromise } from './../../../utils/helpers';
 import { useMutation, useQuery } from "@apollo/client"
+import Auth from "./../../../utils/auth";
 import {
   REMOVE_THOUGHT,
   UPDATE_THOUGHT,
@@ -42,7 +43,8 @@ const ThoughtPost = (props) => {
     loginUser,
     logoutUser,
     likedList,
-    setLikedList
+    setLikedList,
+    updateNotifs
   } = useUserContext();
   
   const replyAreaRef = useRef(null);
@@ -92,17 +94,19 @@ const ThoughtPost = (props) => {
       ]
     }
   );
+
   
   const [ addReThought, { error: rethoughtError }] = useMutation(
     RETHOUGHT_THOUGHT,
     {
-      refetchqueries:
-      [
-	[
-	  GET_MY_NOTIFICATIONS,
-	  "getMyNotifications"
+      refetchqueries: Auth.loggedIn()
+	? [
+	  [
+	    GET_MY_NOTIFICATIONS,
+	    "getMyNotifications"
+	  ]
 	]
-      ]
+	: []
     }
   );
   
@@ -194,7 +198,7 @@ const ThoughtPost = (props) => {
       console.log("Trying to rethought");
       if(props.page !== "ThoughtPage") {
 	props.updateFeed();
-	props.updateNotifs();
+	updateNotifs();
       }; 
     } catch (e) {
       throw new Error("You did not re the thought!");
@@ -381,7 +385,7 @@ const ThoughtPost = (props) => {
       setIsReplying(false);
       if(props.page !== "ThoughtPage") {
 	props.updateFeed();
-	props.updateNotifs();
+	updateNotifs();
       }; 
     } catch (e) {
       throw new Error("You did not reply to the thought!");

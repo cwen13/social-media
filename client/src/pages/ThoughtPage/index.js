@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { useUserContext } from "./../../utils/UserContext";
 import { useQuery } from "@apollo/client";
@@ -9,6 +9,7 @@ import {
   QUERY_ALL_RETHOUGHT_IDS,
   QUERY_ALL_REPLY_IDS,
 } from "./../../utils/queries";
+import Auth from "./../../utils/auth";
 
 import UserInfo from "./../../components/UserInfo";
 import ThoughtPost from "./../../components/Posts/ThoughtPost";
@@ -17,6 +18,9 @@ import ThoughtPost from "./../../components/Posts/ThoughtPost";
 import "./../MainStyles/style.css";
 
 const ThoughtPage = () => {
+
+  if(!Auth.loggedIn()) window.location.assign("/Mainfeed");
+  
   const page = "ThoughtPage";
 
   const {
@@ -30,7 +34,7 @@ const ThoughtPage = () => {
     userId,
     loginUSer,
     logoutUser,
-    likedList
+    likedList,
   } = useUserContext();
   
   const { loading: thoughtLoading, error: thoughtError, data: thoughtData } = useQuery(
@@ -60,7 +64,8 @@ const ThoughtPage = () => {
   const { loading: reThoughtIdsLoading, error: reThoughtIdsError, data: reThoughtIdsData, refetch: reThoughtIdsRefetch } = useQuery(
     QUERY_ALL_RETHOUGHT_IDS,
   );
-  
+
+
   if(thoughtLoading) return "Loading";
   if(thoughtError) return console.log(thoughtError);
   if(replysLoading)return "Loading"

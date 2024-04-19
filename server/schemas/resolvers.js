@@ -327,7 +327,6 @@ const resolvers = {
 
 	}
       );
-      console.log("REPLYS:", replys.replyThoughts);
       return replys.replyThoughts;
     },
 

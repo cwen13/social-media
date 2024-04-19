@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import {
   QUERY_USER,
 } from "./../../utils/queries";
+import Auth from "./../../utils/auth";
 import UserInfo from "./../../components/UserInfo";
 import Feed from "./../../components/Feed";
 import "./../MainStyles/style.css";
@@ -11,7 +12,8 @@ import "./../MainStyles/style.css";
 import { useUserContext } from "./../../utils/UserContext";
 
 function UserPage() {
-
+  if(!Auth.loggedIn()) window.location.assign("/Mainfeed");
+  
   const {
     blockedList,
     setBlockedList,

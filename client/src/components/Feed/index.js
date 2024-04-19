@@ -125,7 +125,6 @@ const Feed = (props) => {
 			  type={thought.type}
 			  liked={isLiked(thought.id)}
 			  updateFeed={updateFeed}
-			  updateNotifs={props.updateNotifs}
 	     />
 	   </li>
 	 )}

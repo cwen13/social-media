@@ -14,15 +14,13 @@ import {
 import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
-const Notifications = () => {
+const Notifications = (props) => {
 
   const userId = localStorage.getItem("user_id")
   
-  const [ notifications, setNotifications ] = useState([]);
-
-  const { loading: notificationsLoading , error: notificationsError, data: notificationsData } = useQuery(
-    GET_MY_NOTIFICATIONS
-  );
+  const {
+    notifications,
+  } = useUserContext()
   
   const [ approveFriend, { error: approveError }] = useMutation(
     APPROVE_FRIEND_REQUEST,
@@ -59,20 +57,6 @@ const Notifications = () => {
     }
   );
   
-  useEffect(() =>{
-    if(!notificationsLoading && !notificationsError && notificationsData !== undefined){
-      console.log("NOTIF DATA:", notificationsData.getMyNotifications);
-      setNotifications(
-	[
-	  ...notificationsData.getMyNotifications
-	]
-      )
-    }
-  },[notificationsLoading, notificationsError, notificationsData]);
-
-  if(notificationsLoading) return "Loading notifications";
-  if(notificationsError) return "Error Loading notifs";
-
   const approveFR = async (event, userId) => {
     event.preventDefault();
     const approveRequest = await approveFriend(
@@ -238,37 +222,55 @@ const Notifications = () => {
     );
   }
 
-  const NotificationsAndClear = (notifs) => {
-    const clearAll = async (event) => {
-      event.preventDefault();
-      notifs.map((notif) => {
-	ackNotif(
-	  {
-	    variables:
-	    {
-	      notificationId: notif.id
-	    }
-	  }
-	);
-      });
-    }
-    return(
-      <button id="clearNotifs"
-	      type="button"
-	      name="clearNotifs"
-	      onClick={clearAll}>
-	<p>Clear your notifications</p>
-	<p>({notifs.length})</p>
-      </button>
-    );
-  };
+  const NotificationsAndClear = () =>
+	{
+	  const doNothing = (event) =>
+		{
+		  event.preventDefault();
+		  return;
+		};
+	  const clearAll = async (event) =>
+		{
+		  event.preventDefault();
+		  notifications.map((notif) =>
+		    {
+		      ackNotif(
+			{
+			  variables:
+			  {
+			    notificationId: notif.id
+			  }
+			}
+		      );
+		    }
+		  );
+		}
+	  return(
+	    <button id="clearNotifs"
+		    type="button"
+		    name="clearNotifs"
+		    onClick={(notifications === null)
+			     ? doNothing
+			     : clearAll}>
+	      {(notifications === null)
+	       ? "No current notifications"
+	       : <>
+		   Clear your notifications
+	           <br/>
+		   ({notifications.length})
+		 </>}
+	    </button>
+	  );
+	};
   
   return(
     <>
-      {NotificationsAndClear(notificationsData.getMyNotifications)}
-      <ul className="notifications">
-	{notifications.map((notif) => RenderNotification(notif))}
-      </ul>
+      <NotificationsAndClear />
+      {!(notifications === null)
+       && <ul className="notifications">
+	    {notifications.map((notif) => RenderNotification(notif))}
+	  </ul>
+      }
     </>
   );
 }

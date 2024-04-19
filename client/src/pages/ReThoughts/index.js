@@ -7,9 +7,10 @@ import { QUERY_MY_LIKED } from "./../../utils/queries";
 import UserInfo from "./../../components/UserInfo";
 import Feed from "./../../components/Feed";
 import "./../MainStyles/style.css";
+import Auth from "./../../utils/auth";
 
 const ReThoughts = () => {
-
+  if(!Auth.loggedIn()) window.location.assign("/Mainfeed");
   const page = "UserReThoughts"
   const userPageId = parseInt(useParams().userId)
   

@@ -12,10 +12,11 @@ import FriendList from "./../../components/UserLists/Friends";
 import FollowingList from "./../../components/UserLists/Following";
 import BlockedList from "./../../components/UserLists/Blocked";
 import { useUserContext } from "./../../utils/UserContext";
-
+import Auth from "./../../utils/auth";
 import "./../MainStyles/style.css";
 
 const UserRelations = () => {
+if(!Auth.loggedIn()) window.location.assign("/Mainfeed");
   const page = "UserRelataions";
   
   const {

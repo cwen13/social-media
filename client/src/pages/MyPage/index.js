@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import UserInfo from "./../../components/UserInfo";
 import Feed from "./../../components/Feed";
@@ -11,13 +11,17 @@ import {
   QUERY_USER_RETHOUGHTS,
   QUERY_ALL_RETHOUGHT_IDS,
   QUERY_ALL_REPLY_IDS,
-  QUERY_MY_BLOCKED_USERS
+  QUERY_MY_BLOCKED_USERS,
+  GET_MY_NOTIFICATIONS,
 } from "./../../utils/queries";
+import Auth from "./../../utils/auth";
 import { useUserContext } from "./../../utils/UserContext";
 import ThoughtPost from "./../../components/Posts/ThoughtPost";
 import "./../MainStyles/style.css";
 
 function MyPage() {  
+  if(!Auth.loggedIn()) window.location.assign("/Mainfeed");
+
   const page = "MyPage"
 
   const {
@@ -33,10 +37,6 @@ function MyPage() {
     setLikedList
   } = useUserContext();
 
-  let userId = localStorage.getItem("user_id");  
-  const userPageId = parseInt(useParams().userId)
-  const [ blocked, setBlocked ] = useState(userId !== userPageId
-					   && blockedList.filter(blockedUser => parseInt(blockedUser.id) === userPageId).length !== 0);
   const queryOptions = {
     MyPage : QUERY_USER_THOUGHTS,
     UserPage: QUERY_USER_THOUGHTS,
@@ -52,13 +52,21 @@ function MyPage() {
     Liked: "getUserLiked",
     UserReThoughts: "getUserReThoughts"
   };
-  
+
+  let userId = localStorage.getItem("user_id");  
+
+  const userPageId = parseInt(useParams().userId)
+
+  const [ blocked, setBlocked ] = useState(userId !== userPageId
+					   && blockedList.filter(blockedUser => parseInt(blockedUser.id) === userPageId).length !== 0);
+
+ 
   useEffect(() => {
     (blockedList.filter(blockedUser => parseInt(blockedUser.id) === userPageId).length !== 0)
       ? setBlocked(true)
       : setBlocked(false);
   }, [blockedList])
-  
+
   return(
     <section id="feedContainer">
       <UserInfo id="userInfo"
