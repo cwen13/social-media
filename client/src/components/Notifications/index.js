@@ -1,13 +1,11 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { Link, useParams } from "react-router-dom";
-
 import {
   APPROVE_FRIEND_REQUEST,
   DENY_FRIEND_REQUEST,
   ACKNOWLEDGE_NOTIFICATION
 } from "./../../utils/mutations";
-
 import {
   QUERY_USER_FRIENDS,
   GET_MY_NOTIFICATIONS
@@ -16,15 +14,13 @@ import {
 import { useUserContext } from "./../../utils/UserContext";
 import "./style.css";
 
-const Notifications = () => {
+const Notifications = (props) => {
 
-  const { userId } = useUserContext();
-
-  const [ notifications, setNotifications ] = useState([]);
-
-  const { loading: notificationsLoading , error: notificationsError, data: notificationsData } = useQuery(
-    GET_MY_NOTIFICATIONS
-  );
+  const userId = localStorage.getItem("user_id")
+  
+  const {
+    notifications,
+  } = useUserContext()
   
   const [ approveFriend, { error: approveError }] = useMutation(
     APPROVE_FRIEND_REQUEST,
@@ -61,19 +57,6 @@ const Notifications = () => {
     }
   );
   
-  useEffect(() =>{
-    if(!notificationsLoading && !notificationsError && notificationsData !== undefined){
-      setNotifications(
-	[
-	  ...notificationsData.getMyNotifications
-	]
-      )
-    }
-  },[notificationsLoading, notificationsError, notificationsData]);
-
-  if(notificationsLoading) return "Loading notifications";
-  if(notificationsError) return "Error Loading notifs";
-
   const approveFR = async (event, userId) => {
     event.preventDefault();
     const approveRequest = await approveFriend(
@@ -239,10 +222,56 @@ const Notifications = () => {
     );
   }
 
+  const NotificationsAndClear = () =>
+	{
+	  const doNothing = (event) =>
+		{
+		  event.preventDefault();
+		  return;
+		};
+	  const clearAll = async (event) =>
+		{
+		  event.preventDefault();
+		  notifications.map((notif) =>
+		    {
+		      ackNotif(
+			{
+			  variables:
+			  {
+			    notificationId: notif.id
+			  }
+			}
+		      );
+		    }
+		  );
+		}
+	  return(
+	    <button id="clearNotifs"
+		    type="button"
+		    name="clearNotifs"
+		    onClick={(notifications === null)
+			     ? doNothing
+			     : clearAll}>
+	      {(notifications === null)
+	       ? "No current notifications"
+	       : <>
+		   Clear your notifications
+	           <br/>
+		   ({notifications.length})
+		 </>}
+	    </button>
+	  );
+	};
+  
   return(
-    <ul className="notifications">
-      {notifications.map((notif) => RenderNotification(notif))}
-    </ul>
+    <>
+      <NotificationsAndClear />
+      {!(notifications === null)
+       && <ul className="notifications">
+	    {notifications.map((notif) => RenderNotification(notif))}
+	  </ul>
+      }
+    </>
   );
 }
 

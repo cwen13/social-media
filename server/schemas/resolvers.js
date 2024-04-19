@@ -327,7 +327,6 @@ const resolvers = {
 
 	}
       );
-      console.log("REPLYS:", replys.replyThoughts);
       return replys.replyThoughts;
     },
 
@@ -632,13 +631,12 @@ const resolvers = {
 	  order:
 	  [
 	    [
-	      "createdAt", "ASC"
+	      "createdAt", "DESC"
 	    ]
 	  ]
 	  
 	}
       )
-      //console.log("NOTIFS:",notifications.map(entry => entry.get({plain:true})));
 
       return notifications
     },

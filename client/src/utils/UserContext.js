@@ -1,4 +1,4 @@
-import React, { useContext, createContext, useState, useEffect } from "react";
+import React, { useContext, createContext, useState, useEffect, useCallback } from "react";
 import { useQuery } from "@apollo/client";
 import {
   LOGIN_USER,
@@ -7,7 +7,8 @@ import {
   QUERY_MY_LIKED,
   QUERY_MY_FRIENDS,
   QUERY_MY_FOLLOWING,
-  QUERY_MY_PENDING_REQUESTS
+  QUERY_MY_PENDING_REQUESTS,
+  GET_MY_NOTIFICATIONS
 } from "./queries";
 import Auth from "./auth";
 
@@ -30,6 +31,7 @@ export const UserContextProvider = ({ children }) => {
   const [ followList, setFollowList ] = useState([]);
   const [ pendList, setPendList ] = useState([]);
   const [ profilePicture, setProfilePicture ] = useState([]);
+  const [ notifications, setNotifications ] = useState([]);
   
   const { loading: loadingBlockedList, error: errorBlockedList, data: dataBlockedList } = useQuery(
     QUERY_MY_BLOCKED_USERS
@@ -54,6 +56,39 @@ export const UserContextProvider = ({ children }) => {
   const { loading: loadingUser, error: errorUser, data: dataUser } = useQuery(
     QUERY_ME,
   );
+
+  const { loading: notificationsLoading , error: notificationsError, data: notificationsData, refetch: notificationsRefetch } = useQuery(
+    GET_MY_NOTIFICATIONS
+  );  
+  
+  const updateNotifs = useCallback(() =>
+    {
+      notificationsRefetch();
+    },[]
+  );
+
+  useEffect(() =>
+    {
+      updateNotifs();
+    },[]
+  );
+  
+  useEffect(() =>{
+    if(Auth.loggedIn() && !notificationsLoading && !notificationsError && notificationsData !== undefined){
+      if(notificationsData.getMyNotifications.length === 0)
+      {
+	setNotifications(null);	
+      }
+      else
+      {
+	setNotifications(
+	  [
+	    ...notificationsData.getMyNotifications
+	  ]
+	)
+      }
+    }
+  },[notificationsLoading, notificationsError, notificationsData]);
   
   useEffect(() => {
 
@@ -145,6 +180,8 @@ export const UserContextProvider = ({ children }) => {
 				  setFollowList,
 				  pendList,
 				  setPendList,
+				  notifications,
+				  updateNotifs
 				 }}>
       {children}
     </UserContext.Provider>

@@ -9,11 +9,11 @@ QUERY_USER
 import {
   UPDATE_USER
 } from "./../../utils/mutations";
-
 import { useUserContext } from "./../../utils/UserContext";
 
 const EditProfile = () => {
-
+  if(!Auth.loggedIn()) window.location.assign("/Mainfeed");
+  
   let userId = localStorage.getItem("user_id");  
   
   const [ userUpdate, setUserUpdate ] = useState(

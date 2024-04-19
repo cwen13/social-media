@@ -42,7 +42,6 @@
   margin: 0rem 0rem -0.4rem 0rem;
 }
 
-
 .liked-thought {
   background-color: purple ;
 }
@@ -71,7 +70,6 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-
   width: 30rem;
 }
 
@@ -157,4 +155,17 @@
   background-color: #7262d4;
   width: 100%;
   margin: 0rem 0rem -0.4rem 0rem;
+}
+
+.authorInfo div  {
+    & a:link {
+	color: #1eeede;
+    }
+    & a:visited {
+	color: red;
+    }
+    & a:hover {
+	color: yellow;
+    }
+    
 }

@@ -4,6 +4,7 @@ import { pluralize } from './../../../utils/helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import { idbPromise } from './../../../utils/helpers';
 import { useMutation, useQuery } from "@apollo/client"
+import Auth from "./../../../utils/auth";
 import {
   REMOVE_THOUGHT,
   UPDATE_THOUGHT,
@@ -20,7 +21,8 @@ import {
   QUERY_ALL_RETHOUGHT_IDS,
   QUERY_RETHOUGHT_ORIGINAL_THOUGHT,
   QUERY_REPLY_ORIGINAL_THOUGHT,
-  QUERY_REPLYS
+  QUERY_REPLYS,
+  GET_MY_NOTIFICATIONS
 } from "./../../../utils/queries";
 import ReplyPost from "./../ReplyPost";
 import ReThoughtPost from "./../ReThoughtPost";
@@ -35,13 +37,14 @@ const ThoughtPost = (props) => {
     postType
   } = useParams();
 
+  const userId = localStorage.getItem("user_id")
   
   const {
-    userId,
     loginUser,
     logoutUser,
     likedList,
-    setLikedList
+    setLikedList,
+    updateNotifs
   } = useUserContext();
   
   const replyAreaRef = useRef(null);
@@ -91,9 +94,20 @@ const ThoughtPost = (props) => {
       ]
     }
   );
+
   
   const [ addReThought, { error: rethoughtError }] = useMutation(
     RETHOUGHT_THOUGHT,
+    {
+      refetchqueries: Auth.loggedIn()
+	? [
+	  [
+	    GET_MY_NOTIFICATIONS,
+	    "getMyNotifications"
+	  ]
+	]
+	: []
+    }
   );
   
   const [ replyToThought, { error: replyError }] = useMutation(
@@ -181,14 +195,11 @@ const ThoughtPost = (props) => {
       );
       setReThoughtText("");
       setIsReThought(false);
-      props.updateFeed(
-	{
-	  thought: reThoughtText,
-	  userId: userId,
-	  fromPage: props.page,
-	  createdAt: Date.now(),
-	  postType: "reThought"
-	});
+      console.log("Trying to rethought");
+      if(props.page !== "ThoughtPage") {
+	props.updateFeed();
+	updateNotifs();
+      }; 
     } catch (e) {
       throw new Error("You did not re the thought!");
       console.log(e);
@@ -238,6 +249,7 @@ const ThoughtPost = (props) => {
 	  }
 	}
       );
+      props.updateFeed();
     } catch (e) {
       console.log("Thought update was not commited to memory")
       console.log(e)
@@ -371,17 +383,10 @@ const ThoughtPost = (props) => {
       );
       setReplyText("");
       setIsReplying(false);
-      (props.page !== "ThoughtPage" &&
-       props.updateFeed(
-      	 {
-	   thought: reThoughtText,
-	   userId: userId,
-	   fromPage: props.page,
-	   createdAt: Date.now(),
-	   postType: "reply"
-	 }
-       )
-      );
+      if(props.page !== "ThoughtPage") {
+	props.updateFeed();
+	updateNotifs();
+      }; 
     } catch (e) {
       throw new Error("You did not reply to the thought!");
       console.log(e);

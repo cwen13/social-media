@@ -27,9 +27,9 @@ import Auth from "./../../utils/auth";
 
 import "./style.css";
 
-const UserInfo = ({ page, userPageId, blocked, setBlocked }) => {
+const UserInfo = ({ page, userPageId, blocked, setBlocked, notifications }) => {
 
-   const {
+  const {
     blockedList,
     setBlockedList,
     friendList,

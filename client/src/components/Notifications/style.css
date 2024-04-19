@@ -15,8 +15,11 @@
     border-style:  dotted none dotted none;
     border-color:  #fb0df1;
     border-size: 5px;
-
   }
+}
+
+.notifications #clearNotifs {
+    width: 95%;
 }
 
 .userCard {
