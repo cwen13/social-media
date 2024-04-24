@@ -95,8 +95,11 @@ const ThoughtCreate = ({ userId, page }) => {
 	<label>Add your thought</label>
 	<textarea placeholder="Put your thought into the database"
 		  rows="4"
-		  cols="33"
+		  cols="30"
 		  id="thoughtCreate"
+		  maxlength="254"
+		  spellcheck="true"
+		  wrap="soft"
 		  onChange={handleChange}>
 	</textarea>
 	<button id="postThought" onClick={postThought}>

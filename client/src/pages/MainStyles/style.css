@@ -1,57 +1,65 @@
-#feed {
-  width: 90%;
+#feed 
+{
+  width: 80%;
   display:flex;
   flex-direction: column;
   align-items: center;
   flex-shrink: 0;
 }
 
-#feedContainer {
-  width: 666px;
+#feedContainer 
+{
+  width: 600px;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
-  flex-shrink: 0;
 }
 
-#mainFeed .mainPage {
+#mainFeed .mainPage 
+{
   width: 100%;
   display: flex;
   flex-direction:row;
   flex-shrink: 0;
 }
 
-#userInfo {
+#userInfo 
+{
   width: 20%;
 }
 
-#replys {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: #7262d4;
-    border: ridge #1eeede 5px;
+#replys 
+{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #7262d4;
+  border: ridge #1eeede 5px;
 }
 
-#replyHeadline {
-    width: 90%;
-    background: #1eeede;
-    display: flex;
-    fled-direction: row;
-    justify-content: center;
-    border: ridge #7262d4 5px;
+#replyHeadline 
+{
+  width: 90%;
+  background: #1eeede;
+  display: flex;
+  fled-direction: row;
+  justify-content: center;
+  border: ridge #7262d4 5px;
 }
 
-.thought-and-replys {
+.thought-and-replys 
+{
   display: flex;
   flex-direciton: column;
 }
 
-#replys li {
+#replys li 
+{
   background-color: #a0c0ec;
 }
 
-#friendLists {
+#friendLists 
+{
   display: flex;
   flex-direction: column;
   width: 50rem;
@@ -64,24 +72,27 @@
 #pendingFriends,
 #currentFriends,
 #usersFollowing,
-#blockedUsers{
+#blockedUsers
+{
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.attribute {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    width: 13rem;
+.attribute 
+{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 13rem;
 }
 
-#pfp {
-    display:flex;
-    flex-directon: column;
-    justify-content: center;
+#pfp 
+{
+  display:flex;
+  flex-directon: column;
+  justify-content: center;
 
 }
 
@@ -90,42 +101,59 @@
 #signUp,
 #friends,
 #following,
-#blocked{
-    background-color: #03c3c6;
-    border-radius: 5px;
-    border: solid #342987 2px;
-    width: 15rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 2.5rem;
+#blocked
+{
+  background-color: #03c3c6;
+  border-radius: 5px;
+  border: solid #342987 2px;
+  width: 15rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2.5rem;
 }
 
-.loginPage {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.loginPage 
+{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-#userLists {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+#userLists 
+{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-.relations {
-    margin: 1rem 0.5rem 0rem 0.5rem;
+.relations 
+{
+  margin: 1rem 0.5rem 0rem 0.5rem;
 }
 
-#relationships {
-    display: flex;
-    flex-direction: column;
+#relationships 
+{
+  display: flex;
+  flex-direction: column;
 }
 
-#userHeader {
-    display: flex;
-    flex-direciton: row;
-    background-color: #03c3c6;
-    border-radius: 5px;
-    border: solid #342987 2px;     
+#userHeader 
+{
+  display: flex;
+  flex-direciton: row;
+  background-color: #03c3c6;
+  border-radius: 5px;
+  border: solid #342987 2px;     
+}
+
+.thoughts
+{
+  display: flex;
+  flex-direction: column;
+}
+
+#replys
+{
+  margin: 0rem 0.5rem 0rem 0.5rem;
 }

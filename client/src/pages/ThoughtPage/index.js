@@ -78,8 +78,8 @@ const ThoughtPage = () => {
 		userPageId={userPageId}
 		page={page}
       />
-      <div className="thoughts">
-	<div id="mainThought">
+      <ul className="thoughts">
+	<li id="mainThought">
 	  {thoughtLoading && Object.keys(thoughtData).length !== 0 && thoughtData.getThought !== null ? "LOADING" :
 	   <ThoughtPost key={thoughtData.getThought.id}
 			userName={thoughtData.getThought.thoughtAuthor.userName}	    
@@ -91,9 +91,9 @@ const ThoughtPage = () => {
 			page={page}
 			type={thoughtData.getThought.type}
 	   />}
-	</div>
-	<div id="replys">
-	  <div id="replyHeadline"> REPLYS </div>
+	</li>
+	<ul id="replys" className="thoughts">
+	  <li id="replyHeadline"> REPLYS </li>
 	  {replysLoading && Object.keys(replysData).length !== 0 && replysData.getThoughtReplys !== undefined
 	   ? (!replysError && Object.keys(replysData) === 0 ? "NO REPLYS" :  "LOADING")
 	   : replysData.getThoughtReplys.map((reply) =>
@@ -107,8 +107,8 @@ const ThoughtPage = () => {
 			  type={reply.type}
 	     />)}
 
-	</div>
-      </div>
+	</ul>
+      </ul>
     </section>);
 };
 
