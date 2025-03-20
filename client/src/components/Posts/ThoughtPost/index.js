@@ -470,7 +470,7 @@ const ThoughtPost = (props) => {
   return(
     <div className={`post ${props.page === "ThoughtPage" && "reverse"}`}>
       <section className="authorInfo">
-	<div>
+	<div id="user-info">
 	  <Link to={`/user/${props.userId}`}>
 	    <span className="pfpCircle">
 	      <img className="pfp" src={`/images/pfp/${props.profilePicture}`}/>
@@ -479,7 +479,8 @@ const ThoughtPost = (props) => {
 	    <br/>
 	    {props.handle} 
 	  </Link>
-	  <Link to={`/thought/${props.thoughtId}/${props.type}`}>
+	  <Link className="thought-id"
+		to={`/thought/${props.thoughtId}/${props.type}`}>
 	    Thought: {props.thoughtId}
 	  </Link>
 	</div>

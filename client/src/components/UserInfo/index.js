@@ -173,6 +173,11 @@ const UserInfo = ({ page, userPageId, blocked, setBlocked, notifications }) => {
   if(userError) return `Error User ${userError.message}`;
   if(loadingFriends) return "Loading Friends";
   if(followingLoading) return "Loading Following";
+
+  let userEmail = userPage?.email;
+  let localEmail = (userEmail ? userEmail.slice(0,userEmail.indexOf("@")) : "");
+  let domainEmail = (userEmail ? userEmail.slice(userEmail.indexOf("@")) : "");
+  
   
   //-------------------------
   //-------FRIENDSHIP-BUTTON-
@@ -449,7 +454,7 @@ const UserInfo = ({ page, userPageId, blocked, setBlocked, notifications }) => {
     <section className="userInfo" >
       <section className="profile">
 	
-	<h1>=^={userPage?.userName}=^=</h1>
+	<h1>={userPage?.userName}=</h1>
 	<div className="pfp">
 	  {userPage?.profilePicture
 	   ? <img src={`/images/pfp/${userPage?.profilePicture}`}
@@ -463,12 +468,19 @@ const UserInfo = ({ page, userPageId, blocked, setBlocked, notifications }) => {
 	  }
 	</div>
 	<div className="names">
-	  NAME: {userPage?.handle}
+	  {userPage?.handle}
 	</div>
 	
 	{blocked ? "" :
 	 <div className="email">
-	   EMAIL: {userPage?.email}
+	   <a href={`mailto:{userEmail}`}>
+	     <div id="local-name">
+	       {localEmail}
+	     </div>
+	     <div id="domain">
+	       {domainEmail}
+	     </div>
+	   </a>
 	 </div>}
 
 	{(userPage?.id === userId || page === "MainFeed") && userPage?.id !== 0

@@ -79,10 +79,10 @@
 }
 
 .authorInfo img {
-  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  border-radius: 50%;
   padding: 0rem;
-  width: 6.25rem;
-  height: 6.25rem;
+  width: 6rem;
+  height: 6rem;
   background-color: #d82d1b;
 }
 
@@ -90,7 +90,7 @@
   background-color: #fb0df1;
   border: solid #fbfc0b 0.1rem;
   border-radius: 50%;
-  margin: 0rem 0.4rem 0rem 0rem;
+  margin: 0rem 0rem 0rem 0.75rem;
 }
 
 .authorInfoReThought {
@@ -105,13 +105,11 @@
   border-radius: 1rem;
 }
 
-
 .originalAuthor {
   display: flex;
   flex-direciton: row;
   justify-content: space-between;
 }
-
 
 .originalThought {
   margin: 0.4rem;
@@ -155,6 +153,11 @@
   background-color: #7262d4;
   width: 100%;
   margin: 0rem 0rem -0.4rem 0rem;
+}
+
+.thought-id {
+  margin: 1rem;
+    
 }
 
 .authorInfo div  {
