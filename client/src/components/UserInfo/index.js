@@ -408,7 +408,7 @@ const UserInfo = ({ page, userPageId, blocked, setBlocked, notifications }) => {
 	     </li>
 	     <li>
 	       <Link to={`/userRelations`}>
-		 Friends, following, and blocked!
+		 USER RELATIONS!
 	       </Link>
 	     </li>
 	     

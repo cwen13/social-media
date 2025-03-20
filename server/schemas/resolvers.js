@@ -124,7 +124,7 @@ const resolvers = {
     
     
     //STATUS: WORKING
-    getMyThoughts: async (parent, args, context) => {
+    getMyThoughts: async (parent, args, context) => {      
       //return await Thought.findAll({ where: { userId: context.user.id }});
       return await Thought.findAll(
 	{
@@ -151,6 +151,7 @@ const resolvers = {
     //STATUS: WORKING
     getAllThoughts: async (parent, args, context) => {
       if (context.user) {
+
 	const blocking = (
 	  await Blocked.findAll(
 	    {
@@ -277,7 +278,8 @@ const resolvers = {
     },
 
     //STATUS: WORKING
-    getUserThoughts: async (parent, { userId }, context) => {
+    getUserThoughts: async (parent, { userId, page }, context) => {
+      
       const userThoughts = await Thought.findAll(
 	{
 	  where:
@@ -297,7 +299,6 @@ const resolvers = {
 	  ]
 	}
       );
-      //      console.log(userThoughts);
       return userThoughts;
     },
 

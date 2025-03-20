@@ -95,10 +95,10 @@ const ThoughtCreate = ({ userId, page }) => {
 	<label>Add your thought</label>
 	<textarea placeholder="Put your thought into the database"
 		  rows="4"
-		  cols="30"
+		  cols="25"
 		  id="thoughtCreate"
-		  maxlength="254"
-		  spellcheck="true"
+		  maxLength="254"
+		  spellCheck="true"
 		  wrap="soft"
 		  onChange={handleChange}>
 	</textarea>

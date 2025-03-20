@@ -24,6 +24,8 @@ const Feed = (props) => {
     setBlockedList
   } = useUserContext();
 
+  let [ page, setPage ] = useState(0);
+  
   const queryOptions = {
     MyPage : QUERY_USER_THOUGHTS,
     UserPage: QUERY_USER_THOUGHTS,
@@ -48,12 +50,26 @@ const Feed = (props) => {
       QUERY_ALL_RETHOUGHT_IDS,
   );
   
-  const queryString = (props.page === "MainFeed" && props.userPageId === undefined || props.userPageId === 0)
-	? "" : { variables: { userId: (props.page === "MyPage" ? props.userId : props.userPageId) }};
+  // add page to query string for 
+  //  const queryString = (props.page === "MainFeed" && props.userPageId === undefined || props.userPageId === 0)
+  //	? "" : { variables: { userId: (props.page === "MyPage" ? props.userId : props.userPageId) }};
+  
+  //  const queryString = {variables: {page: page, (props.page === "MainFeed" && props.userPageId === undefined || props.userPageId === 0)
+  
+  
+  const queryString = {
+    variables: {
+      page: page,
+      userId: (props.page === "MainFeed" && props.userPageId === undefined || props.userPageId === 0)
+	? ""
+	: (props.page === "MyPage" ? props.userId : props.userPageId)
+    }
+  }
 
+  
   const { loading: queryLoading, error: queryError, data: queryData, refetch: refetchData } = useQuery(
     queryOptions[props.page],
-      queryString,
+    queryString,
   );
 
   const updateFeed = useCallback(() =>
@@ -105,8 +121,8 @@ const Feed = (props) => {
     }
   }
 
-  const isLiked = (thoughtId) => likedList.includes(thoughtId);
-    
+  const isLiked = (thoughtId) => likedList.includes(thoughtId);	
+  
   return (
     <div className="feed">
       <ul className="feedPosts">
@@ -129,12 +145,22 @@ const Feed = (props) => {
 	   </li>
 	 )}
       </ul>
+      <div className="pager">
+	<button onClick={() => setPage(++page)} >
+	  Go to next page
+	</button>
+	
+	<button onClick={() => setPage(--page)}>
+	  Go to previous page
+	</button>
+	<br/>
+	<div id="page">
+	  The page is: {page}
+	</div>
+      </div>
     </div>
   );
 };
 
 export default Feed;
 
-
-//			  isReThought={isReThought(thought.id)}
-//			  isReply={isReply(thought.id)}
