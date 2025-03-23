@@ -1,4 +1,5 @@
-const { AuthenticationError } = require('apollo-server-express');
+/*
+  const { AuthenticationError } = require('apollo-server-express');
 const {
   User,
   Friend,
@@ -13,6 +14,23 @@ const {
 } = require("./../models");
 const { signToken } = require('../utils/auth');
 const { Op } = require("sequelize");
+*/
+import { AuthenticationError } from "apollo-server-express";
+t {
+  User,
+  Friend,
+  Thought,
+  Liked,
+  Blocked,
+  Pending,
+  Following,
+  Reply,
+  ReThought,
+  Notification
+} from "./../models/index.js";
+import { signToken } from "../utils/auth";
+import { Op } from "sequelize";
+
 
 const resolvers = {
   Query: {
@@ -1154,6 +1172,6 @@ const resolvers = {
   }
 };
 
-module.exports = resolvers;
+export default resolvers;
 
 

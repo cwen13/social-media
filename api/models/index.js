@@ -1,3 +1,4 @@
+/*
 const Friend = require("./Friend");
 const Thought = require("./Thought");
 const User = require("./User");
@@ -8,6 +9,18 @@ const ReThought = require("./ReThought");
 const Reply = require("./Reply");
 const Following = require("./Following");
 const Notification = require("./Notification");
+*/
+
+import Friend from "./Friend.js";
+import Thought from "./Thought.js";
+import User from "./User.js";
+import Liked from "./Liked.js";
+import Blocked from "./Blocked.js";
+import Pending from "./Pending.js";
+import ReThought from "./ReThought.js";
+import Reply from "./Reply.js";
+import Following from "./Following.js";
+import Notification from "./Notification.js";
 
 
 Thought.belongsTo(User, {
@@ -239,7 +252,7 @@ Notification.belongsTo(ReThought, {
 });
 
 	       
-module.exports = {
+/*module.exports = {
   Friend,
   User,
   Thought,
@@ -251,3 +264,28 @@ module.exports = {
   Following,
   Notification
 };
+*/
+/*
+export  Friend;
+export  User;
+export  Thought;
+export  Liked;
+export  Blocked;
+export  Pending;
+export  ReThought;
+export  Reply;
+export  Following;
+export  Notification;
+*/
+
+export  { Friend,
+	  User,
+	  Thought,
+	  Liked,
+	  Blocked,
+	  Pending,
+	  ReThought,
+	  Reply,
+	  Following,
+	  Notification
+	};
